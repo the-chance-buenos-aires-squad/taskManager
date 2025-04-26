@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    id("jacoco")
 }
 
 group = "org.buinos"
@@ -20,7 +21,59 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+    finalizedBy(tasks.jacocoTestReport)
 }
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        csv.required = true
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        classDirectories.setFrom(
+            classDirectories.files.forEach {
+                fileTree(it) {
+                    exclude("**/model/**")
+                    exclude("**/di/**")
+                }
+            }
+        )
+        rule {
+            limit {
+                minimum = "0.8".toBigDecimal()
+            }
+
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.8".toBigDecimal()
+            }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.8".toBigDecimal()
+            }
+            limit {
+                counter = "METHOD"
+                value = "COVEREDRATIO"
+                minimum = "0.8".toBigDecimal()
+            }
+        }
+    }
+}
+
+
+jacoco {
+    toolVersion = "0.8.13"
+}
+
 kotlin {
     jvmToolchain(21)
 }
