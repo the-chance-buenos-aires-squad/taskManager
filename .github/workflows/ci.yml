@@ -55,7 +55,7 @@ jobs:
   analyze-pr:
     name: Analyze PR Code Coverage
     needs: run-tests
-    if: github.event_name == 'pull_request' && always()
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
