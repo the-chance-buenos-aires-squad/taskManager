@@ -1,4 +1,4 @@
-package org.buinos
+package org.buinos.presentation
 
 fun main() {
     println("Hello World!")
