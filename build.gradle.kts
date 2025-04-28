@@ -38,9 +38,8 @@ tasks.jacocoTestReport {
 tasks.jacocoTestCoverageVerification {
     violationRules {
         classDirectories.setFrom(
-            classDirectories.files.forEach {
+            classDirectories.files.map {
                 fileTree(it) {
-                    exclude("**/model/**")
                     exclude("**/di/**")
                 }
             }
