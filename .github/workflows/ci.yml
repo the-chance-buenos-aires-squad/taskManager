@@ -55,14 +55,30 @@ jobs:
   analyze-pr:
     name: Analyze PR Code Coverage
     needs: run-tests
-    if: github.event_name == 'pull_request' && always()
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check if artifact exists
+        id: check_artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            const matchArtifact = artifacts.data.artifacts.find(artifact => {
+              return artifact.name === "jacoco-coverage-report"
+            });
+            return !!matchArtifact;
+
       - name: Download coverage reports
         uses: actions/download-artifact@v4
+        if: steps.check_artifact.outputs.result == 'true'
         with:
           name: jacoco-coverage-report
           path: build/reports/jacoco/
