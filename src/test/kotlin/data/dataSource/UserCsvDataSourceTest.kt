@@ -4,13 +4,12 @@ import com.google.common.truth.Truth.assertThat
 import org.buinos.domain.entities.User
 import org.buinos.domain.entities.UserRole
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class UserCsvDataSourceTest{
     private val dataSource = UserCsvDataSource()
-    val dummyUser = User(id = "1", username = "dummy user", password = "123456", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
+    private val dummyUser = User(id = "1", username = "dummy user", password = "123456", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
 
     @AfterEach
     fun cleanUpFile(){
