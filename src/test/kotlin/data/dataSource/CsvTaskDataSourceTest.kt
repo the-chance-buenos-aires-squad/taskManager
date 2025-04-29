@@ -98,7 +98,39 @@ class CsvTaskDataSourceTest {
         // then
         assertThat(tasks).isNotEmpty()
     }
+    @Test
+    fun `should throw exception if file does not exist when calling getAll`() {
+        // given
+        val nonExistentFilePath = "data/resource/non_existing_file.csv"
+        val file = File(nonExistentFilePath)
+        if (file.exists()) file.delete()
 
+        val dataSource = CsvTaskDataSource(nonExistentFilePath)
+
+        // when & then
+        val exception = assertThrows<IllegalStateException> {
+            dataSource.getAll()
+        }
+
+        assertThat(exception.message).contains("CSV file not found")
+    }
+    @Test
+    fun `should throw exception if file does not exist when calling getById`() {
+        // given
+        val nonExistentFilePath = "data/resource/missing_tasks.csv"
+        val file = File(nonExistentFilePath)
+        if (file.exists()) file.delete()
+
+        val dataSource = CsvTaskDataSource(nonExistentFilePath)
+        val randomId = UUID.randomUUID()
+
+        // when & then
+        val exception = assertThrows<IllegalStateException> {
+            dataSource.getById(randomId)
+        }
+
+        assertThat(exception.message).contains("CSV file not found")
+    }
     private fun sampleTask(
         title: String = "Sample Task",
         id: UUID = UUID.randomUUID()
