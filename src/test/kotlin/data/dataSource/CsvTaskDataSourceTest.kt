@@ -96,7 +96,7 @@ class CsvTaskDataSourceTest {
         val tasks = dataSource.getAll()
 
         // then
-        assertThat(tasks).isNotEmpty()
+        assertThat(tasks).isEmpty()
     }
     @Test
     fun `should throw exception if file does not exist when calling getAll`() {
