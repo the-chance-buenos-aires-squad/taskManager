@@ -12,11 +12,13 @@ repositories {
 
 dependencies {
     implementation("io.insert-koin:koin-core:4.0.4")
+    implementation("com.jsoizo:kotlin-csv-jvm:1.10.0")
 
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("com.google.truth:truth:1.4.4")
+
 }
 
 tasks.test {
