@@ -5,24 +5,25 @@ import domain.repositories.Repository
 import org.buinos.domain.entities.User
 
 class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : Repository<User> {
-    override fun addItem(item: User): Boolean {
-        TODO("Not yet implemented")
+
+    override fun addItem(user: User): Boolean {
+        return userDataSource.insertItem(user)
     }
 
-    override fun updateItem(item: User): Boolean {
-        TODO("Not yet implemented")
+    override fun updateItem(user: User): Boolean {
+        return userDataSource.updateItem(user)
     }
 
-    override fun deleteItem(item: User): Boolean {
-        TODO("Not yet implemented")
+    override fun deleteItem(user: User): Boolean {
+        return userDataSource.deleteItem(user.id)
     }
 
     override fun getItemById(id: String): User? {
-        TODO("Not yet implemented")
+        return userDataSource.getItemById(id)
     }
 
     override fun getItems(): List<User> {
-        TODO("Not yet implemented")
+       return userDataSource.getItems()
     }
 
 
