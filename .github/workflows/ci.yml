@@ -2,10 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [ main,develop ]
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'bugfix/**'
   pull_request:
-    branches: [ main,develop ]
-  workflow_dispatch:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'bugfix/**'
 
 permissions:
   pull-requests: write
@@ -55,7 +62,7 @@ jobs:
   analyze-pr:
     name: Analyze PR Code Coverage
     needs: run-tests
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
