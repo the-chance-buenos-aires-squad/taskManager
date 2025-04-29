@@ -1,8 +1,7 @@
 package domain.usecases
 
-import domain.repositories.Repository
-import org.buinos.domain.entities.User
+import domain.repositories.UserRepository
 
-class CreateUserUseCase(private val repository: Repository<User>) {
+class CreateUserUseCase(private val repository: UserRepository) {
 
 }

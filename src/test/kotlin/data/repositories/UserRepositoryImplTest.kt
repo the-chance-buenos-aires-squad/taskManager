@@ -29,7 +29,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.insertItem(testUserOne) } returns true
 
         //when
-        val result = userRepository.addItem(testUserOne)
+        val result = userRepository.insertUser(testUserOne)
 
         //then
         assertThat(result).isTrue()
@@ -41,7 +41,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.getItemById("1") } returns testUserOne
 
         //when
-        val result = userRepository.getItemById("1")
+        val result = userRepository.getUserById("1")
 
         //then
         assertThat(result).isEqualTo(testUserOne)
@@ -53,7 +53,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.getItemById("3") } returns null
 
         //when
-        val result = userRepository.getItemById("3")
+        val result = userRepository.getUserById("3")
 
         //then
         assertThat(result).isNull()
@@ -65,7 +65,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.getItems() } returns listOf(testUserOne, testUserTwo)
 
         //when
-        val result = userRepository.getItems()
+        val result = userRepository.getUsers()
 
         //then
         assertThat(result.size).isEqualTo(2)
@@ -77,7 +77,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.updateItem(testUserOne) } returns true
 
         //when
-        userRepository.updateItem(testUserOne)
+        userRepository.updateUser(testUserOne)
 
         //then
         verify(exactly = 1) { mockDataSource.updateItem(testUserOne) }
@@ -90,7 +90,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.deleteItem("1") } returns true
 
         //when
-        userRepository.deleteItem(testUserOne)
+        userRepository.deleteUser(testUserOne)
 
         //then
         verify(exactly = 1) { mockDataSource.deleteItem("1") }
