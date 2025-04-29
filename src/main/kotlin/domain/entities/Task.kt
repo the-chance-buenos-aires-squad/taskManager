@@ -1,9 +1,10 @@
-package org.buinos.domain.entities
+package domain.entities
 
 import java.time.LocalDateTime
+import java.util.*
 
 data class Task(
-    val id: String,
+    val id: UUID = UUID.randomUUID(),
     val title: String,
     val description: String,
     val projectId: String,
@@ -11,5 +12,5 @@ data class Task(
     val assignedTo: String?,
     val createdBy: String,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 )
