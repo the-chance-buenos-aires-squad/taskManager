@@ -1,10 +1,10 @@
 package data.repositories
 
-import data.dataSource.UserCsvDataSource
+import data.dataSource.DataSource
 import domain.repositories.Repository
 import org.buinos.domain.entities.User
 
-class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : Repository<User> {
+class UserRepositoryImpl(private val userDataSource: DataSource<User>) : Repository<User> {
 
     override fun addItem(user: User): Boolean {
         return userDataSource.insertItem(user)

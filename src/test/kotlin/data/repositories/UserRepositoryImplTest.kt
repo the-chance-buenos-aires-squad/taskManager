@@ -1,18 +1,19 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.UserCsvDataSource
+import data.dataSource.DataSource
 import dummyData.DummyUser.testUserOne
 import dummyData.DummyUser.testUserTwo
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.buinos.domain.entities.User
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class UserRepositoryImplTest {
 
-    private val mockDataSource = mockk<UserCsvDataSource>()
+    private val mockDataSource = mockk<DataSource<User>>()
     private lateinit var userRepository: UserRepositoryImpl
 
 
