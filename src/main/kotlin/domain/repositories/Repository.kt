@@ -9,5 +9,4 @@ interface Repository<T> {
     fun deleteItem(item: T): Boolean
     fun getItemById(id: String): T?
     fun getItems(): List<T>
-
 }
