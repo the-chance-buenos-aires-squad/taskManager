@@ -3,23 +3,25 @@ package data.dataSource
 import com.google.common.truth.Truth.assertThat
 import org.buinos.domain.entities.User
 import org.buinos.domain.entities.UserRole
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
 class UserCsvDataSourceTest{
-
-
-
     private val dataSource = UserCsvDataSource()
+    val dummyUser = User(id = "1", username = "dummy user", password = "123456", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
+
+    @AfterEach
+    fun cleanUpFile(){
+        dataSource.getItems().forEach { dataSource.deleteItem(it.id) }
+    }
+
 
     @Test
-    fun `add user to userCscDayaSource`(){
-        //given
-        val newUser = User(id = "", username = "", password = "", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
-
+    fun `should return true when add user to userCscDayaSource`(){
         //when
-        val result = dataSource.insertItem(newUser)
+        val result = dataSource.insertItem(dummyUser)
 
         //then
         assertThat(result).isTrue()
@@ -27,26 +29,22 @@ class UserCsvDataSourceTest{
 
 
     @Test
-    fun `get user by id for an existing user will return user object`(){
+    fun `get user by id for an existing user will return same user object`(){
         //given
-        val existUserId = "123"
+        dataSource.insertItem(dummyUser)
 
         //when
-        val resultUser = dataSource.getItemById(existUserId)
+        val resultUser = dataSource.getItemById(dummyUser.id)
 
         //then
-        assertThat(resultUser?.id).isEqualTo(existUserId)
+        assertThat(resultUser).isEqualTo(dummyUser)
     }
 
 
     @Test
     fun `get user by id for not existed user will return null`(){
-        //given
-        val existUserId = "123"
-
         //when
-        val resultUser = dataSource.getItemById(existUserId)
-
+        val resultUser = dataSource.getItemById(dummyUser.id)
         //then
         assertThat(resultUser).isNull()
     }
@@ -56,11 +54,11 @@ class UserCsvDataSourceTest{
     @Test
     fun `delete user will return true if successful`(){
         //given
-        val userId = " 123"
+        dataSource.insertItem(dummyUser)
 
 
         //when
-        val userIsDeleted = dataSource.deleteItem(userId)
+        val userIsDeleted = dataSource.deleteItem(dummyUser.id)
 
 
         //then
@@ -69,13 +67,8 @@ class UserCsvDataSourceTest{
 
     @Test
     fun `delete user will return false if unSuccessful`(){
-        //given
-        val userId = " 123"
-
-
         //when
-        val userIsDeleted = dataSource.deleteItem(userId)
-
+        val userIsDeleted = dataSource.deleteItem(dummyUser.id)
 
         //then
         assertThat(userIsDeleted).isFalse()
@@ -85,6 +78,11 @@ class UserCsvDataSourceTest{
 
     @Test
     fun `get users will return non empty List of User`() {
+        //given
+        dataSource.insertItem(dummyUser)
+        dataSource.insertItem(dummyUser)
+        dataSource.insertItem(dummyUser)
+
         //when
         val users: List<User> = dataSource.getItems()
 
@@ -93,7 +91,7 @@ class UserCsvDataSourceTest{
     }
 
     @Test
-    fun `get users from empty dataSource will return  empty List of User`() {
+    fun `get users from empty dataSource will return  empty List`() {
         //when
         val users: List<User> = dataSource.getItems()
 
@@ -107,29 +105,35 @@ class UserCsvDataSourceTest{
     @Test
     fun `update user will return true when successful`(){
         //given
-        val user = User(id = "", username = "old", password = "", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
+        dataSource.insertItem(dummyUser)
 
 
         //when
-        val result = dataSource.updateItem(user.copy(username = "new"))
+        val result = dataSource.updateItem(dummyUser.copy(username = "new user name"))
 
         // then
         assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `update user will false true when UnSuccessful`(){
+        //when
+        val result = dataSource.updateItem(dummyUser.copy(username = "new user name"))
+
+        // then
+        assertThat(result).isFalse()
     }
 
 
     @Test
     fun `check the updated user properties is changed`() {
         //given
-        val user =
-            User(id = "userid", username = "mostafa", password = "", role = UserRole.ADMIN, createdAt = LocalDateTime.now())
-
-        dataSource.insertItem(user)
+        dataSource.insertItem(dummyUser)
 
         //when
-        val updatedUserName = "falah"
-        val result = dataSource.updateItem(user.copy(username = updatedUserName))
-        val userFromDataSource = dataSource.getItemById("userid")
+        val updatedUserName = "mostafa"
+        dataSource.updateItem(dummyUser.copy(username = updatedUserName))
+        val userFromDataSource = dataSource.getItemById(dummyUser.id)
         // then
         assertThat(userFromDataSource?.username).isEqualTo(updatedUserName)
     }
