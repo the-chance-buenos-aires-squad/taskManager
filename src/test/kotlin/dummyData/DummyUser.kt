@@ -1,7 +1,7 @@
 package dummyData
 
-import org.buinos.domain.entities.User
-import org.buinos.domain.entities.UserRole
+import domain.entities.User
+import domain.entities.UserRole
 import java.time.LocalDateTime
 
 object DummyUser {

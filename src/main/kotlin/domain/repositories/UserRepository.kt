@@ -1,6 +1,7 @@
 package domain.repositories
 
-import org.buinos.domain.entities.User
+import domain.entities.User
+
 
 interface UserRepository {
 

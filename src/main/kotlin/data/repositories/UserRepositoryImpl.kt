@@ -1,29 +1,29 @@
 package data.repositories
 
-import data.dataSource.DataSource
+import data.dataSource.UserCsvDataSource
+import domain.entities.User
 import domain.repositories.UserRepository
-import org.buinos.domain.entities.User
 
-class UserRepositoryImpl(private val userDataSource: DataSource<User>) : UserRepository {
+class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : UserRepository {
 
     override fun insertUser(user: User): Boolean {
-        return userDataSource.insertItem(user)
+        return userDataSource.insertUser(user)
     }
 
     override fun updateUser(user: User): Boolean {
-        return userDataSource.updateItem(user)
+        return userDataSource.updateUser(user)
     }
 
     override fun deleteUser(user: User): Boolean {
-        return userDataSource.deleteItem(user.id)
+        return userDataSource.deleteUser(user.id)
     }
 
     override fun getUserById(id: String): User? {
-        return userDataSource.getItemById(id)
+        return userDataSource.getUserById(id)
     }
 
     override fun getUsers(): List<User> {
-        return userDataSource.getItems()
+        return userDataSource.getUsers()
     }
 
 }

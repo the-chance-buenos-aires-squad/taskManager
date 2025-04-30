@@ -3,12 +3,12 @@ package data.dataSource
 import com.github.doyaaaaaken.kotlincsv.client.ICsvFileWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import org.buinos.domain.entities.User
-import org.buinos.domain.entities.UserRole
+import domain.entities.User
+import domain.entities.UserRole
 import java.io.File
 import java.time.LocalDateTime
 
-class UserCsvDataSource : DataSource<User> {
+class UserCsvDataSource {
 
     companion object {
         const val usersFilePath = "src/main/kotlin/data/resource/users_file.csv"
@@ -21,10 +21,10 @@ class UserCsvDataSource : DataSource<User> {
     }
 
 
-    override fun insertItem(item: User): Boolean {
+    fun insertUser(user: User): Boolean {
         return try {
             csvWriter().open(file, append = true) {
-                writeUserRow(item)
+                writeUserRow(user)
             }
             true
         } catch (e: Exception) {
@@ -33,12 +33,12 @@ class UserCsvDataSource : DataSource<User> {
         }
     }
 
-    override fun getItemById(id: String): User? {
-        return getItems().find { it.id == id }
+    fun getUserById(id: String): User? {
+        return getUsers().find { it.id == id }
     }
 
-    override fun deleteItem(id: String): Boolean {
-        val allUsers = this.getItems()
+    fun deleteUser(id: String): Boolean {
+        val allUsers = this.getUsers()
         val updatedUsers = allUsers.filterNot { it.id == id }
 
         if (allUsers.size == updatedUsers.size) {
@@ -59,7 +59,7 @@ class UserCsvDataSource : DataSource<User> {
         }
     }
 
-    override fun getItems(): List<User> {
+    fun getUsers(): List<User> {
         if (!file.exists()) return emptyList()
         return csvReader().readAll(file).drop(HEADER_ROW).map { row ->
             User(
@@ -72,16 +72,16 @@ class UserCsvDataSource : DataSource<User> {
         }
     }
 
-    override fun updateItem(item: User): Boolean {
-        val allUsers = this.getItems()
-        val exists = allUsers.any { it.id == item.id }
+     fun updateUser(user: User): Boolean {
+        val allUsers = this.getUsers()
+        val exists = allUsers.any { it.id == user.id }
 
         if (!exists) return false
 
         val updatedUsers = allUsers
-            .filterNot { it.id == item.id }
+            .filterNot { it.id == user.id }
             .toMutableList()
-            .apply { add(item) }
+            .apply { add(user) }
 
         return try {
             csvWriter().open(File(usersFilePath)) {

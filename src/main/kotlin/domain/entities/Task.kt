@@ -1,4 +1,4 @@
-package org.buinos.domain.entities
+package domain.entities
 
 import java.time.LocalDateTime
 
