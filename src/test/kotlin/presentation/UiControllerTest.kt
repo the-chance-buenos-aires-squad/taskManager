@@ -21,7 +21,6 @@ class UiControllerTest {
         System.setOut(PrintStream(outputStream))
     }
 
-
     @Test
     fun `should print message with new line`() {
         uiController.printMessage("hello")
@@ -46,6 +45,5 @@ class UiControllerTest {
 
         assertThat(result).isEqualTo(input)
     }
-
 
 }
