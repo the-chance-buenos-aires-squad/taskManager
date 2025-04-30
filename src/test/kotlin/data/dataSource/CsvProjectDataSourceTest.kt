@@ -47,7 +47,8 @@ class CsvProjectDataSourceTest{
     @Test
     fun `should return list of projects`(){
         csvProjectDataSource.saveData(project)
+        csvProjectDataSource.saveData(project)
 
-        assertThat(csvProjectDataSource.getAllProjects()).hasSize(1)
+        assertThat(csvProjectDataSource.getAllProjects()).hasSize(2)
     }
  }
