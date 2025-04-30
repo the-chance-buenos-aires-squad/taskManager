@@ -9,7 +9,7 @@ import org.buinos.domain.entities.State
 
 class EditUseCaseCli(
     private val editStateUseCase: EditStateUseCase,
-    private val stateRepository: StateRepository
+    private val getAllStatesUseCase: GetAllStatesUseCase
 ) {
 
     fun start() {
@@ -31,7 +31,7 @@ class EditUseCaseCli(
     }
 
     private fun editState() {
-        val allStates = stateRepository.getAllStates()
+        val allStates = getAllStatesUseCase.execute()
         if (allStates.isEmpty()) {
             println("No states available to edit.")
             return
@@ -75,7 +75,7 @@ class EditUseCaseCli(
                 println("Failed to update the state. Please check your input.")
             }
         } catch (e: IllegalArgumentException) {
-            println("⚠️ Invalid input: ${e.message}")
+            println("Invalid input: ${e.message}")
         }
     }
 
