@@ -32,4 +32,11 @@ object DummyState {
         name = "Ready For Review",
         projectId = "P005"
     )
+
+
+    val invalidState = State(
+        id = "1",
+        name = "",
+        projectId = "P001"
+    )
 }
