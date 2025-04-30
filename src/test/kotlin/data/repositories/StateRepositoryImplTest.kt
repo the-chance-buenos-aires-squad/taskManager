@@ -66,7 +66,7 @@ class StateRepositoryImplTest {
             stateRepository.editState(invalidState)
         }
 
-        assertEquals("State name cannot be empty", exception.message)
+        assertEquals("State failed cannot be empty", exception.message)
     }
 
     // TODO: Write below all tests for deleteState fun.

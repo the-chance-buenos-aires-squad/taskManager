@@ -12,7 +12,17 @@ class StateRepositoryImpl(
     }
 
     override fun editState(state: State): Boolean {
-        TODO("Not yet implemented")
+        if (state.name.isBlank() || state.id.isBlank() || state.projectId.isBlank()) {
+            throw IllegalArgumentException("State failed cannot be empty")
+        }
+
+        val allStates = dataSource.getAllStates()
+        val existingState = allStates.find { it.id == state.id }
+
+        if (existingState == null) return false
+
+        if (existingState.projectId != state.projectId) return false
+        return dataSource.updateState(state)
     }
 
     override fun deleteState(stateId: String): Boolean {
