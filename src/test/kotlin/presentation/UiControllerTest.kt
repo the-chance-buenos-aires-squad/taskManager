@@ -18,7 +18,6 @@ class UiControllerTest {
     private val mockedScanner = mockk<Scanner>(relaxed = true)
     private lateinit var  uiController : UiController
 
-    private val uiController = UiController()
     private lateinit var outputStream: ByteArrayOutputStream
 
     @BeforeEach
