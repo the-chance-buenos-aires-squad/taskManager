@@ -18,19 +18,17 @@ class MainCliTest {
     fun `should print welcome message`() {
 
         //when
-        mainCli.startCli()
+        mainCli.startCli(true)
 
         //then
         verify {
             uiController.printMessage(
-                """
-            ========================================
-                     Welcome to PlanMate!        
-            ========================================
-            1. Login
-            2. Exit
-            Choose an option (1 - 2): 
-            """
+                "========================================\n" +
+                        "              Welcome to PlanMate!       \n" +
+                        "========================================\n" +
+                        "1. Login\n" +
+                        "2. Exit\n" +
+                        "Choose an option (1 - 2): "
             )
         }
 
@@ -44,7 +42,7 @@ class MainCliTest {
         every { uiController.readInput() }.returns(userInput)
 
         //when
-        mainCli.startCli()
+        mainCli.startCli(true)
 
         //then
         verify {
@@ -62,7 +60,7 @@ class MainCliTest {
         every { uiController.readInput() }.returns(userInput)
 
         //when
-        mainCli.startCli()
+        mainCli.startCli(true)
 
         //then
         verify {
@@ -79,22 +77,12 @@ class MainCliTest {
         every { uiController.readInput() }.returns(userInput)
 
         //when
-        mainCli.startCli()
+        mainCli.startCli(true)
 
         //then
-        verify(exactly = 2) {
-            uiController.printMessage(
-                """
-            ========================================
-                     Welcome to PlanMate!        
-            ========================================
-            1. Login
-            2. Exit
-            Choose an option (1 - 2): 
-            """
-            )
+        verify {
+            uiController.printMessage("Invalid option! Please try again.")
         }
-
 
     }
 
