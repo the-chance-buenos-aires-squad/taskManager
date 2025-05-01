@@ -31,18 +31,28 @@ class CsvTaskDataSource(
         return getAll().find { it.id == taskId }
     }
 
-    fun update(updatedTask: Task) {
+    fun update(updatedTask: Task): Boolean {
         val tasks = getAll().toMutableList()
         val index = tasks.indexOfFirst { it.id == updatedTask.id }
-        if (index != -1) {
+        return if (index != -1) {
             tasks[index] = updatedTask
             overwriteAll(tasks)
+            true
+        } else {
+            false
         }
     }
 
-    fun delete(taskId: UUID) {
-        val tasks = getAll().filterNot { it.id == taskId }
-        overwriteAll(tasks)
+
+    fun delete(taskId: UUID): Boolean {
+        val tasks = getAll()
+        val existedBefore = tasks.any { it.id == taskId }
+        if (!existedBefore) {
+            return false
+        }
+        val newTasks = tasks.filterNot { it.id == taskId }
+        overwriteAll(newTasks)
+        return true
     }
 
     private fun serialize(task: Task): List<String> = listOf(

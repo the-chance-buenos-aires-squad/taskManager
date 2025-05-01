@@ -11,138 +11,179 @@ import kotlin.test.assertNotNull
 
 
 class CsvTaskDataSourceTest {
-
-    private val testFilePath = "data/resource/test_tasks.csv"
+    private val testFilePath = "build/test-resources/test_tasks.csv"
     private lateinit var dataSource: CsvTaskDataSource
+    private lateinit var testFile: File
 
     @BeforeEach
     fun setup() {
-        File(testFilePath).apply {
+        testFile = File(testFilePath).apply {
             parentFile.mkdirs()
             writeText("")
         }
-        dataSource = CsvTaskDataSource(testFilePath)
+        dataSource = CsvTaskDataSource(testFile)
     }
 
     @AfterEach
     fun teardown() {
-        File(testFilePath).delete()
+        if (testFile.exists()) testFile.delete()
     }
 
     @Test
-    fun `should save a task and retrieve it`() {
-        // given
+    fun `save should persist task and getAll should retrieve it`() {
         val task = sampleTask()
 
-        // when
         dataSource.save(task)
         val tasks = dataSource.getAll()
 
-        // then
-        assertThat(tasks).isNotEmpty()
+        assertThat(tasks).hasSize(1)
+        assertThat(tasks.first()).isEqualTo(task)
     }
 
     @Test
-    fun `should get a task by ID`() {
-        // given
+    fun `getById should return correct task`() {
         val task = sampleTask()
         dataSource.save(task)
 
-        // when
         val found = dataSource.getById(task.id)
 
-        // then
         assertNotNull(found)
+        assertThat(found).isEqualTo(task)
     }
 
     @Test
-    fun `should overwrite all tasks`() {
-        // given
-        val tasks = listOf(sampleTask(), sampleTask(title = "Second"))
+    fun `getById should return null for non-existent task`() {
+        dataSource.save(sampleTask())
 
-        // when
-        dataSource.overwriteAll(tasks)
+        val result = dataSource.getById(UUID.randomUUID())
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `overwriteAll should replace all existing tasks`() {
+        val initialTasks = listOf(sampleTask(), sampleTask())
+        dataSource.overwriteAll(initialTasks)
+
+        val newTasks = listOf(sampleTask(title = "Task 1"), sampleTask(title = "Task 2"))
+        dataSource.overwriteAll(newTasks)
+
         val result = dataSource.getAll()
-
-        // then
         assertThat(result).hasSize(2)
-
+        assertThat(result.map { it.title }).containsExactly("Task 1", "Task 2")
     }
 
     @Test
-    fun `should update a task`() {
-        // given
-        val task = sampleTask(title = "Old Title")
-        dataSource.save(task)
+    fun `update should modify existing task`() {
+        val original = sampleTask(title = "Original")
+        dataSource.save(original)
 
-        // when
-        val updatedTask = task.copy(title = "New Title")
-        dataSource.update(updatedTask)
+        val updated = original.copy(title = "Updated")
+        val success = dataSource.update(updated)
 
-        val result = dataSource.getById(task.id)
 
-        // then
-        assertNotNull(result)
+        assertThat(dataSource.getById(original.id)?.title).isEqualTo("Updated")
     }
 
     @Test
-    fun `should delete a task`() {
-        // given
+    fun `update should return false for non-existent task`() {
+        val success = dataSource.update(sampleTask())
+
+        assertThat(success).isEqualTo(false)
+    }
+
+    @Test
+    fun `delete should remove task`() {
         val task = sampleTask()
         dataSource.save(task)
 
-        // when
-        dataSource.delete(task.id)
+        val success = dataSource.delete(task.id)
         val tasks = dataSource.getAll()
 
-        // then
         assertThat(tasks).isEmpty()
     }
+
     @Test
-    fun `should throw exception if file does not exist when calling getAll`() {
-        // given
-        val nonExistentFilePath = "data/resource/non_existing_file.csv"
-        val file = File(nonExistentFilePath)
-        if (file.exists()) file.delete()
+    fun `delete should return false for non-existent task`() {
+        val success = dataSource.delete(UUID.randomUUID())
 
-        val dataSource = CsvTaskDataSource(nonExistentFilePath)
+        assertThat(success).isEqualTo(false)
+    }
 
-        // when & then
+    @Test
+    fun `should handle special characters in fields`() {
+        val task = sampleTask(
+            title = "Task, with, commas",
+            description = "Description with \"quotes\"",
+            assignedTo = "User, with, comma"
+        )
+
+        dataSource.save(task)
+        val retrieved = dataSource.getById(task.id)
+
+        assertNotNull(retrieved)
+        assertThat(retrieved.title).isEqualTo("Task, with, commas")
+        assertThat(retrieved.description).isEqualTo("Description with \"quotes\"")
+        assertThat(retrieved.assignedTo).isEqualTo("User, with, comma")
+    }
+
+    @Test
+    fun `getAll should throw when file does not exist`() {
+        val nonExistentFile = File("build/test-resources/non_existing_file.csv")
+        if (nonExistentFile.exists()) nonExistentFile.delete()
+
         val exception = assertThrows<IllegalStateException> {
-            dataSource.getAll()
+            CsvTaskDataSource(nonExistentFile).getAll()
+        }
+
+        assertThat(exception.message).contains("CSV file not found")
+    }
+
+    @Test
+    fun `getById should throw when file does not exist`() {
+        val nonExistentFile = File("build/test-resources/missing_tasks.csv")
+        if (nonExistentFile.exists()) nonExistentFile.delete()
+
+        val exception = assertThrows<IllegalStateException> {
+            CsvTaskDataSource(nonExistentFile).getById(UUID.randomUUID())
         }
 
         assertThat(exception.message).contains("CSV file not found")
     }
     @Test
-    fun `should throw exception if file does not exist when calling getById`() {
-        // given
-        val nonExistentFilePath = "data/resource/missing_tasks.csv"
-        val file = File(nonExistentFilePath)
-        if (file.exists()) file.delete()
+    fun `parse should return null for malformed CSV rows`() {
+        // Create a malformed CSV row (missing fields)
+        val malformedRow = listOf(
+            UUID.randomUUID().toString(),
+            "Test Task"
+            // Missing all other required fields
+        )
 
-        val dataSource = CsvTaskDataSource(nonExistentFilePath)
-        val randomId = UUID.randomUUID()
+        // Use reflection to access private parse method
+        val parseMethod = CsvTaskDataSource::class.java.getDeclaredMethod("parse", List::class.java)
+        parseMethod.isAccessible = true
 
-        // when & then
-        val exception = assertThrows<IllegalStateException> {
-            dataSource.getById(randomId)
-        }
+        // Invoke parse on the malformed row
+        val result = parseMethod.invoke(dataSource, malformedRow)
 
-        assertThat(exception.message).contains("CSV file not found")
+        assertNull(result)
     }
+
+
     private fun sampleTask(
         title: String = "Sample Task",
-        id: UUID = UUID.randomUUID()
+        id: UUID = UUID.randomUUID(),
+        description: String = "Test description",
+        assignedTo: String? = null
     ): Task {
         val now = LocalDateTime.now()
         return Task(
             id = id,
             title = title,
-            description = "Test description",
+            description = description,
             projectId = "proj-001",
             stateId = "todo",
-            assignedTo = null,
+            assignedTo = assignedTo,
             createdBy = "tester",
             createdAt = now,
             updatedAt = now
