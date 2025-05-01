@@ -1,9 +1,6 @@
 package domain.usecases
 
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.InvalidLengthPasswordException
-import domain.customeExceptions.UserAlreadyExistException
-import domain.customeExceptions.UserNameEmptyException
+import domain.customeExceptions.*
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.UserRepository
@@ -37,17 +34,17 @@ class CreateUserUseCase(private val repository: UserRepository) {
     }
 
     private fun validateUsername(username: String) {
-        if (username.isBlank()) {
-            throw UserNameEmptyException()
-        }
+        if (username.isBlank()) throw UserNameEmptyException()
+
     }
 
     private fun validatePassword(password: String, confirmPassword: String) {
-        if (password.length < 6) {
-            throw InvalidLengthPasswordException()
-        }
-        if (password != confirmPassword) {
-            throw InvalidConfirmPasswordException()
-        }
+
+        if (password.isBlank()) throw PasswordEmptyException()
+
+        if (password.length < 6) throw InvalidLengthPasswordException()
+
+        if (password != confirmPassword) throw InvalidConfirmPasswordException()
+
     }
 }

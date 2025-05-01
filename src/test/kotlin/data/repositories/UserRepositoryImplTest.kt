@@ -59,10 +59,10 @@ class UserRepositoryImplTest {
     @Test
     fun `should return user when searching by valid userName`() {
         //given
-        every { mockDataSource.getUserByUserName("testUser1") } returns testUserOne
+        every { mockDataSource.getUserByUserName("adminUserName") } returns testUserOne
 
         //when
-        val result = userRepository.getUserByUserName("testUser1")
+        val result = userRepository.getUserByUserName("adminUserName")
 
         //then
         assertThat(result).isEqualTo(testUserOne)
