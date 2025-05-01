@@ -8,7 +8,7 @@ class AuditRepository(
 ) {
 
     fun addAudit(audit:Audit):Boolean{
-        TODO()
+       return auditDataSource.addAudit(audit)
     }
 
 
