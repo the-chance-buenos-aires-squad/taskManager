@@ -15,12 +15,10 @@ class UserRepositoryImplTest {
     private val mockDataSource = mockk<UserCsvDataSource>()
     private lateinit var userRepository: UserRepositoryImpl
 
-
     @BeforeEach
     fun setUp() {
         userRepository = UserRepositoryImpl(mockDataSource)
     }
-
 
     @Test
     fun `should return true when adding a new user`() {
@@ -81,7 +79,6 @@ class UserRepositoryImplTest {
         //then
         verify(exactly = 1) { mockDataSource.updateUser(testUserOne) }
     }
-
 
     @Test
     fun `should call deleteItem on data source when deleting a user`() {
