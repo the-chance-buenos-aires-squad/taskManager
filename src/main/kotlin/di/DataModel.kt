@@ -27,7 +27,7 @@ val dataModule = module {
 
 
     single {
-        CsvAuditDataSource(get(Paths.AuditFileQualifier))
+        CsvAuditDataSource(get(),get(Paths.AuditFileQualifier))
     }
 
     single {
