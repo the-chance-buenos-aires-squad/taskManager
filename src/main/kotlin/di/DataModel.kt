@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import data.dataSource.CsvAuditDataSource
 import data.dataSource.util.CsvHandler
+import data.repositories.AuditRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.core.qualifier.qualifier
@@ -29,6 +30,9 @@ val dataModule = module {
         CsvAuditDataSource(get(Paths.AuditFileQualifier))
     }
 
+    single {
+        AuditRepository(get())
+    }
 
 
 }
