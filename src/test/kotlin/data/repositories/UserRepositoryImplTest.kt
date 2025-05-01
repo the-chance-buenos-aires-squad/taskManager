@@ -15,12 +15,10 @@ class UserRepositoryImplTest {
     private val mockDataSource = mockk<UserCsvDataSource>()
     private lateinit var userRepository: UserRepositoryImpl
 
-
     @BeforeEach
     fun setUp() {
         userRepository = UserRepositoryImpl(mockDataSource)
     }
-
 
     @Test
     fun `should return true when adding a new user`() {
@@ -47,12 +45,36 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when user does not exist`() {
+    fun `should return null when user id does not exist`() {
         //given
         every { mockDataSource.getUserById("3") } returns null
 
         //when
         val result = userRepository.getUserById("3")
+
+        //then
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return user when searching by valid userName`() {
+        //given
+        every { mockDataSource.getUserByUserName("adminUserName") } returns testUserOne
+
+        //when
+        val result = userRepository.getUserByUserName("adminUserName")
+
+        //then
+        assertThat(result).isEqualTo(testUserOne)
+    }
+
+    @Test
+    fun `should return null when userName does not exist`() {
+        //given
+        every { mockDataSource.getUserByUserName("testUser3") } returns null
+
+        //when
+        val result = userRepository.getUserByUserName("testUser3")
 
         //then
         assertThat(result).isNull()
@@ -81,7 +103,6 @@ class UserRepositoryImplTest {
         //then
         verify(exactly = 1) { mockDataSource.updateUser(testUserOne) }
     }
-
 
     @Test
     fun `should call deleteItem on data source when deleting a user`() {

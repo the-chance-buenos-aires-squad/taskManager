@@ -1,23 +1,20 @@
 package dummyData
 
-import domain.entities.User
 import domain.entities.UserRole
-import java.time.LocalDateTime
+import domain.util.MD5Hash
 
 object DummyUser {
-     val testUserOne = User(
+     val testUserOne = createDummyUser(
         id = "1",
-        username = "testUser1",
-        password = "testPassword1",
-        role = UserRole.ADMIN,
-        createdAt = LocalDateTime.now()
+        username = "adminUserName",
+        password = MD5Hash.hash("adminPassword"),
+        role = UserRole.ADMIN
     )
 
-     val testUserTwo = User(
+     val testUserTwo = createDummyUser(
         id = "2",
-        username = "testUser2",
-        password = "testPassword2",
-        role = UserRole.MATE,
-        createdAt = LocalDateTime.now()
+        username = "mateUserName",
+        password = MD5Hash.hash("matePassword"),
+        role = UserRole.MATE
     )
 }

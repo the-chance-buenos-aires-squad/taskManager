@@ -11,10 +11,12 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
+
 class UserCsvDataSourceTest{
 
     private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
     private val dataSource = UserCsvDataSource(Files.UserFile,csvHandler)
+
     private val dummyUser = User(
         id = "1",
         username = "dummy user",
@@ -24,13 +26,12 @@ class UserCsvDataSourceTest{
     )
 
     @AfterEach
-    fun cleanUpFile(){
+    fun cleanUpFile() {
         dataSource.getUsers().forEach { dataSource.deleteUser(it.id) }
     }
 
-
     @Test
-    fun `should return true when add user to userCscDayaSource`(){
+    fun `should return true when add user to userCscDayaSource`() {
         //when
         val result = dataSource.insertUser(dummyUser)
 
@@ -38,9 +39,8 @@ class UserCsvDataSourceTest{
         assertThat(result).isTrue()
     }
 
-
     @Test
-    fun `get user by id for an existing user will return same user object`(){
+    fun `get user by id for an existing user will return same user object`() {
         //given
         dataSource.insertUser(dummyUser)
 
@@ -51,9 +51,8 @@ class UserCsvDataSourceTest{
         assertThat(resultUser).isEqualTo(dummyUser)
     }
 
-
     @Test
-    fun `get user by id for not existed user will return null`(){
+    fun `get user by id for not existed user will return null`() {
         //when
         val resultUser = dataSource.getUserById(dummyUser.id)
         //then
@@ -61,9 +60,28 @@ class UserCsvDataSourceTest{
     }
 
 
+    @Test
+    fun `get user by userName for an existing user will return same user object`() {
+        //given
+        dataSource.insertUser(dummyUser)
+
+        //when
+        val resultUser = dataSource.getUserByUserName(dummyUser.username)
+
+        //then
+        assertThat(resultUser).isEqualTo(dummyUser)
+    }
 
     @Test
-    fun `delete user will return true if successful`(){
+    fun `get user by userName for not existed user will return null`() {
+        //when
+        val resultUser = dataSource.getUserByUserName(dummyUser.username)
+        //then
+        assertThat(resultUser).isNull()
+    }
+
+    @Test
+    fun `delete user will return true if successful`() {
         //given
         dataSource.insertUser(dummyUser)
 
@@ -77,15 +95,13 @@ class UserCsvDataSourceTest{
     }
 
     @Test
-    fun `delete user will return false if unSuccessful`(){
+    fun `delete user will return false if unSuccessful`() {
         //when
         val userIsDeleted = dataSource.deleteUser(dummyUser.id)
 
         //then
         assertThat(userIsDeleted).isFalse()
     }
-
-
 
     @Test
     fun `get users will return non empty List of User`() {
@@ -110,14 +126,10 @@ class UserCsvDataSourceTest{
         assertThat(users.isEmpty()).isTrue()
     }
 
-
-
-
     @Test
-    fun `update user will return true when successful`(){
+    fun `update user will return true when successful`() {
         //given
         dataSource.insertUser(dummyUser)
-
 
         //when
         val result = dataSource.updateUser(dummyUser.copy(username = "new user name"))
@@ -127,14 +139,13 @@ class UserCsvDataSourceTest{
     }
 
     @Test
-    fun `update user will false true when UnSuccessful`(){
+    fun `update user will false true when UnSuccessful`() {
         //when
         val result = dataSource.updateUser(dummyUser.copy(username = "new user name"))
 
         // then
         assertThat(result).isFalse()
     }
-
 
     @Test
     fun `check the updated user properties is changed`() {

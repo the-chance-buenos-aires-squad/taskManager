@@ -22,6 +22,10 @@ class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : UserRe
         return userDataSource.getUserById(id)
     }
 
+    override fun getUserByUserName(userName: String): User? {
+        return userDataSource.getUserByUserName(userName)
+    }
+
     override fun getUsers(): List<User> {
         return userDataSource.getUsers()
     }
