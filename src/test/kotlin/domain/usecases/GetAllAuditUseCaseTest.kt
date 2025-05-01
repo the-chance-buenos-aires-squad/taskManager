@@ -1,0 +1,50 @@
+package domain.usecases
+
+import com.google.common.truth.Truth.assertThat
+import data.dataSource.dummyData.createDummyAudit
+import data.repositories.AuditRepository
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+class GetAllAuditUseCaseTest {
+    private lateinit var getAllAuditUseCase: GetAllAuditUseCase
+    private val mockedAuditRepository: AuditRepository = mockk(relaxed = true)
+
+    @BeforeEach
+    fun setUp(){
+        getAllAuditUseCase = GetAllAuditUseCase(mockedAuditRepository)
+    }
+
+    @Test
+    fun `should return empty list when no audits exist in data source`() {
+        //given
+        every { getAllAuditUseCase.getAllAudit() } returns emptyList()
+
+        //when
+        val result = getAllAuditUseCase.getAllAudit()
+
+        //then
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `should return all audits from data source`() {
+        //given
+        val expectedAudits = listOf(
+            createDummyAudit.dummyTaskAudit_CreateAction,
+            createDummyAudit.dummyTaskAudit_CreateAction,
+            createDummyAudit.dummyUserAudit_UpdateAction
+        )
+        every { mockedAuditRepository.getAllAudit() } returns expectedAudits
+
+        //when
+        val result = getAllAuditUseCase.getAllAudit()
+
+        //then
+        assertThat(result).isEqualTo(expectedAudits)
+    }
+
+}
