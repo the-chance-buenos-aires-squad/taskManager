@@ -1,18 +1,22 @@
 package data.dataSource
 
+import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.client.ICsvFileWriter
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import data.util.CsvHandler
 import domain.entities.User
 import domain.entities.UserRole
 import java.io.File
 import java.time.LocalDateTime
 
-class UserCsvDataSource {
+class UserCsvDataSource (
+    private val file: File,
+    private val csvHandler: CsvHandler
+){
 
     companion object {
         const val usersFilePath = "src/main/kotlin/data/resource/users_file.csv"
-        private val file = File(usersFilePath)
+//        private val file = File(usersFilePath)
         const val HEADER_ROW = 1
     }
 
@@ -23,9 +27,14 @@ class UserCsvDataSource {
 
     fun insertUser(user: User): Boolean {
         return try {
-            csvWriter().open(file, append = true) {
-                writeUserRow(user)
-            }
+//            csvWriter().open(file, append = true) {
+//                writeUserRow(user)
+//            }
+//            listOf(user.id, user.username, user.password, user.role, user.createdAt)
+            csvHandler.write(
+                list = listOf(user.id, user.username, user.password, user.role.name, user.createdAt.toString()),
+                file = file,
+                append = true)
             true
         } catch (e: Exception) {
             println("Failed to write user: ${e.message}")
@@ -50,12 +59,20 @@ class UserCsvDataSource {
         }
 
         return try {
-            csvWriter().open(file) {
-                writeHeaderRow()
-                updatedUsers.forEach { user ->
-                    writeUserRow(user)
-                }
+//            csvWriter().open(file) {
+////                writeHeaderRow()
+//                updatedUsers.forEach { user ->
+//                    writeUserRow(user)
+//                }
+//            }
+            csvHandler.writeHeaderIfNotExist(listOf("id", "username", "password", "role", "createdAt"), file)
+            updatedUsers.forEach { user ->
+                csvHandler.write(
+                    list = listOf(user.id, user.username, user.password, user.role.name, user.createdAt.toString()),
+                    file = file,
+                    append = true)
             }
+
             true
         } catch (e: Exception) {
             println("Error during delete: ${e.message}")
@@ -65,7 +82,7 @@ class UserCsvDataSource {
 
     fun getUsers(): List<User> {
         if (!file.exists()) return emptyList()
-        return csvReader().readAll(file).drop(HEADER_ROW).map { row ->
+        return csvHandler.read(file).drop(HEADER_ROW).map { row ->
             User(
                 id = row[0],
                 username = row[1],
@@ -88,12 +105,24 @@ class UserCsvDataSource {
             .apply { add(user) }
 
         return try {
-            csvWriter().open(File(usersFilePath)) {
-                writeHeaderRow()
-                updatedUsers.forEach { user ->
-                    writeUserRow(user)
-                }
+//            csvWriter().open(File(usersFilePath)) {
+//                writeHeaderRow()
+//                updatedUsers.forEach { user ->
+//                    writeUserRow(user)
+//                }
+//            }
+            csvHandler.writeHeaderIfNotExist(listOf("id", "username", "password", "role", "createdAt"), file)
+            updatedUsers.forEach { updatedUser->
+                csvHandler.write(
+                    list= listOf(updatedUser.id, updatedUser.username, updatedUser.password, updatedUser.role.name, updatedUser.createdAt.toString()),
+                    file = file,
+                    append = true
+                )
+
             }
+
+
+
             true
         } catch (e: Exception) {
             println("Error updating user: ${e.message}")
@@ -105,9 +134,10 @@ class UserCsvDataSource {
         try {
             if (!file.exists()) {
                 file.createNewFile()
-                csvWriter().open(file) {
-                    writeHeaderRow()
-                }
+//                csvWriter().open(file) {
+//                    writeHeaderRow()
+//                }
+                csvHandler.writeHeaderIfNotExist(listOf("id", "username", "password", "role", "createdAt"), file)
             }
         } catch (e: Exception) {
             println("Failed to initialize CSV file: ${e.message}")

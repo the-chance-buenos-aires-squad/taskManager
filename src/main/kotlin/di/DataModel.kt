@@ -8,6 +8,9 @@ package di
 //import org.example.logic.RecipesRepository
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+
+import data.dataSource.UserCsvDataSource
+
 import data.util.CsvHandler
 import org.koin.dsl.module
 import java.io.File
@@ -19,7 +22,9 @@ val dataModule = module {
     single { CsvHandler(get(), get()) }
 
 
-//    single { UserCsvDataSource(Files.UserFile,get()) }
+
+    single { UserCsvDataSource(Files.UserFile,get()) }
+
 
 
 }

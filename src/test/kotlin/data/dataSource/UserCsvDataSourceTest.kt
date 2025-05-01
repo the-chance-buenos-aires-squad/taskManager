@@ -1,14 +1,22 @@
 package data.dataSource
 
+import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
+import data.util.CsvHandler
+import di.Files
 import domain.entities.User
 import domain.entities.UserRole
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class UserCsvDataSourceTest {
-    private val dataSource = UserCsvDataSource()
+
+class UserCsvDataSourceTest{
+
+    private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
+    private val dataSource = UserCsvDataSource(Files.UserFile,csvHandler)
+
     private val dummyUser = User(
         id = "1",
         username = "dummy user",
