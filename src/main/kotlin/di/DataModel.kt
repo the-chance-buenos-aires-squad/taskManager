@@ -18,6 +18,9 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
+    single<File>(qualifier = Paths.TaskFileQualifier) {
+        File(Paths.TaskFilePath)
+    }
 
 
 }
@@ -29,4 +32,7 @@ object Paths {
      */
     const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
+
+    const val TaskFilePath = "src/main/kotlin/data/resource/tasks_file.csv"
+    val TaskFileQualifier: Qualifier = named("TaskFilePath")
 }
