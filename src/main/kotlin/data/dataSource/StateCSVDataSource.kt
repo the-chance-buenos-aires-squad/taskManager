@@ -1,4 +1,5 @@
 package data.dataSource
+
 import java.io.File
 import data.util.CsvHandler
 import domain.entities.State
@@ -44,6 +45,17 @@ class StateCSVDataSource(
     fun existsState(stateId: String): Boolean {
         val allStates = getAllStates()
         return allStates.any { it.id == stateId }
+    }
+
+    fun deleteState(stateId: String): Boolean {
+        val states = getAllStates().toMutableList()
+        val removed = states.removeIf { it.id == stateId }
+
+        if (removed) {
+            writeStates(states)
+            return true
+        }
+        return false
     }
 
     private fun writeStates(states: List<State>) {

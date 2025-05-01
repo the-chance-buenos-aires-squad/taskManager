@@ -16,7 +16,7 @@ class StateRepositoryImpl(
     }
 
     override fun deleteState(stateId: String): Boolean {
-        TODO("Not yet implemented")
+       return stateCSVDataSource.deleteState(stateId)
     }
 
     override fun getAllStates(): List<State> {

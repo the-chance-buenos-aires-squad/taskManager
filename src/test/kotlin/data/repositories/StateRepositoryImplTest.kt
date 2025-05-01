@@ -62,9 +62,7 @@ class StateRepositoryImplTest {
 
     @Test
     fun `should delete state successfully when state exists`() {
-        val blockedState = DummyState.blocked
-
-        every { mockCSVDataSource.getAllStates() } returns listOf(blockedState)
+        every { mockCSVDataSource.deleteState("4") } returns true
 
         val result = stateRepository.deleteState("4")
 
