@@ -1,4 +1,10 @@
 package data.dataSource
 
-class CsvAuditDataSource {
+import java.io.File
+
+
+
+class CsvAuditDataSource (
+    private val file:File
+){
 }
