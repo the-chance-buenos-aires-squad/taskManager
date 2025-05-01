@@ -2,6 +2,6 @@ package domain.usecases
 
 import org.junit.jupiter.api.Assertions.*
 
-class DeleteProjectUseCaseTest{
+class DeleteProjectUseCaseTest {
 
- }
+}

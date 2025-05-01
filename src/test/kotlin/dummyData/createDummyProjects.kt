@@ -10,6 +10,5 @@ fun createDummyProject(
     id = id,
     name = name,
     description = "desc",
-    createdBy = "Ahmed",
     createdAt = LocalDateTime.now()
 )

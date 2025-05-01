@@ -5,5 +5,5 @@ import domain.repositories.ProjectRepository
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource
-): ProjectRepository {
+) : ProjectRepository {
 }

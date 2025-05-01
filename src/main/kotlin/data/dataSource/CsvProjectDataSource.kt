@@ -3,7 +3,7 @@ package data.dataSource
 import org.buinos.domain.entities.Project
 import java.io.File
 
-class CsvProjectDataSource(private val file:File):ProjectDataSource {
+class CsvProjectDataSource(private val file: File) : ProjectDataSource {
     override fun saveData(project: Project): Boolean {
         return false
     }

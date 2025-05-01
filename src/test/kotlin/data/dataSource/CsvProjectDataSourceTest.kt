@@ -7,48 +7,53 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 
-class CsvProjectDataSourceTest{
+class CsvProjectDataSourceTest {
     private lateinit var testFile: File
     private lateinit var csvProjectDataSource: CsvProjectDataSource
-    private val project=createDummyProject()
-  @BeforeEach
-  fun setup(){
-      testFile= File.createTempFile("testFile",".csv")
-   csvProjectDataSource= CsvProjectDataSource(testFile)
-  }
+    private val project = createDummyProject()
 
-  @Test
-  fun `should return true when project saved`(){
-   val result=csvProjectDataSource.saveData(project)
+    @BeforeEach
+    fun setup() {
+        testFile = File.createTempFile("testFile", ".csv")
+        csvProjectDataSource = CsvProjectDataSource(testFile)
+    }
 
-      assertThat(result).isTrue()
-  }
     @Test
-    fun `should return project if exist`(){
+    fun `should return true when project saved`() {
+        val result = csvProjectDataSource.saveData(project)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return project if exist`() {
         csvProjectDataSource.saveData(project)
-        val projectIsFound=csvProjectDataSource.findProjectById(project.id)
+        val projectIsFound = csvProjectDataSource.findProjectById(project.id)
 
         assertThat(projectIsFound).isNotNull()
     }
+
     @Test
-    fun `should return true when project deleted`(){
-       csvProjectDataSource.saveData(project)
-        val isProjectDeleted=csvProjectDataSource.deleteData(project.id)
+    fun `should return true when project deleted`() {
+        csvProjectDataSource.saveData(project)
+        val isProjectDeleted = csvProjectDataSource.deleteData(project.id)
 
         assertThat(isProjectDeleted).isTrue()
     }
+
     @Test
-    fun `should return true if project updated successfully`(){
+    fun `should return true if project updated successfully`() {
         csvProjectDataSource.saveData(project)
-        val isProjectUpdated=csvProjectDataSource.updateProject(createDummyProject("1"))
+        val isProjectUpdated = csvProjectDataSource.updateProject(createDummyProject("1"))
 
         assertThat(isProjectUpdated).isTrue()
     }
+
     @Test
-    fun `should return list of projects`(){
+    fun `should return list of projects`() {
         csvProjectDataSource.saveData(project)
         csvProjectDataSource.saveData(project)
 
         assertThat(csvProjectDataSource.getAllProjects()).hasSize(2)
     }
- }
+}
