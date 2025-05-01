@@ -31,6 +31,10 @@ class CsvTaskDataSourceTest() {
         }
         dataSource = CsvTaskDataSource(csvHandler, file)
     }
+    @AfterEach
+    fun tearDown() {
+        file.writeText("")
+    }
     @Test
     fun `save should persist task and getAll should retrieve it`() {
         val task = sampleTask()
