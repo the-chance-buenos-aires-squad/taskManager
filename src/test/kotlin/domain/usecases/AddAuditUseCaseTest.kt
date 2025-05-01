@@ -3,7 +3,7 @@ package domain.usecases
 import com.google.common.truth.Truth.assertThat
 import data.dummyData.DummyAudits
 import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
-import data.repositories.AuditRepository
+import data.repositories.AuditRepositoryImpl
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 class AddAuditUseCaseTest{
 
     private lateinit var addAuditUseCase:AddAuditUseCase
-    private val auditRepository:AuditRepository = mockk(relaxed = true)
+    private val auditRepository:AuditRepositoryImpl = mockk(relaxed = true)
 
 
     @BeforeEach

@@ -1,9 +1,9 @@
 package domain.usecases
 
-import data.repositories.AuditRepository
 import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
+import domain.repositories.AuditRepository
 import java.time.LocalDateTime
 import java.util.*
 
@@ -23,7 +23,7 @@ class AddAuditUseCase(
         val id = UUID.randomUUID()
         val timeStamp = LocalDateTime.now()
         val newAudit = Audit(
-            id = id.toString().take(10),
+            id = id.toString(),
             entityId = entityId,
             entityType = entityType,
             action = action,
