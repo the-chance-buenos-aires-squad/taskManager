@@ -1,8 +1,11 @@
 package presentation.Cli.projectClasses
 
+import presentation.UiController
+
 class ProjectScreenController(
     private val projectShowMenu: ProjectShowMenu,
-    private val projectActionHandler: ProjectActionHandler
+    private val projectActionHandler: ProjectActionHandler,
+    private val uiController: UiController
 ) {
     fun show() {
         while (true) {
@@ -11,7 +14,8 @@ class ProjectScreenController(
                 2 -> projectActionHandler.edit()
                 3 -> projectActionHandler.delete()
                 4 -> return
-                else -> println("Invalid option.")
+                null -> uiController.printMessage("Invalid Input should enter number.")
+                else -> uiController.printMessage("Invalid Input should enter number in menu.")
             }
         }
     }

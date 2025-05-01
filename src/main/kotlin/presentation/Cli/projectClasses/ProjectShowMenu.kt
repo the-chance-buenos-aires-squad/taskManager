@@ -1,9 +1,10 @@
 package presentation.Cli.projectClasses
 
-import presentation.Cli.InputHandler
 
-class ProjectShowMenu(private val inputHandler: InputHandler) {
-    fun showMenu(): Int {
+import presentation.UiController
+
+class ProjectShowMenu(private val uiController: UiController) {
+    fun showMenu(): Int? {
         println(
             """
             === Project Management ===
@@ -13,6 +14,6 @@ class ProjectShowMenu(private val inputHandler: InputHandler) {
             4. Back
             """.trimIndent()
         )
-        return inputHandler.readInt("Choose an option: ")
+        return uiController.readInput().toIntOrNull()
     }
 }

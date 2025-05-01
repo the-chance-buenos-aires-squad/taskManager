@@ -1,6 +1,7 @@
 package data.dataSource
 
-import org.buinos.domain.entities.Project
+import domain.entities.Project
+
 
 interface ProjectDataSource {
     fun saveData(project: Project): Boolean

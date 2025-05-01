@@ -6,7 +6,7 @@ class DeleteProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
     fun execute(projectId: String): Boolean {
-        return false
+        return projectRepository.deleteProject(projectId)
     }
 
 }

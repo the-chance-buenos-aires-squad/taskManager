@@ -1,13 +1,14 @@
 package domain.usecases
 
+import domain.entities.Project
 import domain.repositories.ProjectRepository
-import org.buinos.domain.entities.Project
 
-class EditProjectUseCase(
+
+class UpdateProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
     fun execute(project: Project): Boolean {
-        return false
+        return projectRepository.updateProject(project)
     }
 
 }

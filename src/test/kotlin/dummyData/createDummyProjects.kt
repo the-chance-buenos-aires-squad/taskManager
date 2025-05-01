@@ -1,6 +1,7 @@
 package dummyData
 
-import org.buinos.domain.entities.Project
+
+import domain.entities.Project
 import java.time.LocalDateTime
 
 fun createDummyProject(
