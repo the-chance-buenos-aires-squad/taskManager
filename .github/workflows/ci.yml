@@ -7,12 +7,14 @@ on:
       - develop
       - 'feature/**'
       - 'bugfix/**'
+      - 'task/**'
   pull_request:
     branches:
       - main
       - develop
       - 'feature/**'
       - 'bugfix/**'
+      - 'task/**'
 
 permissions:
   pull-requests: write
