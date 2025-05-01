@@ -1,4 +1,4 @@
-import org.buinos.domain.entities.State
+import domain.entities.State
 
 fun createDummyState(
     id: String,

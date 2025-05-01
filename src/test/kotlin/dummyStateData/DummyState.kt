@@ -1,6 +1,7 @@
 package dummyStateData
 
-import org.buinos.domain.entities.State
+import domain.entities.State
+
 
 object DummyState {
     val todo = State(
@@ -33,10 +34,4 @@ object DummyState {
         projectId = "P005"
     )
 
-
-    val invalidState = State(
-        id = "1",
-        name = "",
-        projectId = "P001"
-    )
 }

@@ -1,5 +1,6 @@
 package domain.usecases
 
+import com.google.common.truth.Truth.assertThat
 import domain.repositories.StateRepository
 import dummyStateData.DummyState
 import io.mockk.every
@@ -25,7 +26,7 @@ class EditStateUseCaseTest {
 
         val result = editStateUseCase.execute(updatedState)
 
-        assertTrue(result)
+        assertThat(result).isTrue()
     }
 
     @Test
@@ -36,6 +37,6 @@ class EditStateUseCaseTest {
 
         val result = editStateUseCase.execute(updatedState)
 
-        assertFalse(result)
+        assertThat(result).isFalse()
     }
 }

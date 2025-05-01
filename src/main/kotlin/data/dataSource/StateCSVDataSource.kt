@@ -1,20 +1,23 @@
 package data.dataSource
-
-import domain.entities.StateIndices
-import org.buinos.domain.entities.State
 import java.io.File
+import data.util.CsvHandler
+import domain.entities.State
+import domain.entities.StateIndices
 
-class StateCSVDataSource(private val filePath: String) {
+class StateCSVDataSource(
+    private val file: File,
+    private val csvHandler: CsvHandler
+) {
 
-    private val file = File(filePath)
+    init {
+        initStateFile()
+    }
 
     fun getAllStates(): List<State> {
         if (!file.exists()) return emptyList()
-
-        return file.readLines()
-            .drop(1)
-            .mapNotNull { line ->
-                val parts = line.split(",")
+        return csvHandler.read(file)
+            .drop(StateIndices.HEADER_ROW)
+            .mapNotNull { parts ->
                 if (parts.size == 3) {
                     State(
                         id = parts[StateIndices.ID],
@@ -25,24 +28,49 @@ class StateCSVDataSource(private val filePath: String) {
             }
     }
 
-    fun updateState(updatedState: State): Boolean {
-        val states = getAllStates().toMutableList()
-        val index = states.indexOfFirst { it.id == updatedState.id }
+    fun editState(updatedState: State): Boolean {
+        val allStates = getAllStates().toMutableList()
+        val index = allStates.indexOfFirst { it.id == updatedState.id }
 
         return if (index != -1) {
-            states[index] = updatedState
-            saveAllStates(states)
+            allStates[index] = updatedState
+            writeStates(allStates)
             true
         } else {
             false
         }
     }
 
-    private fun saveAllStates(states: List<State>) {
-        val file = File(filePath)
-        file.writeText("Id, Name, ProjectId\n")
-        states.forEach {
-            file.appendText("${it.id}, ${it.name}, ${it.projectId}\n")
+    fun existsState(stateId: String): Boolean {
+        val allStates = getAllStates()
+        return allStates.any { it.id == stateId }
+    }
+
+    private fun writeStates(states: List<State>) {
+        try {
+            initStateFile()
+            states.forEach { state ->
+                csvHandler.write(
+                    listOf(state.id, state.name, state.projectId),
+                    file,
+                    append = true
+                )
+            }
+        } catch (e: Exception) {
+            println("Failed to write states: ${e.message}")
+        }
+    }
+
+    private fun initStateFile() {
+        try {
+            if (!file.exists()) file.createNewFile()
+
+            csvHandler.writeHeaderIfNotExist(
+                StateIndices.STATE_FILE_HEADER,
+                file,
+            )
+        } catch (e: Exception) {
+            println("Failed to initialize state file: ${e.message}")
         }
     }
 }

@@ -1,7 +1,7 @@
 package domain.usecases
 
+import domain.entities.State
 import domain.repositories.StateRepository
-import org.buinos.domain.entities.State
 
 class EditStateUseCase(private val repository: StateRepository) {
     fun execute(state: State): Boolean {

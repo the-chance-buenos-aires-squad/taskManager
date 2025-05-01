@@ -26,5 +26,5 @@ val dataModule = module {
 
 object Files {
     val UserFile = File("src/main/kotlin/data/resource/users_file.csv")
-
+    val STATE_FILE = File("src/main/kotlin/data/resource/state.csv")
 }

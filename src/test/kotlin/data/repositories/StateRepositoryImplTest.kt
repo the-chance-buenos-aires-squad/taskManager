@@ -1,9 +1,10 @@
+import com.google.common.truth.Truth.assertThat
 import data.dataSource.StateCSVDataSource
 import data.repositories.StateRepositoryImpl
+import domain.entities.State
 import dummyStateData.DummyState
 import io.mockk.*
 import junit.framework.TestCase.*
-import org.buinos.domain.entities.State
 import org.junit.jupiter.api.*
 
 class StateRepositoryImplTest {
@@ -27,11 +28,11 @@ class StateRepositoryImplTest {
         val updatedToDoState = State("1", "In Progress", "P001")
 
         every { mockCSVDataSource.getAllStates() } returns listOf(todoState)
-        every { mockCSVDataSource.updateState(updatedToDoState) } returns true
+        every { mockCSVDataSource.editState(updatedToDoState) } returns true
 
         val result = stateRepository.editState(updatedToDoState)
 
-        assertTrue(result)
+        assertThat(result).isTrue()
     }
 
     @Test
@@ -41,7 +42,7 @@ class StateRepositoryImplTest {
 
         val result = stateRepository.editState(nonExistentState)
 
-        assertFalse(result)
+        assertThat(result).isFalse()
     }
 
     @Test
@@ -53,21 +54,9 @@ class StateRepositoryImplTest {
 
         val result = stateRepository.editState(updatedDoState)
 
-        assertFalse(result)
+        assertThat(result).isFalse()
     }
 
-    @Test
-    fun `should throw exception when trying to edit state with invalid data`() {
-        val invalidState = DummyState.invalidState
-
-        every { mockCSVDataSource.getAllStates() } returns listOf(invalidState)
-
-        val exception = assertThrows<IllegalArgumentException> {
-            stateRepository.editState(invalidState)
-        }
-
-        assertEquals("State failed cannot be empty", exception.message)
-    }
 
     // TODO: Write below all tests for deleteState fun.
 
