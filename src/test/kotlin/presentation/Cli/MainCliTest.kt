@@ -72,7 +72,7 @@ class MainCliTest {
     }
 
     @Test
-    fun `should start main cli when user valid input`() {
+    fun `should recall startCli on invalid input`() {
 
         //given
         val userInput = "3"
@@ -82,7 +82,7 @@ class MainCliTest {
         mainCli.startCli()
 
         //then
-        verify(exactly = 1) {
+        verify(exactly = 2) {
             uiController.printMessage(
                 """
             ========================================
