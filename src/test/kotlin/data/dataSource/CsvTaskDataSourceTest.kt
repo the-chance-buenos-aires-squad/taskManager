@@ -1,5 +1,7 @@
 package data.datasource
 
+import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.CsvTaskDataSource
 import data.dataSource.util.CsvHandler
@@ -15,39 +17,20 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.assertNotNull
 
-class CsvTaskDataSourceTest {
+class CsvTaskDataSourceTest() {
 
-    private lateinit var testFile: File
+    private lateinit var file: File
     private lateinit var dataSource: CsvTaskDataSource
+    private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
 
     @BeforeEach
-    fun setup() {
-        testFile = File("build/test-resources/test_tasks.csv").apply {
-            parentFile.mkdirs()
+    fun setUp() {
+        file = File.createTempFile("task_test", ".csv").apply {
             writeText("")
+            deleteOnExit()
         }
-
-        startKoin {
-            modules(
-                module {
-                    single(named(Paths.TaskFilePath)) { testFile }
-                    single { CsvHandler(get(), get()) }
-                    single { com.github.doyaaaaaken.kotlincsv.client.CsvWriter() }
-                    single { com.github.doyaaaaaken.kotlincsv.client.CsvReader() }
-                    single { CsvTaskDataSource() }
-                }
-            )
-        }
-
-        dataSource = org.koin.core.context.GlobalContext.get().get()
+        dataSource = CsvTaskDataSource(csvHandler, file)
     }
-
-    @AfterEach
-    fun teardown() {
-        stopKoin()
-        if (testFile.exists()) testFile.delete()
-    }
-
     @Test
     fun `save should persist task and getAll should retrieve it`() {
         val task = sampleTask()
