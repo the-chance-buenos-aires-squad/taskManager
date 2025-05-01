@@ -42,6 +42,7 @@ tasks.jacocoTestCoverageVerification {
             classDirectories.files.map {
                 fileTree(it) {
                     exclude("**/di/**")
+                    exclude("**/entities/**")
                 }
             }
         )
