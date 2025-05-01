@@ -1,4 +1,4 @@
-package data.util
+package data.dataSource.util
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
@@ -10,9 +10,9 @@ class CsvHandler(
 )
 {
 
-    fun write(list:List<String>,file: File,append:Boolean=true){
+    fun write(row:List<String>, file: File, append:Boolean=true){
         csvWriter.open(file,append){
-            writeRow(list)
+            writeRow(row)
         }
     }
 
