@@ -1,18 +1,24 @@
 package presentation
 
+import java.io.PrintStream
+import java.util.*
 
-class UiController {
+
+class UiController(
+    private val printer: PrintStream,
+    private val scanner: Scanner
+) {
 
     fun printMessage(message: String, isInline: Boolean = false) {
         if (isInline) {
-            print(message)
+            printer.print(message)
         } else {
-            println(message)
+            printer.println(message)
         }
     }
 
     fun readInput(): String {
-        return readlnOrNull() ?: ""
+        return scanner.nextLine()
     }
 
 }

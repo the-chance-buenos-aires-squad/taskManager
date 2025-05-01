@@ -1,15 +1,19 @@
 package org.buinos.presentation
 
+import di.dataModule
+import di.presentationModel
+import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
-import presentation.Cli.LoginCli
 import presentation.Cli.MainCli
-import presentation.UiController
 
 fun main() {
     println("Hello World!")
+    startKoin {
+        modules(
+            dataModule, presentationModel
+        )
+    }
 
-    val uiController = UiController()
-    val loginCli = LoginCli(uiController)
-    val holderCli = MainCli(uiController, loginCli)
+    val holderCli: MainCli = getKoin().get()
     holderCli.startCli()
 }

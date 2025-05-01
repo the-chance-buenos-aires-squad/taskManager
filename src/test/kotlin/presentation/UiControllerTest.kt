@@ -1,44 +1,50 @@
 package presentation
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.util.Scanner
 import kotlin.test.Test
 
 
 class UiControllerTest {
 
-
-    private val uiController = UiController()
-    private lateinit var outputStream: ByteArrayOutputStream
+    private val mockedPrinterStream = mockk<PrintStream>(relaxed = true)
+    private val mockedScanner = mockk<Scanner>(relaxed = true)
+    private lateinit var  uiController : UiController
 
     @BeforeEach
     fun setUp() {
-        outputStream = ByteArrayOutputStream()
-        System.setOut(PrintStream(outputStream))
+        uiController = UiController(mockedPrinterStream,mockedScanner)
     }
 
     @Test
-    fun `should print message with new line`() {
-        uiController.printMessage("hello")
+    fun `should print message with new line when isInline false `() {
+        //printing message in new line
+        uiController.printMessage(message = "hello", isInline = false)
 
-        val expectedOutput = "hello${System.lineSeparator()}"
-        assertThat(outputStream.toString()).isEqualTo(expectedOutput)
+        verify { mockedPrinterStream.println("hello") }
     }
+
 
     @Test
-    fun `should print message without new line`() {
-        uiController.printMessage("hello", isInline = true)
+    fun `should print message in same line when isInline true `() {
+        //printing message in the same line
+        uiController.printMessage(message = "hello", isInline = true)
 
-        assertThat(outputStream.toString()).isEqualTo("hello")
+        verify { mockedPrinterStream.print("hello") }
     }
+
 
     @Test
     fun `readInput should return input from System in`() {
         val input = "my input"
-        System.setIn(ByteArrayInputStream(input.toByteArray()))
+        every { mockedScanner.nextLine() } returns input
 
         val result = uiController.readInput()
 
