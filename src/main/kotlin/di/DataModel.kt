@@ -5,9 +5,9 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import data.dataSource.CsvAuditDataSource
 import data.dataSource.util.CsvHandler
 import data.repositories.AuditRepository
+import domain.usecases.AddAuditUseCase
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
-import org.koin.core.qualifier.qualifier
 import org.koin.dsl.module
 import java.io.File
 
