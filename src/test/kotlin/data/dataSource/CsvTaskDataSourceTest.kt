@@ -182,6 +182,25 @@ class CsvTaskDataSourceTest {
         dataSource.overwriteAll(emptyList())
         assertThat(dataSource.getAll()).isEmpty()
     }
+    @Test
+    fun `update should not alter task if no changes are made`() {
+        val task = sampleTask()
+        dataSource.save(task)
+        val result = dataSource.update(task)
+        assertThat(result).isEqualTo(true)
+        assertThat(dataSource.getById(task.id)).isEqualTo(task)
+    }
+    @Test
+    fun `save should not overwrite existing tasks`() {
+        val task1 = sampleTask(title = "First")
+        val task2 = sampleTask(title = "Second")
+        dataSource.save(task1)
+        dataSource.save(task2)
+
+        val tasks = dataSource.getAll()
+        assertThat(tasks).hasSize(2)
+        assertThat(tasks.map { it.title }).containsExactly("First", "Second")
+    }
 
 
     private fun sampleTask(
