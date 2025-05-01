@@ -1,4 +1,4 @@
 package domain.customeExceptions
 
-class UserAlreadyExistException (message: String = "Username Already Exist !") : Exception(message) {
+class UserAlreadyExistException (message: String = "Username already exists!") : Exception(message) {
 }
