@@ -6,18 +6,21 @@ import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import domain.entities.Audit
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 
 class CsvAuditDataSourceTest {
 
-    private val file = File("src/main/kotlin/data/resource/audit.csv")
+    private lateinit var  file : File
     private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
-    private val dataSource = CsvAuditDataSource(csvHandler, file)
+    private lateinit var dataSource: CsvAuditDataSource
 
-    @AfterEach
-    fun cleanUp(){
-
+    @BeforeEach
+    fun setUp(){
+        file = File.createTempFile("audit_test",".csv")
+        file.writeText("")
+        dataSource = CsvAuditDataSource(csvHandler, file)
     }
 
 
