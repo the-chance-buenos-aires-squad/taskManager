@@ -1,7 +1,6 @@
 package presentation
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -25,12 +24,12 @@ class UiControllerTest {
     fun `should print message with new line`() {
         uiController.printMessage("hello")
 
-        val expectedOutput = "hello\r\n"
+        val expectedOutput = "hello${System.lineSeparator()}"
         assertThat(outputStream.toString()).isEqualTo(expectedOutput)
     }
 
     @Test
-    fun `should print message without new line `() {
+    fun `should print message without new line`() {
         uiController.printMessage("hello", isInline = true)
 
         assertThat(outputStream.toString()).isEqualTo("hello")
