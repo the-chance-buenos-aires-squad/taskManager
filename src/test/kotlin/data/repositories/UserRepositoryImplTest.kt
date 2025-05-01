@@ -45,12 +45,36 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when user does not exist`() {
+    fun `should return null when user id does not exist`() {
         //given
         every { mockDataSource.getUserById("3") } returns null
 
         //when
         val result = userRepository.getUserById("3")
+
+        //then
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `should return user when searching by valid userName`() {
+        //given
+        every { mockDataSource.getUserByUserName("testUser1") } returns testUserOne
+
+        //when
+        val result = userRepository.getUserByUserName("testUser1")
+
+        //then
+        assertThat(result).isEqualTo(testUserOne)
+    }
+
+    @Test
+    fun `should return null when userName does not exist`() {
+        //given
+        every { mockDataSource.getUserByUserName("testUser3") } returns null
+
+        //when
+        val result = userRepository.getUserByUserName("testUser3")
 
         //then
         assertThat(result).isNull()

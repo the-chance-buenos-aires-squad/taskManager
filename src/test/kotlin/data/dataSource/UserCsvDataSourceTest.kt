@@ -51,6 +51,27 @@ class UserCsvDataSourceTest {
         assertThat(resultUser).isNull()
     }
 
+
+    @Test
+    fun `get user by userName for an existing user will return same user object`() {
+        //given
+        dataSource.insertUser(dummyUser)
+
+        //when
+        val resultUser = dataSource.getUserByUserName(dummyUser.username)
+
+        //then
+        assertThat(resultUser).isEqualTo(dummyUser)
+    }
+
+    @Test
+    fun `get user by userName for not existed user will return null`() {
+        //when
+        val resultUser = dataSource.getUserByUserName(dummyUser.username)
+        //then
+        assertThat(resultUser).isNull()
+    }
+
     @Test
     fun `delete user will return true if successful`() {
         //given

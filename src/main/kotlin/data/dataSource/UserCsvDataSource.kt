@@ -37,6 +37,10 @@ class UserCsvDataSource {
         return getUsers().find { it.id == id }
     }
 
+    fun getUserByUserName(userName: String): User? {
+        return getUsers().find { it.username == userName }
+    }
+
     fun deleteUser(id: String): Boolean {
         val allUsers = this.getUsers()
         val updatedUsers = allUsers.filterNot { it.id == id }
@@ -72,7 +76,7 @@ class UserCsvDataSource {
         }
     }
 
-     fun updateUser(user: User): Boolean {
+    fun updateUser(user: User): Boolean {
         val allUsers = this.getUsers()
         val exists = allUsers.any { it.id == user.id }
 
