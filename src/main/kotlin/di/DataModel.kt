@@ -34,6 +34,8 @@ val dataModule = module {
         AuditRepository(get())
     }
 
+    single { AddAuditUseCase(get()) }
+
 
 }
 
