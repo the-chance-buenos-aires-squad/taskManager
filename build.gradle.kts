@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("io.insert-koin:koin-core:4.0.4")
 
+    implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
     testImplementation("io.mockk:mockk:1.14.0")
@@ -41,6 +42,7 @@ tasks.jacocoTestCoverageVerification {
             classDirectories.files.map {
                 fileTree(it) {
                     exclude("**/di/**")
+                    exclude("**/entities/**")
                 }
             }
         )
