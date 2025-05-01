@@ -1,5 +1,6 @@
 package presentation.Cli.projectClasses
 
+import data.dataSource.util.CheckValidationInputs
 import domain.usecases.CreateProjectUseCase
 import domain.usecases.DeleteProjectUseCase
 import domain.usecases.UpdateProjectUseCase
@@ -15,13 +16,19 @@ class ProjectActionHandlerTest {
     private val createProjectUseCase: CreateProjectUseCase = mockk(relaxed = true)
     private val updateProjectUseCase: UpdateProjectUseCase = mockk(relaxed = true)
     private val deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
-    private lateinit var uiController: UiController
+    private val uiController: UiController = mockk(relaxed = true)
+    private val checkValidationInputs: CheckValidationInputs = mockk(relaxed = true)
 
     @BeforeEach
     fun setup() {
-        uiController = mockk(relaxed = true)
         projectActionHandler =
-            ProjectActionHandler(createProjectUseCase, updateProjectUseCase, deleteProjectUseCase, uiController)
+            ProjectActionHandler(
+                createProjectUseCase,
+                updateProjectUseCase,
+                deleteProjectUseCase,
+                uiController,
+                checkValidationInputs
+            )
     }
 
     @Test
