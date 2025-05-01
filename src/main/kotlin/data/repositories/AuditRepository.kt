@@ -7,16 +7,12 @@ class AuditRepository(
     private val auditDataSource: CsvAuditDataSource
 ) {
 
-    fun addAudit(audit:Audit):Boolean{
+    fun addAudit(audit: Audit): Boolean {
         TODO()
     }
 
-
-    fun getAllAudit():List<Audit>{
-        TODO()
+    fun getAllAudit(): List<Audit> {
+        return auditDataSource.getAllAudit()
     }
-
-
-
 
 }

@@ -13,23 +13,22 @@ import java.io.File
 
 class CsvAuditDataSourceTest {
 
-    private lateinit var  file : File
+    private lateinit var file: File
     private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
     private lateinit var dataSource: CsvAuditDataSource
 
     @BeforeEach
-    fun setUp(){
-        file = File.createTempFile("audit_test",".csv")
+    fun setUp() {
+        file = File.createTempFile("audit_test", ".csv")
         file.writeText("")
         dataSource = CsvAuditDataSource(csvHandler, file)
     }
 
     @Test
     fun `getAllAudit should return empty list when no audits exist`() {
-        // When
+        //when
         val result = dataSource.getAllAudit()
-
-        // Then
+        //then
         assertThat(result).isEmpty()
     }
 
@@ -38,23 +37,16 @@ class CsvAuditDataSourceTest {
     fun `should return all audits from file`() {
         //given
         val expectedAudits = listOf(
-        createDummyAudit.dummyProjectAudit_CreateAction,
-        createDummyAudit.dummyTaskAudit_CreateAction
+            createDummyAudit.dummyProjectAudit_CreateAction,
+            createDummyAudit.dummyTaskAudit_CreateAction
         )
         //when
         dataSource.addAudit(expectedAudits[0])
         dataSource.addAudit(expectedAudits[1])
         val result = dataSource.getAllAudit()
-
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }
-
-
-
-
-
-
 
 
 }

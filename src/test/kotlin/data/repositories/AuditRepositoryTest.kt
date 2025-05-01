@@ -19,17 +19,12 @@ class AuditRepositoryTest{
   fun setUp(){
    auditRepository = AuditRepository(mockedDataSource)
   }
-
-
-
     @Test
     fun `should return empty list when no audits exist in data source`() {
         //given
         every { mockedDataSource.getAllAudit() } returns emptyList()
-
         //when
         val result = auditRepository.getAllAudit()
-
         //then
         assertThat(result).isEmpty()
     }
@@ -43,10 +38,8 @@ class AuditRepositoryTest{
             createDummyAudit.dummyUserAudit_UpdateAction
         )
         every { mockedDataSource.getAllAudit() } returns expectedAudits
-
         //when
         val result = auditRepository.getAllAudit()
-
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }

@@ -5,7 +5,6 @@ import data.dataSource.dummyData.createDummyAudit
 import data.repositories.AuditRepository
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -14,7 +13,7 @@ class GetAllAuditUseCaseTest {
     private val mockedAuditRepository: AuditRepository = mockk(relaxed = true)
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         getAllAuditUseCase = GetAllAuditUseCase(mockedAuditRepository)
     }
 
@@ -22,10 +21,8 @@ class GetAllAuditUseCaseTest {
     fun `should return empty list when no audits exist in data source`() {
         //given
         every { getAllAuditUseCase.getAllAudit() } returns emptyList()
-
         //when
         val result = getAllAuditUseCase.getAllAudit()
-
         //then
         assertThat(result).isEmpty()
     }
@@ -39,10 +36,8 @@ class GetAllAuditUseCaseTest {
             createDummyAudit.dummyUserAudit_UpdateAction
         )
         every { mockedAuditRepository.getAllAudit() } returns expectedAudits
-
         //when
         val result = getAllAuditUseCase.getAllAudit()
-
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }
