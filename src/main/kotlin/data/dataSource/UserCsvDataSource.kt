@@ -111,7 +111,6 @@ class UserCsvDataSource (
 //                    writeUserRow(user)
 //                }
 //            }
-            csvHandler.writeHeaderIfNotExist(listOf("id", "username", "password", "role", "createdAt"), file)
             updatedUsers.forEach { updatedUser->
                 csvHandler.write(
                     list= listOf(updatedUser.id, updatedUser.username, updatedUser.password, updatedUser.role.name, updatedUser.createdAt.toString()),
