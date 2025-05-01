@@ -1,4 +1,4 @@
-package org.buinos.domain.entities
+package domain.entities
 
 data class State(
     val id: String,
