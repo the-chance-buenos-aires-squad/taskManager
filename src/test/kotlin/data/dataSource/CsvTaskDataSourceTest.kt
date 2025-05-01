@@ -150,6 +150,7 @@ class CsvTaskDataSourceTest {
 
         assertThat(exception.message).contains("CSV file not found")
     }
+
     @Test
     fun `parse should return null for malformed CSV rows`() {
         // Create a malformed CSV row (missing fields)
@@ -167,6 +168,19 @@ class CsvTaskDataSourceTest {
         val result = parseMethod.invoke(dataSource, malformedRow)
 
         assertNull(result)
+    }
+
+    @Test
+    fun `save should handle empty file`() {
+        testFile.writeText("")
+        dataSource.save(sampleTask())
+        assertThat(dataSource.getAll()).hasSize(1)
+    }
+
+    @Test
+    fun `overwriteAll should handle empty list`() {
+        dataSource.overwriteAll(emptyList())
+        assertThat(dataSource.getAll()).isEmpty()
     }
 
 
