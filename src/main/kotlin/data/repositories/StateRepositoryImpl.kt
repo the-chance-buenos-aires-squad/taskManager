@@ -1,18 +1,18 @@
 package data.repositories
 
 import data.dataSource.StateCSVDataSource
+import domain.entities.State
 import domain.repositories.StateRepository
-import org.buinos.domain.entities.State
 
 class StateRepositoryImpl(
-    private val dataSource: StateCSVDataSource
+    private val stateCSVDataSource: StateCSVDataSource
 ): StateRepository{
     override fun createState(state: State): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun editState(state: State): Boolean {
-        TODO("Not yet implemented")
+        return stateCSVDataSource.editState(state)
     }
 
     override fun deleteState(stateId: String): Boolean {
@@ -21,5 +21,9 @@ class StateRepositoryImpl(
 
     override fun getAllStates(): List<State> {
         TODO("Not yet implemented")
+    }
+
+    override fun existsState(stateId: String): Boolean {
+        return stateCSVDataSource.existsState(stateId)
     }
 }
