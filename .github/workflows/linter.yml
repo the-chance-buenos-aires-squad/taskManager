@@ -27,3 +27,8 @@ jobs:
       - name: Run Linter Check
         run: ./gradlew ktlintCheck
 
+      - uses: le0nidas/ktlint-pr-comments@v1.1
+        with:
+          repotoken: ${{ secrets.GITHUB_TOKEN }}
+          arguments: "--disabled_rules=parameter-list-wrapping,final-newline"
+
