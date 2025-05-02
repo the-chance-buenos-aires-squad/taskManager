@@ -2,7 +2,7 @@ package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits
-import data.repositories.AuditRepository
+import data.repositories.AuditRepositoryImpl
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -10,11 +10,11 @@ import org.junit.jupiter.api.Test
 
 class GetAllAuditUseCaseTest {
     private lateinit var getAllAuditUseCase: GetAllAuditUseCase
-    private val mockedAuditRepository: AuditRepository = mockk(relaxed = true)
+    private val mockedAuditRepositoryImpl: AuditRepositoryImpl = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
-        getAllAuditUseCase = GetAllAuditUseCase(mockedAuditRepository)
+        getAllAuditUseCase = GetAllAuditUseCase(mockedAuditRepositoryImpl)
     }
 
     @Test
@@ -35,7 +35,7 @@ class GetAllAuditUseCaseTest {
             createDummyAudits.dummyProjectCreateAction,
             createDummyAudits.dummyUserUpdateAction
         )
-        every { mockedAuditRepository.getAllAudit() } returns expectedAudits
+        every { mockedAuditRepositoryImpl.getAllAudit() } returns expectedAudits
         //when
         val result = getAllAuditUseCase.getAllAudit()
         //then

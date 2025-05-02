@@ -1,11 +1,10 @@
 package domain.usecases
 
-import data.repositories.AuditRepository
+import data.repositories.AuditRepositoryImpl
 import domain.entities.Audit
 
-class GetAllAuditUseCase(private val auditRepository: AuditRepository) {
+class GetAllAuditUseCase(private val auditRepositoryImpl: AuditRepositoryImpl) {
     fun getAllAudit():List<Audit>{
-        return auditRepository.getAllAudit()
+        return auditRepositoryImpl.getAllAudit()
     }
-
 }

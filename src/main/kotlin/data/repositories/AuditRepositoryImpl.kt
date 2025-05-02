@@ -2,16 +2,17 @@ package data.repositories
 
 import data.dataSource.CsvAuditDataSource
 import domain.entities.Audit
+import domain.repositories.AuditRepository
 
-class AuditRepository(
+class AuditRepositoryImpl(
     private val auditDataSource: CsvAuditDataSource
-) {
+) :AuditRepository{
 
-    fun addAudit(audit: Audit): Boolean {
+    override fun addAudit(audit: Audit): Boolean {
         TODO()
     }
 
-    fun getAllAudit(): List<Audit> {
+    override fun getAllAudit(): List<Audit> {
         return auditDataSource.getAllAudit()
     }
 

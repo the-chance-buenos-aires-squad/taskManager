@@ -8,22 +8,22 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AuditRepositoryTest{
+class AuditRepositoryImplTest{
 
   private val mockedDataSource = mockk<CsvAuditDataSource>(relaxed = true)
-  private lateinit var auditRepository: AuditRepository
+  private lateinit var auditRepositoryImpl: AuditRepositoryImpl
 
 
   @BeforeEach
   fun setUp(){
-   auditRepository = AuditRepository(mockedDataSource)
+   auditRepositoryImpl = AuditRepositoryImpl(mockedDataSource)
   }
     @Test
     fun `should return empty list when no audits exist in data source`() {
         //given
         every { mockedDataSource.getAllAudit() } returns emptyList()
         //when
-        val result = auditRepository.getAllAudit()
+        val result = auditRepositoryImpl.getAllAudit()
         //then
         assertThat(result).isEmpty()
     }
@@ -38,7 +38,7 @@ class AuditRepositoryTest{
         )
         every { mockedDataSource.getAllAudit() } returns expectedAudits
         //when
-        val result = auditRepository.getAllAudit()
+        val result = auditRepositoryImpl.getAllAudit()
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }
