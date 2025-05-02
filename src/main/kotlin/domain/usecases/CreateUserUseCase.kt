@@ -3,24 +3,30 @@ package domain.usecases
 import domain.customeExceptions.*
 import domain.entities.User
 import domain.entities.UserRole
+import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
+import domain.util.UserValidator
 import java.time.LocalDateTime
 import java.util.*
 
-class CreateUserUseCase(private val repository: UserRepository) {
-    fun createUser(
-        username: String,
-        password: String,
-        confirmPassword: String,
-        userRole: UserRole = UserRole.MATE
+class CreateUserUseCase(
+    private val userRepository: UserRepository,
+    val authRepository: AuthRepository
+) {
+
+    fun addUser(
+        username: String, password: String, confirmPassword: String, userRole: UserRole = UserRole.MATE
     ) {
-        validateUsername(username)
-        validatePassword(password, confirmPassword)
 
-        if (repository.getUserByUserName(username.trim()) != null) throw UserAlreadyExistException()
+        val userValidator = UserValidator()
+        userValidator.validateUsername(username)
+        userValidator.validatePassword(password, confirmPassword)
 
-        val hashedPassword = MD5Hash.hash(password)
+        if (userRepository.getUserByUserName(username.trim()) != null) throw UserAlreadyExistException()
+
+        val mD5Hash = MD5Hasher()
+        val hashedPassword = mD5Hash.hash(password)
 
         val newUser = User(
             id = UUID.randomUUID().toString(),
@@ -30,21 +36,9 @@ class CreateUserUseCase(private val repository: UserRepository) {
             createdAt = LocalDateTime.now()
         )
 
-        repository.insertUser(newUser)
-    }
+        if (authRepository.getCurrentUser() == null) throw CreateUserException()
 
-    private fun validateUsername(username: String) {
-        if (username.isBlank()) throw UserNameEmptyException()
-
-    }
-
-    private fun validatePassword(password: String, confirmPassword: String) {
-
-        if (password.isBlank()) throw PasswordEmptyException()
-
-        if (password.length < 6) throw InvalidLengthPasswordException()
-
-        if (password != confirmPassword) throw InvalidConfirmPasswordException()
+            userRepository.addUser(newUser)
 
     }
 }

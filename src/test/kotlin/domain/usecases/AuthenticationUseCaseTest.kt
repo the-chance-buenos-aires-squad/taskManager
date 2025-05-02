@@ -3,8 +3,9 @@ package domain.usecases
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidCredentialsException
 import domain.customeExceptions.UserNameEmptyException
+import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
@@ -14,8 +15,10 @@ import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
-    private val authUseCase = AuthenticationUseCase(userRepository)
-    val firstUser = DummyUser.dummyUserOne
+    private var authRepository: AuthRepository = mockk(relaxed = true)
+    private val authUseCase = AuthenticationUseCase(userRepository, authRepository)
+    val mD5Hasher = MD5Hasher()
+    val firstUser = DummyUser.dummyUserOne.copy(password = mD5Hasher.hash("adminPassword"))
 
     @Test
     fun `should return user when valid credentials`() {
@@ -103,7 +106,7 @@ class AuthenticationUseCaseTest {
     fun `should return user when password has special characters`() {
         // Given
         val complexPassword = "P@ssw0rd!123"
-        val complexPasswordUser = firstUser.copy(password = MD5Hash.hash(complexPassword))
+        val complexPasswordUser = firstUser.copy(password = mD5Hasher.hash(complexPassword))
         every { userRepository.getUserByUserName(complexPasswordUser.username) } returns complexPasswordUser
 
         // When

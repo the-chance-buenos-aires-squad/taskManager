@@ -10,7 +10,7 @@ class UserRepositoryImpl(
     private val userMapper: UserMapper
 ) : UserRepository {
 
-    override fun insertUser(user: User): Boolean {
+    override fun addUser(user: User): Boolean {
         return userDataSource.addUser(userMapper.mapEntityToRow(user))
     }
 

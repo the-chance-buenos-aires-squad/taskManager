@@ -28,7 +28,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.addUser(any()) } returns true
 
         //when
-        val result = userRepository.insertUser(dummyUserOne)
+        val result = userRepository.addUser(dummyUserOne)
 
         //then
         assertThat(result).isTrue()

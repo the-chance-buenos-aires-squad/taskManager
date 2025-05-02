@@ -2,13 +2,13 @@ package dummyData
 
 import data.repositories.mappers.UserMapper
 import domain.entities.UserRole
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
 
 object DummyUser {
     val dummyUserOne = createDummyUser(
         id = "1",
         username = "adminUserName",
-        password = MD5Hash.hash("adminPassword"),
+        password = "adminPassword",
         role = UserRole.ADMIN
     )
     val userMapper = UserMapper()
@@ -22,7 +22,7 @@ object DummyUser {
     val dummyUserTwo = createDummyUser(
         id = "2",
         username = "mateUserName",
-        password = MD5Hash.hash("matePassword"),
+        password = "matePassword",
         role = UserRole.MATE
     )
 

@@ -9,10 +9,12 @@ import data.dataSource.user.UserDataSource
 
 
 import data.dataSource.util.CsvHandler
-import data.repositories.UserRepositoryImpl
 import data.repositories.mappers.Mapper
 import data.repositories.mappers.UserMapper
 import domain.entities.User
+import data.repositories.AuthRepositoryImpl
+import data.repositories.UserRepositoryImpl
+import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
@@ -35,7 +37,9 @@ val dataModule = module {
     single<Mapper<User>> { UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
 
+    single<AuthRepository> { AuthRepositoryImpl() }
     single<UserRepository> { UserRepositoryImpl(get(),get()) }
+
 
 }
 
