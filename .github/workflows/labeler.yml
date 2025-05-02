@@ -5,6 +5,11 @@ on:
     branches:
       - main
       - develop
+
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   review-complextiy-labeler:
     runs-on: ubuntu-latest
