@@ -1,7 +1,7 @@
 package domain.entities
 
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 data class Task(
     val id: UUID = UUID.randomUUID(),
@@ -12,5 +12,5 @@ data class Task(
     val assignedTo: UUID?,
     val createdBy: UUID,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 )

@@ -1,14 +1,27 @@
 package di
 
+
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+
+import data.dataSource.user.CsvUserDataSource
+import data.dataSource.user.UserDataSource
+
+
 import data.dataSource.util.CsvHandler
+import data.repositories.UserRepositoryImpl
+import data.repositories.mappers.Mapper
+import data.repositories.mappers.UserMapper
+import domain.entities.User
+import domain.repositories.UserRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
+import kotlin.io.path.Path
 
 
+//
 val dataModule = module {
     single { CsvWriter() }
     single { CsvReader() }
@@ -18,7 +31,14 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
+    single<File>(qualifier = Paths.TaskFileQualifier) {
+        File(Paths.TaskFilePath)
+    }
 
+    single<Mapper<User>> { UserMapper() }
+    single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
+
+    single<UserRepository> { UserRepositoryImpl(get(),get()) }
 
 }
 
@@ -29,4 +49,12 @@ object Paths {
      */
     const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
+
+    const val TaskFilePath = "src/main/kotlin/data/resource/tasks_file.csv"
+    val TaskFileQualifier: Qualifier = named("TaskFilePath")
+}
+
+object Files {
+    val UserFile = File("src/main/kotlin/data/resource/users_file.csv")
+
 }
