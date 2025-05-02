@@ -11,7 +11,12 @@ class TaskStateCSVDataSource(
 ): TaskStateDataSource {
 
     override fun createTaskState(state: State): Boolean {
-        TODO("Not yet implemented")
+        val existingTaskStates = getAllTaskStates()
+        if (existingTaskStates.any { it.id == state.id }) return false
+
+        val allStates = existingTaskStates + state
+        writeTaskStates(allStates)
+        return true
     }
 
     override fun editTaskState(editState: State): Boolean {
