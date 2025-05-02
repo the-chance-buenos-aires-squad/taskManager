@@ -1,6 +1,6 @@
 package data.dataSource.user
 
-import data.util.CsvHandler
+import data.dataSource.util.CsvHandler
 import java.io.File
 
 class CsvUserDataSource(
@@ -11,7 +11,7 @@ class CsvUserDataSource(
     override fun addUser(userRow: List<String>): Boolean {
         return try {
             csvHandler.write(
-                list = userRow,
+                row = userRow,
                 file = file,
                 append = true
             )
@@ -41,7 +41,7 @@ class CsvUserDataSource(
         return try {
             updatedUsers.forEach { userRow ->
                 csvHandler.write(
-                    list = listOf(
+                    row = listOf(
                         userRow[ID_ROW],
                         userRow[USER_NAME_ROW],
                         userRow[PASSWORD_ROW],
@@ -80,7 +80,7 @@ class CsvUserDataSource(
 
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(
-                    list = listOf(
+                    row = listOf(
                         updatedUser[ID_ROW],
                         updatedUser[USER_NAME_ROW],
                         updatedUser[PASSWORD_ROW],

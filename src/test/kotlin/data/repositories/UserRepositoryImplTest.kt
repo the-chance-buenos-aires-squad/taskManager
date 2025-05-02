@@ -1,9 +1,10 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.UserCsvDataSource
-import dummyData.DummyUser.testUserOne
-import dummyData.DummyUser.testUserTwo
+import data.dataSource.user.CsvUserDataSource
+import data.repositories.mappers.UserMapper
+import dummyData.DummyUser.dummyUserOne
+import dummyData.DummyUser.dummyUserOneRow
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -12,18 +13,19 @@ import org.junit.jupiter.api.Test
 
 class UserRepositoryImplTest {
 
-    private val mockDataSource = mockk<UserCsvDataSource>()
+    private val mockDataSource = mockk<CsvUserDataSource>(relaxed = true)
     private lateinit var userRepository: UserRepositoryImpl
+    private val userMapper = UserMapper()
 
     @BeforeEach
     fun setUp() {
-        userRepository = UserRepositoryImpl(mockDataSource)
+        userRepository = UserRepositoryImpl(mockDataSource,userMapper)
     }
 
     @Test
     fun `should return true when adding a new user`() {
         //given
-        every { mockDataSource.insertUser(testUserOne) } returns true
+        every { mockDataSource.addUser(any()) } returns true
 
         //when
         val result = userRepository.addUser(testUserOne)
@@ -35,13 +37,13 @@ class UserRepositoryImplTest {
     @Test
     fun `should return user when searching by valid user id`() {
         //given
-        every { mockDataSource.getUserById("1") } returns testUserOne
+        every { mockDataSource.getUserById("1") } returns dummyUserOneRow
 
         //when
         val result = userRepository.getUserById("1")
 
         //then
-        assertThat(result).isEqualTo(testUserOne)
+        assertThat(result).isEqualTo(dummyUserOne)
     }
 
     @Test
@@ -59,13 +61,13 @@ class UserRepositoryImplTest {
     @Test
     fun `should return user when searching by valid userName`() {
         //given
-        every { mockDataSource.getUserByUserName("adminUserName") } returns testUserOne
+        every { mockDataSource.getUserByUserName("adminUserName") } returns dummyUserOneRow
 
         //when
         val result = userRepository.getUserByUserName("adminUserName")
 
         //then
-        assertThat(result).isEqualTo(testUserOne)
+        assertThat(result).isEqualTo(dummyUserOne)
     }
 
     @Test
@@ -83,7 +85,7 @@ class UserRepositoryImplTest {
     @Test
     fun `should return all users when retrieving users`() {
         //given
-        every { mockDataSource.getUsers() } returns listOf(testUserOne, testUserTwo)
+        every { mockDataSource.getUsers() } returns listOf(dummyUserOneRow, dummyUserOneRow)
 
         //when
         val result = userRepository.getUsers()
@@ -95,13 +97,13 @@ class UserRepositoryImplTest {
     @Test
     fun `should call updateItem on data source when updating a user`() {
         //given
-        every { mockDataSource.updateUser(testUserOne) } returns true
+        every { mockDataSource.updateUser(dummyUserOneRow) } returns true
 
         //when
-        userRepository.updateUser(testUserOne)
+        userRepository.updateUser(dummyUserOne)
 
         //then
-        verify(exactly = 1) { mockDataSource.updateUser(testUserOne) }
+        verify(exactly = 1) { mockDataSource.updateUser(dummyUserOneRow) }
     }
 
     @Test
@@ -110,7 +112,7 @@ class UserRepositoryImplTest {
         every { mockDataSource.deleteUser("1") } returns true
 
         //when
-        userRepository.deleteUser(testUserOne)
+        userRepository.deleteUser(dummyUserOne)
 
         //then
         verify(exactly = 1) { mockDataSource.deleteUser("1") }

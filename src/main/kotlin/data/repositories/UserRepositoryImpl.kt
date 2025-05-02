@@ -1,17 +1,21 @@
 package data.repositories
 
-import data.dataSource.UserCsvDataSource
+import data.dataSource.user.UserDataSource
+import data.repositories.mappers.UserMapper
 import domain.entities.User
 import domain.repositories.UserRepository
 
-class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : UserRepository {
+class UserRepositoryImpl(
+    private val userDataSource: UserDataSource,
+    private val userMapper: UserMapper
+) : UserRepository {
 
     override fun addUser(user: User): Boolean {
         return userDataSource.insertUser(user)
     }
 
     override fun updateUser(user: User): Boolean {
-        return userDataSource.updateUser(user)
+        return userDataSource.updateUser(userMapper.mapEntityToRow(user))
     }
 
     override fun deleteUser(user: User): Boolean {
@@ -19,15 +23,24 @@ class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : UserRe
     }
 
     override fun getUserById(id: String): User? {
-        return userDataSource.getUserById(id)
+        return when (val userRow = userDataSource.getUserById(id)) {
+            null -> null
+            else -> userMapper.mapRowToEntity(userRow)
+        }
     }
 
     override fun getUserByUserName(userName: String): User? {
-        return userDataSource.getUserByUserName(userName)
+        return when (val userRow = userDataSource.getUserByUserName(userName)) {
+            null -> null
+            else -> userMapper.mapRowToEntity(userRow)
+        }
     }
 
     override fun getUsers(): List<User> {
-        return userDataSource.getUsers()
+        val usersRows = userDataSource.getUsers()
+        return usersRows.map { userRow ->
+            userMapper.mapRowToEntity(userRow)
+        }
     }
 
 }

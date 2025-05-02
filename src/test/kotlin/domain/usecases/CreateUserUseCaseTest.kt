@@ -19,9 +19,10 @@ class CreateUserUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
     private var authRepository: AuthRepository = mockk(relaxed = true)
     private val createUserUseCase = CreateUserUseCase(userRepository,authRepository)
-    val firstUser = DummyUser.testUserOne
-    val secondUser = DummyUser.testUserTwo
+    val firstUser = DummyUser.dummyUserOne
+    val secondUser = DummyUser.dummyUserTwo
     val mD5Hash = MD5Hasher()
+
 
     @Test
     fun `should create admin successfully`() {

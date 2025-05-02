@@ -18,7 +18,7 @@ class AuthenticationUseCaseTest {
     private var authRepository: AuthRepository = mockk(relaxed = true)
     private val authUseCase = AuthenticationUseCase(userRepository, authRepository)
     val mD5Hasher = MD5Hasher()
-    val firstUser = DummyUser.testUserOne.copy(password = mD5Hasher.hash("adminPassword"))
+    val firstUser = DummyUser.dummyUserOne.copy(password = mD5Hasher.hash("adminPassword"))
 
     @Test
     fun `should return user when valid credentials`() {

@@ -1,4 +1,4 @@
-package org.buinos.presentation
+package presentation
 
 import di.dataModule
 import di.presentationModel

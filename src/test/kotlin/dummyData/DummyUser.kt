@@ -1,21 +1,30 @@
 package dummyData
 
+import data.repositories.mappers.UserMapper
 import domain.entities.UserRole
 import domain.util.MD5Hasher
 
 object DummyUser {
-
-     val testUserOne = createDummyUser(
+    val dummyUserOne = createDummyUser(
         id = "1",
         username = "adminUserName",
         password = "adminPassword",
         role = UserRole.ADMIN
     )
+    val userMapper = UserMapper()
 
-     val testUserTwo = createDummyUser(
+    val dummyUserOneRow = userMapper.mapEntityToRow(dummyUserOne)
+
+    const val dummyUpdatedUserOneUserName = "new user name"
+    val dummyUpdatedUserOneRow = userMapper.mapEntityToRow(dummyUserOne.copy(username = dummyUpdatedUserOneUserName))
+
+
+    val dummyUserTwo = createDummyUser(
         id = "2",
         username = "mateUserName",
         password = "matePassword",
         role = UserRole.MATE
     )
+
+
 }
