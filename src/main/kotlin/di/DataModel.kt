@@ -4,9 +4,10 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import data.dataSource.CsvAuditDataSource
 import data.dataSource.util.CsvHandler
-import data.repositories.AuditRepositoryImpl
+import data.repositories.AuditRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
+import org.koin.core.qualifier.qualifier
 import org.koin.dsl.module
 import java.io.File
 
@@ -24,14 +25,14 @@ val dataModule = module {
         File(Paths.AuditFilePath)
     }
 
+    single<Mapper<Audit>> { AuditMapper()  }
 
-    single {
-        CsvAuditDataSource(get(),get(Paths.AuditFileQualifier))
-    }
 
-    single {
-        AuditRepositoryImpl(get())
-    }
+    single<AuditDataSource> { CsvAuditDataSource(get(),get(Paths.AuditFileQualifier)) }
+
+    single<AuditRepository> { AuditRepositoryImpl(get(),get()) }
+
+    single { AddAuditUseCase(get()) }
 
 
 }
