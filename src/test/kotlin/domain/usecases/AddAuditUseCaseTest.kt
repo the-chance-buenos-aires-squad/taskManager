@@ -9,19 +9,19 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AddAuditUseCaseTest{
+class AddAuditUseCaseTest {
 
-    private lateinit var addAuditUseCase:AddAuditUseCase
-    private val auditRepository:AuditRepositoryImpl = mockk(relaxed = true)
+    private lateinit var addAuditUseCase: AddAuditUseCase
+    private val auditRepository: AuditRepositoryImpl = mockk(relaxed = true)
 
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         addAuditUseCase = AddAuditUseCase(auditRepository)
     }
 
     @Test
-    fun `should return audit object with given info when adding is successful`(){
+    fun `should return audit object with given info when adding is successful`() {
         //given
         every { auditRepository.addAudit(any()) } returns true
 
@@ -40,7 +40,7 @@ class AddAuditUseCaseTest{
     }
 
     @Test
-    fun `should return null  when adding is unSuccessful`(){
+    fun `should return null  when adding is unSuccessful`() {
         //given
         every { auditRepository.addAudit(any()) } returns false
 
@@ -57,7 +57,6 @@ class AddAuditUseCaseTest{
         //then
         assertThat(resultAudit).isEqualTo(null)
     }
-
 
 
 }

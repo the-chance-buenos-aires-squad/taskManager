@@ -5,7 +5,7 @@ import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
 
-class AuditMapper:Mapper<Audit>{
+class AuditMapper : Mapper<Audit> {
     override fun mapEntityToRow(entity: Audit): List<String> {
         return listOf(
             entity.id,
@@ -22,16 +22,28 @@ class AuditMapper:Mapper<Audit>{
 
     override fun mapRowToEntity(row: List<String>): Audit {
         return Audit(
-            id = row[0],
-            entityId = row[1],
-            entityType = EntityType.entries.find { it.name == row[2]}!!,
-            action = ActionType.valueOf(row[3]),
-            field = row[4],
-            oldValue = row[5],
-            newValue = row[6],
-            userId = row[7],
-            timestamp = LocalDateTime.parse(row[8])
+            id = row[ID_ROW],
+            entityId = row[ENTITY_IT],
+            entityType = EntityType.entries.find { it.name == row[ENTITY_TYPE_ROW] }!!,
+            action = ActionType.valueOf(row[ACTION_ROW]),
+            field = row[FIELD_ROW],
+            oldValue = row[OLD_VALUE_ROW],
+            newValue = row[NEW_VALUE_ROW],
+            userId = row[USER_ID_ROW],
+            timestamp = LocalDateTime.parse(row[TIMESTAMP_ROW])
         )
+    }
+
+    companion object {
+        const val ID_ROW = 0
+        const val ENTITY_IT = 1
+        const val ENTITY_TYPE_ROW = 2
+        const val ACTION_ROW = 3
+        const val FIELD_ROW = 4
+        const val OLD_VALUE_ROW = 5
+        const val NEW_VALUE_ROW = 6
+        const val USER_ID_ROW = 7
+        const val TIMESTAMP_ROW = 8
     }
 
 

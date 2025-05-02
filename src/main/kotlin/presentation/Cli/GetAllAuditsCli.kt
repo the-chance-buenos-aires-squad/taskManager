@@ -5,7 +5,8 @@ import domain.usecases.GetAllAuditUseCase
 
 class GetAllAuditsCli(private val getAllAuditUseCase: GetAllAuditUseCase) {
     fun displayAuditHeader() {
-        val header = "ID || Entity ID || Entity Type || Action || Field || Old Value || New Value || User ID || Timestamp"
+        val header =
+            "ID || Entity ID || Entity Type || Action || Field || Old Value || New Value || User ID || Timestamp"
         println(header)
         println("-".repeat(header.length))
     }

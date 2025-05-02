@@ -5,12 +5,12 @@ import data.dummyData.DummyAudits
 import data.dummyData.DummyAudits.DummyTaskAuditRow
 import org.junit.jupiter.api.Test
 
-class AuditMapperTest{
+class AuditMapperTest {
     private val auditMapper = AuditMapper()
 
 
     @Test
-    fun `should return Audit object when Calling mapRowToEntity`(){
+    fun `should return Audit object when Calling mapRowToEntity`() {
         //when
         val expectedAudit = auditMapper.mapRowToEntity(DummyTaskAuditRow)
 
@@ -20,13 +20,12 @@ class AuditMapperTest{
 
 
     @Test
-    fun `should return row string when calling mapEntityToRow`(){
+    fun `should return row string when calling mapEntityToRow`() {
         //when
         val expectedRow = auditMapper.mapEntityToRow(DummyAudits.dummyTaskAudit_CreateAction)
         //then
         assertThat(expectedRow).isEqualTo(DummyTaskAuditRow)
     }
-
 
 
 }
