@@ -1,13 +1,10 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import domain.entities.UserRole
 import domain.repositories.UserRepository
-import data.repositories.MD5Hasher
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
@@ -15,7 +12,7 @@ class AuthRepositoryImplTest {
 
     private lateinit var authRepository: AuthRepositoryImpl
     private var userRepository: UserRepository = mockk(relaxed = true)
-    private var mD5Hasher: MD5Hasher = mockk()
+    private var mD5Hasher: PasswordHasher = mockk()
 
     private val testAdminUser = DummyUser.dummyUserOne
     private val testMateUser = DummyUser.dummyUserTwo

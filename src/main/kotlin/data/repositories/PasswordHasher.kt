@@ -2,7 +2,7 @@ package data.repositories
 
 import java.security.MessageDigest
 
-class MD5Hasher {
+class PasswordHasher {
     fun hash(input: String): String {
 
         val messageDigest = MessageDigest.getInstance("MD5")

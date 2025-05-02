@@ -10,6 +10,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class UserRepositoryImplTest {
 
@@ -37,10 +38,10 @@ class UserRepositoryImplTest {
     @Test
     fun `should return user when searching by valid user id`() {
         //given
-        every { mockDataSource.getUserById("1") } returns dummyUserOneRow
+        every { mockDataSource.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) } returns dummyUserOneRow
 
         //when
-        val result = userRepository.getUserById("1")
+        val result = userRepository.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221"))
 
         //then
         assertThat(result).isEqualTo(dummyUserOne)
@@ -49,10 +50,10 @@ class UserRepositoryImplTest {
     @Test
     fun `should return null when user id does not exist`() {
         //given
-        every { mockDataSource.getUserById("3") } returns null
+        every { mockDataSource.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223")) } returns null
 
         //when
-        val result = userRepository.getUserById("3")
+        val result = userRepository.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223"))
 
         //then
         assertThat(result).isNull()
@@ -109,12 +110,12 @@ class UserRepositoryImplTest {
     @Test
     fun `should call deleteItem on data source when deleting a user`() {
         //given
-        every { mockDataSource.deleteUser("1") } returns true
+        every { mockDataSource.deleteUser(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) } returns true
 
         //when
         userRepository.deleteUser(dummyUserOne)
 
         //then
-        verify(exactly = 1) { mockDataSource.deleteUser("1") }
+        verify(exactly = 1) { mockDataSource.deleteUser(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) }
     }
 }

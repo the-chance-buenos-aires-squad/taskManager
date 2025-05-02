@@ -6,8 +6,6 @@ class InvalidCredentialsException(message: String = "Invalid username or passwor
 
 class PasswordEmptyException(message: String = "password cannot be empty !") : Exception(message)
 
-class UserAlreadyExistException(message: String = "Username already exists!") : RuntimeException(message)
-
 class UserNameEmptyException(message: String = "Username cannot be empty !") : Exception(message)
 
 class InvalidLengthPasswordException(

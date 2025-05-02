@@ -2,11 +2,11 @@ package dummyData
 
 import data.repositories.mappers.UserMapper
 import domain.entities.UserRole
-import data.repositories.MD5Hasher
+import java.util.UUID
 
 object DummyUser {
     val dummyUserOne = createDummyUser(
-        id = "1",
+        id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221"),
         username = "adminUserName",
         password = "adminPassword",
         role = UserRole.ADMIN
@@ -22,7 +22,7 @@ object DummyUser {
 
 
     val dummyUserTwo = createDummyUser(
-        id = "2",
+        id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b222"),
         username = "mateUserName",
         password = "matePassword",
         role = UserRole.MATE

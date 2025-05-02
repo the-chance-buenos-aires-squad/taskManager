@@ -1,16 +1,14 @@
 package data.repositories
 
-import domain.customeExceptions.CreateUserException
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import data.repositories.MD5Hasher
 import java.time.LocalDateTime
 import java.util.UUID
 
 class AuthRepositoryImpl(
-    private val userRepository: UserRepository, private val mD5Hasher: MD5Hasher
+    private val userRepository: UserRepository, private val mD5Hasher: PasswordHasher
 ) : AuthRepository {
 
     private var currentUser: User? = null
@@ -38,7 +36,7 @@ class AuthRepositoryImpl(
         val newUserHashedPassword = mD5Hasher.hash(password)
 
         val newUser = User(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             username = userName.trim(),
             password = newUserHashedPassword,
             role = UserRole.MATE,

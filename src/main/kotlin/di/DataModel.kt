@@ -16,13 +16,12 @@ import data.repositories.AuthRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import data.repositories.MD5Hasher
+import data.repositories.PasswordHasher
 import domain.util.UserValidator
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
-import kotlin.io.path.Path
 
 
 //
@@ -31,7 +30,7 @@ val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get(), get()) }
 
-    single { MD5Hasher() }
+    single { PasswordHasher() }
     //todo which direction
     single { UserValidator() }
 
