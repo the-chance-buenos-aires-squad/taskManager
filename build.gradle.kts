@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.0.20"
     id("jacoco")
+    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 }
 
 group = "org.buinos"
@@ -20,7 +21,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("com.google.truth:truth:1.4.4")
     implementation(kotlin("reflect"))
-
 }
 
 tasks.test {
@@ -47,7 +47,7 @@ tasks.jacocoTestCoverageVerification {
                     exclude("**/di/**")
                     exclude("**/entities/**")
                 }
-            }
+            },
         )
         rule {
             limit {
@@ -73,11 +73,29 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
-
 jacoco {
     toolVersion = "0.8.13"
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    debug.set(true)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(true)
+    enableExperimentalRules.set(true)
+    baseline.set(file("my-project-ktlint-baseline.xml"))
+
+    kotlinScriptAdditionalPaths {
+        include(fileTree("scripts/"))
+    }
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
 }
