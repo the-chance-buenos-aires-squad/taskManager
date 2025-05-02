@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Fetch repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Analyze code changes
         id: line_count
