@@ -51,7 +51,7 @@ val dataModule = module {
 
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
 
-    single { ProjectMapper() }
+    single<Mapper<Project>> { ProjectMapper() }
     single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get(), get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get()) }
 

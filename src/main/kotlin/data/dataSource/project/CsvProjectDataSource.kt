@@ -2,6 +2,7 @@ package data.dataSource.project
 
 
 import data.dataSource.util.CsvHandler
+import data.repositories.mappers.Mapper
 import data.repositories.mappers.ProjectMapper
 import domain.entities.Project
 import java.io.File
@@ -9,7 +10,7 @@ import java.io.File
 class CsvProjectDataSource(
     private val file: File,
     private val csvHandler: CsvHandler,
-    private val projectMapper: ProjectMapper
+    private val projectMapper: Mapper<Project>
 ) : ProjectDataSource {
 
     override fun saveData(project: Project): Boolean {
