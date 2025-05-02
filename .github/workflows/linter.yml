@@ -6,6 +6,12 @@ on:
       - main
       - develop
       - feature/setup-linter #remove me
+
+
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   linter:
     name: Linter
@@ -28,6 +34,7 @@ jobs:
         run: ./gradlew ktlintCheck
 
       - uses: le0nidas/ktlint-pr-comments@v1.1
+        if: github.event_name == 'pull_request' && always()
         with:
           repotoken: ${{ secrets.GITHUB_TOKEN }}
           arguments: "--disabled_rules=parameter-list-wrapping,final-newline"
