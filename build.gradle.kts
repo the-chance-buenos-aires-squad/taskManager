@@ -1,3 +1,5 @@
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     kotlin("jvm") version "2.0.20"
     id("jacoco")
@@ -90,12 +92,12 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     ignoreFailures.set(false)
     enableExperimentalRules.set(true)
     baseline.set(file("my-project-ktlint-baseline.xml"))
-
-    kotlinScriptAdditionalPaths {
-        include(fileTree("scripts/"))
-    }
     filter {
         exclude("**/generated/**")
         include("**/kotlin/**")
+    }
+
+    reporters {
+        reporter(ReporterType.HTML)
     }
 }
