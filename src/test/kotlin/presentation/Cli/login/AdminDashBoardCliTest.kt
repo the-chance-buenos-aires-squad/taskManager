@@ -21,7 +21,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting option 1 calls createUserCli start`() {
         // Given: Simulate user input "1" then throw exception to exit loop
-        every { uiController.readInput() } returns "1"
+        every { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
@@ -43,7 +43,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting option 2 prints manage project message`() {
         // Given
-        every { uiController.readInput() } returns "2"
+        every { uiController.readInput() } returns "2" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
@@ -55,7 +55,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting option 3 prints manage task states message`() {
         // Given
-        every { uiController.readInput() } returns "3"
+        every { uiController.readInput() } returns "3" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
@@ -67,7 +67,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting option 4 prints view audit logs message`() {
         // Given
-        every { uiController.readInput() } returns "4"
+        every { uiController.readInput() } returns "4" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
@@ -79,7 +79,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting option 5 prints logout message`() {
         // Given
-        every { uiController.readInput() } returns "5"
+        every { uiController.readInput() } returns "5" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
@@ -91,7 +91,7 @@ class AdminDashBoardCliTest {
     @Test
     fun `selecting invalid option prints error message`() {
         // Given
-        every { uiController.readInput() } returns "99"
+        every { uiController.readInput() } returns "99" andThenThrows RuntimeException("Exit loop")
 
         // When
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
