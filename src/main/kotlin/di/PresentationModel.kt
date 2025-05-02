@@ -17,5 +17,5 @@ val presentationModel = module {
 
     single { CreateUserUseCase(userRepository = get(), authRepository = get()) }
     single { AuthenticationUseCase(userRepository = get(), authRepository = get()) }
-    single { CreateUserCli(uiController = get(), createUserUseCase = get() , authenticationUseCase = get())}
+    single { CreateUserCli(uiController = get(), createUserUseCase = get() , authRepository = get())}
 }
