@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
+import presentation.Cli.login.LoginCli
 import presentation.UiController
 import kotlin.test.Test
 
@@ -12,7 +13,6 @@ class MainCliTest {
     private val uiController: UiController = mockk(relaxed = true)
     private val loginCli: LoginCli = mockk(relaxed = true)
     private val mainCli: MainCli = MainCli(uiController, loginCli)
-
 
     @Test
     fun `should print welcome message`() {

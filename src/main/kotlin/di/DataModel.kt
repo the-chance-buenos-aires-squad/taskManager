@@ -38,7 +38,7 @@ val dataModule = module {
         File(Paths.UserFilePath)
     }
 
-    single<Mapper<User>> { UserMapper() }
+    single{ UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(),get()) }

@@ -1,5 +1,6 @@
 package presentation.Cli
 
+import presentation.Cli.login.LoginCli
 import presentation.UiController
 
 class MainCli(

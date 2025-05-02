@@ -1,7 +1,6 @@
 package presentation.Cli
 
 import data.repositories.AuthRepositoryImpl
-import domain.customeExceptions.UserAlreadyExistException
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
 import domain.usecases.CreateUserUseCase
