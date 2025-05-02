@@ -1,8 +1,10 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
+import domain.customeExceptions.CreateUserException
 import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.InvalidLengthPasswordException
+import domain.customeExceptions.PasswordEmptyException
 import domain.customeExceptions.UserAlreadyExistException
 import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.AuthRepository
@@ -18,11 +20,10 @@ import org.junit.jupiter.api.assertThrows
 class CreateUserUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
     private var authRepository: AuthRepository = mockk(relaxed = true)
-    private val createUserUseCase = CreateUserUseCase(userRepository,authRepository)
+    private val createUserUseCase = CreateUserUseCase(userRepository, authRepository)
     val firstUser = DummyUser.dummyUserOne
     val secondUser = DummyUser.dummyUserTwo
     val mD5Hash = MD5Hasher()
-
 
     @Test
     fun `should create admin successfully`() {
@@ -98,6 +99,18 @@ class CreateUserUseCaseTest {
     }
 
     @Test
+    fun `should return throw PasswordEmptyException when password is empty`() {
+        // given
+        every { userRepository.getUserByUserName(secondUser.username) } returns null
+
+        //when & then
+        assertThrows<PasswordEmptyException> {
+            createUserUseCase.addUser(secondUser.username, "", secondUser.password, secondUser.role)
+        }
+
+    }
+
+    @Test
     fun `should return throw if password length less than 6 `() {
         // given
         every { userRepository.getUserByUserName(secondUser.username) } returns null
@@ -108,7 +121,6 @@ class CreateUserUseCaseTest {
         }
 
     }
-
 
     @Test
     fun `should return throw if password not equal confirm password `() {
@@ -122,6 +134,18 @@ class CreateUserUseCaseTest {
 
     }
 
+    @Test
+    fun `should return throw CreateUserException when token is missing `() {
+        // given
+        every { userRepository.getUserByUserName(secondUser.username) } returns null
+        every { authRepository.getCurrentUser() } returns null
+
+        //when & then
+        assertThrows<CreateUserException> {
+            createUserUseCase.addUser(secondUser.username, secondUser.password, secondUser.password, secondUser.role)
+        }
+
+    }
 
     @Test
     fun `should hash password using MD5 utility`() {
@@ -135,7 +159,6 @@ class CreateUserUseCaseTest {
         // Then
         assertThat(actualHash).isEqualTo(expectedHash)
     }
-
 
     @Test
     fun `created user should have hashed password`() {

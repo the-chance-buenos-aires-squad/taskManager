@@ -36,8 +36,9 @@ class CreateUserUseCase(
             createdAt = LocalDateTime.now()
         )
 
-        if (authRepository.getCurrentUser() != null) {
+        if (authRepository.getCurrentUser() == null) throw CreateUserException()
+
             userRepository.addUser(newUser)
-        }
+
     }
 }

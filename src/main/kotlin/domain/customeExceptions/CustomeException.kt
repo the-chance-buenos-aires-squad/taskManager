@@ -13,3 +13,5 @@ class UserNameEmptyException(message: String = "Username cannot be empty !") : E
 class InvalidLengthPasswordException(
     message: String = "Password must be at least 6 characters!"
 ) : Exception(message)
+
+class CreateUserException(message: String = "Token is missing") : Exception(message)
