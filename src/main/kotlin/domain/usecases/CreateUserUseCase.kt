@@ -12,7 +12,7 @@ import java.util.*
 
 class CreateUserUseCase(
     private val userRepository: UserRepository,
-    val authRepository: AuthRepository
+    private val authRepository: AuthRepository
 ) {
 
     fun addUser(
