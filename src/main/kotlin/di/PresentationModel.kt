@@ -13,13 +13,12 @@ import presentation.UiController
 import java.util.*
 import kotlin.math.sin
 
-
 val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
-    single { AdminDashBoardCli() }
-    single { MateDashBoardCli() }
+    single { AdminDashBoardCli(get(),get()) }
+    single { MateDashBoardCli(get()) }
     single { LoginCli(get(), get(), get(), get()) }
     single { MainCli(get(), get()) }
 

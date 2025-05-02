@@ -7,9 +7,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 import presentation.Cli.MainCli
 
 fun main() {
-    println("Hello World!")
     startKoin {
-        printLogger()
         modules(
             dataModule, presentationModel
         )

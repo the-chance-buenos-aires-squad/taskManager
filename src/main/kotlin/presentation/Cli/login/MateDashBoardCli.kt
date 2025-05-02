@@ -1,5 +1,7 @@
 package presentation.Cli.login
 
-class MateDashBoardCli {
+import presentation.UiController
+
+class MateDashBoardCli(private val uiController: UiController) {
     fun start(){}
 }
