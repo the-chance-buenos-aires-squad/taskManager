@@ -31,6 +31,6 @@ fun main() {
         )
     }
 
-    val holderCli: MainCli = getKoin().get()
-    holderCli.startCli()
+    val mainCli: MainCli = getKoin().get()
+    mainCli.startCli()
 }
