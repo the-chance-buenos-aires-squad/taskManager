@@ -33,26 +33,9 @@ jobs:
       - name: Run Linter Check
         run: ./gradlew ktlintCheck
 
-      - name: Extract Linter Summary
-        id: linter-summary
-        if: github.event_name == 'pull_request' && always()
-        run: |
-          mkdir -p temp
-          if [ -f build/reports/ktlint/ktlint.html ]; then
-            # Extract error count summary (you can improve this extraction)
-            grep -o 'class="problem[^"]*"' build/reports/ktlint/ktlint.html | wc -l > temp/summary.txt
-            echo "summary=$(cat temp/summary.txt)" >> $GITHUB_OUTPUT
-          else
-            echo "summary=No linter issues found or report not generated." >> $GITHUB_OUTPUT
-          fi
-
-
-      - name: Comment on PR with Linter Summary
-        if: github.event_name == 'pull_request' && always()
+      - name: Comment on PR if linter issues found
+        if: failure() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          SUMMARY="${{ steps.linter-summary.outputs.summary }}"
-          gh pr comment "$PR_URL" --body "### 🧹 Linter Report Summary\n$SUMMARY issue(s) found. Full HTML report is available as an artifact."
-        
+          gh pr comment "${{ github.event.pull_request.html_url }}" --body "⚠️ **Linter issues detected.**\n\nPlease run \`./gradlew ktlintCheck\` locally to fix them before merging."
