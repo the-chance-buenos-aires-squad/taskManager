@@ -5,10 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.Scanner
+import java.util.*
 import kotlin.test.Test
 
 
@@ -16,11 +14,11 @@ class UiControllerTest {
 
     private val mockedPrinterStream = mockk<PrintStream>(relaxed = true)
     private val mockedScanner = mockk<Scanner>(relaxed = true)
-    private lateinit var  uiController : UiController
+    private lateinit var uiController: UiController
 
     @BeforeEach
     fun setUp() {
-        uiController = UiController(mockedPrinterStream,mockedScanner)
+        uiController = UiController(mockedPrinterStream, mockedScanner)
     }
 
     @Test

@@ -26,18 +26,18 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
-    single<File>(qualifier = Paths.AuditFileQualifier){
+    single<File>(qualifier = Paths.AuditFileQualifier) {
         File(Paths.AuditFilePath)
     }
 
-    single<Mapper<Audit>> { AuditMapper()  }
+    single<Mapper<Audit>> { AuditMapper() }
 
 
-    single<AuditDataSource> { CsvAuditDataSource(get(),get(Paths.AuditFileQualifier)) }
+    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
 
-    single<AuditRepository> { AuditRepositoryImpl(get(),get()) }
+    single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditMapper = get()) }
 
-    single { AddAuditUseCase(get()) }
+    single { AddAuditUseCase(auditRepository = get()) }
 
 
 }
@@ -51,8 +51,7 @@ object Paths {
     val UserFileQualifier: Qualifier = named("UserFilePath")
 
     const val AuditFilePath = "src/main/kotlin/data/resource/audit.csv"
-    val AuditFileQualifier :Qualifier = named("AuditFile")
-
+    val AuditFileQualifier: Qualifier = named("AuditFile")
 
 
 }

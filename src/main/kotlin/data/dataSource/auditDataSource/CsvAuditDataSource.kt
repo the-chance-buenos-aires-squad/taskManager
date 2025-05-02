@@ -1,14 +1,13 @@
 package data.dataSource.auditDataSource
 
 import data.dataSource.util.CsvHandler
-import domain.entities.Audit
 import java.io.File
 
 
 class CsvAuditDataSource(
     private val csvHandler: CsvHandler,
     private val file: File
-):AuditDataSource {
+) : AuditDataSource {
 
 
     override fun addAudit(auditRow: List<String>): Boolean {
@@ -26,11 +25,10 @@ class CsvAuditDataSource(
     }
 
 
-    override fun getAllAudit(): List<String> {
-        TODO()
+    override fun getAllAudit(): List<List<String>> {
+        val rows = csvHandler.read(file)
+        return rows
     }
-
-
 
 
 }

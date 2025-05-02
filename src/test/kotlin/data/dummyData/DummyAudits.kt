@@ -19,7 +19,7 @@ object DummyAudits {
     )
 
 
-     val  DummyTaskAuditRow = listOf(
+    val DummyTaskAuditRow = listOf(
         DummyAudits.dummyTaskAudit_CreateAction.id,
         DummyAudits.dummyTaskAudit_CreateAction.entityId,
         DummyAudits.dummyTaskAudit_CreateAction.entityType.name,
@@ -43,8 +43,6 @@ object DummyAudits {
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
-
-
 
 
 }

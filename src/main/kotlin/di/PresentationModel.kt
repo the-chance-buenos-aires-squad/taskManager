@@ -10,5 +10,5 @@ import java.util.*
 val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }
     single { LoginCli(get()) }
-    single { MainCli(get(),get()) }
+    single { MainCli(get(), get()) }
 }

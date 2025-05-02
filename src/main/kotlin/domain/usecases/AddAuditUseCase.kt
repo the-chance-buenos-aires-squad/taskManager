@@ -35,7 +35,7 @@ class AddAuditUseCase(
         )
         val result = auditRepository.addAudit(newAudit)
 
-        return when(result){
+        return when (result) {
             true -> newAudit
             false -> null
         }

@@ -6,7 +6,7 @@ class LoginCli(
     private val uiController: UiController
 ) {
 
-    fun start(){
+    fun start() {
 
     }
 
