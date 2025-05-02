@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.assertThrows
 import presentation.Cli.login.LoginCli
 import presentation.UiController
 import kotlin.test.Test
@@ -16,9 +17,11 @@ class MainCliTest {
 
     @Test
     fun `should print welcome message`() {
+        //given
+        every { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
 
         //when
-        mainCli.startCli(true)
+        assertThrows<RuntimeException> { mainCli.startCli() }
 
         //then
         verify {
@@ -39,10 +42,10 @@ class MainCliTest {
 
         //given
         val userInput = "1"
-        every { uiController.readInput() }.returns(userInput)
+        every { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
 
         //when
-        mainCli.startCli(true)
+        assertThrows<RuntimeException> { mainCli.startCli() }
 
         //then
         verify {
@@ -50,7 +53,6 @@ class MainCliTest {
         }
 
     }
-
 
     @Test
     fun `should exit CLI on option 2`() {
@@ -60,7 +62,7 @@ class MainCliTest {
         every { uiController.readInput() }.returns(userInput)
 
         //when
-        mainCli.startCli(true)
+        mainCli.startCli()
 
         //then
         verify {
@@ -74,10 +76,10 @@ class MainCliTest {
 
         //given
         val userInput = "3"
-        every { uiController.readInput() }.returns(userInput)
+        every { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
 
         //when
-        mainCli.startCli(true)
+        assertThrows<RuntimeException> { mainCli.startCli() }
 
         //then
         verify {

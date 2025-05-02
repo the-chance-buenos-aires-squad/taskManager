@@ -8,7 +8,7 @@ class MainCli(
     private val loginCli: LoginCli
 ) {
 
-    fun startCli(isTest: Boolean = false) {
+    fun startCli() {
 
         while (true) {
             uiController.printMessage(
@@ -32,9 +32,6 @@ class MainCli(
 
             }
 
-            if (isTest) {
-                break
-            }
 
         }
 
