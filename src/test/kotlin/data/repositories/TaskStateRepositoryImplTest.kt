@@ -16,9 +16,25 @@ class TaskStateRepositoryImplTest {
         stateRepository = TaskStateRepositoryImpl(mockCSVDataSource)
     }
 
-    // TODO: Write below all test for createState fun. (write here shahed)
+    @Test
+    fun `should return true when creating a new state`() {
+        val newState = DummyTaskState.readyForReview
+        every { mockCSVDataSource.createTaskState(newState) } returns true
 
+        val result = stateRepository.createTaskState(newState)
 
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return false when state already exists`() {
+        val existingState = DummyTaskState.todo
+        every { mockCSVDataSource.createTaskState(existingState) } returns false
+
+        val result = stateRepository.createTaskState(existingState)
+
+        assertThat(result).isFalse()
+    }
 
     @Test
     fun `should edit state successfully when this state is existing`() {
@@ -35,7 +51,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return false when editing non existent state`() {
-        val nonExistentState =  State("99", "Non-existent State", "P12")
+        val nonExistentState = State("99", "Non-existent State", "P12")
         every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
 
         val result = stateRepository.editTaskState(nonExistentState)
@@ -46,7 +62,7 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should not update state when projectId does not match`() {
         val todoState = DummyTaskState.done
-        val updatedDoState =  State("3", "In Progress", "P012")
+        val updatedDoState = State("3", "In Progress", "P012")
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
 
