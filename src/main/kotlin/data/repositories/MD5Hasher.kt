@@ -1,4 +1,4 @@
-package domain.util
+package data.repositories
 
 import java.security.MessageDigest
 

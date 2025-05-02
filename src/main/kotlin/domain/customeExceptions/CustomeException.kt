@@ -14,4 +14,4 @@ class InvalidLengthPasswordException(
     message: String = "Password must be at least 6 characters!"
 ) : Exception(message)
 
-class CreateUserException(message: String = "Token is missing") : Exception(message)
+class CreateUserException(message: String = "Failed to create user") : Exception(message)

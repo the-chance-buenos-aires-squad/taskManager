@@ -2,7 +2,7 @@ package dummyData
 
 import data.repositories.mappers.UserMapper
 import domain.entities.UserRole
-import domain.util.MD5Hasher
+import data.repositories.MD5Hasher
 
 object DummyUser {
     val dummyUserOne = createDummyUser(

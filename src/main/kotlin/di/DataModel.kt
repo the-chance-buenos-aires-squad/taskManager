@@ -16,6 +16,8 @@ import data.repositories.AuthRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
+import data.repositories.MD5Hasher
+import domain.util.UserValidator
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -29,6 +31,9 @@ val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get(), get()) }
 
+    single { MD5Hasher() }
+    //todo which direction
+    single { UserValidator() }
 
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
@@ -37,7 +42,7 @@ val dataModule = module {
     single<Mapper<User>> { UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
 
-    single<AuthRepository> { AuthRepositoryImpl() }
+    single<AuthRepository> { AuthRepositoryImpl(get(),get()) }
     single<UserRepository> { UserRepositoryImpl(get(),get()) }
 
 
