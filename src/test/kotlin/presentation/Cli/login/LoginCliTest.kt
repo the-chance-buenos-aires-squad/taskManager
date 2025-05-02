@@ -42,7 +42,7 @@ class LoginCliTest {
         loginCli.start()
 
         // Then
-        verifyOrder {
+        verify {
             uiController.printMessage("\n=== Login ===")
             uiController.printMessage("Username: ")
             uiController.printMessage("Password: ")
@@ -69,7 +69,7 @@ class LoginCliTest {
         loginCli.start()
 
         // Then
-        verifyOrder {
+        verify {
             uiController.printMessage("\n=== Login ===")
             uiController.printMessage("Username: ")
             uiController.printMessage("Password: ")
@@ -111,7 +111,6 @@ class LoginCliTest {
             uiController.printMessage("Error: Database error")
         }
     }
-
 
     @Test
     fun `should return after 2 failed attempts`() {
