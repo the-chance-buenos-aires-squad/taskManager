@@ -12,7 +12,9 @@ object DummyUser {
         role = UserRole.ADMIN
     )
     val userMapper = UserMapper()
+
     val dummyUserOneRow = userMapper.mapEntityToRow(dummyUserOne)
+
     const val dummyUpdatedUserOneUserName = "new user name"
     val dummyUpdatedUserOneRow = userMapper.mapEntityToRow(dummyUserOne.copy(username = dummyUpdatedUserOneUserName))
 

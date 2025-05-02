@@ -15,7 +15,7 @@ import kotlin.test.Test
 class AuthenticationUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
     private val authUseCase = AuthenticationUseCase(userRepository)
-    val firstUser = DummyUser.testUserOne
+    val firstUser = DummyUser.dummyUserOne
 
     @Test
     fun `should return user when valid credentials`() {
