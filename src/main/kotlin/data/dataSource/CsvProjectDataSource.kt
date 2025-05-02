@@ -1,9 +1,9 @@
 package data.dataSource
 
 
+import data.dataSource.util.CsvHandler
 import data.dataSource.util.toCsvRow
 import data.dataSource.util.toProject
-import data.util.CsvHandler
 import domain.entities.Project
 import java.io.File
 
@@ -56,19 +56,13 @@ class CsvProjectDataSource(private val file: File, private val csvHandler: CsvHa
     private fun initializeFileIfNeeded() {
         if (!file.exists()) {
             file.createNewFile()
-            csvHandler.writeHeaderIfNotExist(HEADER, file)
         }
     }
 
     private fun rewriteAllProjects(projects: List<Project>) {
         file.writeText("") // clear file
-        csvHandler.writeHeaderIfNotExist(HEADER, file)
         projects.forEach {
             csvHandler.write(it.toCsvRow(), file)
         }
-    }
-
-    companion object {
-        private val HEADER = listOf("id", "name", "description", "createdAt", "createdBy")
     }
 }

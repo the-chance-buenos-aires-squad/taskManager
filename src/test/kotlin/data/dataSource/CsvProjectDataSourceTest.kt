@@ -3,7 +3,7 @@ package data.dataSource
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
-import data.util.CsvHandler
+import data.dataSource.util.CsvHandler
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
