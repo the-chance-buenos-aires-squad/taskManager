@@ -2,12 +2,17 @@ package di
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
-import data.dataSource.CsvAuditDataSource
+import data.dataSource.auditDataSource.AuditDataSource
+import data.dataSource.auditDataSource.CsvAuditDataSource
 import data.dataSource.util.CsvHandler
-import data.repositories.AuditRepository
+import data.repositories.AuditRepositoryImpl
+import data.repositories.mappers.AuditMapper
+import data.repositories.mappers.Mapper
+import domain.entities.Audit
+import domain.repositories.AuditRepository
+import domain.usecases.AddAuditUseCase
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
-import org.koin.core.qualifier.qualifier
 import org.koin.dsl.module
 import java.io.File
 
@@ -25,14 +30,14 @@ val dataModule = module {
         File(Paths.AuditFilePath)
     }
 
+    single<Mapper<Audit>> { AuditMapper()  }
 
-    single {
-        CsvAuditDataSource(get(),get(Paths.AuditFileQualifier))
-    }
 
-    single {
-        AuditRepository(get())
-    }
+    single<AuditDataSource> { CsvAuditDataSource(get(),get(Paths.AuditFileQualifier)) }
+
+    single<AuditRepository> { AuditRepositoryImpl(get(),get()) }
+
+    single { AddAuditUseCase(get()) }
 
 
 }
