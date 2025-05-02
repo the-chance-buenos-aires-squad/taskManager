@@ -1,11 +1,11 @@
-import domain.entities.State
+import domain.entities.TaskState
 
 fun createDummyTaskState(
     id: String,
     name: String,
     projectId: String
-): State {
-    return State(
+): TaskState {
+    return TaskState(
         id = id,
         name = name,
         projectId = projectId

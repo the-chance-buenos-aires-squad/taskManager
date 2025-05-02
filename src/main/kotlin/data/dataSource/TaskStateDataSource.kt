@@ -1,11 +1,11 @@
 package data.dataSource
 
-import domain.entities.State
+import domain.entities.TaskState
 
 interface TaskStateDataSource {
-    fun createTaskState(state: State): Boolean
-    fun editTaskState(state: State): Boolean
+    fun createTaskState(state: TaskState): Boolean
+    fun editTaskState(editState: TaskState): Boolean
     fun deleteTaskState(stateId: String): Boolean
-    fun getAllTaskStates(): List<State>
+    fun getAllTaskStates(): List<TaskState>
     fun existsTaskState(stateId: String): Boolean
 }

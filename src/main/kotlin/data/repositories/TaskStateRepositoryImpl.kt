@@ -1,17 +1,17 @@
 package data.repositories
 
 import data.dataSource.TaskStateCSVDataSource
-import domain.entities.State
+import domain.entities.TaskState
 import domain.repositories.TaskStateRepository
 
 class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateCSVDataSource
 ): TaskStateRepository{
-    override fun createTaskState(state: State): Boolean {
+    override fun createTaskState(state: TaskState): Boolean {
         return taskStateCSVDataSource.createTaskState(state)
     }
 
-    override fun editTaskState(state: State): Boolean {
+    override fun editTaskState(state: TaskState): Boolean {
         return taskStateCSVDataSource.editTaskState(state)
     }
 
@@ -19,7 +19,7 @@ class TaskStateRepositoryImpl(
         return taskStateCSVDataSource.deleteTaskState(stateId)
     }
 
-    override fun getAllTaskStates(): List<State> {
+    override fun getAllTaskStates(): List<TaskState> {
         return taskStateCSVDataSource.getAllTaskStates()
     }
 

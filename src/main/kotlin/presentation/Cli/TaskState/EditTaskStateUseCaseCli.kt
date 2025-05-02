@@ -1,12 +1,12 @@
-package presentation.Cli
+package presentation.Cli.TaskState
 
-import domain.entities.State
+import domain.entities.TaskState
 import domain.usecases.EditTaskStateUseCase
 import domain.usecases.GetAllTaskStatesUseCase
 
 class EditTaskStateUseCaseCli(
     private val editStateUseCase: EditTaskStateUseCase,
-    private val getAllStatesUseCase: GetAllTaskStatesUseCase
+    private val getAllStatesUseCase: GetAllTaskStatesUseCase,
 ) {
 
     fun start() {
@@ -42,7 +42,7 @@ class EditTaskStateUseCaseCli(
         existingStateToEdit(allStates)
     }
 
-    private fun existingStateToEdit(allStates: List<State>){
+    private fun existingStateToEdit(allStates: List<TaskState>) {
         print("Enter State ID to edit: ")
         val id = readlnOrNull()?.trim().orEmpty()
         val existingState = allStates.find { it.id == id }
@@ -58,7 +58,7 @@ class EditTaskStateUseCaseCli(
         val newProjectId = readlnOrNull()?.trim().orEmpty()
 
         try {
-            val updatedState = State(
+            val updatedState = TaskState(
                 id = existingState.id,
                 name = newName,
                 projectId = newProjectId

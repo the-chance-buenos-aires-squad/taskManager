@@ -1,6 +1,6 @@
 package domain.entities
 
-data class State(
+data class TaskState(
     val id: String,
     val name: String,
     val projectId: String,

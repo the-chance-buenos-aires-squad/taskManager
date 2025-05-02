@@ -11,11 +11,11 @@ import dummyStateData.DummyTaskState
 class CreateTaskStateUseCaseTest {
 
     private var repository: TaskStateRepository = mockk()
-    private lateinit var createStateUseCase: CreateTaskStateUseCase
+    private lateinit var createTaskStateUseCase: CreateTaskStateUseCase
 
     @BeforeTest
     fun setUp() {
-        createStateUseCase = CreateTaskStateUseCase(repository)
+        createTaskStateUseCase = CreateTaskStateUseCase(repository)
     }
 
     @Test
@@ -24,7 +24,7 @@ class CreateTaskStateUseCaseTest {
 
         every { repository.createTaskState(newState) } returns true
 
-        val result = createStateUseCase.execute(newState)
+        val result = createTaskStateUseCase.execute(newState)
 
         assertThat(result).isTrue()
     }
@@ -36,7 +36,7 @@ class CreateTaskStateUseCaseTest {
 
         every { repository.createTaskState(newState) } returns false
 
-        val result = createStateUseCase.execute(newState)
+        val result = createTaskStateUseCase.execute(newState)
 
         assertThat(result).isFalse()
     }

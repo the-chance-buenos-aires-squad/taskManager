@@ -1,16 +1,16 @@
 package data.dataSource
-import data.mapper.StateMapper
+
+import data.mapper.TaskStateMapper
 import java.io.File
 import data.util.CsvHandler
-import domain.entities.State
-import domain.entities.StateIndices
+import domain.entities.TaskState
 
 class TaskStateCSVDataSource(
     private val file: File,
     private val csvHandler: CsvHandler
-): TaskStateDataSource {
+) : TaskStateDataSource {
 
-    override fun createTaskState(state: State): Boolean {
+    override fun createTaskState(state: TaskState): Boolean {
         val existingTaskStates = getAllTaskStates()
         if (existingTaskStates.any { it.id == state.id }) return false
 
@@ -19,7 +19,7 @@ class TaskStateCSVDataSource(
         return true
     }
 
-    override fun editTaskState(editState: State): Boolean {
+    override fun editTaskState(editState: TaskState): Boolean {
         val allStates = getAllTaskStates().toMutableList()
         println(allStates)
         val index = allStates.indexOfFirst { it.id == editState.id }
@@ -44,10 +44,10 @@ class TaskStateCSVDataSource(
         return false
     }
 
-    override fun getAllTaskStates(): List<State> {
+    override fun getAllTaskStates(): List<TaskState> {
         if (!file.exists()) return emptyList()
         return csvHandler.read(file)
-            .mapNotNull { parts -> StateMapper.map(parts)}
+            .mapNotNull { parts -> TaskStateMapper.map(parts) }
     }
 
     override fun existsTaskState(stateId: String): Boolean {
@@ -55,7 +55,7 @@ class TaskStateCSVDataSource(
         return allStates.any { it.id == stateId }
     }
 
-    private fun writeTaskStates(states: List<State>) {
+    private fun writeTaskStates(states: List<TaskState>) {
         file.writeText("")
         try {
             states.forEach { state ->

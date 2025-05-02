@@ -1,7 +1,7 @@
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.TaskStateCSVDataSource
 import data.repositories.TaskStateRepositoryImpl
-import domain.entities.State
+import domain.entities.TaskState
 import dummyStateData.DummyTaskState
 import io.mockk.*
 import org.junit.jupiter.api.*
@@ -39,7 +39,7 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should edit state successfully when this state is existing`() {
         val todoState = DummyTaskState.todo
-        val updatedToDoState = State("1", "In Progress", "P001")
+        val updatedToDoState = TaskState("1", "In Progress", "P001")
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
         every { mockCSVDataSource.editTaskState(updatedToDoState) } returns true
@@ -51,7 +51,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return false when editing non existent state`() {
-        val nonExistentState = State("99", "Non-existent State", "P12")
+        val nonExistentState = TaskState("99", "Non-existent State", "P12")
         every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
 
         val result = stateRepository.editTaskState(nonExistentState)
@@ -62,7 +62,7 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should not update state when projectId does not match`() {
         val todoState = DummyTaskState.done
-        val updatedDoState = State("3", "In Progress", "P012")
+        val updatedDoState = TaskState("3", "In Progress", "P012")
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
 

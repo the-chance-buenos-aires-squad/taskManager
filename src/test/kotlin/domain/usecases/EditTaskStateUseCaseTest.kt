@@ -10,11 +10,11 @@ import kotlin.test.Test
 
 class EditTaskStateUseCaseTest {
     private var repository: TaskStateRepository = mockk()
-    private lateinit var editStateUseCase: EditTaskStateUseCase
+    private lateinit var editTaskStateUseCase: EditTaskStateUseCase
 
     @BeforeEach
     fun setUp() {
-        editStateUseCase = EditTaskStateUseCase(repository)
+        editTaskStateUseCase = EditTaskStateUseCase(repository)
     }
 
     @Test
@@ -23,7 +23,7 @@ class EditTaskStateUseCaseTest {
 
         every { repository.editTaskState(updatedState) } returns true
 
-        val result = editStateUseCase.execute(updatedState)
+        val result = editTaskStateUseCase.execute(updatedState)
 
         assertThat(result).isTrue()
     }
@@ -34,7 +34,7 @@ class EditTaskStateUseCaseTest {
 
         every { repository.editTaskState(updatedState) } returns false
 
-        val result = editStateUseCase.execute(updatedState)
+        val result = editTaskStateUseCase.execute(updatedState)
 
         assertThat(result).isFalse()
     }

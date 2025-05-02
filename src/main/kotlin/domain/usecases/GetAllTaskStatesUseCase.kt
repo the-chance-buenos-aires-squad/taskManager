@@ -1,10 +1,10 @@
 package domain.usecases
 
-import domain.entities.State
+import domain.entities.TaskState
 import domain.repositories.TaskStateRepository
 
-class GetAllTaskStatesUseCase (private val repository: TaskStateRepository) {
-    fun execute() : List<State> {
+class GetAllTaskStatesUseCase(private val repository: TaskStateRepository) {
+    fun execute(): List<TaskState> {
         return repository.getAllTaskStates()
     }
 }
