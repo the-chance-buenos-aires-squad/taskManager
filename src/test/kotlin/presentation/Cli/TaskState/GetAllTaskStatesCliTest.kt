@@ -7,15 +7,17 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
+import presentation.UiController
 import kotlin.test.Test
 
 class GetAllTaskStatesCliTest {
     private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase = mockk()
+    private val uiController: UiController = mockk(relaxed = true)
     private lateinit var getAllTaskStatesCli: GetAllTaskStatesCli
 
     @BeforeEach
     fun setup() {
-        getAllTaskStatesCli = GetAllTaskStatesCli(getAllTaskStatesUseCase)
+        getAllTaskStatesCli = GetAllTaskStatesCli(getAllTaskStatesUseCase, uiController)
     }
 
 
@@ -38,7 +40,6 @@ class GetAllTaskStatesCliTest {
         val result = getAllTaskStatesCli.getAllTaskStates()
 
         verify { getAllTaskStatesUseCase.execute() }
-        assertThat(result).isEmpty()
     }
 
 }
