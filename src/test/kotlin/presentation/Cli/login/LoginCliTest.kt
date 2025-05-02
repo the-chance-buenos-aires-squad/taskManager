@@ -1,6 +1,7 @@
 import domain.entities.User
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
+import dummyData.DummyUser
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,6 +19,7 @@ class LoginCliTest {
     private val authenticationUseCase: AuthenticationUseCase = mockk()
     private val adminDashBoardCli: AdminDashBoardCli = mockk(relaxed = true)
     private val mateDashBoardCli: MateDashBoardCli = mockk(relaxed = true)
+    val testUser = DummyUser.dummyUserOne
 
     @BeforeEach
     fun setup() {
@@ -27,16 +29,8 @@ class LoginCliTest {
     @Test
     fun `should login successfully as admin and redirect to admin dashboard`() {
         // Given
-        val user = User(
-            id = UUID.randomUUID(),
-            username = "admin",
-            password = "hashedPass",
-            role = UserRole.ADMIN,
-            createdAt = mockk()
-        )
-
-        every { uiController.readInput() } returnsMany listOf("admin", "password")
-        every { authenticationUseCase.login("admin", "password") } returns user
+        every { uiController.readInput() } returnsMany listOf(testUser.username, testUser.password)
+        every { authenticationUseCase.login(testUser.username, testUser.password) } returns testUser
 
         // When
         loginCli.start()
@@ -46,7 +40,7 @@ class LoginCliTest {
             uiController.printMessage("\n=== Login ===")
             uiController.printMessage("Username: ")
             uiController.printMessage("Password: ")
-            uiController.printMessage("\nWelcome admin!")
+            uiController.printMessage("\nWelcome adminUserName!")
             adminDashBoardCli.start()
         }
     }
