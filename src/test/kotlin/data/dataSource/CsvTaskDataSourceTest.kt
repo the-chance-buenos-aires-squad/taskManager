@@ -1,148 +1,142 @@
 package data.datasource
 
-import domain.entities.Task
-import org.junit.jupiter.api.*
+import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.CsvTaskDataSource
+import data.dataSource.util.CsvHandler
+import di.Paths
+import domain.entities.Task
+import org.junit.jupiter.api.*
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.assertNotNull
 
+class CsvTaskDataSourceTest() {
 
-class CsvTaskDataSourceTest {
-
-    private val testFilePath = "data/resource/test_tasks.csv"
+    private lateinit var file: File
     private lateinit var dataSource: CsvTaskDataSource
+    private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
 
     @BeforeEach
-    fun setup() {
-        File(testFilePath).apply {
-            parentFile.mkdirs()
+    fun setUp() {
+        file = File.createTempFile("task_test", ".csv").apply {
             writeText("")
+            deleteOnExit()
         }
-        dataSource = CsvTaskDataSource(testFilePath)
+        dataSource = CsvTaskDataSource(csvHandler, file)
     }
-
     @AfterEach
-    fun teardown() {
-        File(testFilePath).delete()
+    fun tearDown() {
+        file.writeText("")
     }
-
     @Test
-    fun `should save a task and retrieve it`() {
-        // given
+    fun `save should persist task and getAll should retrieve it`() {
         val task = sampleTask()
-
-        // when
         dataSource.save(task)
         val tasks = dataSource.getAll()
-
-        // then
-        assertThat(tasks).isNotEmpty()
+        assertThat(tasks.first()).isEqualTo(task)
     }
 
     @Test
-    fun `should get a task by ID`() {
-        // given
+    fun `getById should return correct task`() {
         val task = sampleTask()
         dataSource.save(task)
-
-        // when
-        val found = dataSource.getById(task.id)
-
-        // then
-        assertNotNull(found)
+        val found = dataSource.getById(task.id.toString())
+        assertThat(found).isEqualTo(task)
     }
 
     @Test
-    fun `should overwrite all tasks`() {
-        // given
-        val tasks = listOf(sampleTask(), sampleTask(title = "Second"))
-
-        // when
+    fun `overwriteAll should replace all existing tasks`() {
+        val tasks = listOf(sampleTask("A"), sampleTask("B"))
         dataSource.overwriteAll(tasks)
         val result = dataSource.getAll()
-
-        // then
-        assertThat(result).hasSize(2)
-
+        assertThat(result.map { it.title }).containsExactly("A", "B")
     }
 
     @Test
-    fun `should update a task`() {
-        // given
-        val task = sampleTask(title = "Old Title")
+    fun `update should modify existing task`() {
+        val task = sampleTask("Old")
         dataSource.save(task)
+        val updated = task.copy(title = "New")
+        val success = dataSource.update(updated)
 
-        // when
-        val updatedTask = task.copy(title = "New Title")
-        dataSource.update(updatedTask)
-
-        val result = dataSource.getById(task.id)
-
-        // then
-        assertNotNull(result)
+        val result = dataSource.getById(task.id.toString())
+        assertThat(success).isTrue()
+        assertThat(result?.title).isEqualTo("New")
     }
 
     @Test
-    fun `should delete a task`() {
-        // given
+    fun `delete should remove task`() {
         val task = sampleTask()
         dataSource.save(task)
+        val deleted = dataSource.delete(task.id.toString())
+        assertThat(deleted).isTrue()
+        assertThat(dataSource.getAll()).isEmpty()
+    }
 
-        // when
-        dataSource.delete(task.id)
-        val tasks = dataSource.getAll()
+    @Test
+    fun `parse should return null for malformed data`() {
+        val malformedRow = listOf("invalid-uuid", "incomplete title")
+        val method = CsvTaskDataSource::class.java.getDeclaredMethod("parse", List::class.java)
+        method.isAccessible = true
+        val result = method.invoke(dataSource, malformedRow)
+        assertThat(result).isNull()
+    }
 
-        // then
-        assertThat(tasks).isNotEmpty()
+    @Test
+    fun `delete should return false for non-existent task`() {
+        val randomId = UUID.randomUUID().toString()
+        val result = dataSource.delete(randomId)
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `update should return false for non-existent task`() {
+        val nonExistentTask = sampleTask()
+        val result = dataSource.update(nonExistentTask)
+        assertThat(result).isFalse()
     }
     @Test
-    fun `should throw exception if file does not exist when calling getAll`() {
-        // given
-        val nonExistentFilePath = "data/resource/non_existing_file.csv"
-        val file = File(nonExistentFilePath)
-        if (file.exists()) file.delete()
-
-        val dataSource = CsvTaskDataSource(nonExistentFilePath)
-
-        // when & then
-        val exception = assertThrows<IllegalStateException> {
-            dataSource.getAll()
-        }
-
-        assertThat(exception.message).contains("CSV file not found")
+    fun `delete should return false for invalid UUID string`() {
+        val invalidId = "not-a-uuid"
+        val result = dataSource.delete(invalidId)
+        assertThat(result).isFalse()
     }
     @Test
-    fun `should throw exception if file does not exist when calling getById`() {
-        // given
-        val nonExistentFilePath = "data/resource/missing_tasks.csv"
-        val file = File(nonExistentFilePath)
-        if (file.exists()) file.delete()
-
-        val dataSource = CsvTaskDataSource(nonExistentFilePath)
-        val randomId = UUID.randomUUID()
-
-        // when & then
-        val exception = assertThrows<IllegalStateException> {
-            dataSource.getById(randomId)
-        }
-
-        assertThat(exception.message).contains("CSV file not found")
+    fun `delete should return false for valid UUID string that does not match any task`() {
+        val nonExistentId = UUID.randomUUID().toString()
+        val result = dataSource.delete(nonExistentId)
+        assertThat(result).isFalse()
     }
+    @Test
+    fun `getById should return null and catch IllegalArgumentException for malformed UUID`() {
+        val malformedId = "not-a-valid-uuid"
+
+        val result = dataSource.getById(malformedId)
+
+        assertThat(result).isNull()
+    }
+
     private fun sampleTask(
         title: String = "Sample Task",
-        id: UUID = UUID.randomUUID()
+        id: UUID = UUID.randomUUID(),
+        description: String = "Test description",
+        assignedTo: String? = null
     ): Task {
         val now = LocalDateTime.now()
         return Task(
             id = id,
             title = title,
-            description = "Test description",
+            description = description,
             projectId = "proj-001",
             stateId = "todo",
-            assignedTo = null,
+            assignedTo = assignedTo,
             createdBy = "tester",
             createdAt = now,
             updatedAt = now
