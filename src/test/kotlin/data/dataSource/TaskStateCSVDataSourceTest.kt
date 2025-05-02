@@ -4,13 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import data.util.CsvHandler
 import domain.entities.State
 import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import java.io.File
 import kotlin.test.Test
 
 class TaskStateCSVDataSourceTest {
 
-    private var testStateFile: File = File("test_states.csv")
+    private var testStateFile: File = File.createTempFile("test_states", "csv")
     private lateinit var csvHandler: CsvHandler
     private lateinit var taskStateCSVDataSource: TaskStateCSVDataSource
 
@@ -21,6 +22,7 @@ class TaskStateCSVDataSourceTest {
 
     @BeforeEach
     fun setup() {
+        csvHandler = mockk()
         taskStateCSVDataSource = TaskStateCSVDataSource(testStateFile, csvHandler)
     }
 
@@ -32,7 +34,6 @@ class TaskStateCSVDataSourceTest {
 
         assertThat(result).isTrue()
     }
-
 
     @Test
     fun `should return false when state already exists`() {
