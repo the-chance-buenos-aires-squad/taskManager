@@ -2,7 +2,7 @@ import com.google.common.truth.Truth.assertThat
 import data.dataSource.TaskStateCSVDataSource
 import data.repositories.TaskStateRepositoryImpl
 import domain.entities.State
-import dummyStateData.DummyState
+import dummyStateData.DummyTaskState
 import io.mockk.*
 import org.junit.jupiter.api.*
 
@@ -22,7 +22,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should edit state successfully when this state is existing`() {
-        val todoState = DummyState.todo
+        val todoState = DummyTaskState.todo
         val updatedToDoState = State("1", "In Progress", "P001")
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
@@ -45,7 +45,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should not update state when projectId does not match`() {
-        val todoState = DummyState.done
+        val todoState = DummyTaskState.done
         val updatedDoState =  State("3", "In Progress", "P012")
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
@@ -66,7 +66,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return false when delete non-existing state`() {
-        every { mockCSVDataSource.getAllTaskStates() } returns listOf(DummyState.readyForReview)
+        every { mockCSVDataSource.getAllTaskStates() } returns listOf(DummyTaskState.readyForReview)
 
         val result = stateRepository.deleteTaskState("99")
 
@@ -85,7 +85,7 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should return all states when they exist`() {
         every { mockCSVDataSource.getAllTaskStates() } returns
-                listOf(DummyState.readyForReview, DummyState.blocked)
+                listOf(DummyTaskState.readyForReview, DummyTaskState.blocked)
 
         val result = stateRepository.getAllTaskStates()
 
@@ -103,9 +103,9 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return true when the state exists`() {
-        every { mockCSVDataSource.existsTaskState(DummyState.todo.id) } returns true
+        every { mockCSVDataSource.existsTaskState(DummyTaskState.todo.id) } returns true
 
-        val result = stateRepository.existsTaskState(DummyState.todo.id)
+        val result = stateRepository.existsTaskState(DummyTaskState.todo.id)
 
         assertThat(result).isTrue()
     }

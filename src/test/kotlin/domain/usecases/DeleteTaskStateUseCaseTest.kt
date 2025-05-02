@@ -2,7 +2,7 @@ package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
-import dummyStateData.DummyState
+import dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
@@ -20,7 +20,7 @@ class DeleteTaskStateUseCaseTest{
 
   @Test
   fun `should edit state successfully when repository returns true`() {
-   val deletedTaskState = DummyState.todo.id
+   val deletedTaskState = DummyTaskState.todo.id
 
    every { repository.deleteTaskState(deletedTaskState) } returns true
 
@@ -31,7 +31,7 @@ class DeleteTaskStateUseCaseTest{
 
   @Test
   fun `should fail to edit state when repository returns false`() {
-   val deletedTaskState = DummyState.blocked.id
+   val deletedTaskState = DummyTaskState.blocked.id
 
    every { repository.deleteTaskState(deletedTaskState) } returns false
 

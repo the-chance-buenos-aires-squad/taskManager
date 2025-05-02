@@ -7,23 +7,23 @@ import domain.repositories.TaskStateRepository
 class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateCSVDataSource
 ): TaskStateRepository{
-    override fun createState(state: State): Boolean {
+    override fun createTaskState(state: State): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun editState(state: State): Boolean {
+    override fun editTaskState(state: State): Boolean {
         return taskStateCSVDataSource.editTaskState(state)
     }
 
-    override fun deleteState(stateId: String): Boolean {
-        TODO("Not yet implemented")
+    override fun deleteTaskState(stateId: String): Boolean {
+        return taskStateCSVDataSource.deleteTaskState(stateId)
     }
 
-    override fun getAllStates(): List<State> {
-        TODO("Not yet implemented")
+    override fun getAllTaskStates(): List<State> {
+        return taskStateCSVDataSource.getAllTaskStates()
     }
 
-    override fun existsState(stateId: String): Boolean {
+    override fun existsTaskState(stateId: String): Boolean {
         return taskStateCSVDataSource.existsTaskState(stateId)
     }
 }

@@ -2,7 +2,7 @@ package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
-import dummyStateData.DummyState
+import dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,7 @@ class GetAllTaskStatesUseCaseTest {
 
     @Test
     fun `should return all task states from repository when they exist`() {
-        val allTaskStates = listOf(DummyState.inProgress, DummyState.readyForReview)
+        val allTaskStates = listOf(DummyTaskState.inProgress, DummyTaskState.readyForReview)
         every { repository.getAllTaskStates() } returns allTaskStates
 
 

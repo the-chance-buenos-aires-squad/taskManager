@@ -3,7 +3,7 @@ package dummyStateData
 import domain.entities.State
 
 
-object DummyState {
+object DummyTaskState {
     val todo = State(
         id = "1",
         name = "To Do",

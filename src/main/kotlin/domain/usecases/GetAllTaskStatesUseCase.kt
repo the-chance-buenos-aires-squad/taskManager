@@ -5,6 +5,6 @@ import domain.repositories.TaskStateRepository
 
 class GetAllTaskStatesUseCase (private val repository: TaskStateRepository) {
     fun execute() : List<State> {
-        TODO("")
+        return repository.getAllTaskStates()
     }
 }

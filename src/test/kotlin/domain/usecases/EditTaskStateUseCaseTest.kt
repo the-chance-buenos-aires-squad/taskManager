@@ -2,7 +2,7 @@ package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
-import dummyStateData.DummyState
+import dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -19,9 +19,9 @@ class EditTaskStateUseCaseTest {
 
     @Test
     fun `should edit state successfully when repository returns true`() {
-        val updatedState = DummyState.inProgress
+        val updatedState = DummyTaskState.inProgress
 
-        every { repository.editState(updatedState) } returns true
+        every { repository.editTaskState(updatedState) } returns true
 
         val result = editStateUseCase.execute(updatedState)
 
@@ -30,9 +30,9 @@ class EditTaskStateUseCaseTest {
 
     @Test
     fun `should fail to edit state when repository returns false`() {
-        val updatedState = DummyState.inProgress
+        val updatedState = DummyTaskState.inProgress
 
-        every { repository.editState(updatedState) } returns false
+        every { repository.editTaskState(updatedState) } returns false
 
         val result = editStateUseCase.execute(updatedState)
 

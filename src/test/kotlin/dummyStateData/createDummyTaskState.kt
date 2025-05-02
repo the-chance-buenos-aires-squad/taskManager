@@ -1,6 +1,6 @@
 import domain.entities.State
 
-fun createDummyState(
+fun createDummyTaskState(
     id: String,
     name: String,
     projectId: String
