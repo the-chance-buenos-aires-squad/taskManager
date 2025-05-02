@@ -6,8 +6,8 @@ import domain.entities.EntityType
 import java.time.LocalDateTime
 
 
-object createDummyAudit {
-    val dummyTaskAudit_CreateAction = Audit(
+object createDummyAudits {
+    val dummyTaskCreateAction = Audit(
         id = "121",
         entityId = "entity_id",
         entityType = EntityType.TASK,
@@ -20,7 +20,7 @@ object createDummyAudit {
     )
 
 
-    val dummyProjectAudit_CreateAction = Audit(
+    val dummyProjectCreateAction = Audit(
         id = "121",
         entityId = "entity_id",
         entityType = EntityType.PROJECT,
@@ -32,7 +32,7 @@ object createDummyAudit {
         timestamp = LocalDateTime.now()
     )
 
-    val dummyUserAudit_UpdateAction = Audit(
+    val dummyUserUpdateAction = Audit(
         id = "121",
         entityId = "entity_id",
         entityType = EntityType.USER,
