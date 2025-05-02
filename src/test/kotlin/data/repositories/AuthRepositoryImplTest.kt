@@ -10,8 +10,8 @@ import kotlin.test.Test
 class AuthRepositoryImplTest {
 
     private lateinit var authRepository: AuthRepositoryImpl
-    private val testAdminUser = DummyUser.testUserOne
-    private val testMateUser = DummyUser.testUserTwo
+    private val testAdminUser = DummyUser.dummyUserOne
+    private val testMateUser = DummyUser.dummyUserTwo
 
     @BeforeEach
     fun setup() {

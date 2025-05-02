@@ -9,11 +9,9 @@ import data.dataSource.user.UserDataSource
 
 
 import data.dataSource.util.CsvHandler
-import data.repositories.UserRepositoryImpl
 import data.repositories.mappers.Mapper
 import data.repositories.mappers.UserMapper
 import domain.entities.User
-import domain.repositories.UserRepository
 import data.repositories.AuthRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.repositories.AuthRepository
@@ -40,7 +38,7 @@ val dataModule = module {
     single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
 
     single<AuthRepository> { AuthRepositoryImpl() }
-    single<UserRepository> { UserRepositoryImpl(get()) }
+    single<UserRepository> { UserRepositoryImpl(get(),get()) }
 
 
 }

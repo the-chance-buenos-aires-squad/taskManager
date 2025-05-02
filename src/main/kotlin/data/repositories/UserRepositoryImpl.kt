@@ -11,7 +11,7 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
     override fun addUser(user: User): Boolean {
-        return userDataSource.insertUser(user)
+        return userDataSource.addUser(userMapper.mapEntityToRow(user))
     }
 
     override fun updateUser(user: User): Boolean {
