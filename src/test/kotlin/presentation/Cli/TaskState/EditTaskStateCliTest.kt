@@ -1,0 +1,79 @@
+package presentation.Cli.TaskState
+
+import com.google.common.truth.Truth.assertThat
+import domain.Validator.TaskStateInputValidator
+import domain.usecases.EditTaskStateUseCase
+import dummyStateData.DummyTaskState
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
+import presentation.UiController
+import kotlin.test.Test
+
+class EditTaskStateCliTest {
+    private val editTaskStateUseCase: EditTaskStateUseCase = mockk(relaxed = true)
+    private val uiController: UiController = mockk(relaxed = true)
+    private val inputValidator = TaskStateInputValidator()
+    private lateinit var editTaskStateCli: EditTaskStateCli
+
+    private val taskState = DummyTaskState.todo
+
+    @BeforeEach
+    fun setup() {
+        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, uiController, inputValidator)
+    }
+
+    @Test
+    fun `should call execute when editing task state succeeds`() {
+        every { editTaskStateUseCase.execute(any()) } returns true
+        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+
+        editTaskStateCli.editTaskState()
+
+        verify { editTaskStateUseCase.execute(any()) }
+    }
+
+    @Test
+    fun `should call execute when editing task state fails`() {
+        every { editTaskStateUseCase.execute(any()) } returns false
+        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
+
+        editTaskStateCli.editTaskState()
+
+        verify { editTaskStateUseCase.execute(any()) }
+    }
+
+    @Test
+    fun `should throw exception when ID is empty`() {
+        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            editTaskStateCli.editTaskState()
+        }
+        assertThat(exception.message).isEqualTo("New ID can't be empty")
+    }
+
+    @Test
+    fun `should throw exception when name is less than 2 letters`() {
+        every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            editTaskStateCli.editTaskState()
+        }
+        assertThat(exception.message).isEqualTo("New Name must be at least 2 letters")
+    }
+
+    @Test
+    fun `should throw exception when project ID is invalid`() {
+        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, "X01")
+
+        val exception = assertThrows<IllegalArgumentException> {
+            editTaskStateCli.editTaskState()
+        }
+        assertThat(exception.message).isEqualTo("New Project ID must start with 'P' followed by at least two digits (e.g., P01, P123)")
+    }
+
+
+}

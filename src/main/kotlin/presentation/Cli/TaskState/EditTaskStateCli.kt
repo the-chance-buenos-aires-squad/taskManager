@@ -1,0 +1,25 @@
+package presentation.Cli.TaskState
+
+import domain.Validator.TaskStateInputValidator
+import domain.usecases.EditTaskStateUseCase
+import presentation.UiController
+
+class EditTaskStateCli(
+    private val editTaskStateUseCase: EditTaskStateUseCase,
+    private val uiController: UiController,
+    private val inputValidator: TaskStateInputValidator
+) {
+    private val inputHandler = TaskStateInputHandler(uiController, inputValidator)
+
+    fun editTaskState() {
+        val taskState = inputHandler.readAndValidateUserInputs(isEdit = true)
+        val result = editTaskStateUseCase.execute(taskState)
+
+        uiController.printMessage(
+            if (result) "Task state edited successfully."
+            else "Failed to edit task state."
+        )
+    }
+
+}
+
