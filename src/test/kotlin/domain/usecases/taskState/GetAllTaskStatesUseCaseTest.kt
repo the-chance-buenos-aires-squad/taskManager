@@ -1,8 +1,9 @@
-package domain.usecases
+package domain.usecases.taskState
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
-import dummyStateData.DummyTaskState
+import domain.usecases.taskState.GetAllTaskStatesUseCase
+import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach

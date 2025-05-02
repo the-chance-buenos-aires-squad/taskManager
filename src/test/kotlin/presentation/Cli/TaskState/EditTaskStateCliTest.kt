@@ -2,8 +2,8 @@ package presentation.Cli.TaskState
 
 import com.google.common.truth.Truth.assertThat
 import domain.Validator.TaskStateInputValidator
-import domain.usecases.EditTaskStateUseCase
-import dummyStateData.DummyTaskState
+import domain.usecases.taskState.EditTaskStateUseCase
+import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

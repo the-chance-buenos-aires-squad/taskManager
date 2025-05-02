@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.taskState
 
 import domain.repositories.TaskStateRepository
 

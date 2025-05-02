@@ -1,6 +1,6 @@
 package presentation.Cli.TaskState
 
-import domain.usecases.DeleteTaskStateUseCase
+import domain.usecases.taskState.DeleteTaskStateUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

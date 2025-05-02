@@ -1,4 +1,4 @@
-package dummyStateData
+package dummyData.dummyStateData
 
 import domain.entities.TaskState
 

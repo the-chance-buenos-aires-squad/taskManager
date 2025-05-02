@@ -1,6 +1,6 @@
 package presentation.Cli.TaskState
 
-import domain.usecases.DeleteTaskStateUseCase
+import domain.usecases.taskState.DeleteTaskStateUseCase
 import presentation.UiController
 
 class DeleteTaskStateCli(

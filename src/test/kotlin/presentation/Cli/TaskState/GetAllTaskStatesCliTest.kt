@@ -1,8 +1,8 @@
 package presentation.Cli.TaskState
 
 import com.google.common.truth.Truth.assertThat
-import domain.usecases.GetAllTaskStatesUseCase
-import dummyStateData.DummyTaskState
+import domain.usecases.taskState.GetAllTaskStatesUseCase
+import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.taskState
 
 import com.google.common.truth.Truth.assertThat
 import kotlin.test.BeforeTest
@@ -6,7 +6,8 @@ import kotlin.test.Test
 import io.mockk.every
 import io.mockk.mockk
 import domain.repositories.TaskStateRepository
-import dummyStateData.DummyTaskState
+import domain.usecases.taskState.CreateTaskStateUseCase
+import dummyData.dummyStateData.DummyTaskState
 
 class CreateTaskStateUseCaseTest {
 

@@ -1,8 +1,8 @@
-package data.dataSource
+package data.dataSource.taskState
 
-import data.mapper.TaskStateMapper
+import data.dataSource.util.CsvHandler
+import data.repositories.mappers.TaskStateMapper
 import java.io.File
-import data.util.CsvHandler
 import domain.entities.TaskState
 
 class TaskStateCSVDataSource(
@@ -47,7 +47,7 @@ class TaskStateCSVDataSource(
     override fun getAllTaskStates(): List<TaskState> {
         if (!file.exists()) return emptyList()
         return csvHandler.read(file)
-            .mapNotNull { parts -> TaskStateMapper.map(parts) }
+            .mapNotNull { parts -> TaskStateMapper().mapRowToEntity(parts) }
     }
 
     override fun existsTaskState(stateId: String): Boolean {

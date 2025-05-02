@@ -1,8 +1,8 @@
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.TaskStateCSVDataSource
+import data.dataSource.taskState.TaskStateCSVDataSource
 import data.repositories.TaskStateRepositoryImpl
 import domain.entities.TaskState
-import dummyStateData.DummyTaskState
+import dummyData.dummyStateData.DummyTaskState
 import io.mockk.*
 import org.junit.jupiter.api.*
 

@@ -6,21 +6,23 @@ import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
 import data.dataSource.auditDataSource.AuditDataSource
 import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.taskState.TaskStateCSVDataSource
+import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
 import data.repositories.ProjectRepositoryImpl
 import data.repositories.AuditRepositoryImpl
+import data.repositories.TaskStateRepositoryImpl
 import data.repositories.UserRepositoryImpl
-import data.repositories.mappers.AuditMapper
-import data.repositories.mappers.Mapper
-import data.repositories.mappers.ProjectMapper
-import data.repositories.mappers.UserMapper
+import data.repositories.mappers.*
 import domain.entities.Project
 import domain.entities.Audit
+import domain.entities.TaskState
 import domain.entities.User
 import domain.repositories.ProjectRepository
 import domain.repositories.AuditRepository
+import domain.repositories.TaskStateRepository
 import domain.repositories.UserRepository
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
@@ -46,6 +48,9 @@ val dataModule = module {
     single<File>(qualifier = Paths.AuditFileQualifier) {
         File(Paths.AuditFilePath)
     }
+    single<File>(qualifier = Paths.TaskStateFileQualifier) {
+        File(Paths.TASK_STATE_FILE_PATH)
+    }
 
     single<Mapper<Audit>> { AuditMapper() }
 
@@ -66,6 +71,10 @@ val dataModule = module {
     single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
 
+    single<Mapper<TaskState>> { TaskStateMapper() }
+    single<TaskStateDataSource> { TaskStateCSVDataSource(get(Paths.TaskStateFileQualifier), get()) }
+    single<TaskStateRepository> { TaskStateRepositoryImpl(get(), get()) }
+
 }
 
 object Paths {
@@ -81,6 +90,9 @@ object Paths {
 
     const val AuditFilePath = "src/main/kotlin/data/resource/audit.csv"
     val AuditFileQualifier: Qualifier = named("AuditFile")
+
+    const val TASK_STATE_FILE_PATH = "src/main/kotlin/data/resource/task_state.csv"
+    val TaskStateFileQualifier: Qualifier = named("TaskStateFilePath")
 
 
 }

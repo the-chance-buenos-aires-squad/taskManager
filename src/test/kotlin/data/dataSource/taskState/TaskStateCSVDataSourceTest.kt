@@ -1,7 +1,7 @@
-package data.dataSource
+package data.dataSource.taskState
 
 import com.google.common.truth.Truth.assertThat
-import data.util.CsvHandler
+import data.dataSource.util.CsvHandler
 import domain.entities.TaskState
 import io.mockk.every
 import io.mockk.mockk

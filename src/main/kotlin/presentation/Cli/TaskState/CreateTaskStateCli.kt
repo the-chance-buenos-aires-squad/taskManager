@@ -1,7 +1,7 @@
 package presentation.Cli.TaskState
 
 import domain.Validator.TaskStateInputValidator
-import domain.usecases.CreateTaskStateUseCase
+import domain.usecases.taskState.CreateTaskStateUseCase
 import presentation.UiController
 
 class CreateTaskStateCli(
