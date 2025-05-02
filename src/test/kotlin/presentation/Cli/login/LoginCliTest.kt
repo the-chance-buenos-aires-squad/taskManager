@@ -111,4 +111,18 @@ class LoginCliTest {
             uiController.printMessage("Error: Database error")
         }
     }
+
+
+    @Test
+    fun `should return after 2 failed attempts`() {
+        // given
+        every { authenticationUseCase.login(any(), any()) } throws Exception("Invalid credentials")
+        every { uiController.readInput() } returnsMany listOf("user1", "pass1", "user2", "pass2")
+
+        // When
+        loginCli.start()
+
+        // Then
+        verify(exactly = 1) { uiController.printMessage("Too many failed attempts. Returning to main menu.") }
+    }
 }
