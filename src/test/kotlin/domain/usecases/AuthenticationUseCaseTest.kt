@@ -8,14 +8,13 @@ import domain.util.MD5Hash
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
     private val authUseCase = AuthenticationUseCase(userRepository)
-    val firstUser = DummyUser.testUserOne
+    val firstUser = DummyUser.dummyUserOne
 
     @Test
     fun `should return user when valid credentials`() {
