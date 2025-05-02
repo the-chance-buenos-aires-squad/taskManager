@@ -33,9 +33,7 @@ jobs:
       - name: Run Linter Check
         run: ./gradlew ktlintCheck
 
-      - uses: le0nidas/ktlint-pr-comments@v1.1
+      - uses: minjunkweon/action-ktlint-auto-review@v1
         if: github.event_name == 'pull_request' && always()
         with:
-          repotoken: ${{ secrets.GITHUB_TOKEN }}
-          arguments: "--disabled_rules=parameter-list-wrapping,final-newline"
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
