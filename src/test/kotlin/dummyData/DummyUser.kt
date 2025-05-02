@@ -11,6 +11,8 @@ object DummyUser {
         password = "adminPassword",
         role = UserRole.ADMIN
     )
+
+    val dummyAdminUser = dummyUserOne.copy()
     val userMapper = UserMapper()
 
     val dummyUserOneRow = userMapper.mapEntityToRow(dummyUserOne)

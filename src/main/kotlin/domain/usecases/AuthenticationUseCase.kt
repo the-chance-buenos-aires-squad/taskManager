@@ -8,8 +8,8 @@ import domain.util.MD5Hasher
 import domain.util.UserValidator
 
 class AuthenticationUseCase(
-    private val repository: UserRepository,
-    val authRepository: AuthRepository
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository
 ) {
 
     fun login(
@@ -28,7 +28,7 @@ class AuthenticationUseCase(
     }
 
     private fun getUserOrThrow(username: String): User {
-        return repository.getUserByUserName(username.trim())
+        return userRepository.getUserByUserName(username.trim())
             ?: throw InvalidCredentialsException()
     }
 
