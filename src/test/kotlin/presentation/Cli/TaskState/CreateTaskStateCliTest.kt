@@ -62,7 +62,7 @@ class CreateTaskStateCliTest {
         every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
 
         val exception = assertThrows<IllegalArgumentException> {
-            CreateTaskStateCli(createTaskStateUseCase, uiController, inputValidator).createTaskState()
+            createTaskStateCli.createTaskState()
         }
 
         assertThat(exception.message).isEqualTo("Name must be at least 2 letters")
