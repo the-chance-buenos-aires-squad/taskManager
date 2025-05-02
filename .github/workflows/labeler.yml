@@ -1,0 +1,126 @@
+name: PR Review Complexity Labeler
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  review-complextiy-labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze code changes
+        id: line_count
+        run: |
+          echo "BASE_SHA=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+          echo "Counting changed lines from base: $BASE_SHA"
+
+          ADDED=$(git diff $BASE_SHA HEAD --unified=0 | grep '^+[^+]' | wc -l)
+          REMOVED=$(git diff $BASE_SHA HEAD --unified=0 | grep '^-[^-]' | wc -l)
+          TOTAL=$((ADDED + REMOVED))
+
+          echo "✅ Added lines: $ADDED"
+          echo "❌ Removed lines: $REMOVED"
+          echo "📊 Total changed lines: $TOTAL"
+          
+          echo "added=$ADDED" >> $GITHUB_OUTPUT
+          echo "removed=$REMOVED" >> $GITHUB_OUTPUT
+          echo "total=$TOTAL" >> $GITHUB_OUTPUT
+
+      - name: Generate complexity label
+        id: size_label
+        run: |
+          TOTAL=${{ steps.line_count.outputs.total }}
+          if [ "$TOTAL" -le 50 ]; then
+            echo "label=Easy to Review" >> "$GITHUB_OUTPUT"
+          elif [ "$TOTAL" -le 200 ]; then
+            echo "label=Moderate Review Effort" >> "$GITHUB_OUTPUT"
+          else
+            echo "label=Difficult to Review" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Selected label: $(cat $GITHUB_OUTPUT | grep label | cut -d= -f2)"
+  
+
+      - name: Apply complexity label
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const newSizeLabel = '${{ steps.size_label.outputs.label }}'.trim();
+            const sizeLabels = ['Easy to Review', 'Moderate Review Effort', 'Difficult to Review'];
+
+            function generateRandomColor() {
+              return Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+            }
+
+            console.log('🔍 New size label:', newSizeLabel);
+
+            try {
+              const { data: prLabels } = await github.rest.issues.listLabelsOnIssue({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number
+              });
+
+              const currentLabelNames = prLabels.map(label => label.name);
+              console.log('🏷 Current labels on PR:', currentLabelNames.join(', '));
+
+              for (const label of sizeLabels) {
+                if (currentLabelNames.includes(label) && label !== newSizeLabel) {
+                  await github.rest.issues.removeLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    name: label
+                  });
+                  console.log(`❌ Removed old size label: ${label}`);
+                }
+              }
+
+              const { data: existingLabels } = await github.rest.issues.listLabelsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100
+              });
+
+              const repoLabels = existingLabels.map(label => label.name);
+
+              if (!repoLabels.includes(newSizeLabel)) {
+                console.log(`🆕 Creating new label: ${newSizeLabel}`);
+
+                try {
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: newSizeLabel,
+                    color: generateRandomColor(),
+                    description: `PR size: ${newSizeLabel}`
+                  });
+                  console.log(`✅ Created new label: ${newSizeLabel}`);
+                } catch (createError) {
+                  console.error(`💥 Error creating label: ${createError}`);
+                }
+              }
+
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: [newSizeLabel]
+              });
+              console.log(`✅ Added label: ${newSizeLabel}`);
+
+            } catch (error) {
+              console.error('💥 Error handling size labels:', error);
+            }
