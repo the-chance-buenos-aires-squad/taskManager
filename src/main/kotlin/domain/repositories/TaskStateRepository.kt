@@ -2,7 +2,7 @@ package domain.repositories
 
 import domain.entities.State
 
-interface StateRepository {
+interface TaskStateRepository {
     fun createState(state: State): Boolean
     fun editState(state: State): Boolean
     fun deleteState(stateId: String): Boolean

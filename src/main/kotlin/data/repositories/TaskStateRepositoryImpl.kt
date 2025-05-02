@@ -1,18 +1,18 @@
 package data.repositories
 
-import data.dataSource.StateCSVDataSource
+import data.dataSource.TaskStateCSVDataSource
 import domain.entities.State
-import domain.repositories.StateRepository
+import domain.repositories.TaskStateRepository
 
-class StateRepositoryImpl(
-    private val stateCSVDataSource: StateCSVDataSource
-): StateRepository{
+class TaskStateRepositoryImpl(
+    private val taskStateCSVDataSource: TaskStateCSVDataSource
+): TaskStateRepository{
     override fun createState(state: State): Boolean {
         TODO("Not yet implemented")
     }
 
     override fun editState(state: State): Boolean {
-        return stateCSVDataSource.editState(state)
+        return taskStateCSVDataSource.editTaskState(state)
     }
 
     override fun deleteState(stateId: String): Boolean {
@@ -24,6 +24,6 @@ class StateRepositoryImpl(
     }
 
     override fun existsState(stateId: String): Boolean {
-        return stateCSVDataSource.existsState(stateId)
+        return taskStateCSVDataSource.existsTaskState(stateId)
     }
 }

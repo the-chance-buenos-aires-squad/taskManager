@@ -1,20 +1,19 @@
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.StateCSVDataSource
-import data.repositories.StateRepositoryImpl
+import data.dataSource.TaskStateCSVDataSource
+import data.repositories.TaskStateRepositoryImpl
 import domain.entities.State
 import dummyStateData.DummyState
 import io.mockk.*
-import junit.framework.TestCase.*
 import org.junit.jupiter.api.*
 
-class StateRepositoryImplTest {
+class TaskStateRepositoryImplTest {
 
-    private val mockCSVDataSource = mockk<StateCSVDataSource>(relaxed = true)
-    private lateinit var stateRepository: StateRepositoryImpl
+    private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
+    private lateinit var stateRepository: TaskStateRepositoryImpl
 
     @BeforeEach
     fun setUp() {
-        stateRepository = StateRepositoryImpl(mockCSVDataSource)
+        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource)
     }
 
     // TODO: Write below all test for createState fun. (write here shahed)
@@ -27,8 +26,8 @@ class StateRepositoryImplTest {
         val todoState = DummyState.todo
         val updatedToDoState = State("1", "In Progress", "P001")
 
-        every { mockCSVDataSource.getAllStates() } returns listOf(todoState)
-        every { mockCSVDataSource.editState(updatedToDoState) } returns true
+        every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
+        every { mockCSVDataSource.editTaskState(updatedToDoState) } returns true
 
         val result = stateRepository.editState(updatedToDoState)
 
@@ -38,7 +37,7 @@ class StateRepositoryImplTest {
     @Test
     fun `should return false when editing non existent state`() {
         val nonExistentState =  State("99", "Non-existent State", "P12")
-        every { mockCSVDataSource.getAllStates() } returns emptyList()
+        every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
 
         val result = stateRepository.editState(nonExistentState)
 
@@ -50,7 +49,7 @@ class StateRepositoryImplTest {
         val todoState = DummyState.done
         val updatedDoState =  State("3", "In Progress", "P012")
 
-        every { mockCSVDataSource.getAllStates() } returns listOf(todoState)
+        every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
 
         val result = stateRepository.editState(updatedDoState)
 

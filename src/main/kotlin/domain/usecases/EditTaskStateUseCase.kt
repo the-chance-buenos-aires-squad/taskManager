@@ -1,9 +1,9 @@
 package domain.usecases
 
 import domain.entities.State
-import domain.repositories.StateRepository
+import domain.repositories.TaskStateRepository
 
-class EditStateUseCase(private val repository: StateRepository) {
+class EditTaskStateUseCase(private val repository: TaskStateRepository) {
     fun execute(state: State): Boolean {
         return repository.editState(state)
     }

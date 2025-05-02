@@ -1,15 +1,12 @@
 package presentation.Cli
 
-import data.dataSource.StateCSVDataSource
-import data.repositories.StateRepositoryImpl
-import domain.repositories.StateRepository
-import domain.usecases.EditStateUseCase
-import domain.usecases.GetAllStatesUseCase
-import org.buinos.domain.entities.State
+import domain.entities.State
+import domain.usecases.EditTaskStateUseCase
+import domain.usecases.GetAllTaskStatesUseCase
 
-class EditUseCaseCli(
-    private val editStateUseCase: EditStateUseCase,
-    private val getAllStatesUseCase: GetAllStatesUseCase
+class EditTaskStateUseCaseCli(
+    private val editStateUseCase: EditTaskStateUseCase,
+    private val getAllStatesUseCase: GetAllTaskStatesUseCase
 ) {
 
     fun start() {

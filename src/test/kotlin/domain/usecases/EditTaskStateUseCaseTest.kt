@@ -1,21 +1,20 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
-import domain.repositories.StateRepository
+import domain.repositories.TaskStateRepository
 import dummyStateData.DummyState
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
-class EditStateUseCaseTest {
-    private var repository: StateRepository = mockk()
-    private lateinit var editStateUseCase: EditStateUseCase
+class EditTaskStateUseCaseTest {
+    private var repository: TaskStateRepository = mockk()
+    private lateinit var editStateUseCase: EditTaskStateUseCase
 
     @BeforeEach
     fun setUp() {
-        editStateUseCase = EditStateUseCase(repository)
+        editStateUseCase = EditTaskStateUseCase(repository)
     }
 
     @Test
