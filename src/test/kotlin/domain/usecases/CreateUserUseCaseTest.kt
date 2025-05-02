@@ -5,8 +5,9 @@ import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.InvalidLengthPasswordException
 import domain.customeExceptions.UserAlreadyExistException
 import domain.customeExceptions.UserNameEmptyException
+import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
@@ -16,9 +17,11 @@ import org.junit.jupiter.api.assertThrows
 
 class CreateUserUseCaseTest {
     private var userRepository: UserRepository = mockk(relaxed = true)
-    private val createUserUseCase = CreateUserUseCase(userRepository)
+    private var authRepository: AuthRepository = mockk(relaxed = true)
+    private val createUserUseCase = CreateUserUseCase(userRepository,authRepository)
     val firstUser = DummyUser.testUserOne
     val secondUser = DummyUser.testUserTwo
+    val mD5Hash = MD5Hasher()
 
     @Test
     fun `should create admin successfully`() {
@@ -123,10 +126,10 @@ class CreateUserUseCaseTest {
     fun `should hash password using MD5 utility`() {
         // Given
         val password = "test123"
-        val expectedHash = MD5Hash.hash(password)
+        val expectedHash = mD5Hash.hash(password)
 
         // When
-        val actualHash = MD5Hash.hash(password)
+        val actualHash = mD5Hash.hash(password)
 
         // Then
         assertThat(actualHash).isEqualTo(expectedHash)
@@ -150,7 +153,7 @@ class CreateUserUseCaseTest {
         verify {
             userRepository.insertUser(
                 match { user ->
-                    user.password == MD5Hash.hash(rawPassword)
+                    user.password == mD5Hash.hash(rawPassword)
                 }
             )
         }

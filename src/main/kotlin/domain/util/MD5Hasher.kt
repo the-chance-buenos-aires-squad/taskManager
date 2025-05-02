@@ -2,9 +2,13 @@ package domain.util
 
 import java.security.MessageDigest
 
-object MD5Hash {
+class MD5Hasher {
     fun hash(input: String): String {
-        val md = MessageDigest.getInstance("MD5")
-        return md.digest(input.toByteArray()).joinToString("") { "%02x".format(it) }
+
+        val messageDigest = MessageDigest.getInstance("MD5")
+
+        return messageDigest.digest(input.toByteArray()).joinToString("") {
+            "%02x".format(it)
+        }
     }
 }

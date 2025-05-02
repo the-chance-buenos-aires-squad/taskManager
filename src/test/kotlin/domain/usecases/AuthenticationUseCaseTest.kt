@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidCredentialsException
 import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.UserRepository
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
@@ -103,7 +103,7 @@ class AuthenticationUseCaseTest {
     fun `should return user when password has special characters`() {
         // Given
         val complexPassword = "P@ssw0rd!123"
-        val complexPasswordUser = firstUser.copy(password = MD5Hash.hash(complexPassword))
+        val complexPasswordUser = firstUser.copy(password = MD5Hasher.hash(complexPassword))
         every { userRepository.getUserByUserName(complexPasswordUser.username) } returns complexPasswordUser
 
         // When

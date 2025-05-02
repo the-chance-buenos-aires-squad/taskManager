@@ -1,24 +1,30 @@
 package domain.usecases
 
 import domain.customeExceptions.InvalidCredentialsException
-import domain.customeExceptions.UserNameEmptyException
 import domain.entities.User
+import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import domain.util.MD5Hash
+import domain.util.MD5Hasher
+import domain.util.UserValidator
 
-class AuthenticationUseCase(private val repository: UserRepository) {
+class AuthenticationUseCase(
+    private val repository: UserRepository,
+    val authRepository: AuthRepository
+) {
 
-    fun login(username: String, password: String): User {
-        validateUsername(username)
+    fun login(
+        username: String,
+        password: String
+    ): User {
+
+        val userValidator = UserValidator()
+        userValidator.validateUsername(username)
+
         val user = getUserOrThrow(username)
-        checkHashPassword(user, password)
-        return user
-    }
 
-    private fun validateUsername(username: String) {
-        if (username.isBlank()) {
-            throw UserNameEmptyException()
-        }
+        checkHashPassword(user, password)
+        authRepository.login(user)
+        return user
     }
 
     private fun getUserOrThrow(username: String): User {
@@ -27,7 +33,8 @@ class AuthenticationUseCase(private val repository: UserRepository) {
     }
 
     private fun checkHashPassword(user: User, inputPassword: String) {
-        val hashedInput = MD5Hash.hash(inputPassword)
+        val md5Hash = MD5Hasher()
+        val hashedInput = md5Hash.hash(inputPassword)
         if (user.password != hashedInput) {
             throw InvalidCredentialsException()
         }
