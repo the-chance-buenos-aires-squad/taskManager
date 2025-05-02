@@ -1,6 +1,6 @@
 package presentation.Cli.TaskState
 
-import domain.Validator.TaskStateInputValidator
+import TaskStateInputValidator
 import domain.entities.TaskState
 import presentation.UiController
 

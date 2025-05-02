@@ -1,8 +1,12 @@
 package presentation.Cli.TaskState
 
+import TaskStateInputValidator
 import com.google.common.truth.Truth.assertThat
-import domain.Validator.TaskStateInputValidator
+import domain.customeExceptions.InvalidIdException
+import domain.customeExceptions.InvalidNameException
+import domain.customeExceptions.InvalidProjectIdException
 import domain.usecases.taskState.CreateTaskStateUseCase
+import domain.usecases.taskState.ExistsTaskStateUseCase
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
@@ -14,6 +18,8 @@ import kotlin.test.Test
 
 class CreateTaskStateCliTest {
     private val createTaskStateUseCase: CreateTaskStateUseCase = mockk(relaxed = true)
+    private val existsTaskStateUseCase: ExistsTaskStateUseCase = mockk(relaxed = true)
+
     private val uiController: UiController = mockk(relaxed = true)
     private val inputValidator = TaskStateInputValidator()
     private lateinit var createTaskStateCli: CreateTaskStateCli
@@ -22,7 +28,7 @@ class CreateTaskStateCliTest {
 
     @BeforeEach
     fun setup() {
-        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, uiController, inputValidator)
+        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase,uiController, inputValidator)
     }
 
     @Test
@@ -50,7 +56,7 @@ class CreateTaskStateCliTest {
     fun `should throw exception when enter empty ID and failed to create task state`() {
         every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.id)
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidIdException> {
             createTaskStateCli.createTaskState()
         }
         assertThat(exception.message).isEqualTo("ID can't be empty")
@@ -61,7 +67,7 @@ class CreateTaskStateCliTest {
 
         every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidNameException> {
             createTaskStateCli.createTaskState()
         }
 
@@ -72,7 +78,7 @@ class CreateTaskStateCliTest {
     fun `should throw exception when project id does not start with P and followed by numbers`() {
         every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, "X01")
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidProjectIdException> {
             createTaskStateCli.createTaskState()
         }
         assertThat(exception.message).isEqualTo("Project ID must start with 'P' followed by at least two digits (e.g., P01, P123)")
