@@ -34,8 +34,9 @@ class CreateUserCli(
         val roleInput = uiController.readInput()
         val role: UserRole? = UserRole.entries.find { it.name ==  roleInput}
         //createUserUseCase.addUser(username,password)
-        val userIsAdmin = authRepository.getCurrentUser() != null
-        if(userIsAdmin){
+        val currentLoggedInUser = authRepository.getCurrentUser()
+
+        if(currentLoggedInUser !=null && currentLoggedInUser.role == UserRole.ADMIN){
             when(role){
                 UserRole.MATE ->{
                     createMateUser(usernameInput, passwordInput, confirmPasswordInput)
@@ -48,7 +49,7 @@ class CreateUserCli(
                 }
             }
         }else{
-         uiController.printMessage("You are not allowed to create users.....\n ask the admin to create one")
+         uiController.printMessage(NOT_ALLOWED_MESSAGE,true)
         }
      }
 
@@ -59,7 +60,7 @@ class CreateUserCli(
         role: UserRole
     ) {
         tryCreateNewUser(
-            addUserCal = {
+            addUserCall = {
                 createUserUseCase.addUser(
                     usernameInput,
                     passwordInput,
@@ -72,7 +73,7 @@ class CreateUserCli(
 
     private fun createMateUser(usernameInput: String, passwordInput: String, confirmPasswordInput: String) {
         tryCreateNewUser(
-            addUserCal = {
+            addUserCall = {
                 createUserUseCase.addUser(
                     usernameInput,
                     passwordInput,
@@ -84,12 +85,10 @@ class CreateUserCli(
     }
 
 
-    private fun tryCreateNewUser(addUserCal: () -> Unit) {
+    private fun tryCreateNewUser(addUserCall: () -> Unit) {
         try {
-            addUserCal()
+            addUserCall()
         }catch (e: UserAlreadyExistException){
-            uiController.printMessage(e.message?:"error")
-        }catch (e: CreateUserException){
             uiController.printMessage(e.message?:"error")
         }
     }
@@ -106,6 +105,7 @@ class CreateUserCli(
         const val CONFIRM_PASSWORD_PROMPT_MESSAGE = "confirm password: "
         const val USER_ROLE_PROMPT_MESSAGE = "choose user Role 1-ADMIN , 2-MATE \n: "
 
+        const val NOT_ALLOWED_MESSAGE = "You are not allowed to create users.....\n ask the admin to create one"
     }
 
 }
