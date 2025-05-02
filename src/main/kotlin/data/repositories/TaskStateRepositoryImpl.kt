@@ -8,7 +8,7 @@ class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateCSVDataSource
 ): TaskStateRepository{
     override fun createTaskState(state: State): Boolean {
-        TODO("Not yet implemented")
+        return taskStateCSVDataSource.createTaskState(state)
     }
 
     override fun editTaskState(state: State): Boolean {
