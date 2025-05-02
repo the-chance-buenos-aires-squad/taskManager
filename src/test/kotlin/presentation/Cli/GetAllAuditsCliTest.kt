@@ -7,17 +7,19 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
+import presentation.UiController
 import kotlin.test.Test
 
 class GetAllAuditsCliTest {
 
     private lateinit var getAllAuditCli: GetAllAuditsCli
     private lateinit var getAllAuditUseCase: GetAllAuditUseCase
+    private val uiController:UiController = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
         getAllAuditUseCase = mockk()
-        getAllAuditCli = GetAllAuditsCli(getAllAuditUseCase)
+        getAllAuditCli = GetAllAuditsCli(getAllAuditUseCase,uiController)
     }
 
     @Test

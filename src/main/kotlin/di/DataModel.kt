@@ -11,10 +11,12 @@ import data.repositories.mappers.Mapper
 import domain.entities.Audit
 import domain.repositories.AuditRepository
 import domain.usecases.AddAuditUseCase
+import domain.usecases.GetAllAuditUseCase
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
+import kotlin.math.sin
 
 
 val dataModule = module {
@@ -38,6 +40,7 @@ val dataModule = module {
     single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditMapper = get()) }
 
     single { AddAuditUseCase(auditRepository = get()) }
+    single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
 
 
 }
