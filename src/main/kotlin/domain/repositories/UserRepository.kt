@@ -5,7 +5,7 @@ import domain.entities.User
 
 interface UserRepository {
 
-    fun insertUser(user: User): Boolean
+    fun addUser(user: User): Boolean
     fun updateUser(user: User): Boolean
     fun deleteUser(user: User): Boolean
     fun getUserById(id: String): User?

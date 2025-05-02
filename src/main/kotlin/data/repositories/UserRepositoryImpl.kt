@@ -6,7 +6,7 @@ import domain.repositories.UserRepository
 
 class UserRepositoryImpl(private val userDataSource: UserCsvDataSource) : UserRepository {
 
-    override fun insertUser(user: User): Boolean {
+    override fun addUser(user: User): Boolean {
         return userDataSource.insertUser(user)
     }
 

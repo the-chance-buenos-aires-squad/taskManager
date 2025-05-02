@@ -11,11 +11,11 @@ import java.time.LocalDateTime
 import java.util.*
 
 class CreateUserUseCase(
-    private val repository: UserRepository,
+    private val userRepository: UserRepository,
     val authRepository: AuthRepository
 ) {
 
-    fun createUser(
+    fun addUser(
         username: String, password: String, confirmPassword: String, userRole: UserRole = UserRole.MATE
     ) {
 
@@ -23,7 +23,7 @@ class CreateUserUseCase(
         userValidator.validateUsername(username)
         userValidator.validatePassword(password, confirmPassword)
 
-        if (repository.getUserByUserName(username.trim()) != null) throw UserAlreadyExistException()
+        if (userRepository.getUserByUserName(username.trim()) != null) throw UserAlreadyExistException()
 
         val mD5Hash = MD5Hasher()
         val hashedPassword = mD5Hash.hash(password)
@@ -36,10 +36,8 @@ class CreateUserUseCase(
             createdAt = LocalDateTime.now()
         )
 
-        if (authRepository.getCurrentUser() != null
-            && authRepository.getCurrentUser()?.role == UserRole.ADMIN
-        ) {
-            repository.insertUser(newUser)
+        if (authRepository.getCurrentUser() != null) {
+            userRepository.addUser(newUser)
         }
     }
 }

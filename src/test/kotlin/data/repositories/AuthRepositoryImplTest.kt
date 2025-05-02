@@ -20,9 +20,6 @@ class AuthRepositoryImplTest {
 
     @Test
     fun `should set current user when logging in with no existing user`() {
-        // given
-        every { authRepository.getCurrentUser() } returns null
-
         // when
         authRepository.login(testAdminUser)
 

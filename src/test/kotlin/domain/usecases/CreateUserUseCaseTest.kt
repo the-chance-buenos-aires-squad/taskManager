@@ -29,7 +29,7 @@ class CreateUserUseCaseTest {
         every { userRepository.getUserByUserName(firstUser.username) } returns null
 
         //when
-        createUserUseCase.createUser(
+        createUserUseCase.addUser(
             username = firstUser.username,
             password = firstUser.password,
             confirmPassword = firstUser.password,
@@ -38,7 +38,7 @@ class CreateUserUseCaseTest {
 
         //then
         verify(exactly = 1) {
-            userRepository.insertUser(
+            userRepository.addUser(
                 match { user ->
                     user.username == firstUser.username &&
                             user.role == firstUser.role
@@ -54,7 +54,7 @@ class CreateUserUseCaseTest {
         every { userRepository.getUserByUserName(secondUser.username) } returns null
 
         //when
-        createUserUseCase.createUser(
+        createUserUseCase.addUser(
             username = secondUser.username,
             password = secondUser.password,
             confirmPassword = secondUser.password,
@@ -63,7 +63,7 @@ class CreateUserUseCaseTest {
 
         //then
         verify(exactly = 1) {
-            userRepository.insertUser(
+            userRepository.addUser(
                 match { user ->
                     user.role == secondUser.role
                 }
@@ -79,7 +79,7 @@ class CreateUserUseCaseTest {
 
         //when & then
         assertThrows<UserAlreadyExistException> {
-            createUserUseCase.createUser(secondUser.username, secondUser.password, secondUser.password, secondUser.role)
+            createUserUseCase.addUser(secondUser.username, secondUser.password, secondUser.password, secondUser.role)
         }
 
     }
@@ -91,7 +91,7 @@ class CreateUserUseCaseTest {
 
         //when & then
         assertThrows<UserNameEmptyException> {
-            createUserUseCase.createUser("", secondUser.password, secondUser.password, secondUser.role)
+            createUserUseCase.addUser("", secondUser.password, secondUser.password, secondUser.role)
         }
 
     }
@@ -103,7 +103,7 @@ class CreateUserUseCaseTest {
 
         //when & then
         assertThrows<InvalidLengthPasswordException> {
-            createUserUseCase.createUser(secondUser.username, "1234", secondUser.password, secondUser.role)
+            createUserUseCase.addUser(secondUser.username, "1234", secondUser.password, secondUser.role)
         }
 
     }
@@ -116,7 +116,7 @@ class CreateUserUseCaseTest {
 
         //when & then
         assertThrows<InvalidConfirmPasswordException> {
-            createUserUseCase.createUser(secondUser.username, secondUser.password, "invalid-confirm", secondUser.role)
+            createUserUseCase.addUser(secondUser.username, secondUser.password, "invalid-confirm", secondUser.role)
         }
 
     }
@@ -138,20 +138,20 @@ class CreateUserUseCaseTest {
 
     @Test
     fun `created user should have hashed password`() {
-        // Arrange
+        // given
         val rawPassword = "rawPassword123"
         every { userRepository.getUserByUserName(any()) } returns null
 
-        // Act
-        createUserUseCase.createUser(
+        // when
+        createUserUseCase.addUser(
             username = "newUser",
             password = rawPassword,
             confirmPassword = rawPassword
         )
 
-        // Assert
+        // then
         verify {
-            userRepository.insertUser(
+            userRepository.addUser(
                 match { user ->
                     user.password == mD5Hash.hash(rawPassword)
                 }
