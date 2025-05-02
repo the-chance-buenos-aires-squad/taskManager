@@ -29,10 +29,8 @@ class GetAllAuditsCliTest {
             createDummyAudits.dummyUserUpdateAction
         )
         every { getAllAuditUseCase.getAllAudit() } returns expectedAudits
-        
         //when
         getAllAuditCli.displayAllAudits()
-        
         //then
         verify { getAllAuditUseCase.getAllAudit() }
     }
@@ -42,10 +40,8 @@ class GetAllAuditsCliTest {
     fun `should display single audit correctly`() {
         //given
         val audit = createDummyAudits.dummyTaskCreateAction
-        
         //when
         val result = getAllAuditCli.displaySingleAudit(audit)
-
         //then
         assertThat(result)
     }

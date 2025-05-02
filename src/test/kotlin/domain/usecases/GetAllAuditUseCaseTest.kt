@@ -1,7 +1,7 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.dummyData.createDummyAudit
+import data.dataSource.dummyData.createDummyAudits
 import data.repositories.AuditRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -31,9 +31,9 @@ class GetAllAuditUseCaseTest {
     fun `should return all audits from data source`() {
         //given
         val expectedAudits = listOf(
-            createDummyAudit.dummyTaskAudit_CreateAction,
-            createDummyAudit.dummyTaskAudit_CreateAction,
-            createDummyAudit.dummyUserAudit_UpdateAction
+            createDummyAudits.dummyTaskCreateAction,
+            createDummyAudits.dummyProjectCreateAction,
+            createDummyAudits.dummyUserUpdateAction
         )
         every { mockedAuditRepository.getAllAudit() } returns expectedAudits
         //when

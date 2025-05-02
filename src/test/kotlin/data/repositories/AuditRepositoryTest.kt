@@ -2,10 +2,9 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.CsvAuditDataSource
-import data.dataSource.dummyData.createDummyAudit
+import data.dataSource.dummyData.createDummyAudits
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -33,9 +32,9 @@ class AuditRepositoryTest{
     fun `should return all audits from data source`() {
         //given
         val expectedAudits = listOf(
-            createDummyAudit.dummyTaskAudit_CreateAction,
-            createDummyAudit.dummyTaskAudit_CreateAction,
-            createDummyAudit.dummyUserAudit_UpdateAction
+            createDummyAudits.dummyTaskCreateAction,
+            createDummyAudits.dummyProjectCreateAction,
+            createDummyAudits.dummyUserUpdateAction
         )
         every { mockedDataSource.getAllAudit() } returns expectedAudits
         //when
