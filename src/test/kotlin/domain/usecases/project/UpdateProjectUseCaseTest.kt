@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.ProjectRepository

@@ -4,8 +4,8 @@ package presentation.Cli.projectClasses
 import presentation.UiController
 
 class ProjectShowMenu(private val uiController: UiController) {
-    fun showMenu(): Int? {
-        println(
+    fun showMenu() {
+        uiController.printMessage(
             """
             === Project Management ===
             1. Create Project
@@ -14,6 +14,5 @@ class ProjectShowMenu(private val uiController: UiController) {
             4. Back
             """.trimIndent()
         )
-        return uiController.readInput().toIntOrNull()
     }
 }

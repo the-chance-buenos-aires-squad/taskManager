@@ -1,20 +1,20 @@
-package data.dataSource
+package data.dataSource.project
 
 
 import data.dataSource.util.CsvHandler
-import data.dataSource.util.toCsvRow
-import data.dataSource.util.toProject
+import data.repositories.mappers.ProjectMapper
 import domain.entities.Project
 import java.io.File
 
-class CsvProjectDataSource(private val file: File, private val csvHandler: CsvHandler) : ProjectDataSource {
-    init {
-        initializeFileIfNeeded()
-    }
+class CsvProjectDataSource(
+    private val file: File,
+    private val csvHandler: CsvHandler,
+    private val projectMapper: ProjectMapper
+) : ProjectDataSource {
 
     override fun saveData(project: Project): Boolean {
         if (findProjectById(project.id) != null) return false
-        csvHandler.write(project.toCsvRow(), file)
+        csvHandler.write(projectMapper.mapEntityToRow(project), file)
         return true
     }
 
@@ -44,25 +44,19 @@ class CsvProjectDataSource(private val file: File, private val csvHandler: CsvHa
 
     override fun getAllProjects(): List<Project> {
         val rows = csvHandler.read(file)
-        return rows.drop(1).mapNotNull {
+        return rows.mapNotNull {
             try {
-                it.toProject()
+                projectMapper.mapRowToEntity(it)
             } catch (e: Exception) {
                 null
             }
         }
     }
 
-    private fun initializeFileIfNeeded() {
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-    }
-
     private fun rewriteAllProjects(projects: List<Project>) {
         file.writeText("") // clear file
         projects.forEach {
-            csvHandler.write(it.toCsvRow(), file)
+            csvHandler.write(projectMapper.mapEntityToRow(it), file)
         }
     }
 }

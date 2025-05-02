@@ -1,13 +1,13 @@
-package data.dataSource
+package data.dataSource.project
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
+import data.repositories.mappers.ProjectMapper
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -17,6 +17,7 @@ class CsvProjectDataSourceTest {
     private lateinit var csvHandler: CsvHandler
     private lateinit var csvWriter: CsvWriter
     private lateinit var csvReader: CsvReader
+    private lateinit var projectMapper: ProjectMapper
     private lateinit var csvProjectDataSource: CsvProjectDataSource
     private val project = createDummyProject()
     private val csvRows = listOf(
@@ -28,11 +29,12 @@ class CsvProjectDataSourceTest {
 
     @BeforeEach
     fun setup() {
+        projectMapper = ProjectMapper()
         csvWriter = mockk(relaxed = true)
         csvReader = mockk(relaxed = true)
         csvHandler = CsvHandler(csvWriter, csvReader)
         testFile = File.createTempFile("testFile", ".csv")
-        csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler)
+        csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler, projectMapper)
     }
 
     @Test

@@ -1,6 +1,6 @@
 package data.repositories
 
-import data.dataSource.ProjectDataSource
+import data.dataSource.project.ProjectDataSource
 import domain.entities.Project
 import domain.repositories.ProjectRepository
 

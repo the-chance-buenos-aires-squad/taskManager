@@ -21,6 +21,6 @@ class ProjectShowMenuTest {
     fun `should print menu and call input handler when call show menu function`() {
         projectShowMenu.showMenu()
 
-        verify { uiController.readInput() }
+        verify { uiController.printMessage(any()) }
     }
 }

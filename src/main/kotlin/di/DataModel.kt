@@ -8,16 +8,22 @@ package di
 //import org.example.logic.RecipesRepository
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.project.ProjectDataSource
 
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 
 
 import data.dataSource.util.CsvHandler
+import data.repositories.ProjectRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import data.repositories.mappers.Mapper
+import data.repositories.mappers.ProjectMapper
 import data.repositories.mappers.UserMapper
+import domain.entities.Project
 import domain.entities.User
+import domain.repositories.ProjectRepository
 import domain.repositories.UserRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
@@ -36,11 +42,18 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
+    single<File>(qualifier = Paths.ProjectFileQualifier) {
+        File(Paths.PROJECTFILEPATH)
+    }
 
     single<Mapper<User>> { UserMapper() }
-    single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
+    single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
 
-    single<UserRepository> { UserRepositoryImpl(get(),get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+
+    single { ProjectMapper() }
+    single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get(), get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
 
 }
 
@@ -51,6 +64,9 @@ object Paths {
      */
     const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
+
+    const val PROJECTFILEPATH = "src/main/kotlin/data/resource/projects.csv"
+    val ProjectFileQualifier: Qualifier = named("ProjectFilePath")
 }
 
 object Files {

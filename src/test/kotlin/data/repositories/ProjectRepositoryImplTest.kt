@@ -1,11 +1,10 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.ProjectDataSource
+import data.dataSource.project.ProjectDataSource
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
