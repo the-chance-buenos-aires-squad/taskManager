@@ -2,6 +2,9 @@ package data.dataSource.taskState
 
 import data.dataSource.util.CsvHandler
 import data.repositories.mappers.TaskStateMapper
+import data.repositories.mappers.TaskStateMapper.Companion.ID
+import data.repositories.mappers.TaskStateMapper.Companion.NAME
+import data.repositories.mappers.TaskStateMapper.Companion.PROJECT_ID
 import java.io.File
 import domain.entities.TaskState
 
@@ -10,27 +13,36 @@ class TaskStateCSVDataSource(
     private val csvHandler: CsvHandler
 ) : TaskStateDataSource {
 
-    override fun createTaskState(state: TaskState): Boolean {
+    override fun createTaskState(state: List<String>): Boolean {
         val existingTaskStates = getAllTaskStates()
-        if (existingTaskStates.any { it.id == state.id }) return false
+        if (existingTaskStates.any { it.id == state[ID] }) return false
 
-        val allStates = existingTaskStates + state
+        val newTaskState = TaskState(
+            id = state[ID],
+            name = state[NAME],
+            projectId = state[PROJECT_ID]
+        )
+
+        val allStates = existingTaskStates + newTaskState
         writeTaskStates(allStates)
         return true
     }
 
-    override fun editTaskState(editState: TaskState): Boolean {
+    override fun editTaskState(editState: List<String>): Boolean {
         val allStates = getAllTaskStates().toMutableList()
-        println(allStates)
-        val index = allStates.indexOfFirst { it.id == editState.id }
+        val index = allStates.indexOfFirst { it.id == editState[ID] }
 
         return if (index != -1) {
-            allStates[index] = editState
+            val editTaskState = TaskState(
+                id = editState[ID],
+                name = editState[NAME],
+                projectId = editState[PROJECT_ID]
+            )
+
+            allStates[index] = editTaskState
             writeTaskStates(allStates)
             true
-        } else {
-            false
-        }
+        } else false
     }
 
     override fun deleteTaskState(stateId: String): Boolean {

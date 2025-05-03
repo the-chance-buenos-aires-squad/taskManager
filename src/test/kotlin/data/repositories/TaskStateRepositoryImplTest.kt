@@ -1,6 +1,7 @@
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.repositories.TaskStateRepositoryImpl
+import data.repositories.mappers.TaskStateMapper
 import domain.entities.TaskState
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.*
@@ -9,17 +10,21 @@ import org.junit.jupiter.api.*
 class TaskStateRepositoryImplTest {
 
     private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
+    private lateinit var taskStateMapper: TaskStateMapper
     private lateinit var stateRepository: TaskStateRepositoryImpl
 
     @BeforeEach
     fun setUp() {
-        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource)
+        taskStateMapper = TaskStateMapper()
+        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource,taskStateMapper)
     }
 
     @Test
     fun `should return true when creating a new state`() {
         val newState = DummyTaskState.readyForReview
-        every { mockCSVDataSource.createTaskState(newState) } returns true
+        val stateRow = listOf(newState.id, newState.name, newState.projectId)
+
+        every { mockCSVDataSource.createTaskState(stateRow) } returns true
 
         val result = stateRepository.createTaskState(newState)
 
@@ -29,7 +34,9 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should return false when state already exists`() {
         val existingState = DummyTaskState.todo
-        every { mockCSVDataSource.createTaskState(existingState) } returns false
+        val stateRow = listOf(existingState.id, existingState.name, existingState.projectId)
+
+        every { mockCSVDataSource.createTaskState(stateRow) } returns false
 
         val result = stateRepository.createTaskState(existingState)
 
@@ -40,9 +47,10 @@ class TaskStateRepositoryImplTest {
     fun `should edit state successfully when this state is existing`() {
         val todoState = DummyTaskState.todo
         val updatedToDoState = TaskState("1", "In Progress", "P001")
+        val updatedStateRow = listOf(updatedToDoState.id, updatedToDoState.name, updatedToDoState.projectId)
 
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
-        every { mockCSVDataSource.editTaskState(updatedToDoState) } returns true
+        every { mockCSVDataSource.editTaskState(updatedStateRow) } returns true
 
         val result = stateRepository.editTaskState(updatedToDoState)
 
