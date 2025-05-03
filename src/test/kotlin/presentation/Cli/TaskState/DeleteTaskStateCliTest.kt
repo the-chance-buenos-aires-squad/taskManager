@@ -9,6 +9,7 @@ import presentation.UiController
 import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import com.google.common.truth.Truth.assertThat
+import domain.customeExceptions.InvalidIdException
 
 
 class DeleteTaskStateCliTest {
@@ -47,10 +48,10 @@ class DeleteTaskStateCliTest {
     fun `should throw exception when ID is empty`() {
         every { uiController.readInput() } returns ""
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidIdException> {
             deleteTaskStateCli.deleteTaskState()
         }
 
-        assertThat(exception.message).isEqualTo("ID can't be empty")
+        assertThat(exception.message).contains("ID can't be empty")
 }
 }
