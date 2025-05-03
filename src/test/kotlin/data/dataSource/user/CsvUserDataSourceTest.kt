@@ -1,21 +1,15 @@
 package data.dataSource.user
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import dummyData.DummyUser.dummyUpdatedUserOneRow
 import dummyData.DummyUser.dummyUserOne
 import dummyData.DummyUser.dummyUserOneRow
 import dummyData.DummyUser.dummyUserTwoRow
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.io.File
-import java.io.FileNotFoundException
-import java.io.PrintStream
-import java.util.UUID
 
 //new
 class CsvUserDataSourceTest {
