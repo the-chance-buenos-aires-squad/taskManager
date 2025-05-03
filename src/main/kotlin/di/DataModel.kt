@@ -13,8 +13,6 @@ import data.dataSource.util.CsvHandler
 import data.dataSource.util.PasswordHasher
 import data.repositories.*
 import data.repositories.mappers.*
-import domain.entities.Project
-import domain.entities.TaskState
 import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
@@ -28,6 +26,9 @@ import java.io.File
 val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get()) }
+    single { CsvHandler(get()) }
+    single { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
+    single { TaskRepositoryImpl(get(),get()) }
 
     single { PasswordHasher() }
     single { UserValidator() }

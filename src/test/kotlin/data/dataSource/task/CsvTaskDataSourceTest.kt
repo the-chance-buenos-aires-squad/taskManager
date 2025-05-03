@@ -22,7 +22,7 @@ class CsvTaskDataSourceTest {
             writeText("")
             deleteOnExit()
         }
-        csvHandler = CsvHandler(CsvWriter(), CsvReader())
+        csvHandler = CsvHandler( CsvReader())
         dataSource = CsvTaskDataSource(csvHandler, file)
     }
 
