@@ -12,12 +12,12 @@ import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 
 import presentation.UiController
-import presentation.cli.projectClasses.ProjectShowMenu
-import presentation.cli.projectClasses.CreateProjectCli
-import presentation.cli.projectClasses.UpdateProjectCli
-import presentation.cli.projectClasses.DeleteProjectCli
-import presentation.cli.projectClasses.GetAllProjectsCli
-import presentation.cli.projectClasses.ProjectScreenController
+import presentation.cli.project.ProjectShowMenu
+import presentation.cli.project.CreateProjectCli
+import presentation.cli.project.UpdateProjectCli
+import presentation.cli.project.DeleteProjectCli
+import presentation.cli.project.GetAllProjectsCli
+import presentation.cli.project.ProjectScreenController
 import presentation.cli.TaskState.CreateTaskStateCli
 import presentation.cli.TaskState.EditTaskStateCli
 import presentation.cli.TaskState.GetAllTaskStatesCli

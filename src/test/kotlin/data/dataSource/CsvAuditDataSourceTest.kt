@@ -1,9 +1,8 @@
 package data.dataSource
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.dummyData.createDummyAudits.dummyProjectCreateActionRow
 import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateActionRow
 import data.dataSource.util.CsvHandler

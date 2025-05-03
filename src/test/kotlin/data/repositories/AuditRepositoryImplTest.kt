@@ -1,7 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.dummyData.createDummyAudits
 import data.dataSource.dummyData.createDummyAudits.dummyProjectCreateAction
 import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateAction

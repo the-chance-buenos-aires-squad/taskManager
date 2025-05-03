@@ -1,4 +1,4 @@
-package presentation.cli.projectClasses
+package presentation.cli.project
 
 import io.mockk.mockk
 import io.mockk.verify

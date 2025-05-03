@@ -1,4 +1,4 @@
-package presentation.cli.projectClasses
+package presentation.cli.project
 
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.NoProjectsFoundException
