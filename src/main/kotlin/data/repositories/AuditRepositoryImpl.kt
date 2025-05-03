@@ -2,13 +2,13 @@ package data.repositories
 
 
 import data.dataSource.auditDataSource.AuditDataSource
-import data.repositories.mappers.Mapper
+import data.repositories.mappers.AuditMapper
 import domain.entities.Audit
 import domain.repositories.AuditRepository
 
 class AuditRepositoryImpl(
     private val auditDataSource: AuditDataSource,
-    private val auditMapper: Mapper<Audit>
+    private val auditMapper: AuditMapper
 ) : AuditRepository {
 
     override fun addAudit(audit: Audit): Boolean {

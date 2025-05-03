@@ -14,12 +14,12 @@ class GetAllAuditsCliTest {
 
     private lateinit var getAllAuditCli: GetAllAuditsCli
     private lateinit var getAllAuditUseCase: GetAllAuditUseCase
-    private val uiController:UiController = mockk(relaxed = true)
+    private val uiController: UiController = mockk(relaxed = true)
 
     @BeforeEach
     fun setUp() {
         getAllAuditUseCase = mockk()
-        getAllAuditCli = GetAllAuditsCli(getAllAuditUseCase,uiController)
+        getAllAuditCli = GetAllAuditsCli(getAllAuditUseCase, uiController)
     }
 
     @Test
