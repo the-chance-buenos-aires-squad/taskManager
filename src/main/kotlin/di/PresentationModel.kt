@@ -2,16 +2,14 @@ package di
 
 import domain.usecases.AuthenticationUseCase
 import domain.usecases.CreateUserUseCase
-import domain.util.UserValidator
 import org.koin.dsl.module
-import presentation.Cli.CreateUserCli
-import presentation.Cli.login.LoginCli
+import presentation.Cli.auth.CreateUserCli
+import presentation.Cli.auth.LoginCli
 import presentation.Cli.MainCli
-import presentation.Cli.login.AdminDashBoardCli
-import presentation.Cli.login.MateDashBoardCli
+import presentation.Cli.dashBoard.AdminDashBoardCli
+import presentation.Cli.dashBoard.MateDashBoardCli
 import presentation.UiController
 import java.util.*
-import kotlin.math.sin
 
 val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }

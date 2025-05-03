@@ -1,4 +1,4 @@
-import presentation.Cli.login.MateDashBoardCli
+package presentation.Cli.dashBoard
 
 import io.mockk.every
 import io.mockk.mockk

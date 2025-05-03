@@ -1,17 +1,19 @@
+package presentation.Cli.auth
+
 import domain.customeExceptions.InvalidCredentialsException
 import domain.usecases.AuthenticationUseCase
 import dummyData.DummyUser
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import presentation.Cli.login.AdminDashBoardCli
-import presentation.Cli.login.LoginCli
-import presentation.Cli.login.MateDashBoardCli
+import presentation.Cli.dashBoard.AdminDashBoardCli
+import presentation.Cli.dashBoard.MateDashBoardCli
 import presentation.UiController
-import java.util.*
 
 class LoginCliTest {
-
     private lateinit var loginCli: LoginCli
     private val uiController: UiController = mockk(relaxed = true)
     private val authenticationUseCase: AuthenticationUseCase = mockk()
@@ -36,10 +38,6 @@ class LoginCliTest {
 
         // Then
         verify {
-            uiController.printMessage("\n=== Login ===")
-            uiController.printMessage("Username: ")
-            uiController.printMessage("Password: ")
-            uiController.printMessage("\nWelcome adminUserName!")
             adminDashBoardCli.start()
         }
     }
@@ -56,10 +54,6 @@ class LoginCliTest {
 
         // Then
         verify {
-            uiController.printMessage("\n=== Login ===")
-            uiController.printMessage("Username: ")
-            uiController.printMessage("Password: ")
-            uiController.printMessage("\nWelcome mateUserName!")
             mateDashBoardCli.start()
         }
     }

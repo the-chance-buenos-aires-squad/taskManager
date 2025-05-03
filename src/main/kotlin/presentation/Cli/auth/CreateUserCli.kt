@@ -1,4 +1,4 @@
-package presentation.Cli
+package presentation.Cli.auth
 
 
 class CreateUserCli(

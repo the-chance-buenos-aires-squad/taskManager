@@ -1,22 +1,21 @@
-import io.mockk.*
+package presentation.Cli.dashBoard
+
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import presentation.Cli.CreateUserCli
-import presentation.Cli.login.AdminDashBoardCli
+import presentation.Cli.auth.CreateUserCli
 import presentation.UiController
-import java.util.*
 
 class AdminDashBoardCliTest {
 
-    private lateinit var adminDashBoardCli: AdminDashBoardCli
     private val uiController: UiController = mockk(relaxed = true)
     private val createUserCli: CreateUserCli = mockk(relaxed = true)
+    private var adminDashBoardCli : AdminDashBoardCli= AdminDashBoardCli(uiController, createUserCli)
 
-    @BeforeEach
-    fun setup() {
-        adminDashBoardCli = AdminDashBoardCli(uiController, createUserCli)
-    }
 
     @Test
     fun `should display message when start admin cli`() {
@@ -91,10 +90,10 @@ class AdminDashBoardCliTest {
     @Test
     fun `should start Logout when user choose option 5`() {
         // given
-        every { uiController.readInput() } returns "5" andThenThrows RuntimeException("Exit loop")
+        every { uiController.readInput() } returns "5"
 
         // when
-        assertThrows<RuntimeException> { adminDashBoardCli.start() }
+         adminDashBoardCli.start()
 
         // then
         verify { uiController.printMessage("Logout") }
@@ -104,6 +103,18 @@ class AdminDashBoardCliTest {
     fun `should restart adminDashBoardCli when invalid input`() {
         // given
         every { uiController.readInput() } returns "99" andThenThrows RuntimeException("Exit loop")
+
+        // when
+        assertThrows<RuntimeException> { adminDashBoardCli.start() }
+
+        // then
+        verify { uiController.printMessage("Invalid option!") }
+    }
+
+    @Test
+    fun `should restart adminDashBoardCli when empty input`() {
+        // given
+        every { uiController.readInput() } returns "" andThenThrows RuntimeException("Exit loop")
 
         // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }

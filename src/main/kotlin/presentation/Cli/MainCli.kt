@@ -1,6 +1,6 @@
 package presentation.Cli
 
-import presentation.Cli.login.LoginCli
+import presentation.Cli.auth.LoginCli
 import presentation.UiController
 
 class MainCli(
@@ -9,7 +9,6 @@ class MainCli(
 ) {
 
     fun startCli() {
-
         while (true) {
             uiController.printMessage(
                 "========================================\n" +
@@ -31,9 +30,6 @@ class MainCli(
 
 
             }
-
-
         }
-
     }
 }

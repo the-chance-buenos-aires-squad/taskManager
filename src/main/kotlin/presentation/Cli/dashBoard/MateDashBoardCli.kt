@@ -1,4 +1,4 @@
-package presentation.Cli.login
+package presentation.Cli.dashBoard
 
 import presentation.UiController
 
@@ -14,7 +14,7 @@ class MateDashBoardCli(private val uiController: UiController) {
                         " Choose an option (1-4):"
             )
 
-            when (uiController.readInput()) {
+            when (uiController.readInput().trim()) {
                 "1" -> uiController.printMessage("Manage Task")
                 "2" -> uiController.printMessage("View Swimlanes")
                 "3" -> uiController.printMessage("View Audit Logs")
