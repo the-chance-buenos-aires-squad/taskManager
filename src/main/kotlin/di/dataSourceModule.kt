@@ -1,6 +1,5 @@
 package di
 
-import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
@@ -9,29 +8,12 @@ import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
-import data.dataSource.util.CsvHandler
-import data.dataSource.util.PasswordHasher
-import data.repositories.*
-import data.repositories.mappers.*
-import domain.repositories.*
-import domain.usecases.AddAuditUseCase
-import domain.usecases.GetAllAuditUseCase
-import domain.util.UserValidator
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
 
-
-val dataModule = module {
-    single { CsvReader() }
-    single { CsvHandler(get()) }
-    single { CsvHandler(get()) }
-    single { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
-    single { TaskRepositoryImpl(get(),get()) }
-
-    single { PasswordHasher() }
-    single { UserValidator() }
+val dataSourceModule = module {
 
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
@@ -46,32 +28,14 @@ val dataModule = module {
         File(Paths.TASK_STATE_FILE_PATH)
     }
 
-    single { AuditMapper() }
-
-
     single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
-
-    single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditMapper = get()) }
-
-    single { AddAuditUseCase(auditRepository = get()) }
-    single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
-
-    single { UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
-
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get()) }
-
-
-    single { ProjectMapper() }
     single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
-
-    single { TaskStateMapper() }
     single<TaskStateDataSource> { TaskStateCSVDataSource(get(Paths.TaskStateFileQualifier), get()) }
-    single<TaskStateRepository> { TaskStateRepositoryImpl(get(), get()) }
+
 
 }
+
 
 object Paths {
     /*

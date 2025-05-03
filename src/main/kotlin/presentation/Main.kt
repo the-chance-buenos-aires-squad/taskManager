@@ -1,8 +1,6 @@
 package presentation
 
-import di.dataModule
-import di.logicModule
-import di.presentationModel
+import di.*
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import presentation.cli.MainCli
@@ -10,7 +8,13 @@ import presentation.cli.MainCli
 fun main() {
     startKoin {
         modules(
-            dataModule, presentationModel, logicModule
+            dataUtilModule,
+            dataSourceModule,
+            domainUtilModule,
+            mapperModule,
+            presentationModule,
+            repositoryModule,
+            useCaseModule
         )
     }
     val mainCli: MainCli = getKoin().get()
