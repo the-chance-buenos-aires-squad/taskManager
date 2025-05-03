@@ -1,25 +1,22 @@
 package di
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import data.dataSource.auditDataSource.AuditDataSource
+import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.project.ProjectDataSource
+import data.dataSource.taskState.TaskStateCSVDataSource
+import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
 import data.dataSource.util.PasswordHasher
 import data.repositories.*
 import data.repositories.mappers.*
-import domain.entities.Project
-import domain.entities.TaskState
 import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
 import domain.util.UserValidator
-import data.repositories.TaskRepositoryImpl
-import data.repositories.UserRepositoryImpl
-import data.repositories.mappers.Mapper
-import data.repositories.mappers.UserMapper
-import domain.entities.User
-import domain.repositories.UserRepository
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -29,7 +26,7 @@ import java.io.File
 val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get()) }
-    single { CsvHandler(get(),get()) }
+    single { CsvHandler(get()) }
     single { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
     single { TaskRepositoryImpl(get(),get()) }
 
