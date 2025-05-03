@@ -34,9 +34,7 @@ class CsvProjectDataSource(
         val all = getAllProjects()
         if (all.none { it.id.toString() == project[0] }) return false
         val updatedProject = all.map {
-            if (it.id.toString() == project[0]) {
-                Project(UUID.fromString(project[0]), project[1], project[2], LocalDateTime.parse(project[3]))
-            } else it
+            Project(UUID.fromString(project[0]), project[1], project[2], LocalDateTime.parse(project[3]))
         }
 
         rewriteAllProjects(updatedProject)
