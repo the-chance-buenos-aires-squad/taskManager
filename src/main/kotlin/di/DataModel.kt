@@ -1,20 +1,11 @@
 package di
 
-
-//import org.example.data.CsvFileReader
-//import org.example.data.CsvRecipesRepository
-//import org.example.data.MemoryDataSource
-//import org.example.data.RecipeParser
-//import org.example.logic.RecipesRepository
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
-
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
-
-
 import data.dataSource.util.CsvHandler
 import data.repositories.ProjectRepositoryImpl
 import data.repositories.UserRepositoryImpl
@@ -29,8 +20,6 @@ import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
-import kotlin.io.path.Path
-
 
 //
 val dataModule = module {
@@ -52,8 +41,8 @@ val dataModule = module {
     single<UserRepository> { UserRepositoryImpl(get(), get()) }
 
     single<Mapper<Project>> { ProjectMapper() }
-    single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get(), get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
+    single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
 
 }
 

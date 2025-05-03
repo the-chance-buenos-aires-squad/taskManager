@@ -118,7 +118,6 @@ class CreateUserUseCaseTest {
 
     }
 
-
     @Test
     fun `should hash password using MD5 utility`() {
         // Given
@@ -131,7 +130,6 @@ class CreateUserUseCaseTest {
         // Then
         assertThat(actualHash).isEqualTo(expectedHash)
     }
-
 
     @Test
     fun `created user should have hashed password`() {

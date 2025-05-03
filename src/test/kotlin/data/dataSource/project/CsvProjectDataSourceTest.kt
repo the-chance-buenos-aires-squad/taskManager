@@ -11,112 +11,101 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.time.LocalDateTime
+import java.util.*
 
 class CsvProjectDataSourceTest {
     private lateinit var testFile: File
     private lateinit var csvHandler: CsvHandler
     private lateinit var csvWriter: CsvWriter
     private lateinit var csvReader: CsvReader
-    private lateinit var projectMapper: ProjectMapper
     private lateinit var csvProjectDataSource: CsvProjectDataSource
-    private val project = createDummyProject()
-    private val csvRows = listOf(
-        listOf("id", "name", "description", "createdAt"), // header
-        listOf("1", "Project 1", "Description 1", "2024-04-29T12:00"),
-        listOf("2", "Project 1", "Description 1", "2024-04-29T12:00")
-    )
-    private val header = 0
+
+    val id: UUID = UUID.randomUUID()
+    val project = listOf(id.toString(), "ahmed", "ahmed mohamed egypt", LocalDateTime.now().toString())
+    private val project2 =
+        listOf(UUID.randomUUID().toString(), "ahmed", "ahmed mohamed egypt", LocalDateTime.now().toString())
 
     @BeforeEach
     fun setup() {
-        projectMapper = ProjectMapper()
         csvWriter = mockk(relaxed = true)
         csvReader = mockk(relaxed = true)
         csvHandler = CsvHandler(csvWriter, csvReader)
         testFile = File.createTempFile("testFile", ".csv")
-        csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler, projectMapper)
+        csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler)
     }
 
     @Test
-    fun `should return true when project saved`() {
-        val result = csvProjectDataSource.saveData(project)
+    fun `should return true when project created`() {
+        val result = csvProjectDataSource.addProject(project)
 
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `should return false when project exist`() {
-        every { csvHandler.read(testFile) } returns csvRows
-
-        val result = csvProjectDataSource.saveData(createDummyProject("1"))
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
     fun `should return project if project found`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val projectIsFound = csvProjectDataSource.findProjectById("1")
+        val projectIsFound = csvProjectDataSource.getProjectById(id)
 
         assertThat(projectIsFound).isNotNull()
     }
 
     @Test
     fun `should return null if project not found`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val projectIsFound = csvProjectDataSource.findProjectById("3")
+        val projectIsFound = csvProjectDataSource.getProjectById(UUID.randomUUID())
 
         assertThat(projectIsFound).isNull()
     }
 
     @Test
     fun `should return true when project deleted`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val isProjectDeleted = csvProjectDataSource.deleteData("1")
+        val isProjectDeleted = csvProjectDataSource.deleteProject(id)
 
         assertThat(isProjectDeleted).isTrue()
     }
 
     @Test
     fun `should return false when project not found`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val isProjectDeleted = csvProjectDataSource.deleteData("3")
+        val isProjectDeleted = csvProjectDataSource.deleteProject(UUID.randomUUID())
 
         assertThat(isProjectDeleted).isFalse()
     }
 
     @Test
     fun `should return true if project updated successfully`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val isProjectUpdated = csvProjectDataSource.updateProject(createDummyProject("1"))
+        val isProjectUpdated = csvProjectDataSource.updateProject(project)
 
         assertThat(isProjectUpdated).isTrue()
     }
 
     @Test
     fun `should return false if project not found`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        val isProjectUpdated = csvProjectDataSource.updateProject(createDummyProject("3"))
+        val isProjectUpdated = csvProjectDataSource.updateProject(project2)
 
         assertThat(isProjectUpdated).isFalse()
     }
 
     @Test
     fun `should return list of projects`() {
-        every { csvHandler.read(testFile) } returns csvRows
+        every { csvHandler.read(testFile) } returns listOf(project)
 
-        assertThat(csvProjectDataSource.getAllProjects()).hasSize(2)
+        assertThat(csvProjectDataSource.getAllProjects()).hasSize(1)
     }
 
     @Test
     fun `should return null when file is empty`() {
-        every { csvHandler.read(testFile) } returns listOf(csvRows[header])
+        every { csvHandler.read(testFile) } returns emptyList()
 
         assertThat(csvProjectDataSource.getAllProjects()).isEmpty()
     }

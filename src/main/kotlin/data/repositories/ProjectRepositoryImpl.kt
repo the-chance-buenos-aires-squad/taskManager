@@ -1,26 +1,29 @@
 package data.repositories
 
 import data.dataSource.project.ProjectDataSource
+import data.repositories.mappers.Mapper
 import domain.entities.Project
 import domain.repositories.ProjectRepository
+import java.util.UUID
 
 class ProjectRepositoryImpl(
-    private val projectDataSource: ProjectDataSource
+    private val projectDataSource: ProjectDataSource,
+    private val projectMapper: Mapper<Project>
 ) : ProjectRepository {
     override fun createProject(project: Project): Boolean {
-        return projectDataSource.saveData(project)
+        return projectDataSource.addProject(projectMapper.mapEntityToRow(project))
     }
 
     override fun updateProject(project: Project): Boolean {
-        return projectDataSource.updateProject(project)
+        return projectDataSource.updateProject(projectMapper.mapEntityToRow(project))
     }
 
-    override fun deleteProject(projectId: String): Boolean {
-        return projectDataSource.deleteData(projectId)
+    override fun deleteProject(projectId: UUID): Boolean {
+        return projectDataSource.deleteProject(projectId)
     }
 
-    override fun findProjectById(projectId: String): Project? {
-        return projectDataSource.findProjectById(projectId)
+    override fun getProjectById(projectId: UUID): Project? {
+        return projectDataSource.getProjectById(projectId)
     }
 
     override fun getAllProjects(): List<Project> {

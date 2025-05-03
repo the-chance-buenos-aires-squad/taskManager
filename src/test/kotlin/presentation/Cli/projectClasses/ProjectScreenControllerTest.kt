@@ -1,11 +1,13 @@
 package presentation.Cli.projectClasses
 
-import domain.customeExceptions.UserEnterEmptyValueException
+import domain.customeExceptions.NoProjectsFoundException
+import domain.customeExceptions.UserEnterInvalidValueException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 
 class ProjectScreenControllerTest {
@@ -42,12 +44,38 @@ class ProjectScreenControllerTest {
     }
 
     @Test
+    fun `should handle createProjectCli with UserEnterInvalidValueException`() {
+        every { uiController.readInput() } returns "1" andThen "4"
+        every { createProjectCli.create() } throws UserEnterInvalidValueException("Invalid Input")
+
+        projectScreenController.show()
+
+        verify { uiController.printMessage("Invalid Input") }
+    }
+
+    @Test
     fun `should call edit project function when user input number tow`() {
         every { uiController.readInput() } returns "2" andThen "4"
 
         projectScreenController.show()
 
         verify { updateProjectCli.update() }
+    }
+
+    @Test
+    fun `should handle updateProjectCli with UserEnterInvalidValueException`() {
+        every { uiController.readInput() } returns "2" andThen "4"
+        every { updateProjectCli.update() } throws UserEnterInvalidValueException("Invalid update")
+        projectScreenController.show()
+        verify { uiController.printMessage("Invalid update") }
+    }
+
+    @Test
+    fun `should handle updateProjectCli with NoProjectsFoundException`() {
+        every { uiController.readInput() } returns "2" andThen "4"
+        every { updateProjectCli.update() } throws NoProjectsFoundException("No projects")
+        projectScreenController.show()
+        verify { uiController.printMessage("No projects") }
     }
 
     @Test
@@ -60,7 +88,23 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should print Invalid Input when user input empty value`() {
+    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() {
+        every { uiController.readInput() } returns "3" andThen "4"
+        every { deleteProjectCli.delete() } throws UserEnterInvalidValueException("Can't delete")
+        projectScreenController.show()
+        verify { uiController.printMessage("Can't delete") }
+    }
+
+    @Test
+    fun `should handle deleteProjectCli with NoProjectsFoundException`() {
+        every { uiController.readInput() } returns "3" andThen "4"
+        every { deleteProjectCli.delete() } throws NoProjectsFoundException("Empty list")
+        projectScreenController.show()
+        verify { uiController.printMessage("Empty list") }
+    }
+
+    @Test
+    fun `should handel Invalid Input when user input empty value`() {
         every { uiController.readInput() } returns "" andThen "4"
 
         projectScreenController.show()
@@ -69,7 +113,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should print Invalid Input when user input invalid value and`() {
+    fun `should handel Invalid Input when user input invalid value`() {
         every { uiController.readInput() } returns "7" andThen "4"
 
         projectScreenController.show()
@@ -78,31 +122,11 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should print Invalid Input when user input invalid value`() {
+    fun `should handel Invalid Input when user input is return null`() {
         every { uiController.readInput() } returns "j" andThen "4"
 
         projectScreenController.show()
 
         verify { uiController.printMessage("Invalid Input should enter number.") }
-    }
-
-    @Test
-    fun `should print exception message when create function calls`() {
-        every { uiController.readInput() } returns "1" andThen "4"
-        every { createProjectCli.create() } throws UserEnterEmptyValueException()
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage(any()) }
-    }
-
-    @Test
-    fun `should print exception message when update function calls`() {
-        every { uiController.readInput() } returns "2" andThen "4"
-        every { updateProjectCli.update() } throws UserEnterEmptyValueException()
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage(any()) }
     }
 }

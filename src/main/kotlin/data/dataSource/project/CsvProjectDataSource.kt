@@ -2,24 +2,22 @@ package data.dataSource.project
 
 
 import data.dataSource.util.CsvHandler
-import data.repositories.mappers.Mapper
-import data.repositories.mappers.ProjectMapper
 import domain.entities.Project
 import java.io.File
+import java.time.LocalDateTime
+import java.util.UUID
 
 class CsvProjectDataSource(
     private val file: File,
     private val csvHandler: CsvHandler,
-    private val projectMapper: Mapper<Project>
 ) : ProjectDataSource {
 
-    override fun saveData(project: Project): Boolean {
-        if (findProjectById(project.id) != null) return false
-        csvHandler.write(projectMapper.mapEntityToRow(project), file)
+    override fun addProject(project: List<String>): Boolean {
+        csvHandler.write(project, file)
         return true
     }
 
-    override fun deleteData(projectId: String): Boolean {
+    override fun deleteProject(projectId: UUID): Boolean {
         val all = getAllProjects()
         val updated = all.filterNot { it.id == projectId }
         if (all.size == updated.size) return false
@@ -28,15 +26,17 @@ class CsvProjectDataSource(
         return true
     }
 
-    override fun findProjectById(projectId: String): Project? {
+    override fun getProjectById(projectId: UUID): Project? {
         return getAllProjects().find { it.id == projectId }
     }
 
-    override fun updateProject(project: Project): Boolean {
+    override fun updateProject(project: List<String>): Boolean {
         val all = getAllProjects()
-        if (all.none { it.id == project.id }) return false
+        if (all.none { it.id.toString() == project[0] }) return false
         val updatedProject = all.map {
-            if (it.id == project.id) project else it
+            if (it.id.toString() == project[0]) {
+                Project(UUID.fromString(project[0]), project[1], project[2], LocalDateTime.parse(project[3]))
+            } else it
         }
 
         rewriteAllProjects(updatedProject)
@@ -47,7 +47,7 @@ class CsvProjectDataSource(
         val rows = csvHandler.read(file)
         return rows.mapNotNull {
             try {
-                projectMapper.mapRowToEntity(it)
+                Project(UUID.fromString(it[0]), it[1], it[2], LocalDateTime.parse(it[3]))
             } catch (e: Exception) {
                 null
             }
@@ -57,7 +57,7 @@ class CsvProjectDataSource(
     private fun rewriteAllProjects(projects: List<Project>) {
         file.writeText("") // clear file
         projects.forEach {
-            csvHandler.write(projectMapper.mapEntityToRow(it), file)
+            csvHandler.write(listOf(it.id.toString(), it.name, it.description, it.createdAt.toString()), file)
         }
     }
 }

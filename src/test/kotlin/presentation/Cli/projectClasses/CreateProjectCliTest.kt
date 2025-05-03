@@ -1,21 +1,29 @@
 package presentation.Cli.projectClasses
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.UserEnterEmptyValueException
+import domain.customeExceptions.UserEnterInvalidValueException
 import domain.usecases.project.CreateProjectUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
+import java.time.LocalDateTime
+import java.util.*
 
 class CreateProjectCliTest {
     private val createProjectUseCase: CreateProjectUseCase = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)
     private lateinit var createProjectCli: CreateProjectCli
+
+    val project = listOf(UUID.randomUUID().toString(), "ahmed", "ahmed mohamed egypt", LocalDateTime.now().toString())
+    private val project2 =
+        listOf("", "ahmed mohamed egypt", LocalDateTime.now().toString())
+    private val project3 =
+        listOf("ahmed", "", LocalDateTime.now().toString())
+
 
     @BeforeEach
     fun setup() {
@@ -25,7 +33,7 @@ class CreateProjectCliTest {
     @Test
     fun `should call execute function in create use case when I call create function and success to create project`() {
         every { createProjectUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf("1", "ahmed", "f1 project")
+        every { uiController.readInput() } returnsMany project
 
         createProjectCli.create()
 
@@ -35,7 +43,7 @@ class CreateProjectCliTest {
     @Test
     fun `should call execute function in create use case when I call create function and failed to create project`() {
         every { createProjectUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany listOf("1", "ahmed", "f1 project")
+        every { uiController.readInput() } returnsMany project
 
         createProjectCli.create()
 
@@ -43,20 +51,10 @@ class CreateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception when enter empty ID and failed to create project`() {
-        every { uiController.readInput() } returnsMany listOf("", "ahmed", "f1 project")
-
-        val exception = assertThrows<UserEnterEmptyValueException> {
-            createProjectCli.create()
-        }
-        assertThat(exception.message).isEqualTo("ID can't be empty")
-    }
-
-    @Test
     fun `should throw exception when enter empty name and failed to create project`() {
-        every { uiController.readInput() } returnsMany listOf("1", "", "f1 project")
+        every { uiController.readInput() } returnsMany project2
 
-        val exception = assertThrows<UserEnterEmptyValueException> {
+        val exception = assertThrows<UserEnterInvalidValueException> {
             createProjectCli.create()
         }
         assertThat(exception.message).isEqualTo("name can't be empty")
@@ -64,9 +62,9 @@ class CreateProjectCliTest {
 
     @Test
     fun `should throw exception when enter empty description and failed to create project`() {
-        every { uiController.readInput() } returnsMany listOf("1", "ahmed", "")
+        every { uiController.readInput() } returnsMany project3
 
-        val exception = assertThrows<UserEnterEmptyValueException> {
+        val exception = assertThrows<UserEnterInvalidValueException> {
             createProjectCli.create()
         }
         assertThat(exception.message).isEqualTo("description can't be empty")

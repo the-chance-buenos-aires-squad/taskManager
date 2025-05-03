@@ -14,9 +14,8 @@ val presentationModel = module {
     single { LoginCli(get()) }
     single { MainCli(get(), get()) }
     single { CreateProjectCli(get(), get()) }
-    single { UpdateProjectCli(get(), get()) }
-    single { DeleteProjectCli(get(), get()) }
+    single { UpdateProjectCli(get(), get(), get()) }
+    single { DeleteProjectCli(get(), get(), get()) }
     single { ProjectShowMenu(get()) }
-    single { ProjectScreenController(get(), get(), get(), get(), get()) }
-    //singleOf(::ProjectScreenController)
+    singleOf(::ProjectScreenController)
 }

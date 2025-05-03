@@ -2,6 +2,7 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.project.ProjectDataSource
+import data.repositories.mappers.ProjectMapper
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
@@ -10,17 +11,19 @@ import org.junit.jupiter.api.Test
 
 class ProjectRepositoryImplTest {
     private lateinit var projectDataSource: ProjectDataSource
+    private lateinit var projectMapper: ProjectMapper
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
 
     @BeforeEach
     fun setup() {
+        projectMapper = ProjectMapper()
         projectDataSource = mockk(relaxed = true)
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource)
+        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectMapper)
     }
 
     @Test
     fun `should return true if project created successfully`() {
-        every { projectDataSource.saveData(any()) } returns true
+        every { projectDataSource.addProject(any()) } returns true
 
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
@@ -29,7 +32,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return false if project not created successfully`() {
-        every { projectDataSource.saveData(any()) } returns false
+        every { projectDataSource.addProject(any()) } returns false
 
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
@@ -56,7 +59,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return true if project deleted successfully`() {
-        every { projectDataSource.deleteData(any()) } returns true
+        every { projectDataSource.deleteProject(any()) } returns true
 
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
@@ -65,7 +68,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return false if project not deleted successfully`() {
-        every { projectDataSource.deleteData(any()) } returns false
+        every { projectDataSource.deleteProject(any()) } returns false
 
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
@@ -74,18 +77,18 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return project if project exist`() {
-        every { projectDataSource.findProjectById(any()) } returns createDummyProject()
+        every { projectDataSource.getProjectById(any()) } returns createDummyProject()
 
-        val result = projectRepositoryImpl.findProjectById(createDummyProject().id)
+        val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
 
         assertThat(result).isNotNull()
     }
 
     @Test
     fun `should return null if project not exist`() {
-        every { projectDataSource.findProjectById(any()) } returns null
+        every { projectDataSource.getProjectById(any()) } returns null
 
-        val result = projectRepositoryImpl.findProjectById(createDummyProject().id)
+        val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
 
         assertThat(result).isNull()
     }
