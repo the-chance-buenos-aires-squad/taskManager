@@ -1,11 +1,13 @@
 package presentation.Cli.TaskState
 
-import domain.Validator.TaskStateInputValidator
+import TaskStateInputValidator
 import domain.usecases.taskState.CreateTaskStateUseCase
+import domain.usecases.taskState.ExistsTaskStateUseCase
 import presentation.UiController
 
 class CreateTaskStateCli(
     private val createTaskStateUseCase: CreateTaskStateUseCase,
+    private val existsTaskStateUseCase: ExistsTaskStateUseCase,
     private val uiController: UiController,
     private val inputValidator: TaskStateInputValidator
 ) {
@@ -13,6 +15,13 @@ class CreateTaskStateCli(
 
     fun createTaskState() {
         val taskState = inputHandler.readAndValidateUserInputs()
+
+
+        if (existsTaskStateUseCase.execute(taskState.id)) {
+            uiController.printMessage("Task state already exists.")
+            return
+        }
+
         val result = createTaskStateUseCase.execute(taskState)
 
         uiController.printMessage(

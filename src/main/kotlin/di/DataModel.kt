@@ -73,7 +73,7 @@ val dataModule = module {
 
     single<Mapper<TaskState>> { TaskStateMapper() }
     single<TaskStateDataSource> { TaskStateCSVDataSource(get(Paths.TaskStateFileQualifier), get()) }
-    single<TaskStateRepository> { TaskStateRepositoryImpl(get(), get()) }
+    single<TaskStateRepository> { TaskStateRepositoryImpl(get(),get()) }
 
 }
 

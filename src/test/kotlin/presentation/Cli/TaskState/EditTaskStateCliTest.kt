@@ -1,7 +1,10 @@
 package presentation.Cli.TaskState
 
+import TaskStateInputValidator
 import com.google.common.truth.Truth.assertThat
-import domain.Validator.TaskStateInputValidator
+import domain.customeExceptions.InvalidIdException
+import domain.customeExceptions.InvalidNameException
+import domain.customeExceptions.InvalidProjectIdException
 import domain.usecases.taskState.EditTaskStateUseCase
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
@@ -49,7 +52,7 @@ class EditTaskStateCliTest {
     fun `should throw exception when ID is empty`() {
         every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId)
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidIdException> {
             editTaskStateCli.editTaskState()
         }
         assertThat(exception.message).isEqualTo("New ID can't be empty")
@@ -59,7 +62,7 @@ class EditTaskStateCliTest {
     fun `should throw exception when name is less than 2 letters`() {
         every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidNameException> {
             editTaskStateCli.editTaskState()
         }
         assertThat(exception.message).isEqualTo("New Name must be at least 2 letters")
@@ -69,7 +72,7 @@ class EditTaskStateCliTest {
     fun `should throw exception when project ID is invalid`() {
         every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, "X01")
 
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<InvalidProjectIdException> {
             editTaskStateCli.editTaskState()
         }
         assertThat(exception.message).isEqualTo("New Project ID must start with 'P' followed by at least two digits (e.g., P01, P123)")

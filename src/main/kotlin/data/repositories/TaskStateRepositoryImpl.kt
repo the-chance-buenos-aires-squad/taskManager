@@ -1,9 +1,7 @@
 package data.repositories
 
 import data.dataSource.taskState.TaskStateCSVDataSource
-import data.repositories.mappers.Mapper
 import data.repositories.mappers.TaskStateMapper
-import domain.entities.Project
 import domain.entities.TaskState
 import domain.repositories.TaskStateRepository
 
@@ -12,11 +10,11 @@ class TaskStateRepositoryImpl(
     private val taskStateMapper: TaskStateMapper,
 ): TaskStateRepository{
     override fun createTaskState(state: TaskState): Boolean {
-        return taskStateCSVDataSource.createTaskState(state)
+        return taskStateCSVDataSource.createTaskState(taskStateMapper.mapEntityToRow(state))
     }
 
     override fun editTaskState(state: TaskState): Boolean {
-        return taskStateCSVDataSource.editTaskState(state)
+        return taskStateCSVDataSource.editTaskState(taskStateMapper.mapEntityToRow(state))
     }
 
     override fun deleteTaskState(stateId: String): Boolean {

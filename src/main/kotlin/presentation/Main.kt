@@ -5,6 +5,7 @@ import di.logicModule
 import di.presentationModel
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
+import presentation.Cli.TaskState.TaskStateCliController
 import presentation.Cli.projectClasses.ProjectScreenController
 
 fun main() {
@@ -19,4 +20,7 @@ fun main() {
 //    mainCli.startCli()
     val projectScreenController: ProjectScreenController = getKoin().get()
     projectScreenController.show()
+
+    val taskStateCliController: TaskStateCliController = getKoin().get()
+    taskStateCliController.show()
 }
