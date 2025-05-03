@@ -14,13 +14,12 @@ import data.repositories.mappers.AuditMapper
 import data.repositories.mappers.Mapper
 import data.repositories.mappers.UserMapper
 import domain.entities.Audit
-import domain.entities.User
 import data.repositories.AuthRepositoryImpl
-import data.repositories.UserRepositoryImpl
 import domain.repositories.AuthRepository
 import domain.repositories.AuditRepository
 import domain.repositories.UserRepository
 import data.dataSource.util.PasswordHasher
+import domain.entities.User
 import domain.util.UserValidator
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
