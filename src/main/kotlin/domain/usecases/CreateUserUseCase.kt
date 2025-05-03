@@ -1,50 +1,37 @@
 package domain.usecases
 
-import domain.customeExceptions.*
+import domain.customeExceptions.CreateUserException
+import domain.entities.ActionType
+import domain.entities.EntityType
 import domain.entities.User
-import domain.entities.UserRole
-import domain.repositories.UserRepository
-import domain.util.MD5Hash
-import java.time.LocalDateTime
-import java.util.*
+import domain.repositories.AuthRepository
+import domain.util.UserValidator
 
-class CreateUserUseCase(private val repository: UserRepository) {
-    fun createUser(
+class CreateUserUseCase(
+    private val authRepository: AuthRepository,
+    private val userValidator: UserValidator,
+    private val addAuditUseCase: AddAuditUseCase
+) {
+
+    fun addUser(
         username: String,
         password: String,
         confirmPassword: String,
-        userRole: UserRole = UserRole.MATE
-    ) {
-        validateUsername(username)
-        validatePassword(password, confirmPassword)
+    ): User {
+        userValidator.validateUsername(username)
+        userValidator.validatePassword(password, confirmPassword)
 
-        if (repository.getUserByUserName(username.trim()) != null) throw UserAlreadyExistException()
-
-        val hashedPassword = MD5Hash.hash(password)
-
-        val newUser = User(
-            id = UUID.randomUUID().toString(),
-            username = username.trim(),
-            password = hashedPassword,
-            role = userRole,
-            createdAt = LocalDateTime.now()
+        val userAdded = authRepository.addUser(username, password) ?: throw CreateUserException()
+        addAuditUseCase.addAudit(
+            entityId = userAdded.id.toString(),
+            entityType = EntityType.USER,
+            action = ActionType.CREATE,
+            field = "create new user",
+            oldValue = null,
+            newValue = "creating user:${userAdded.username}",
+            userId = "${authRepository.getCurrentUser()?.id}",
         )
-
-        repository.insertUser(newUser)
+        return userAdded
     }
 
-    private fun validateUsername(username: String) {
-        if (username.isBlank()) throw UserNameEmptyException()
-
-    }
-
-    private fun validatePassword(password: String, confirmPassword: String) {
-
-        if (password.isBlank()) throw PasswordEmptyException()
-
-        if (password.length < 6) throw InvalidLengthPasswordException()
-
-        if (password != confirmPassword) throw InvalidConfirmPasswordException()
-
-    }
 }

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 fun createDummyUser(
-    id: String,
+    id: UUID,
     username: String,
     password: String,
     role: UserRole,

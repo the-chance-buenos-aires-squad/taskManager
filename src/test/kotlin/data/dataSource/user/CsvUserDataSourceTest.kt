@@ -15,7 +15,7 @@ import java.io.File
 class CsvUserDataSourceTest {
 
     private lateinit var file: File
-    private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
+    private val csvHandler = CsvHandler(CsvReader())
     private lateinit var dataSource: CsvUserDataSource
 
     @BeforeEach
@@ -24,6 +24,7 @@ class CsvUserDataSourceTest {
         file.writeText("")
         dataSource = CsvUserDataSource(csvHandler = csvHandler, file)
     }
+
 
     @Test
     fun `should return true when add user to userCsvDataSource`() {
@@ -110,6 +111,22 @@ class CsvUserDataSourceTest {
 
         //then
         assertThat(users.isNotEmpty()).isTrue()
+
+    }
+
+
+    @Test
+    fun `get users on 3 saved users will return a list of size 3 `() {
+        //given
+        dataSource.addUser(dummyUserOneRow)
+        dataSource.addUser(dummyUserOneRow)
+        dataSource.addUser(dummyUserOneRow)
+
+        //when
+        val users: List<List<String>> = dataSource.getUsers()
+
+        //then
+        assertThat(users).hasSize(3)
     }
 
     @Test
