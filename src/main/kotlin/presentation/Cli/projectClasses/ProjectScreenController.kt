@@ -9,6 +9,7 @@ class ProjectScreenController(
     private val createProjectCli: CreateProjectCli,
     private val updateProjectCli: UpdateProjectCli,
     private val deleteProjectCli: DeleteProjectCli,
+    private val getAllProjectsCli: GetAllProjectsCli,
     private val uiController: UiController
 ) {
     fun show() {
@@ -37,7 +38,13 @@ class ProjectScreenController(
                     uiController.printMessage(exception.message!!)
                 }
 
-                4 -> return
+                4 -> try {
+                    getAllProjectsCli.getAll()
+                } catch (exception: NoProjectsFoundException) {
+                    uiController.printMessage(exception.message!!)
+                }
+
+                5 -> return
                 null -> uiController.printMessage("Invalid Input should enter number.")
                 else -> uiController.printMessage("Invalid Input should enter number in menu.")
             }
