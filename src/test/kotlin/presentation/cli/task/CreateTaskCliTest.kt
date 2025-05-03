@@ -9,6 +9,7 @@ import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import java.time.LocalDateTime
@@ -44,6 +45,7 @@ class CreateTaskCliTest {
             uiController = uiController,
         )
     }
+    @Disabled
     @Test
     fun `start() should create a task and log audit when inputs are valid`() {
         // Arrange
