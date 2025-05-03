@@ -18,10 +18,11 @@ class CreateUserUseCaseTest {
     private val authRepository: AuthRepository = mockk(relaxed = true)
     private val userValidator = UserValidator()
     val dummyUser = DummyUser.dummyUserTwo
+    private var addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
 
     @BeforeEach
     fun setup() {
-        createUserUseCase = CreateUserUseCase(authRepository, userValidator)
+        createUserUseCase = CreateUserUseCase(authRepository, userValidator,addAuditUseCase)
     }
 
     @Test

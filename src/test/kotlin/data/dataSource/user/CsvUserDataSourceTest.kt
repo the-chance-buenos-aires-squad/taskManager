@@ -15,7 +15,7 @@ import java.io.File
 class CsvUserDataSourceTest {
 
     private lateinit var file: File
-    private val csvHandler = CsvHandler(CsvWriter(), CsvReader())
+    private val csvHandler = CsvHandler(CsvReader())
     private lateinit var dataSource: CsvUserDataSource
 
     @BeforeEach
