@@ -2,6 +2,7 @@ package data.dataSource.user
 
 import data.dataSource.util.CsvHandler
 import java.io.File
+import java.util.UUID
 
 class CsvUserDataSource(
     private val csvHandler: CsvHandler,
@@ -22,17 +23,17 @@ class CsvUserDataSource(
         }
     }
 
-    override fun getUserById(id: String): List<String>? {
-        return getUsers().find { it[ID_ROW] == id }
+    override fun getUserById(id: UUID): List<String>? {
+        return getUsers().find { it[ID_ROW] == id.toString() }
     }
 
     override fun getUserByUserName(userName: String): List<String>? {
         return getUsers().find { it[USER_NAME_ROW] == userName }
     }
 
-    override fun deleteUser(id: String): Boolean {
+    override fun deleteUser(id: UUID): Boolean {
         val allUsers = this.getUsers()
-        val updatedUsers = allUsers.filterNot { it[ID_ROW] == id }
+        val updatedUsers = allUsers.filterNot { it[ID_ROW] == id.toString() }
 
         if (allUsers.size == updatedUsers.size) {
             return false

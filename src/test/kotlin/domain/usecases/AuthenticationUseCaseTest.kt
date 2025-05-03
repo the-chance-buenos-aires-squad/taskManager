@@ -4,29 +4,27 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidCredentialsException
 import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.AuthRepository
-import domain.repositories.UserRepository
-import domain.util.MD5Hasher
+import domain.util.UserValidator
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
-    private var userRepository: UserRepository = mockk(relaxed = true)
     private var authRepository: AuthRepository = mockk(relaxed = true)
-    private val authUseCase = AuthenticationUseCase(userRepository, authRepository)
-    val mD5Hasher = MD5Hasher()
-    val firstUser = DummyUser.dummyUserOne.copy(password = mD5Hasher.hash("adminPassword"))
+    private val userValidator = UserValidator()
+    private val authenticationUseCase = AuthenticationUseCase(authRepository, userValidator)
+
+    val firstUser = DummyUser.dummyUserOne
 
     @Test
     fun `should return user when valid credentials`() {
         //given
-        every { userRepository.getUserByUserName(firstUser.username) } returns firstUser
+        every { authRepository.login(firstUser.username,firstUser.password) } returns firstUser
 
         //when
-        val result = authUseCase.login(firstUser.username, "adminPassword")
+        val result = authenticationUseCase.login(firstUser.username, "adminPassword")
 
         //then
         assertThat(result).isEqualTo(firstUser)
@@ -36,11 +34,11 @@ class AuthenticationUseCaseTest {
     @Test
     fun `should throw InvalidCredentialsException for non-existing user`() {
         //given
-        every { userRepository.getUserByUserName(firstUser.username) } returns null
+        every { authRepository.login(firstUser.username,firstUser.password)  } returns null
 
         //when & then
         assertThrows<InvalidCredentialsException> {
-            authUseCase.login(firstUser.username, "adminPassword")
+            authenticationUseCase.login(firstUser.username, "adminPassword")
         }
     }
 
@@ -49,7 +47,7 @@ class AuthenticationUseCaseTest {
 
         //when & then
         assertThrows<UserNameEmptyException> {
-            authUseCase.login(" ", "anypass")
+            authenticationUseCase.login(" ", "anypass")
         }
     }
 
@@ -57,22 +55,22 @@ class AuthenticationUseCaseTest {
     fun `should throw InvalidCredentialsException for wrong password`() {
 
         //given
-        every { userRepository.getUserByUserName(firstUser.username) } returns firstUser
+        every { authRepository.login(firstUser.username,"wrongpass") } returns null
 
         //when & then
         assertThrows<InvalidCredentialsException> {
-            authUseCase.login(firstUser.username, "wrongpass")
+            authenticationUseCase.login(firstUser.username, "wrongpass")
         }
     }
 
     @Test
     fun `should throw InvalidCredentialsException when password has trailing space`() {
         // Given
-        every { userRepository.getUserByUserName(firstUser.username) } returns firstUser
+        every { authRepository.login(firstUser.username,"adminPassword ") } returns null
 
         // When & Then
         assertThrows<InvalidCredentialsException> {
-            authUseCase.login(firstUser.username, "adminPassword ")
+            authenticationUseCase.login(firstUser.username, "adminPassword ")
         }
     }
 
@@ -80,40 +78,25 @@ class AuthenticationUseCaseTest {
     fun `should return user when username has leading or trailing spaces`() {
         // Given
         val usernameWithSpaces = " ${firstUser.username}  "
-        every { userRepository.getUserByUserName(firstUser.username) } returns firstUser
+        every { authRepository.login(usernameWithSpaces,"adminPassword") } returns firstUser
 
         // When
-        val result = authUseCase.login(usernameWithSpaces, "adminPassword")
+        val result = authenticationUseCase.login(usernameWithSpaces, "adminPassword")
 
         // Then
         assertThat(result).isEqualTo(firstUser)
     }
 
-
     @Test
     fun `should throw InvalidCredentialsException when username case mismatch`() {
         // Given
         val caseDifferentUsername = firstUser.username.lowercase()
-        every { userRepository.getUserByUserName(caseDifferentUsername) } returns null
+        every { authRepository.login(caseDifferentUsername,firstUser.password) } returns null
 
         // When & Then
         assertThrows<InvalidCredentialsException> {
-            authUseCase.login(caseDifferentUsername, "adminPassword")
+            authenticationUseCase.login(caseDifferentUsername, firstUser.password)
         }
-    }
-
-    @Test
-    fun `should return user when password has special characters`() {
-        // Given
-        val complexPassword = "P@ssw0rd!123"
-        val complexPasswordUser = firstUser.copy(password = mD5Hasher.hash(complexPassword))
-        every { userRepository.getUserByUserName(complexPasswordUser.username) } returns complexPasswordUser
-
-        // When
-        val result = authUseCase.login(complexPasswordUser.username, complexPassword)
-
-        // Then
-        assertThat(result).isEqualTo(complexPasswordUser)
     }
 
 }

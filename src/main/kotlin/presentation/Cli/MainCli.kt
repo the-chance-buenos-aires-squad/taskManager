@@ -1,5 +1,6 @@
 package presentation.Cli
 
+import presentation.Cli.auth.LoginCli
 import presentation.UiController
 
 class MainCli(
@@ -7,8 +8,7 @@ class MainCli(
     private val loginCli: LoginCli
 ) {
 
-    fun startCli(isTest: Boolean = false) {
-
+    fun startCli() {
         while (true) {
             uiController.printMessage(
                 "========================================\n" +
@@ -30,12 +30,6 @@ class MainCli(
 
 
             }
-
-            if (isTest) {
-                break
-            }
-
         }
-
     }
 }

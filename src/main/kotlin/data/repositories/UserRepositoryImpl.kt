@@ -4,6 +4,7 @@ import data.dataSource.user.UserDataSource
 import data.repositories.mappers.UserMapper
 import domain.entities.User
 import domain.repositories.UserRepository
+import java.util.UUID
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
@@ -22,7 +23,7 @@ class UserRepositoryImpl(
         return userDataSource.deleteUser(user.id)
     }
 
-    override fun getUserById(id: String): User? {
+    override fun getUserById(id: UUID): User? {
         return when (val userRow = userDataSource.getUserById(id)) {
             null -> null
             else -> userMapper.mapRowToEntity(userRow)

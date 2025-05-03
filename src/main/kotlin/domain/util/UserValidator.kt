@@ -11,9 +11,14 @@ class UserValidator {
         if (username.isBlank()) throw UserNameEmptyException()
     }
 
+    fun isPasswordEmpty(password: String) {
+        if (password.isBlank()) throw PasswordEmptyException()
+    }
+
     fun validatePassword(password: String, confirmPassword: String) {
 
-        if (password.isBlank()) throw PasswordEmptyException()
+        isPasswordEmpty(password)
+        isPasswordEmpty(confirmPassword)
 
         if (password.length < 6) throw InvalidLengthPasswordException()
 
