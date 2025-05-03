@@ -1,12 +1,12 @@
 package data.dataSource.user
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import dummyData.DummyUser.dummyUpdatedUserOneRow
 import dummyData.DummyUser.dummyUserOne
 import dummyData.DummyUser.dummyUserOneRow
+import dummyData.DummyUser.dummyUserTwoRow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -114,7 +114,6 @@ class CsvUserDataSourceTest {
 
     }
 
-
     @Test
     fun `get users on 3 saved users will return a list of size 3 `() {
         //given
@@ -154,6 +153,72 @@ class CsvUserDataSourceTest {
     fun `update user should be return false when UnSuccessful`() {
         //when
         val result = dataSource.updateUser(dummyUpdatedUserOneRow)
+
+        // then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should handle an exceptions come from IO`() {
+        //given
+        file.setReadOnly()
+
+
+        val result = dataSource.addUser(dummyUserOneRow)
+
+        assertThat(result).isFalse()
+        //when&then
+        //assertThrows<FileNotFoundException> { dataSource.addUser(dummyUserOneRow) }
+
+    }
+    @Test
+    fun `deleteUser should rewrite file correctly after deletion`() {
+        // given
+        dataSource.addUser(dummyUserOneRow)
+        dataSource.addUser(dummyUserTwoRow)
+
+        // when
+        dataSource.deleteUser(dummyUserOne.id)
+        val remainingUsers = dataSource.getUsers()
+
+        // then
+        assertThat(remainingUsers).hasSize(1)
+        assertThat(remainingUsers).contains(dummyUserTwoRow)
+    }
+
+    @Test
+    fun `updateUser should return false on file write error`() {
+        // given
+        dataSource.addUser(dummyUserOneRow)
+        file.setReadOnly()
+
+        // when
+        val result = dataSource.updateUser(dummyUpdatedUserOneRow)
+
+        // then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `getUsers should return empty list when file does not exist`() {
+        // given
+        file.delete()
+
+        // when
+        val users = dataSource.getUsers()
+
+        // then
+        assertThat(users).isEmpty()
+    }
+
+    @Test
+    fun `deleteUser should return false on file write error`() {
+        // given
+        dataSource.addUser(dummyUserOneRow)
+        file.setReadOnly() // منع الكتابة
+
+        // when
+        val result = dataSource.deleteUser(dummyUserOne.id)
 
         // then
         assertThat(result).isFalse()

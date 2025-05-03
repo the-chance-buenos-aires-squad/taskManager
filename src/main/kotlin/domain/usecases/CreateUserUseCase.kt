@@ -29,9 +29,10 @@ class CreateUserUseCase(
             field = "create new user",
             oldValue = null,
             newValue = "creating user:${userAdded.username}",
-            userId = "${authRepository.getCurrentUser()?.id}",
+            userId = "${authRepository.getCurrentUser()!!.id}",
         )
         return userAdded
     }
+
 
 }

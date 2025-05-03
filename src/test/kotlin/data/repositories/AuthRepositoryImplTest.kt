@@ -1,7 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.util.PasswordHasher
+import data.dataSource.util.PasswordHash
 import domain.repositories.UserRepository
 import dummyData.DummyUser
 import io.mockk.every
@@ -13,7 +13,7 @@ class AuthRepositoryImplTest {
 
     private lateinit var authRepository: AuthRepositoryImpl
     private var userRepository: UserRepository = mockk(relaxed = true)
-    private var mD5Hasher: PasswordHasher = mockk()
+    private var mD5Hasher: PasswordHash = mockk()
 
     private val testAdminUser = DummyUser.dummyUserOne
     private val testMateUser = DummyUser.dummyUserTwo

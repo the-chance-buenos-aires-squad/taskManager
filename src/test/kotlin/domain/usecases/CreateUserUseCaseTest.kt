@@ -14,7 +14,7 @@ import kotlin.test.Test
 
 class CreateUserUseCaseTest {
 
-    private lateinit var createUserUseCase: CreateUserUseCase
+    private lateinit var createUserUseCase:     CreateUserUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
     private val userValidator = UserValidator()
     val dummyUser = DummyUser.dummyUserTwo

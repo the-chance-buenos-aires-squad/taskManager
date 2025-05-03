@@ -19,7 +19,7 @@ class CsvUserDataSource(
             )
             true
         } catch (e: Exception) {
-            println("Failed to write user: ${e.message}")
+            println("Failed to write user : ${e.message}")
             false
         }
     }
@@ -48,11 +48,11 @@ class CsvUserDataSource(
             updatedUsers.forEach { userRow ->
                 csvHandler.write(
                     row = listOf(
-                        userRow[ID_ROW] ?: "",
-                        userRow[USER_NAME_ROW] ?: "",
-                        userRow[PASSWORD_ROW] ?: "",
-                        userRow[USER_ROLE_ROW] ?: "",
-                        userRow[USER_CREATED_AT_ROW] ?: ""
+                        userRow[ID_ROW],
+                        userRow[USER_NAME_ROW],
+                        userRow[PASSWORD_ROW],
+                        userRow[USER_ROLE_ROW],
+                        userRow[USER_CREATED_AT_ROW]
                     ),
                     file = file,
                     append = true
@@ -89,11 +89,11 @@ class CsvUserDataSource(
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(
                     row = listOf(
-                        updatedUser[ID_ROW] ?: "",
-                        updatedUser[USER_NAME_ROW] ?: "",
-                        updatedUser[PASSWORD_ROW] ?: "",
-                        updatedUser[USER_ROLE_ROW] ?: "",
-                        updatedUser[USER_CREATED_AT_ROW] ?: ""
+                        updatedUser[ID_ROW],
+                        updatedUser[USER_NAME_ROW],
+                        updatedUser[PASSWORD_ROW],
+                        updatedUser[USER_ROLE_ROW],
+                        updatedUser[USER_CREATED_AT_ROW]
                     ),
                     file = file,
                     append = true
