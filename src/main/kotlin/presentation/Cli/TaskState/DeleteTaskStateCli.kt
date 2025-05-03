@@ -1,5 +1,6 @@
 package presentation.Cli.TaskState
 
+import domain.customeExceptions.InvalidIdException
 import domain.usecases.taskState.DeleteTaskStateUseCase
 import presentation.UiController
 
@@ -12,14 +13,14 @@ class DeleteTaskStateCli(
         val taskId = uiController.readInput().trim()
 
         if (taskId.isEmpty()) {
-            throw IllegalArgumentException("ID can't be empty")
+            throw InvalidIdException("ID can't be empty")
         }
 
         val result = deleteTaskStateUseCase.execute(taskId)
 
         uiController.printMessage(
             if (result) "Task state deleted successfully."
-            else "Failed to delete task state."
+            else "No task state found with this ID."
         )
     }
 }

@@ -17,7 +17,7 @@ class EditTaskStateCli(
 
         uiController.printMessage(
             if (result) "Task state edited successfully."
-            else "Failed to edit task state."
+            else "No task states found."
         )
     }
 
