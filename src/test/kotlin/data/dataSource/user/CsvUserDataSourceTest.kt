@@ -10,6 +10,7 @@ import dummyData.DummyUser.dummyUserOneRow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.nio.file.Paths
 
 //new
 class CsvUserDataSourceTest {
@@ -24,6 +25,8 @@ class CsvUserDataSourceTest {
         file.writeText("")
         dataSource = CsvUserDataSource(csvHandler = csvHandler, file)
     }
+
+
 
     @Test
     fun `should return true when add user to userCsvDataSource`() {
@@ -110,6 +113,22 @@ class CsvUserDataSourceTest {
 
         //then
         assertThat(users.isNotEmpty()).isTrue()
+
+    }
+
+
+    @Test
+    fun `get users on 3 saved users will return a list of size 3 `() {
+        //given
+        dataSource.addUser(dummyUserOneRow)
+        dataSource.addUser(dummyUserOneRow)
+        dataSource.addUser(dummyUserOneRow)
+
+        //when
+        val users: List<List<String>> = dataSource.getUsers()
+
+        //then
+        assertThat(users).hasSize(3)
     }
 
     @Test

@@ -6,7 +6,7 @@ import presentation.UiController
 
 class CreateUserCli(
     private val uiController: UiController,
-    private val createUserUseCase: CreateUserUseCase
+    private val createUserUseCase: CreateUserUseCase,
 ) {
 
     fun start() {
@@ -19,9 +19,9 @@ class CreateUserCli(
         val password = uiController.readInput().trim()
 
         uiController.printMessage(CONFIRM_PASSWORD_PROMPT_MESSAGE)
-        val confirmPassowrd = uiController.readInput().trim()
+        val confirmPassword = uiController.readInput().trim()
         try {
-            val newUserMate = createUserUseCase.addUser(username, password, confirmPassowrd)
+            val newUserMate = createUserUseCase.addUser(username, password, confirmPassword)
             uiController.printMessage(SUCCESS_MESSAGE.format(newUserMate.username))
         } catch (e: Exception) {
             uiController.printMessage(ERROR_MESSAGE.format(e.message))

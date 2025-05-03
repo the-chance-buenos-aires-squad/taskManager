@@ -19,7 +19,6 @@ class CsvAuditDataSource(
             )
             true
         } catch (e: Exception) {
-
             false
         }
     }

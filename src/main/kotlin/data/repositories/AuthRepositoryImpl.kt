@@ -9,7 +9,8 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class AuthRepositoryImpl(
-    private val userRepository: UserRepository, private val mD5Hasher: PasswordHasher
+    private val userRepository: UserRepository,
+    private val mD5Hasher: PasswordHasher
 ) : AuthRepository {
 
     private var currentUser: User? = null

@@ -16,13 +16,13 @@ val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
     single { MainCli(get(), get()) }
-    single { CreateUserUseCase(authRepository = get(), userValidator = get()) }
+    single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
     single { AdminDashBoardCli(get(),get()) }
     single { MateDashBoardCli(get()) }
     single { LoginCli(get(), get(), get(), get()) }
     single { MainCli(get(), get()) }
 
-    single { CreateUserCli(get(),get()) }
+    single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
 
 }

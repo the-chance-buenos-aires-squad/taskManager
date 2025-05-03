@@ -11,7 +11,7 @@ class UserValidator {
         if (username.isBlank()) throw UserNameEmptyException()
     }
 
-    fun isPasswordEmpty(password: String) {
+    private fun isPasswordEmpty(password: String) {
         if (password.isBlank()) throw PasswordEmptyException()
     }
 

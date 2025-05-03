@@ -1,6 +1,7 @@
 package data.repositories
 
 import data.dataSource.user.UserDataSource
+import data.repositories.mappers.Mapper
 import data.repositories.mappers.UserMapper
 import domain.entities.User
 import domain.repositories.UserRepository
@@ -8,7 +9,7 @@ import java.util.UUID
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
-    private val userMapper: UserMapper
+    private val userMapper: Mapper<User>
 ) : UserRepository {
 
     override fun addUser(user: User): Boolean {

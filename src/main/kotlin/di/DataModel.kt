@@ -31,9 +31,9 @@ import java.io.File
 
 //
 val dataModule = module {
-    single { CsvWriter() }
-    single { CsvReader() }
-    single { CsvHandler(get(), get()) }
+    factory { CsvWriter() }
+    factory { CsvReader() }
+    factory { CsvHandler(get(), get()) }
 
     single { PasswordHasher() }
     //todo which direction
@@ -56,11 +56,11 @@ val dataModule = module {
     single { AddAuditUseCase(auditRepository = get()) }
     single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
 
-    single{ UserMapper() }
+    single<Mapper<User>>{ UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
 
     single<AuthRepository> { AuthRepositoryImpl(get(),get()) }
-    single<UserRepository> { UserRepositoryImpl(get(),get()) }
+    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get()) }
 
 
 }

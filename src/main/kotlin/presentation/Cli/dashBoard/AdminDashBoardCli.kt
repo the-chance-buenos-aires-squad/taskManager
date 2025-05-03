@@ -10,7 +10,6 @@ class AdminDashBoardCli(
     fun start() {
         while (true) {
             uiController.printMessage(
-
                 " === Admin Dashboard ===\n" +
                         " 1. Create User Mate\n" +
                         " 2. Manage Project\n" +
