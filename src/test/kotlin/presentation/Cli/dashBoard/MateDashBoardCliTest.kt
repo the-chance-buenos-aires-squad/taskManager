@@ -31,9 +31,8 @@ class MateDashBoardCliTest {
                 " === Mate Dashboard ===\n" +
                         " 1. Manage Task\n" +
                         " 2. View Swimlanes\n" +
-                        " 3. View Audit Logs\n" +
-                        " 4. Logout\n" +
-                        " Choose an option (1-4):"
+                        " 3. Logout\n" +
+                        " Choose an option (1-3):"
             )
         }
     }
@@ -66,32 +65,31 @@ class MateDashBoardCliTest {
     @Test
     fun `should start ViewAuditLogsCli when user choose option 3`() {
         // given
-        every { uiController.readInput() } returns "3" andThenThrows RuntimeException("Exit loop")
+        every { uiController.readInput() } returns "3"
 
         // when
-        assertThrows<RuntimeException> { mateDashBoardCli.start() }
-
-        // then
-        verify { uiController.printMessage("View Audit Logs") }
-    }
-
-    @Test
-    fun `should logout when user choose option 4`() {
-        // given
-        every { uiController.readInput() } returns "4" andThenThrows RuntimeException("Exit loop")
-
-        // when
-        assertThrows<RuntimeException> { mateDashBoardCli.start() }
+         mateDashBoardCli.start()
 
         // then
         verify { uiController.printMessage("Logout") }
     }
 
-
     @Test
     fun `should restart adminDashBoardCli when invalid input`() {
         // given
         every { uiController.readInput() } returns "9" andThenThrows RuntimeException("Exit loop")
+
+        // when
+        assertThrows<RuntimeException> { mateDashBoardCli.start() }
+
+        // then
+        verify { uiController.printMessage("Invalid option!") }
+    }
+
+    @Test
+    fun `should restart mateDashBoardCli when empty input`() {
+        // given
+        every { uiController.readInput() } returns "" andThenThrows RuntimeException("Exit loop")
 
         // when
         assertThrows<RuntimeException> { mateDashBoardCli.start() }
