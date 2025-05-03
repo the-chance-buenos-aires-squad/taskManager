@@ -36,11 +36,11 @@ val presentationModel = module {
     single { UpdateProjectCli(get(), get(), get()) }
     single { DeleteProjectCli(get(), get(), get()) }
     single { ProjectShowMenu(get()) }
-    singleOf(::ProjectScreenController)
+    single { ProjectScreenController(get(),get(),get(),get(),get()) }
     single { CreateTaskStateCli(get(), get(), get(),get()) }
     single { EditTaskStateCli(get(), get(), get()) }
     single { DeleteProjectCli(get(),get(), get()) }
     single { GetAllTaskStatesCli(get(),get()) }
-    singleOf(::TaskStateCliController)
+    single { TaskStateCliController(get(),get(),get(),get(),get(),get()) }
     single { MainCli(get(), get()) }
 }

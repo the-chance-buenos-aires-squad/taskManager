@@ -1,4 +1,4 @@
-package data.dataSource.auditDataSource
+package data.dataSource.audit
 
 import data.dataSource.util.CsvHandler
 import java.io.File

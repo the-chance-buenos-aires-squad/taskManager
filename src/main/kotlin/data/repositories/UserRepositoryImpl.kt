@@ -27,17 +27,13 @@ class UserRepositoryImpl(
     }
 
     override fun getUserById(id: UUID): User? {
-        return when (val userRow = userDataSource.getUserById(id)) {
-            null -> null
-            else -> userMapper.mapRowToEntity(userRow)
+        return userDataSource.getUserById(id)?.let {
+            userMapper.mapRowToEntity(it)
         }
     }
 
     override fun getUserByUserName(userName: String): User? {
-        return when (val userRow = userDataSource.getUserByUserName(userName)) {
-            null -> null
-            else -> userMapper.mapRowToEntity(userRow)
-        }
+        return userDataSource.getUserByUserName(userName)?.let { userMapper.mapRowToEntity(it) }
     }
 
     override fun getUsers(): List<User> {
