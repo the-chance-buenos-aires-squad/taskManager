@@ -1,20 +1,25 @@
 package di
 
-
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.project.ProjectDataSource
 import data.dataSource.auditDataSource.AuditDataSource
 import data.dataSource.auditDataSource.CsvAuditDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
+import data.repositories.ProjectRepositoryImpl
 import data.repositories.AuditRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import data.repositories.mappers.AuditMapper
 import data.repositories.mappers.Mapper
+import data.repositories.mappers.ProjectMapper
 import data.repositories.mappers.UserMapper
+import domain.entities.Project
 import domain.entities.Audit
 import domain.entities.User
+import domain.repositories.ProjectRepository
 import domain.repositories.AuditRepository
 import domain.repositories.UserRepository
 import domain.usecases.AddAuditUseCase
@@ -35,6 +40,9 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
+    single<File>(qualifier = Paths.ProjectFileQualifier) {
+        File(Paths.PROJECTFILEPATH)
+    }
     single<File>(qualifier = Paths.AuditFileQualifier) {
         File(Paths.AuditFilePath)
     }
@@ -50,9 +58,13 @@ val dataModule = module {
     single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
 
     single<Mapper<User>> { UserMapper() }
-    single<UserDataSource> { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
+    single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
 
-    single<UserRepository> { UserRepositoryImpl(get(),get()) }
+    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+
+    single<Mapper<Project>> { ProjectMapper() }
+    single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
 
 }
 
@@ -63,6 +75,9 @@ object Paths {
      */
     const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
+
+    const val PROJECTFILEPATH = "src/main/kotlin/data/resource/projects.csv"
+    val ProjectFileQualifier: Qualifier = named("ProjectFilePath")
 
     const val AuditFilePath = "src/main/kotlin/data/resource/audit.csv"
     val AuditFileQualifier: Qualifier = named("AuditFile")
