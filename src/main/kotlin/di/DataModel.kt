@@ -1,32 +1,21 @@
 package di
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
-import data.dataSource.project.CsvProjectDataSource
-import data.dataSource.project.ProjectDataSource
 import data.dataSource.auditDataSource.AuditDataSource
 import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.project.ProjectDataSource
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
 import data.dataSource.util.PasswordHasher
-import data.repositories.ProjectRepositoryImpl
-import data.repositories.AuditRepositoryImpl
-import data.repositories.AuthRepositoryImpl
-import data.repositories.TaskStateRepositoryImpl
-import data.repositories.UserRepositoryImpl
+import data.repositories.*
 import data.repositories.mappers.*
 import domain.entities.Project
-import domain.entities.Audit
 import domain.entities.TaskState
-import domain.entities.User
-import domain.repositories.ProjectRepository
-import domain.repositories.AuditRepository
-import domain.repositories.AuthRepository
-import domain.repositories.TaskStateRepository
-import domain.repositories.UserRepository
+import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
 import domain.util.UserValidator
@@ -36,13 +25,11 @@ import org.koin.dsl.module
 import java.io.File
 
 
-//
 val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get()) }
 
     single { PasswordHasher() }
-    //todo which direction
     single { UserValidator() }
 
     single<File>(qualifier = Paths.UserFileQualifier) {
@@ -102,10 +89,5 @@ object Paths {
     const val TASK_STATE_FILE_PATH = "src/main/kotlin/data/resource/task_state.csv"
     val TaskStateFileQualifier: Qualifier = named("TaskStateFilePath")
 
-
-}
-
-object Files {
-    val UserFile = File("src/main/kotlin/data/resource/users_file.csv")
 
 }

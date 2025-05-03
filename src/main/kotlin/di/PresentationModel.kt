@@ -18,7 +18,6 @@ import java.util.*
 val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { LoginCli(get()) }
     single { MainCli(get(), get()) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
