@@ -1,4 +1,4 @@
-package presentation.Cli
+package presentation.cli
 
 import domain.entities.Audit
 import domain.usecases.GetAllAuditUseCase

@@ -1,4 +1,4 @@
-package presentation.Cli.task
+package presentation.cli.task
 
 import com.google.common.truth.Truth.assertThat
 import domain.entities.*

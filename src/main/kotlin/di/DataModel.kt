@@ -13,6 +13,7 @@ import data.dataSource.util.CsvHandler
 import data.dataSource.util.PasswordHasher
 import data.repositories.*
 import data.repositories.mappers.*
+import domain.entities.Project
 import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
@@ -63,7 +64,7 @@ val dataModule = module {
     single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get()) }
 
 
-    single<Mapper<Project>> { ProjectMapper() }
+    single { ProjectMapper() }
     single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
 

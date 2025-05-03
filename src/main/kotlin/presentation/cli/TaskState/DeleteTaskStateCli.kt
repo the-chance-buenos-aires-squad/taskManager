@@ -1,4 +1,4 @@
-package presentation.Cli.TaskState
+package presentation.cli.TaskState
 
 import domain.customeExceptions.InvalidIdException
 import domain.usecases.taskState.DeleteTaskStateUseCase

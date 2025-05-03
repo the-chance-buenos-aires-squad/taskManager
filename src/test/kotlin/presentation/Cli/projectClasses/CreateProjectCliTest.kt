@@ -1,4 +1,4 @@
-package presentation.Cli.projectClasses
+package presentation.cli.projectClasses
 
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.UserEnterInvalidValueException

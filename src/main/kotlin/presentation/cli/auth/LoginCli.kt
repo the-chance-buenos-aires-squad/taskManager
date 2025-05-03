@@ -1,9 +1,9 @@
-package presentation.Cli.auth
+package presentation.cli.auth
 
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
-import presentation.Cli.dashBoard.AdminDashBoardCli
-import presentation.Cli.dashBoard.MateDashBoardCli
+import presentation.cli.dashBoard.AdminDashBoardCli
+import presentation.cli.dashBoard.MateDashBoardCli
 import presentation.UiController
 
 class LoginCli(

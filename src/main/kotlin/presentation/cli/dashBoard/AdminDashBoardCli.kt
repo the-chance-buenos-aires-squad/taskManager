@@ -1,6 +1,6 @@
-package presentation.Cli.dashBoard
+package presentation.cli.dashBoard
 
-import presentation.Cli.auth.CreateUserCli
+import presentation.cli.auth.CreateUserCli
 import presentation.UiController
 
 class AdminDashBoardCli(

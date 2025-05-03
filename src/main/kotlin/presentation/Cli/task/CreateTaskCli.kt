@@ -1,4 +1,4 @@
-package presentation.Cli.task
+package presentation.cli.task
 
 import domain.entities.ActionType
 import domain.entities.EntityType

@@ -1,4 +1,4 @@
-package presentation.Cli.projectClasses
+package presentation.cli.projectClasses
 
 import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase

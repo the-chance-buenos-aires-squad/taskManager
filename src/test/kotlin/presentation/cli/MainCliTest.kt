@@ -1,10 +1,10 @@
-package presentation.Cli
+package presentation.cli
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.assertThrows
-import presentation.Cli.auth.LoginCli
+import presentation.cli.auth.LoginCli
 import presentation.UiController
 import kotlin.test.Test
 

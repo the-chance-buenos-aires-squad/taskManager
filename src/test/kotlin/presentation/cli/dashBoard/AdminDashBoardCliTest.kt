@@ -1,11 +1,11 @@
-package presentation.Cli.dashBoard
+package presentation.cli.dashBoard
 
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import presentation.Cli.auth.CreateUserCli
+import presentation.cli.auth.CreateUserCli
 import presentation.UiController
 
 class AdminDashBoardCliTest {

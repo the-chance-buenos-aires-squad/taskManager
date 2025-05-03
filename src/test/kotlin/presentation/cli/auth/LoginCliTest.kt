@@ -1,4 +1,4 @@
-package presentation.Cli.auth
+package presentation.cli.auth
 
 import domain.customeExceptions.InvalidCredentialsException
 import domain.usecases.AuthenticationUseCase
@@ -8,8 +8,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import presentation.Cli.dashBoard.AdminDashBoardCli
-import presentation.Cli.dashBoard.MateDashBoardCli
+import presentation.cli.dashBoard.AdminDashBoardCli
+import presentation.cli.dashBoard.MateDashBoardCli
 import presentation.UiController
 
 class LoginCliTest {
