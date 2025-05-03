@@ -16,18 +16,18 @@ class ProjectMapper : Mapper<Project> {
 
     override fun mapRowToEntity(row: List<String>): Project {
         return Project(
-            id = UUID.fromString(row[ProjectColumns.ID]),
-            name = row[ProjectColumns.NAME],
-            description = row[ProjectColumns.DESCRIPTION],
-            createdAt = LocalDateTime.parse(row[ProjectColumns.CREATED_AT])
+            id = UUID.fromString(row[ID]),
+            name = row[NAME],
+            description = row[DESCRIPTION],
+            createdAt = LocalDateTime.parse(row[CREATED_AT])
         )
     }
 
-    private object ProjectColumns {
-        const val ID = 0
-        const val NAME = 1
-        const val DESCRIPTION = 2
-        const val CREATED_AT = 3
+    companion object ProjectColumns {
+        private const val ID = 0
+        private const val NAME = 1
+        private const val DESCRIPTION = 2
+        private const val CREATED_AT = 3
     }
 
 }
