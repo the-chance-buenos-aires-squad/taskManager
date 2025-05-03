@@ -19,14 +19,14 @@ class AdminDashBoardCliTest {
     }
 
     @Test
-    fun `selecting option 1 calls createUserCli start`() {
-        // Given: Simulate user input "1" then throw exception to exit loop
+    fun `should display message when start admin cli`() {
+        // given:
         every { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
 
-        // When
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
         verify {
             uiController.printMessage(
                 " === Admin Dashboard ===\n" +
@@ -36,67 +36,79 @@ class AdminDashBoardCliTest {
                         " 4. View Audit Logs\n" +
                         " 5. Logout\n" +
                         " Choose an option (1-5):")
-            createUserCli.start()
         }
     }
 
-    @Test
-    fun `selecting option 2 prints manage project message`() {
-        // Given
-        every { uiController.readInput() } returns "2" andThenThrows RuntimeException("Exit loop")
 
-        // When
+    @Test
+    fun `should start createUserCli when user choose option 1`() {
+        // given
+        every { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
+
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
+        verify { createUserCli.start() }
+    }
+
+    @Test
+    fun `should start manage project cli when user choose option 2`() {
+        // given
+        every { uiController.readInput() } returns "2" andThenThrows RuntimeException("Exit loop")
+
+        // when
+        assertThrows<RuntimeException> { adminDashBoardCli.start() }
+
+        // then
         verify { uiController.printMessage("Manage Project") }
     }
 
     @Test
-    fun `selecting option 3 prints manage task states message`() {
-        // Given
+    fun `should start manageTaskStatesCli when user choose option 3`() {
+        // given
         every { uiController.readInput() } returns "3" andThenThrows RuntimeException("Exit loop")
 
-        // When
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
         verify { uiController.printMessage("Manage task States") }
     }
 
     @Test
-    fun `selecting option 4 prints view audit logs message`() {
-        // Given
+    fun `should start ViewAuditLogsCli when user choose option 4`() {
+        // given
         every { uiController.readInput() } returns "4" andThenThrows RuntimeException("Exit loop")
 
-        // When
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
         verify { uiController.printMessage("View Audit Logs") }
     }
 
     @Test
-    fun `selecting option 5 prints logout message`() {
-        // Given
+    fun `should start Logout when user choose option 5`() {
+        // given
         every { uiController.readInput() } returns "5" andThenThrows RuntimeException("Exit loop")
 
-        // When
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
         verify { uiController.printMessage("Logout") }
     }
 
     @Test
-    fun `selecting invalid option prints error message`() {
-        // Given
+    fun `should restart adminDashBoardCli when invalid input`() {
+        // given
         every { uiController.readInput() } returns "99" andThenThrows RuntimeException("Exit loop")
 
-        // When
+        // when
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
-        // Then
+        // then
         verify { uiController.printMessage("Invalid option!") }
     }
 }
