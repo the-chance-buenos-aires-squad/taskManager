@@ -12,19 +12,19 @@ class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
 ) {
 
-    fun createTask(title: String,
+    fun createTask(
+        title: String,
         description: String,
         projectId: UUID,
-        stateId: UUID? = null,
+        stateId: UUID,
         assignedTo: UUID? = null,
-        createdBy: UUID): Task {
+        createdBy: UUID
+    ): Boolean {
 
         validateTaskTitle(title)
         validateTaskDescription(description)
         validateProjectId(projectId)
 
-        //TODO: implement get default stateId if not provided
-        val stateId = stateId ?: UUID.randomUUID()
         val newTask = Task(
             title = title,
             description = description,
@@ -34,10 +34,9 @@ class CreateTaskUseCase(
             createdBy = createdBy,
         )
 
-        val task = taskRepository.createTask(newTask)
 
         //TODO: implement audit log for task creation
-        return task
+        return taskRepository.addTask(newTask)
     }
 
     private fun validateTaskTitle(title: String) {
@@ -52,9 +51,8 @@ class CreateTaskUseCase(
         }
     }
 
-    //TODO: implement real projectId validation
     private fun validateProjectId(projectId: UUID) {
-        if (projectId == UUID(0,0)) {
+        if (projectId == UUID(0, 0)) {
             throw InvalidProjectIdException()
         }
     }
