@@ -13,8 +13,6 @@ import data.dataSource.util.CsvHandler
 import data.dataSource.util.PasswordHasher
 import data.repositories.*
 import data.repositories.mappers.*
-import domain.entities.Project
-import domain.entities.TaskState
 import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
@@ -28,6 +26,9 @@ import java.io.File
 val dataModule = module {
     single { CsvReader() }
     single { CsvHandler(get()) }
+    single { CsvHandler(get()) }
+    single { CsvUserDataSource(get(),get(Paths.UserFileQualifier)) }
+    single { TaskRepositoryImpl(get(),get()) }
 
     single { PasswordHasher() }
     single { UserValidator() }
@@ -35,7 +36,7 @@ val dataModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
     }
-    single<File>(qualifier = Paths.ProjectFileQualifier) {
+    single<File>(qualifier = Paths.ProjectFileQualifier){
         File(Paths.PROJECTFILEPATH)
     }
     single<File>(qualifier = Paths.AuditFileQualifier) {
@@ -79,6 +80,9 @@ object Paths {
      */
     const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
+
+    const val TaskFilePath = "src/main/kotlin/data/resource/tasks_file.csv"
+    val TaskFileQualifier: Qualifier = named("TaskFilePath")
 
     const val PROJECTFILEPATH = "src/main/kotlin/data/resource/projects.csv"
     val ProjectFileQualifier: Qualifier = named("ProjectFilePath")
