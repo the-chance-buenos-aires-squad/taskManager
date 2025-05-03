@@ -31,9 +31,8 @@ class MateDashBoardCliTest {
                 " === Mate Dashboard ===\n" +
                         " 1. Manage Task\n" +
                         " 2. View Swimlanes\n" +
-                        " 3. View Audit Logs\n" +
-                        " 4. Logout\n" +
-                        " Choose an option (1-4):"
+                        " 3. Logout\n" +
+                        " Choose an option (1-3):"
             )
         }
     }
@@ -60,7 +59,7 @@ class MateDashBoardCliTest {
         assertThrows<RuntimeException> { mateDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("View Swimlanes") }
+        verify {  uiController.printMessage("View Swimlanes") }
     }
 
     @Test
@@ -72,7 +71,7 @@ class MateDashBoardCliTest {
         assertThrows<RuntimeException> { mateDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("View Audit Logs") }
+        verify { uiController.printMessage("View Audit Logs")}
     }
 
     @Test
@@ -99,4 +98,17 @@ class MateDashBoardCliTest {
         // then
         verify { uiController.printMessage("Invalid option!") }
     }
+
+    @Test
+    fun `should restart mateDashBoardCli when empty input`() {
+        // given
+        every { uiController.readInput() } returns "" andThenThrows RuntimeException("Exit loop")
+
+        // when
+        assertThrows<RuntimeException> { mateDashBoardCli.start() }
+
+        // then
+        verify { uiController.printMessage("Invalid option!") }
+    }
+
 }

@@ -7,12 +7,19 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import presentation.cli.auth.CreateUserCli
 import presentation.UiController
+import presentation.cli.GetAllAuditsCli
+import presentation.cli.TaskState.TaskStateCliController
+import presentation.cli.project.ProjectScreenController
 
 class AdminDashBoardCliTest {
 
     private val uiController: UiController = mockk(relaxed = true)
     private val createUserCli: CreateUserCli = mockk(relaxed = true)
-    private var adminDashBoardCli: AdminDashBoardCli = AdminDashBoardCli(uiController, createUserCli)
+    private val projectScreenController: ProjectScreenController = mockk(relaxed = true)
+    private val taskStateCliController: TaskStateCliController = mockk(relaxed = true)
+    private val auditsCli: GetAllAuditsCli = mockk(relaxed = true)
+
+    private var adminDashBoardCli: AdminDashBoardCli = AdminDashBoardCli(uiController, createUserCli,projectScreenController,taskStateCliController,auditsCli)
 
 
     @Test
@@ -59,7 +66,7 @@ class AdminDashBoardCliTest {
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("Manage Project") }
+        verify { projectScreenController.show() }
     }
 
     @Test
@@ -71,7 +78,7 @@ class AdminDashBoardCliTest {
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("Manage task States") }
+        verify { taskStateCliController.show() }
     }
 
     @Test
@@ -83,7 +90,7 @@ class AdminDashBoardCliTest {
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("View Audit Logs") }
+        verify { auditsCli.displayAllAudits() }
     }
 
     @Test
