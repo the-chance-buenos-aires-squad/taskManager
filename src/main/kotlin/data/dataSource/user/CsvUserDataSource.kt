@@ -19,7 +19,7 @@ class CsvUserDataSource(
             )
             true
         } catch (e: Exception) {
-            println("Failed to write user: ${e.message}")
+            println("Failed to write user")
             false
         }
     }

@@ -7,9 +7,14 @@ import data.dataSource.util.CsvHandler
 import dummyData.DummyUser.dummyUpdatedUserOneRow
 import dummyData.DummyUser.dummyUserOne
 import dummyData.DummyUser.dummyUserOneRow
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.PrintStream
+import java.util.UUID
 
 //new
 class CsvUserDataSourceTest {
@@ -114,7 +119,6 @@ class CsvUserDataSourceTest {
 
     }
 
-
     @Test
     fun `get users on 3 saved users will return a list of size 3 `() {
         //given
@@ -157,6 +161,22 @@ class CsvUserDataSourceTest {
 
         // then
         assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should handle an exceptions come from IO`() {
+        //given
+        file.setReadOnly()
+
+
+        val result = dataSource.addUser(dummyUserOneRow)
+
+        assertThat(result).isFalse()
+        //when&then
+        //assertThrows<FileNotFoundException> { dataSource.addUser(dummyUserOneRow) }
+
+
+
     }
 
 }
