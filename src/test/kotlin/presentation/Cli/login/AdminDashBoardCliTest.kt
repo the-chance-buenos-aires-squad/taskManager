@@ -32,7 +32,7 @@ class AdminDashBoardCliTest {
                 " === Admin Dashboard ===\n" +
                         " 1. Create User Mate\n" +
                         " 2. Manage Project\n" +
-                        "3. Manage task States\n" +
+                        " 3. Manage task States\n" +
                         " 4. View Audit Logs\n" +
                         " 5. Logout\n" +
                         " Choose an option (1-5):")
