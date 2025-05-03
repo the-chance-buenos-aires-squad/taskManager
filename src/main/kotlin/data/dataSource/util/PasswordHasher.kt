@@ -1,4 +1,4 @@
-package data.repositories
+package data.dataSource.util
 
 import java.security.MessageDigest
 

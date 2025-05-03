@@ -16,7 +16,7 @@ import data.repositories.AuthRepositoryImpl
 import data.repositories.UserRepositoryImpl
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
-import data.repositories.PasswordHasher
+import data.dataSource.util.PasswordHasher
 import domain.util.UserValidator
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named

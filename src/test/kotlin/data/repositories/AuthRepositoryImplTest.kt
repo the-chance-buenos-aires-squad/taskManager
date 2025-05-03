@@ -1,6 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
+import data.dataSource.util.PasswordHasher
 import domain.repositories.UserRepository
 import dummyData.DummyUser
 import io.mockk.every

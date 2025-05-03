@@ -1,5 +1,6 @@
 package data.repositories
 
+import data.dataSource.util.PasswordHasher
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.AuthRepository
