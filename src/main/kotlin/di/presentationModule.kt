@@ -10,16 +10,14 @@ import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 
 import presentation.UiController
+import presentation.cli.TaskState.*
 import presentation.cli.project.ProjectShowMenu
 import presentation.cli.project.CreateProjectCli
 import presentation.cli.project.UpdateProjectCli
 import presentation.cli.project.DeleteProjectCli
 import presentation.cli.project.GetAllProjectsCli
 import presentation.cli.project.ProjectScreenController
-import presentation.cli.TaskState.CreateTaskStateCli
-import presentation.cli.TaskState.EditTaskStateCli
-import presentation.cli.TaskState.GetAllTaskStatesCli
-import presentation.cli.TaskState.TaskStateCliController
+import presentation.cli.task.CreateTaskCli
 import java.util.*
 
 
@@ -28,6 +26,7 @@ val presentationModule = module {
 
     single { ProjectShowMenu(uiController = get()) }
     single { MateDashBoardCli(uiController = get()) }
+    single { TaskStateShowMenu(uiController = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
     single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get()) }
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
@@ -36,6 +35,15 @@ val presentationModule = module {
     single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
     single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
+    single { DeleteTaskStateCli( deleteTaskStateUseCase=get(), uiController = get()) }
+    single { TaskStateInputHandler(uiController = get(), inputValidator = get()) }
+    single{ CreateTaskCli(
+        createTaskUseCase = get(),
+        getAllProjectsUseCase = get(),
+        addAuditUseCase = get(),
+        authRepository = get(),
+        getAllStatesUseCase = get(),
+        uiController = get(),) }
 
     single { LoginCli(
         uiController = get(),
@@ -49,6 +57,10 @@ val presentationModule = module {
         uiController = get(),
         inputValidator = get()
     ) }
+
+    single { ProjectScreenController(get(),get(), get(),get(),get(),get()) }
+    single { TaskStateCliController(get(),get(), get(),get(),get(),get()) }
+
     single { AdminDashBoardCli(
         uiController = get(),
         createUserCli = get(),
@@ -57,7 +69,6 @@ val presentationModule = module {
         auditsCli = get()
     ) }
 
-    singleOf(::ProjectScreenController)
-    singleOf(::TaskStateCliController)
+
     singleOf(::MainCli)
 }

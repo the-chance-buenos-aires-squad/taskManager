@@ -28,7 +28,6 @@ class MainCli(
 
                 else -> uiController.printMessage("Invalid option! Please try again.")
 
-
             }
         }
     }

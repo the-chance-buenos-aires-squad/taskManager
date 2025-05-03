@@ -4,6 +4,8 @@ import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
+import data.dataSource.task.CsvTaskDataSource
+import data.dataSource.task.TaskDataSource
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
@@ -16,42 +18,45 @@ import java.io.File
 val dataSourceModule = module {
 
     single<File>(qualifier = Paths.UserFileQualifier) {
-        File(Paths.UserFilePath)
+        File(Paths.USER_FILE_PATH)
     }
     single<File>(qualifier = Paths.ProjectFileQualifier){
-        File(Paths.PROJECTFILEPATH)
+        File(Paths.PROJECT_FILE_PATH)
     }
     single<File>(qualifier = Paths.AuditFileQualifier) {
-        File(Paths.AuditFilePath)
+        File(Paths.AUDIT_FILE_PATH)
     }
     single<File>(qualifier = Paths.TaskStateFileQualifier) {
         File(Paths.TASK_STATE_FILE_PATH)
     }
 
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
-    single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
-    single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
-    single<TaskStateDataSource> { TaskStateCSVDataSource(get(Paths.TaskStateFileQualifier), get()) }
+    single<File>(qualifier = Paths.TaskFileQualifier) {
+        File(Paths.TASK_FILE_PATH)
+    }
 
+    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
+    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier)) }
+    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), csvHandler = get()) }
+    single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), csvHandler = get()) }
+    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
 
 }
-
 
 object Paths {
     /*
     when injecting the file to data source use qualifier before injecting
     @Named("UserFilePath") private val userFile: File
      */
-    const val UserFilePath = "src/main/kotlin/data/resource/users_file.csv"
+    const val USER_FILE_PATH = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
 
-    const val TaskFilePath = "src/main/kotlin/data/resource/tasks_file.csv"
+    const val TASK_FILE_PATH = "src/main/kotlin/data/resource/tasks_file.csv"
     val TaskFileQualifier: Qualifier = named("TaskFilePath")
 
-    const val PROJECTFILEPATH = "src/main/kotlin/data/resource/projects.csv"
+    const val PROJECT_FILE_PATH = "src/main/kotlin/data/resource/projects.csv"
     val ProjectFileQualifier: Qualifier = named("ProjectFilePath")
 
-    const val AuditFilePath = "src/main/kotlin/data/resource/audit.csv"
+    const val AUDIT_FILE_PATH = "src/main/kotlin/data/resource/audit.csv"
     val AuditFileQualifier: Qualifier = named("AuditFile")
 
     const val TASK_STATE_FILE_PATH = "src/main/kotlin/data/resource/task_state.csv"

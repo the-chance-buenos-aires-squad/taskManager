@@ -3,8 +3,8 @@ package data.dataSource.util
 import com.google.common.truth.Truth.assertThat
 import kotlin.test.Test
 
-class PasswordHasherTest {
-    private val passwordHasher = PasswordHasher()
+class PasswordHashTest {
+    private val passwordHasher = PasswordHash()
 
     @Test
     fun `hash should return correct MD5 hash for normal string`() {

@@ -1,6 +1,6 @@
 package data.repositories
 
-import data.dataSource.util.PasswordHasher
+import data.dataSource.util.PasswordHash
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.AuthRepository
@@ -10,7 +10,7 @@ import java.util.*
 
 class AuthRepositoryImpl(
     private val userRepository: UserRepository,
-    private val mD5Hasher: PasswordHasher
+    private val mD5Hasher: PasswordHash
 ) : AuthRepository {
 
     private var currentUser: User? = null

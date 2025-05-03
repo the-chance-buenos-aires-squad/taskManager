@@ -2,7 +2,7 @@ package data.dataSource.util
 
 import java.security.MessageDigest
 
-class PasswordHasher {
+class PasswordHash {
     fun hash(input: String): String {
 
         val messageDigest = MessageDigest.getInstance("MD5")

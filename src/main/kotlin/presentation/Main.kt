@@ -8,8 +8,8 @@ import presentation.cli.MainCli
 fun main() {
     startKoin {
         modules(
-            dataUtilModule,
             dataSourceModule,
+            dataUtilModule,
             domainUtilModule,
             mapperModule,
             presentationModule,
