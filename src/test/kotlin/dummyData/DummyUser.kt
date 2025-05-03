@@ -2,7 +2,7 @@ package dummyData
 
 import data.repositories.mappers.UserMapper
 import domain.entities.UserRole
-import java.util.UUID
+import java.util.*
 
 object DummyUser {
     val dummyUserOne = createDummyUser(

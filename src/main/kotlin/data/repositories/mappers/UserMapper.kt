@@ -3,7 +3,7 @@ package data.repositories.mappers
 import domain.entities.User
 import domain.entities.UserRole
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 class UserMapper : Mapper<User> {
     override fun mapEntityToRow(entity: User): List<String> {

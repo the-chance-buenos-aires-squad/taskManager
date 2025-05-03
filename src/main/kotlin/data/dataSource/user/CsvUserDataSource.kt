@@ -2,12 +2,13 @@ package data.dataSource.user
 
 import data.dataSource.util.CsvHandler
 import java.io.File
-import java.util.UUID
+import java.util.*
 
 class CsvUserDataSource(
     private val csvHandler: CsvHandler,
     private val file: File
 ) : UserDataSource {
+
 
     override fun addUser(userRow: List<String>): Boolean {
         return try {
@@ -36,18 +37,22 @@ class CsvUserDataSource(
         val updatedUsers = allUsers.filterNot { it[ID_ROW] == id.toString() }
 
         if (allUsers.size == updatedUsers.size) {
-            return false
+            return false // No user with the given ID was found
         }
 
         return try {
+            // Clear the file before rewriting
+            file.writeText("") // truncate file contents
+
+            // Write each remaining user back to the file
             updatedUsers.forEach { userRow ->
                 csvHandler.write(
                     row = listOf(
-                        userRow[ID_ROW],
-                        userRow[USER_NAME_ROW],
-                        userRow[PASSWORD_ROW],
-                        userRow[USER_ROLE_ROW],
-                        userRow[USER_CREATED_AT_ROW]
+                        userRow[ID_ROW] ?: "",
+                        userRow[USER_NAME_ROW] ?: "",
+                        userRow[PASSWORD_ROW] ?: "",
+                        userRow[USER_ROLE_ROW] ?: "",
+                        userRow[USER_CREATED_AT_ROW] ?: ""
                     ),
                     file = file,
                     append = true
@@ -78,20 +83,21 @@ class CsvUserDataSource(
             .apply { add(userRow) }
 
         return try {
+            // Clear the file before rewriting all users
+            file.writeText("") // truncate file
 
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(
                     row = listOf(
-                        updatedUser[ID_ROW],
-                        updatedUser[USER_NAME_ROW],
-                        updatedUser[PASSWORD_ROW],
-                        updatedUser[USER_ROLE_ROW],
-                        updatedUser[USER_CREATED_AT_ROW]
+                        updatedUser[ID_ROW] ?: "",
+                        updatedUser[USER_NAME_ROW] ?: "",
+                        updatedUser[PASSWORD_ROW] ?: "",
+                        updatedUser[USER_ROLE_ROW] ?: "",
+                        updatedUser[USER_CREATED_AT_ROW] ?: ""
                     ),
                     file = file,
                     append = true
                 )
-
             }
 
             true
@@ -99,7 +105,6 @@ class CsvUserDataSource(
             println("Error updating user: ${e.message}")
             false
         }
-
     }
 
     companion object {

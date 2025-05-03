@@ -10,6 +10,7 @@ class CsvAuditDataSource(
 ) : AuditDataSource {
 
 
+
     override fun addAudit(auditRow: List<String>): Boolean {
         return try {
             csvHandler.write(
@@ -19,6 +20,7 @@ class CsvAuditDataSource(
             )
             true
         } catch (e: Exception) {
+            println(e.message)
             false
         }
     }

@@ -1,16 +1,18 @@
 package data.repositories
 
 import data.dataSource.user.UserDataSource
-import data.repositories.mappers.Mapper
 import data.repositories.mappers.UserMapper
 import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.UserRepository
-import java.util.UUID
+import java.time.LocalDateTime
+import java.util.*
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
-    private val userMapper: Mapper<User>
+    private val userMapper: UserMapper
 ) : UserRepository {
+
 
     override fun addUser(user: User): Boolean {
         return userDataSource.addUser(userMapper.mapEntityToRow(user))

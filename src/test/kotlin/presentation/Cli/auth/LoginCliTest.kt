@@ -6,7 +6,6 @@ import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.Cli.dashBoard.AdminDashBoardCli

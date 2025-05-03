@@ -1,7 +1,7 @@
 package domain.repositories
 
 import domain.entities.User
-import java.util.UUID
+import java.util.*
 
 
 interface UserRepository {

@@ -30,11 +30,12 @@ class LoginCli(
         try {
             val validUser = authenticationUseCase.login(username, password)
             uiController.printMessage("\nWelcome ${validUser.username}!")
-            when (validUser.role){
+            when (validUser.role) {
                 UserRole.ADMIN -> {
                     adminDashBoardCli.start()
                 }
-                UserRole.MATE ->{
+
+                UserRole.MATE -> {
                     mateDashBoardCli.start()
                 }
             }

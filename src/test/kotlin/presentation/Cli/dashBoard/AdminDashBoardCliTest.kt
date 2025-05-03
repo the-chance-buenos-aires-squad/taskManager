@@ -12,7 +12,7 @@ class AdminDashBoardCliTest {
 
     private val uiController: UiController = mockk(relaxed = true)
     private val createUserCli: CreateUserCli = mockk(relaxed = true)
-    private var adminDashBoardCli : AdminDashBoardCli= AdminDashBoardCli(uiController, createUserCli)
+    private var adminDashBoardCli: AdminDashBoardCli = AdminDashBoardCli(uiController, createUserCli)
 
 
     @Test
@@ -32,7 +32,8 @@ class AdminDashBoardCliTest {
                         " 3. Manage task States\n" +
                         " 4. View Audit Logs\n" +
                         " 5. Logout\n" +
-                        " Choose an option (1-5):")
+                        " Choose an option (1-5):"
+            )
         }
     }
 
@@ -91,7 +92,7 @@ class AdminDashBoardCliTest {
         every { uiController.readInput() } returns "5"
 
         // when
-         adminDashBoardCli.start()
+        adminDashBoardCli.start()
 
         // then
         verify { uiController.printMessage("Logout") }

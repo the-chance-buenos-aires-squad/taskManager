@@ -5,11 +5,11 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import java.io.File
 
 class CsvHandler(
-    private val csvWriter: CsvWriter,
     private val csvReader: CsvReader
 ) {
 
     fun write(row: List<String>, file: File, append: Boolean = true) {
+        val csvWriter = CsvWriter()
         csvWriter.open(file, append) {
             writeRow(row)
         }

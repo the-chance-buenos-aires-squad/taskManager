@@ -1,7 +1,7 @@
 package domain.entities
 
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 data class User(
     val id: UUID,

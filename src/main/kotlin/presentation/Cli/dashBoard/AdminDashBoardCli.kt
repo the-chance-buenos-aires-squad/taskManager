@@ -28,6 +28,7 @@ class AdminDashBoardCli(
                     uiController.printMessage("Logout")
                     break
                 }
+
                 else -> uiController.printMessage("Invalid option!")
             }
         }

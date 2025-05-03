@@ -10,7 +10,6 @@ import dummyData.DummyUser.dummyUserOneRow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
-import java.nio.file.Paths
 
 //new
 class CsvUserDataSourceTest {
@@ -25,7 +24,6 @@ class CsvUserDataSourceTest {
         file.writeText("")
         dataSource = CsvUserDataSource(csvHandler = csvHandler, file)
     }
-
 
 
     @Test

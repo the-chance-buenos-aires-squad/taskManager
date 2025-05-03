@@ -1,18 +1,12 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.CreateUserException
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.InvalidLengthPasswordException
-import domain.customeExceptions.PasswordEmptyException
-
-import domain.customeExceptions.UserNameEmptyException
+import domain.customeExceptions.*
 import domain.repositories.AuthRepository
 import domain.util.UserValidator
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
@@ -99,7 +93,7 @@ class CreateUserUseCaseTest {
 
         //when & then
         assertThrows<InvalidConfirmPasswordException> {
-            createUserUseCase.addUser(dummyUser.username, dummyUser.password, "invalid-confirm",)
+            createUserUseCase.addUser(dummyUser.username, dummyUser.password, "invalid-confirm")
         }
 
     }

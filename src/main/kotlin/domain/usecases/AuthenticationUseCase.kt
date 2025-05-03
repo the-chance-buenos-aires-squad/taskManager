@@ -16,9 +16,9 @@ class AuthenticationUseCase(
     ): User {
         userValidator.validateUsername(username)
         val user = authRepository.login(username, password)
-        if (user == null){
+        if (user == null) {
             throw InvalidCredentialsException()
         }
-            return user
+        return user
     }
 }

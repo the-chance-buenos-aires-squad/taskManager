@@ -10,7 +10,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 class UserRepositoryImplTest {
 
@@ -20,7 +20,7 @@ class UserRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        userRepository = UserRepositoryImpl(mockDataSource,userMapper)
+        userRepository = UserRepositoryImpl(mockDataSource, userMapper)
     }
 
     @Test

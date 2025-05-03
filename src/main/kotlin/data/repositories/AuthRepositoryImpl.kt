@@ -6,7 +6,7 @@ import domain.entities.UserRole
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 class AuthRepositoryImpl(
     private val userRepository: UserRepository,
