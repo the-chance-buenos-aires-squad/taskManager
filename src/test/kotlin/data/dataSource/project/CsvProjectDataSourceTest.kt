@@ -107,4 +107,13 @@ class CsvProjectDataSourceTest {
 
         assertThat(csvProjectDataSource.getAllProjects()).isEmpty()
     }
+
+    @Test
+    fun `should return update project successfully if user enter valid id`() {
+        every { csvHandler.read(testFile) } returns listOf(project,project2)
+
+        val isProjectUpdated = csvProjectDataSource.updateProject(project)
+
+        assertThat(isProjectUpdated).isTrue()
+    }
 }
