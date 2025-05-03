@@ -97,7 +97,42 @@ class CreateUserUseCaseTest {
             createUserUseCase.addUser(dummyUser.username, dummyUser.password, "invalid-confirm")
         }
 
+
+    @Test
+    fun `should hash password using MD5 utility`() {
+        // Given
+        val password = "test123"
+        val expectedHash = MD5Hash.hash(password)
+
+        // When
+        val actualHash = MD5Hash.hash(password)
+
+        // Then
+        assertThat(actualHash).isEqualTo(expectedHash)
     }
 
+
+    @Test
+    fun `created user should have hashed password`() {
+        // Arrange
+        val rawPassword = "rawPassword123"
+        every { userRepository.getUserByUserName(any()) } returns null
+
+        // Act
+        createUserUseCase.createUser(
+            username = "newUser",
+            password = rawPassword,
+            confirmPassword = rawPassword
+        )
+
+        // Assert
+        verify {
+            userRepository.insertUser(
+                match { user ->
+                    user.password == MD5Hash.hash(rawPassword)
+                }
+            )
+        }
+    }
 
 }
