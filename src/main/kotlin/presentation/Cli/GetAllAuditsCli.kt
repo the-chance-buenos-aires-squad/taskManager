@@ -31,8 +31,9 @@ class GetAllAuditsCli(
         audit.displayRow()
     }
 
-    companion object{
-        const val HEADER = "ID || Entity ID || Entity Type || Action || Field || Old Value || New Value || User ID || Timestamp"
+    companion object {
+        const val HEADER =
+            "ID || Entity ID || Entity Type || Action || Field || Old Value || New Value || User ID || Timestamp"
     }
 
 }

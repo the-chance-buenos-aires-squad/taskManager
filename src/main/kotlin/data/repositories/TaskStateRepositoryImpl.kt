@@ -8,7 +8,7 @@ import domain.repositories.TaskStateRepository
 class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateCSVDataSource,
     private val taskStateMapper: TaskStateMapper,
-): TaskStateRepository{
+) : TaskStateRepository {
     override fun createTaskState(state: TaskState): Boolean {
         return taskStateCSVDataSource.createTaskState(taskStateMapper.mapEntityToRow(state))
     }

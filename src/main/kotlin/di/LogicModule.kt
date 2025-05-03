@@ -15,6 +15,4 @@ val logicModule = module {
     single { GetAllProjectsUseCase(get()) }
     single { CreateTaskStateUseCase(get()) }
     single { EditTaskStateUseCase(get()) }
-    single { DeleteProjectUseCase(get()) }
-    single { GetAllProjectsUseCase(get()) }
 }

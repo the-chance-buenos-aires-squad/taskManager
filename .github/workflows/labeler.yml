@@ -53,7 +53,7 @@ jobs:
             echo "label=Difficult to Review" >> "$GITHUB_OUTPUT"
           fi
           echo "Selected label: $(cat $GITHUB_OUTPUT | grep label | cut -d= -f2)"
-  
+
 
       - name: Apply complexity label
         uses: actions/github-script@v6

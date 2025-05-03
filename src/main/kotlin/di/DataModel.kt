@@ -1,43 +1,36 @@
 package di
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
-import data.dataSource.project.CsvProjectDataSource
-import data.dataSource.project.ProjectDataSource
 import data.dataSource.auditDataSource.AuditDataSource
 import data.dataSource.auditDataSource.CsvAuditDataSource
+import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.project.ProjectDataSource
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
-import data.repositories.ProjectRepositoryImpl
-import data.repositories.AuditRepositoryImpl
-import data.repositories.TaskStateRepositoryImpl
-import data.repositories.UserRepositoryImpl
+import data.dataSource.util.PasswordHasher
+import data.repositories.*
 import data.repositories.mappers.*
 import domain.entities.Project
-import domain.entities.Audit
 import domain.entities.TaskState
-import domain.entities.User
-import domain.repositories.ProjectRepository
-import domain.repositories.AuditRepository
-import domain.repositories.TaskStateRepository
-import domain.repositories.UserRepository
+import domain.repositories.*
 import domain.usecases.AddAuditUseCase
 import domain.usecases.GetAllAuditUseCase
+import domain.util.UserValidator
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
 
 
-//
 val dataModule = module {
-    single { CsvWriter() }
     single { CsvReader() }
-    single { CsvHandler(get(), get()) }
+    single { CsvHandler(get()) }
 
+    single { PasswordHasher() }
+    single { UserValidator() }
 
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.UserFilePath)
@@ -52,7 +45,7 @@ val dataModule = module {
         File(Paths.TASK_STATE_FILE_PATH)
     }
 
-    single<Mapper<Audit>> { AuditMapper() }
+    single { AuditMapper() }
 
 
     single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
@@ -62,18 +55,20 @@ val dataModule = module {
     single { AddAuditUseCase(auditRepository = get()) }
     single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
 
-    single<Mapper<User>> { UserMapper() }
+    single { UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
 
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get()) }
+
 
     single<Mapper<Project>> { ProjectMapper() }
     single<ProjectDataSource> { CsvProjectDataSource(get(Paths.ProjectFileQualifier), get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
 
-    single<Mapper<TaskState>> { TaskStateMapper() }
+    single { TaskStateMapper() }
     single<TaskStateDataSource> { TaskStateCSVDataSource(get(Paths.TaskStateFileQualifier), get()) }
-    single<TaskStateRepository> { TaskStateRepositoryImpl(get(),get()) }
+    single<TaskStateRepository> { TaskStateRepositoryImpl(get(), get()) }
 
 }
 
@@ -94,10 +89,5 @@ object Paths {
     const val TASK_STATE_FILE_PATH = "src/main/kotlin/data/resource/task_state.csv"
     val TaskStateFileQualifier: Qualifier = named("TaskStateFilePath")
 
-
-}
-
-object Files {
-    val UserFile = File("src/main/kotlin/data/resource/users_file.csv")
 
 }

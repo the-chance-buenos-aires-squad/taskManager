@@ -16,7 +16,7 @@ class CsvHandlerTest {
     fun setUp() {
         testTempFile = File.createTempFile("csv_test", ".csv")
         testTempFile.deleteOnExit()
-        csvHandler = CsvHandler(CsvWriter(), CsvReader())
+        csvHandler = CsvHandler( CsvReader())
     }
 
     @Test

@@ -17,7 +17,6 @@ import java.util.*
 class CsvProjectDataSourceTest {
     private lateinit var testFile: File
     private lateinit var csvHandler: CsvHandler
-    private lateinit var csvWriter: CsvWriter
     private lateinit var csvReader: CsvReader
     private lateinit var csvProjectDataSource: CsvProjectDataSource
 
@@ -28,9 +27,8 @@ class CsvProjectDataSourceTest {
 
     @BeforeEach
     fun setup() {
-        csvWriter = mockk(relaxed = true)
         csvReader = mockk(relaxed = true)
-        csvHandler = CsvHandler(csvWriter, csvReader)
+        csvHandler = CsvHandler( csvReader)
         testFile = File.createTempFile("testFile", ".csv")
         csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler)
     }
