@@ -1,4 +1,4 @@
-package presentation.Cli.dashBoard
+package presentation.cli.dashBoard
 
 import presentation.UiController
 

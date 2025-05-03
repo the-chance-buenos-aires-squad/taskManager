@@ -1,6 +1,5 @@
-package presentation.Cli.TaskState
+package presentation.cli.TaskState
 
-import domain.entities.TaskState
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
 

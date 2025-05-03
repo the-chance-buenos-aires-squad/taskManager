@@ -1,9 +1,8 @@
-package presentation.Cli.projectClasses
+package presentation.cli.project
 
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.NoProjectsFoundException
 import domain.customeExceptions.UserEnterInvalidValueException
-import domain.entities.Project
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
 import dummyData.createDummyProject

@@ -1,4 +1,4 @@
-package presentation.Cli.auth
+package presentation.cli.auth
 
 import domain.usecases.CreateUserUseCase
 import presentation.UiController

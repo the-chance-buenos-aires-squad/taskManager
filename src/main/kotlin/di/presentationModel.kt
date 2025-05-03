@@ -2,20 +2,24 @@ package di
 
 import domain.usecases.AuthenticationUseCase
 import domain.usecases.CreateUserUseCase
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
-import presentation.Cli.GetAllAuditsCli
-import presentation.Cli.MainCli
-import presentation.Cli.auth.CreateUserCli
-import presentation.Cli.auth.LoginCli
-import presentation.Cli.dashBoard.AdminDashBoardCli
-import presentation.Cli.dashBoard.MateDashBoardCli
-import presentation.Cli.TaskState.CreateTaskStateCli
-import presentation.Cli.TaskState.EditTaskStateCli
-import presentation.Cli.TaskState.GetAllTaskStatesCli
-import presentation.Cli.TaskState.TaskStateCliController
-import presentation.Cli.projectClasses.*
+import presentation.cli.GetAllAuditsCli
+import presentation.cli.MainCli
+import presentation.cli.auth.CreateUserCli
+import presentation.cli.auth.LoginCli
+import presentation.cli.dashBoard.AdminDashBoardCli
+import presentation.cli.dashBoard.MateDashBoardCli
+import presentation.cli.TaskState.CreateTaskStateCli
+import presentation.cli.TaskState.EditTaskStateCli
+import presentation.cli.TaskState.GetAllTaskStatesCli
+import presentation.cli.TaskState.TaskStateCliController
 import presentation.UiController
+import presentation.cli.project.CreateProjectCli
+import presentation.cli.project.DeleteProjectCli
+import presentation.cli.project.ProjectShowMenu
+import presentation.cli.project.UpdateProjectCli
+import presentation.cli.project.ProjectScreenController
+
 import java.util.*
 
 

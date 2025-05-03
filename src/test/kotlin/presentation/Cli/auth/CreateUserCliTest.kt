@@ -1,4 +1,4 @@
-package presentation.Cli.auth
+package presentation.cli.auth
 
 import domain.customeExceptions.CreateUserException
 import domain.customeExceptions.InvalidConfirmPasswordException

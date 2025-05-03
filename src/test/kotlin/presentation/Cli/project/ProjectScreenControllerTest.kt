@@ -1,4 +1,4 @@
-package presentation.Cli.projectClasses
+package presentation.cli.project
 
 import domain.customeExceptions.NoProjectsFoundException
 import domain.customeExceptions.UserEnterInvalidValueException
@@ -7,7 +7,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 
 class ProjectScreenControllerTest {

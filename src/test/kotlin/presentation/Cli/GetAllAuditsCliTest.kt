@@ -1,4 +1,4 @@
-package presentation.Cli
+package presentation.cli
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits

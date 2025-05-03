@@ -1,4 +1,4 @@
-package presentation.Cli.projectClasses
+package presentation.cli.project
 
 import domain.customeExceptions.UserEnterInvalidValueException
 import domain.entities.Project

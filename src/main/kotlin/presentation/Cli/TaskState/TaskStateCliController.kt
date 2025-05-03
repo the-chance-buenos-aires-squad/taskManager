@@ -1,4 +1,4 @@
-package presentation.Cli.TaskState
+package presentation.cli.TaskState
 
 import presentation.UiController
 
