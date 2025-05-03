@@ -1,7 +1,5 @@
 package di
 
-import domain.usecases.AuthenticationUseCase
-import domain.usecases.CreateUserUseCase
 import org.koin.dsl.module
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.MainCli
@@ -25,26 +23,49 @@ import java.util.*
 
 val presentationModel = module {
     single { UiController(System.out, Scanner(System.`in`)) }
+
+    single { MainCli(uiController = get(), loginCli = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { MainCli(get(), get()) }
-    single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
-    single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
-    single { AdminDashBoardCli(get(), get()) }
-    single { MateDashBoardCli(get()) }
-    single { LoginCli(get(), get(), get(), get()) }
-    single { MainCli(get(), get()) }
-
+    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get()) }
+    single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
     single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
-
-    single { CreateProjectCli(get(), get()) }
-    single { UpdateProjectCli(get(), get(), get()) }
-    single { DeleteProjectCli(get(), get(), get()) }
-    single { ProjectShowMenu(get()) }
-    single { ProjectScreenController(get(),get(),get(),get(),get()) }
-    single { CreateTaskStateCli(get(), get(), get(),get()) }
-    single { EditTaskStateCli(get(), get(), get()) }
-    single { DeleteProjectCli(get(),get(), get()) }
-    single { GetAllTaskStatesCli(get(),get()) }
-    single { TaskStateCliController(get(),get(),get(),get(),get(),get()) }
-    single { MainCli(get(), get()) }
+    single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
+    single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
+    single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
+    single { ProjectShowMenu(uiController = get()) }
+    single { AdminDashBoardCli(
+        uiController = get(),
+        createUserCli = get(),
+        projectScreenController = get(),
+        taskStateCliController = get(),
+        auditsCli = get()
+    ) }
+    single { MateDashBoardCli(uiController = get()) }
+    single { LoginCli(
+        uiController = get(),
+        authenticationUseCase = get(),
+        adminDashBoardCli = get(),
+        mateDashBoardCli = get()
+    ) }
+    single { ProjectScreenController(
+        projectShowMenu = get(),
+        createProjectCli = get(),
+        updateProjectCli = get(),
+        deleteProjectCli = get(),
+        uiController = get()
+    ) }
+    single { CreateTaskStateCli(
+        createTaskStateUseCase = get(),
+        existsTaskStateUseCase = get(),
+        uiController = get(),
+        inputValidator = get()
+    ) }
+    single { TaskStateCliController(
+        taskStateShowMenu = get(),
+        createTaskStateCli = get(),
+        editTaskStateCli = get(),
+        deleteTaskStateCli = get(),
+        getAllTaskStatesCli = get(),
+        uiController = get()
+    ) }
 }

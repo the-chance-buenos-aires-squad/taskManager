@@ -1,6 +1,8 @@
 package di
 
 import domain.usecases.AddAuditUseCase
+import domain.usecases.AuthenticationUseCase
+import domain.usecases.CreateUserUseCase
 import domain.usecases.GetAllAuditUseCase
 import domain.usecases.project.CreateProjectUseCase
 import domain.usecases.project.DeleteProjectUseCase
@@ -19,4 +21,7 @@ val useCaseModule = module {
     single { EditTaskStateUseCase(repository = get()) }
     single { AddAuditUseCase(auditRepository = get()) }
     single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
+    single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
+    single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
+
 }

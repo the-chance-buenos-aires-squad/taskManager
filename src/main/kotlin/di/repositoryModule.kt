@@ -1,7 +1,16 @@
 package di
 
-import data.repositories.*
-import domain.repositories.*
+
+import data.repositories.AuthRepositoryImpl
+import data.repositories.ProjectRepositoryImpl
+import data.repositories.TaskStateRepositoryImpl
+import data.repositories.UserRepositoryImpl
+import data.repositories.AuditRepositoryImpl
+import domain.repositories.AuthRepository
+import domain.repositories.ProjectRepository
+import domain.repositories.TaskStateRepository
+import domain.repositories.UserRepository
+import domain.repositories.AuditRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
