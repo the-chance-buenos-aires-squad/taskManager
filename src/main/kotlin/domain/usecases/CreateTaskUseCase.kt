@@ -13,6 +13,7 @@ class CreateTaskUseCase(
 ) {
 
     fun createTask(
+        id : UUID = UUID.randomUUID(),
         title: String,
         description: String,
         projectId: UUID,
@@ -26,6 +27,7 @@ class CreateTaskUseCase(
         validateProjectId(projectId)
 
         val newTask = Task(
+            id = id,
             title = title,
             description = description,
             projectId = projectId,

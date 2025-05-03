@@ -6,7 +6,10 @@ import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.entities.Task
 import domain.repositories.TaskRepository
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -39,14 +42,16 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         // When
-        val result = createTaskUseCase.createTask(
-            validTitle,
-            validDescription,
-            validProjectId,
-            validStateId,
-            validAssignedToId,
-            validCreatedById
-        )
+        val result = createTaskUseCase
+            .createTask(
+                UUID.randomUUID(),
+                validTitle,
+                validDescription,
+                validProjectId,
+                validStateId,
+                validAssignedToId,
+                validCreatedById
+            )
 
         // Then
         assertThat(result).isTrue()  // Ensure the result is true (task creation succeeded)
@@ -57,6 +62,7 @@ class CreateTaskUseCaseTest {
     fun `should throw TaskTitleEmptyException when title is empty`() {
         assertThrows<TaskTitleEmptyException> {
             createTaskUseCase.createTask(
+                UUID.randomUUID(),
                 " ", // Empty title
                 validDescription,
                 validProjectId,
@@ -71,6 +77,7 @@ class CreateTaskUseCaseTest {
     fun `should throw TaskDescriptionEmptyException when description is empty`() {
         assertThrows<TaskDescriptionEmptyException> {
             createTaskUseCase.createTask(
+                UUID.randomUUID(),
                 validTitle,
                 "", // Empty description
                 validProjectId,
@@ -85,6 +92,7 @@ class CreateTaskUseCaseTest {
     fun `should throw InvalidProjectIdException when projectId is zero`() {
         assertThrows<InvalidProjectIdException> {
             createTaskUseCase.createTask(
+                UUID.randomUUID(),
                 validTitle,
                 validDescription,
                 UUID(0, 0), // Zero UUID
@@ -101,6 +109,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             validProjectId,
@@ -118,6 +127,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             validProjectId,
@@ -135,6 +145,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             validProjectId,
@@ -152,6 +163,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             validProjectId,
@@ -168,6 +180,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(any()) } returns true  // Mocking the successful creation response as true
 
         val result = createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             validProjectId,
@@ -187,6 +200,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             trimmedTitle,
             trimmedDescription,
             validProjectId,
@@ -204,6 +218,7 @@ class CreateTaskUseCaseTest {
     fun `should throw TaskTitleEmptyException when title is only whitespace characters`() {
         assertThrows<TaskTitleEmptyException> {
             createTaskUseCase.createTask(
+                UUID.randomUUID(),
                 "\n\t", // whitespace-only
                 validDescription,
                 validProjectId,
@@ -218,6 +233,7 @@ class CreateTaskUseCaseTest {
     fun `should throw TaskDescriptionEmptyException when description is only whitespace characters`() {
         assertThrows<TaskDescriptionEmptyException> {
             createTaskUseCase.createTask(
+                UUID.randomUUID(),
                 validTitle,
                 "\t\t  ", // whitespace-only
                 validProjectId,
@@ -235,6 +251,7 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
+            UUID.randomUUID(),
             validTitle,
             validDescription,
             manualUUID,
