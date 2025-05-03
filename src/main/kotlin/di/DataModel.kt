@@ -4,22 +4,31 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
+import data.dataSource.auditDataSource.AuditDataSource
+import data.dataSource.auditDataSource.CsvAuditDataSource
 import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.util.CsvHandler
 import data.repositories.ProjectRepositoryImpl
+import data.repositories.AuditRepositoryImpl
 import data.repositories.UserRepositoryImpl
+import data.repositories.mappers.AuditMapper
 import data.repositories.mappers.Mapper
 import data.repositories.mappers.ProjectMapper
 import data.repositories.mappers.UserMapper
 import domain.entities.Project
+import domain.entities.Audit
 import domain.entities.User
 import domain.repositories.ProjectRepository
+import domain.repositories.AuditRepository
 import domain.repositories.UserRepository
+import domain.usecases.AddAuditUseCase
+import domain.usecases.GetAllAuditUseCase
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.io.File
+
 
 //
 val dataModule = module {
@@ -34,6 +43,19 @@ val dataModule = module {
     single<File>(qualifier = Paths.ProjectFileQualifier) {
         File(Paths.PROJECTFILEPATH)
     }
+    single<File>(qualifier = Paths.AuditFileQualifier) {
+        File(Paths.AuditFilePath)
+    }
+
+    single<Mapper<Audit>> { AuditMapper() }
+
+
+    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
+
+    single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditMapper = get()) }
+
+    single { AddAuditUseCase(auditRepository = get()) }
+    single { GetAllAuditUseCase(auditRepositoryImpl = get()) }
 
     single<Mapper<User>> { UserMapper() }
     single<UserDataSource> { CsvUserDataSource(get(), get(Paths.UserFileQualifier)) }
@@ -56,6 +78,11 @@ object Paths {
 
     const val PROJECTFILEPATH = "src/main/kotlin/data/resource/projects.csv"
     val ProjectFileQualifier: Qualifier = named("ProjectFilePath")
+
+    const val AuditFilePath = "src/main/kotlin/data/resource/audit.csv"
+    val AuditFileQualifier: Qualifier = named("AuditFile")
+
+
 }
 
 object Files {

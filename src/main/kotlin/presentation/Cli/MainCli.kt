@@ -4,7 +4,7 @@ import presentation.UiController
 
 class MainCli(
     private val uiController: UiController,
-    private val loginCli: LoginCli
+    private val loginCli: LoginCli,
 ) {
 
     fun startCli(isTest: Boolean = false) {
