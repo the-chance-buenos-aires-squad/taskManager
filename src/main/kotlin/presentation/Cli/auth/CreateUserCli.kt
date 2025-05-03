@@ -1,8 +1,12 @@
 package presentation.Cli.auth
 
+import domain.usecases.CreateUserUseCase
+import presentation.UiController
+
 
 class CreateUserCli(
-
+    private val uiController: UiController,
+    private val createUserUseCase: CreateUserUseCase
 ) {
 
     fun start() {}
@@ -15,9 +19,8 @@ class CreateUserCli(
         const val USERNAME_PROMPT_MESSAGE = "username: "
         const val PASSWORD_PROMPT_MESSAGE = "password: "
         const val CONFIRM_PASSWORD_PROMPT_MESSAGE = "confirm password: "
-        const val USER_ROLE_PROMPT_MESSAGE = "choose user Role 1-ADMIN , 2-MATE \n: "
-
-        const val NOT_ALLOWED_MESSAGE = "You are not allowed to create users.....\n ask the admin to create one"
+        const val SUCCESS_MESSAGE = "add new user mate %s successfully"
+        const val ERROR_MESSAGE = "Error: %s"
     }
 
 }

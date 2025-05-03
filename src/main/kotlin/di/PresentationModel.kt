@@ -20,6 +20,6 @@ val presentationModel = module {
     single { LoginCli(get(), get(), get(), get()) }
     single { MainCli(get(), get()) }
 
-    single { CreateUserCli() }
+    single { CreateUserCli(get(),get()) }
 
 }
