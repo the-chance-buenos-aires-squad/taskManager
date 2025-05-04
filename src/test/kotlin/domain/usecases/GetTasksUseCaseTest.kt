@@ -20,20 +20,26 @@ class GetTasksUseCaseTest {
     }
 
     @Test
-    fun `should return list of all projects success`() {
+    fun `should return list of tasks success`() {
+        //given
         every { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
 
+        //when
         val result = getTasksUseCase.getTasks()
 
-        assertThat(result).isNotNull()
+        //then
+        assertThat(result).isNotEmpty()
     }
 
     @Test
-    fun `should return false if project don't created`() {
+    fun `should return false if no task created`() {
+        //given
         every { taskRepository.getAllTasks() } returns emptyList()
 
+        //when
         val result = getTasksUseCase.getTasks()
 
-        assertThat(result).isNull()
+        //then
+        assertThat(result).isEmpty()
     }
 }
