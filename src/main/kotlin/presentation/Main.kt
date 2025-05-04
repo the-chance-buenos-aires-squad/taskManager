@@ -14,7 +14,8 @@ fun main() {
             mapperModule,
             presentationModule,
             repositoryModule,
-            useCaseModule
+            useCaseModule,
+            mongoModule
         )
     }
     val mainCli: MainCli = getKoin().get()
