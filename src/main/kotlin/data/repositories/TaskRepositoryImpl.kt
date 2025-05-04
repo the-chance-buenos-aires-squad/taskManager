@@ -25,4 +25,18 @@ class TaskRepositoryImpl(
         }
     }
 
+    override fun deleteTask(id: UUID): Boolean {
+        return csvTaskDataSource.deleteTask(id.toString())
+    }
+
+    override fun updateTask(task: Task): Boolean {
+        return csvTaskDataSource.updateTask(taskMapper.mapEntityToRow(task))
+    }
+
+    override fun getTaskById(id: UUID): Task? {
+        return csvTaskDataSource.getTaskById(id.toString())?.let {
+            taskMapper.mapRowToEntity(it)
+        }
+    }
+
 }
