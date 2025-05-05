@@ -24,9 +24,16 @@ class TaskMapper : Mapper<Task> {
             description = row[2],
             projectId = UUID.fromString(row[3]),
             stateId = row[4],
-            assignedTo = UUID.fromString(row[5].ifBlank { null }),
+            assignedTo = row[5].toUUIDOrNull(),
             createdBy = UUID.fromString(row[6]),
             createdAt = LocalDateTime.parse(row[7]),
             updatedAt = LocalDateTime.parse(row[8]))
+    }
+
+
+    fun String?.toUUIDOrNull(): UUID? = try {
+        this?.takeUnless { it.isBlank() }?.let { UUID.fromString(it) }
+    } catch (e: IllegalArgumentException) {
+        null
     }
 }
