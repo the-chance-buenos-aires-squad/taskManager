@@ -15,28 +15,35 @@ class AdminDashBoardCli(
 ) {
     fun start() {
         while (true) {
-            uiController.printMessage(
-                " === Admin Dashboard ===\n" +
-                        " 1. Create User Mate\n" +
-                        " 2. Manage Project\n" +
-                        " 3. Manage task States\n" +
-                        " 4. View Audit Logs\n" +
-                        " 5. Logout\n" +
-                        " Choose an option (1-5):"
-            )
+            uiController.printMessage(HEADER_ADMIN_DASHBOARD_MESSAGE)
+
+            uiController.printMessage(CHOOSE_AN_OPTION_MESSAGE,true)
 
             when (uiController.readInput().toIntOrNull()) {
                 1 -> createUserCli.start()
                 2 -> projectScreenController.show()
-                3 -> taskStateCliController.show()
+                3 -> taskStateCliController.start()
                 4 -> auditsCli.displayAllAudits()
                 5 -> {
-                    uiController.printMessage("Logout")
-                    break
+                    uiController.printMessage(LOGOUT_MESSAGE)
+                    return
                 }
 
-                else -> uiController.printMessage("Invalid option!")
+                else -> uiController.printMessage(INVALID_OPTION_MESSAGE)
             }
         }
+    }
+
+    companion object {
+        private const val HEADER_ADMIN_DASHBOARD_MESSAGE =
+            " === Admin Dashboard ===\n" +
+                " 1. Create User Mate\n" +
+                " 2. Manage Project\n" +
+                " 3. Manage task States\n" +
+                " 4. View Audit Logs\n" +
+                " 5. Logout\n"
+        private const val CHOOSE_AN_OPTION_MESSAGE = " Choose an option (1-5):"
+        private const val INVALID_OPTION_MESSAGE = "Invalid option!"
+        private const val LOGOUT_MESSAGE = "Logout"
     }
 }

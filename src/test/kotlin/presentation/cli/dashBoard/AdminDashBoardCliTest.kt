@@ -38,12 +38,10 @@ class AdminDashBoardCliTest {
                         " 2. Manage Project\n" +
                         " 3. Manage task States\n" +
                         " 4. View Audit Logs\n" +
-                        " 5. Logout\n" +
-                        " Choose an option (1-5):"
+                        " 5. Logout\n"
             )
         }
     }
-
 
     @Test
     fun `should start createUserCli when user choose option 1`() {
@@ -78,7 +76,7 @@ class AdminDashBoardCliTest {
         assertThrows<RuntimeException> { adminDashBoardCli.start() }
 
         // then
-        verify { taskStateCliController.show() }
+        verify { taskStateCliController.start() }
     }
 
     @Test

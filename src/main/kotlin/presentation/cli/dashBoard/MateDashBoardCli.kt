@@ -11,17 +11,18 @@ class MateDashBoardCli(
         while (true) {
             uiController.printMessage(
                 " === Mate Dashboard ===\n" +
-                        " 1. Manage Task\n" +
-                        " 2. View Swimlanes\n" +
-                        " 3. Logout\n" +
-                        " Choose an option (1-3):"
+                        " 1. View Swimlanes\n" +
+                        " 2. Logout\n" +
+                        " Choose an option (1-2):"
             )
 
             when (uiController.readInput().toIntOrNull()) {
-                1 -> uiController.printMessage("Manage Task")
-                2 -> viewSwimlanesCLI.start()
-                3 -> uiController.printMessage("View Audit Logs")
-                4 -> uiController.printMessage("Logout")
+                1 -> viewSwimlanesCLI.start()
+                2 -> {
+                    uiController.printMessage("Logout")
+                    return
+                }
+
                 else -> uiController.printMessage("Invalid option!")
             }
         }
