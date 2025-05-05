@@ -1,5 +1,6 @@
 package domain.usecases.project
 
+import domain.customeExceptions.NoProjectsFoundException
 import domain.entities.Project
 import domain.repositories.ProjectRepository
 
@@ -7,6 +8,10 @@ class GetAllProjectsUseCase(
     private val projectRepository: ProjectRepository
 ) {
     fun execute(): List<Project> {
-        return projectRepository.getAllProjects()
+        val projects = projectRepository.getAllProjects()
+
+        if (projects.isEmpty()) throw NoProjectsFoundException()
+
+        return projects
     }
 }

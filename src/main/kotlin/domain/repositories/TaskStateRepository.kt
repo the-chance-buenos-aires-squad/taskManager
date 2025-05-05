@@ -1,6 +1,7 @@
 package domain.repositories
 
 import domain.entities.TaskState
+import java.util.UUID
 
 interface TaskStateRepository {
     fun createTaskState(state: TaskState): Boolean

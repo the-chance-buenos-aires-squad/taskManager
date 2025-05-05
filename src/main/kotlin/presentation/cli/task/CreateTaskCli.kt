@@ -12,14 +12,13 @@ import java.util.*
 
 class CreateTaskCli(
     private val createTaskUseCase: CreateTaskUseCase,
-    private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val addAuditUseCase: AddAuditUseCase,
     private val authRepository: AuthRepository,
     private val getAllStatesUseCase: GetAllTaskStatesUseCase,
     private val uiController: UiController,
 ) {
 
-    fun start() {
+    fun start(projectId: UUID) {
         uiController.printMessage("------ Create Task ------")
         uiController.printMessage("-------------------------")
 
@@ -28,20 +27,6 @@ class CreateTaskCli(
 
         uiController.printMessage("Description: ", false)
         val description = uiController.readInput()
-
-        // Choose project
-        uiController.printMessage("Choose a project:")
-        val projects = getAllProjectsUseCase.execute()
-        projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1} - ${project.name}")
-        }
-
-        val chosenProjectIndex = uiController.readInput().toIntOrNull()
-        if (chosenProjectIndex == null || chosenProjectIndex !in 1..projects.size) {
-            uiController.printMessage("Invalid project selection.")
-            return
-        }
-        val chosenProject = projects[chosenProjectIndex - 1]
 
         // Choose task state
         uiController.printMessage("Choose task state:")
@@ -71,7 +56,7 @@ class CreateTaskCli(
             title = title,
             description = description,
             createdBy = currentUser.id,
-            projectId = chosenProject.id,
+            projectId = projectId,
             stateId = chosenState.id
         )
 

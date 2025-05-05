@@ -1,6 +1,8 @@
 package domain.usecases.project
 
 import com.google.common.truth.Truth.assertThat
+import domain.customeExceptions.InvalidCredentialsException
+import domain.customeExceptions.NoProjectsFoundException
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
 import io.mockk.every
@@ -8,6 +10,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class GetAllProjectsUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
@@ -32,8 +35,10 @@ class GetAllProjectsUseCaseTest {
     fun `should return false if project don't created`() {
         every { projectRepository.getAllProjects() } returns emptyList()
 
-        val result = getAllProjectsUseCase.execute()
 
-        assertThat(result).isEmpty()
+        assertThrows<NoProjectsFoundException> {
+            getAllProjectsUseCase.execute()
+        }
     }
+
 }

@@ -7,6 +7,7 @@ import domain.usecases.AddAuditUseCase
 import domain.usecases.CreateTaskUseCase
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
+import dummyData.createDummyProject
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -33,12 +34,13 @@ class CreateTaskCliTest {
         role = UserRole.ADMIN,
         createdAt = LocalDateTime.now()
     )
+    val dummyProject = createDummyProject(name = "Test Project", description = "Test Description")
+
 
     @BeforeEach
     fun setUp() {
         cli = CreateTaskCli(
             createTaskUseCase = createTaskUseCase,
-            getAllProjectsUseCase = getAllProjectsUseCase,
             addAuditUseCase = addAuditUseCase,
             authRepository = authRepository,
             getAllStatesUseCase = getAllTaskStatesUseCase,
@@ -85,7 +87,7 @@ class CreateTaskCliTest {
         } returns true
 
         // Act
-        cli.start()
+        cli.start(dummyProject.id)
 
         // Assert
         verify(exactly = 1) {

@@ -7,10 +7,11 @@ import java.util.UUID
 
 fun createDummyProject(
     id: UUID = UUID.randomUUID(),
-    name: String = "Test Project"
+    name: String = "Test Project",
+    description : String = "desc",
 ) = Project(
     id = id,
     name = name,
-    description = "desc",
+    description =description,
     createdAt = LocalDateTime.now()
 )

@@ -8,11 +8,11 @@ import java.util.UUID
 fun createDummyTask(
     id: UUID = UUID.randomUUID(),
     title: String,
-    description: String,
+    description: String="task description",
     projectId: UUID,
     stateId: String,
-    assignedTo: UUID?,
-    createdBy: UUID,
+    assignedTo: UUID?= UUID.randomUUID(),
+    createdBy: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now()
 ) = Task(

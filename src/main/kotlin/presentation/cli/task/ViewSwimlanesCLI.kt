@@ -1,88 +1,101 @@
 package presentation.cli.task
 
 import domain.customeExceptions.NoProjectsFoundException
-import domain.entities.Project
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
-import domain.usecases.project.GetAllProjectsUseCase
 import presentation.UiController
+import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
+import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 
 class ViewSwimlanesCLI(
     private val uiController: UiController,
-    private val getProjectsUseCase: GetAllProjectsUseCase,
-    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase
+    private val projectCliHelper: ProjectCliHelper,
+    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase,
+    private val createTaskCli: CreateTaskCli
 ) {
 
     fun start() {
-        try {
-            val projects = getProjectsUseCase.execute()
+       while (true){
+           try {
+               uiController.printMessage(HEADER_MESSAGE)
 
-            uiController.printMessage(HEADER_MESSAGE)
+               val projects = projectCliHelper.getProjects()
+               val selectedProject = projectCliHelper.selectProject(projects)
 
-            if (projects.isEmpty()) {
-                uiController.printMessage("No projects available.")
-                return
-            }
+               if (selectedProject == null){
+                   uiController.printMessage("invalid project")
+                   return
+               }
+               val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
 
-            uiController.printMessage("Select a project:")
-            projects.forEachIndexed { index, project ->
-                uiController.printMessage("${index + 1}. ${project.name} - ${project.description}")
-            }
+               displaySwimlanes(swimlanes)
 
-            val selectedProject = getSelectedProject(projects)
+               uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
-            val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
+               when (uiController.readInput().toIntOrNull()) {
+                   1 -> {
+                       createTaskCli.start(selectedProject.id)
+                   }
+                   2 -> {
+                       uiController.printMessage("update task cli")
+                   }
+                   3 -> uiController.printMessage("delete task cli")
+                   4 -> return
+                   null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
+                   else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+               }
 
-            displaySwimlanes(swimlanes)
-
-        } catch (ex: NoProjectsFoundException) {
-            uiController.printMessage("Error: ${ex.message}")
-        } catch (ex: Exception) {
-            uiController.printMessage("An unexpected error occurred: ${ex.message}")
-        }
-    }
-
-    private fun getSelectedProject(projects: List<Project>): Project {
-        while (true) {
-            try {
-                uiController.printMessage("Enter project number: ")
-                val input = uiController.readInput().trim()
-                val selectedIndex = input.toInt() - 1
-
-                if (selectedIndex in projects.indices) {
-                    return projects[selectedIndex]
-                } else {
-                    uiController.printMessage("Invalid number. Please enter a number between 1 and ${projects.size}")
-                }
-            } catch (e: NumberFormatException) {
-                uiController.printMessage("Invalid input. Please enter a valid number.")
-            }
-        }
+           } catch (ex: NoProjectsFoundException) {
+               uiController.printMessage(NO_PROJECT_ERROR_MESSAGE.format(ex.message))
+           } catch (ex: Exception) {
+               uiController.printMessage(EXCEPTION_ERROR_MESSAGE.format(ex.message))
+           }
+       }
     }
 
     private fun displaySwimlanes(swimlanes: List<TaskStateWithTasks>) {
-        uiController.printMessage("\nTasks by State:")
-        swimlanes.forEach { group ->
-            uiController.printMessage("\n▬▬▬ ${group.state.name.toUpperCase()} ▬▬▬")
-            if (group.tasks.isEmpty()) {
-                uiController.printMessage("  No tasks in this state")
+        uiController.printMessage(TASKS_BY_STATE_MESSAGE)
+        swimlanes.forEach { taskState ->
+            uiController.printMessage(TITLE_STATE_MESSAGE.format(taskState.state.name))
+            if (taskState.tasks.isEmpty()) {
+                uiController.printMessage(NO_TASKS_IN_STATE_MESSAGE)
             } else {
-                group.tasks.forEachIndexed { index, task ->
-                    uiController.printMessage("  ${index + 1}. ${task.title}")
-                    uiController.printMessage("     Description: ${task.description}")
-                    uiController.printMessage("     Assigned to: ${task.assignedTo ?: "Unassigned"}")
-                    uiController.printMessage("     Created at: ${task.createdAt}\n")
+                taskState.tasks.forEachIndexed { index, task ->
+                    val formattedMessage = TASK_FORMAT.format(
+                        index + 1,
+                        task.title,
+                        task.description,
+                        task.assignedTo ?: "Unassigned",
+                        task.createdAt
+                    )
+                    uiController.printMessage(formattedMessage)
                 }
             }
         }
-        uiController.printMessage("\n${swimlanes.sumOf { it.tasks.size }} total tasks found")
+        uiController.printMessage(TOTAL_TASKS_FOUND_MESSAGE.format(swimlanes.sumOf { it.tasks.size }))
     }
 
     companion object {
-        const val HEADER_MESSAGE = """
-            ========================================
-                     TASK SWIMLANES VIEW          
-            ========================================
-        """
+        private const val HEADER_MESSAGE =
+            "========================================\n" +
+                    "         TASK SWIMLANES VIEW             \n" +
+                    "========================================\n"
+        private const val TITLE_STATE_MESSAGE = "\n=====( %S )====="
+        private const val NO_PROJECT_ERROR_MESSAGE = " Error: %S"
+        private const val EXCEPTION_ERROR_MESSAGE = " An unexpected error occurred: %S"
+        private const val TOTAL_TASKS_FOUND_MESSAGE = "\n\n %S total tasks found\n"
+        private const val TASKS_BY_STATE_MESSAGE = "\nTasks by State:"
+        private const val NO_TASKS_IN_STATE_MESSAGE = " No tasks in this state"
+        private const val TASK_FORMAT =
+            "  %d. %s" + "     Description: %s" + "     Assigned to: %s" + "     Created at: %s \n"
+
+        const val DISPLAY_OPTION_MANAGE_TASK =
+            "================================\n" +
+                    " 1. Create Task       \n" +
+                    " 2. Edit Task         \n" +
+                    " 3. Delete Task        \n" +
+                    " 4. Back to Main Menu       \n" +
+                    "==============================\n"
     }
 }

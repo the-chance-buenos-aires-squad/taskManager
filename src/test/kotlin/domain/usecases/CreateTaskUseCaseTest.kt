@@ -44,13 +44,11 @@ class CreateTaskUseCaseTest {
         // When
         val result = createTaskUseCase
             .createTask(
-                UUID.randomUUID(),
-                validTitle,
-                validDescription,
-                validProjectId,
-                validStateId,
-                validAssignedToId,
-                validCreatedById
+                title = validTitle,
+                description = validDescription,
+                projectId = validProjectId,
+                stateId = validStateId,
+                createdBy = validCreatedById
             )
 
         // Then
