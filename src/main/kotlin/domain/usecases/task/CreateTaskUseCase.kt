@@ -20,7 +20,7 @@ class CreateTaskUseCase(
 ) {
 
     fun createTask(
-        id : UUID ,
+        id: UUID,
         title: String,
         description: String,
         projectId: UUID,

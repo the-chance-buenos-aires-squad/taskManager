@@ -1,12 +1,13 @@
 package presentation.cli.task
 
-import domain.entities.*
+import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.AuthRepository
 import domain.usecases.AddAuditUseCase
-import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.project.GetAllProjectsUseCase
+import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
-import io.mockk.*
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
 import java.time.LocalDateTime

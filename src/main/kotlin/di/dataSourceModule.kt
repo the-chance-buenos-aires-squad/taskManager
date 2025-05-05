@@ -20,7 +20,7 @@ val dataSourceModule = module {
     single<File>(qualifier = Paths.UserFileQualifier) {
         File(Paths.USER_FILE_PATH)
     }
-    single<File>(qualifier = Paths.ProjectFileQualifier){
+    single<File>(qualifier = Paths.ProjectFileQualifier) {
         File(Paths.PROJECT_FILE_PATH)
     }
     single<File>(qualifier = Paths.AuditFileQualifier) {

@@ -3,7 +3,7 @@ package data.dataSource.dummyData
 import domain.entities.Task
 import java.util.*
 
-object DummyTasks{
+object DummyTasks {
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
     private val validProjectId = UUID.randomUUID()

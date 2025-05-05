@@ -5,8 +5,8 @@ import data.repositories.mappers.TaskStateMapper
 import data.repositories.mappers.TaskStateMapper.Companion.ID
 import data.repositories.mappers.TaskStateMapper.Companion.NAME
 import data.repositories.mappers.TaskStateMapper.Companion.PROJECT_ID
-import java.io.File
 import domain.entities.TaskState
+import java.io.File
 
 class TaskStateCSVDataSource(
     private val file: File,

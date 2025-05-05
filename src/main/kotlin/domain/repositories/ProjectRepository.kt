@@ -1,7 +1,7 @@
 package domain.repositories
 
 import domain.entities.Project
-import java.util.UUID
+import java.util.*
 
 interface ProjectRepository {
     fun createProject(project: Project): Boolean

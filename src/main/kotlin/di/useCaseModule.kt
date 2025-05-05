@@ -1,16 +1,15 @@
 package di
 
-import domain.usecases.*
+import domain.usecases.AddAuditUseCase
+import domain.usecases.AuthenticationUseCase
+import domain.usecases.CreateUserUseCase
+import domain.usecases.GetAllAuditUseCase
 import domain.usecases.project.CreateProjectUseCase
 import domain.usecases.project.DeleteProjectUseCase
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
 import domain.usecases.task.CreateTaskUseCase
-import domain.usecases.taskState.EditTaskStateUseCase
-import domain.usecases.taskState.CreateTaskStateUseCase
-import domain.usecases.taskState.GetAllTaskStatesUseCase
-import domain.usecases.taskState.DeleteTaskStateUseCase
-import domain.usecases.taskState.ExistsTaskStateUseCase
+import domain.usecases.taskState.*
 import org.koin.dsl.module
 
 val useCaseModule = module {

@@ -8,9 +8,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
-import presentation.UiController
 
 class LoginCliTest {
     private lateinit var loginCli: LoginCli

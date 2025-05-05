@@ -1,7 +1,7 @@
 package presentation.cli
 
-import presentation.cli.auth.LoginCli
 import presentation.UiController
+import presentation.cli.auth.LoginCli
 
 class MainCli(
     private val uiController: UiController,

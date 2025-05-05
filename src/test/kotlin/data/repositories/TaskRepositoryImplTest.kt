@@ -203,9 +203,8 @@ class TaskRepositoryImplTest {
     }
 
 
-
     @Test
-    fun `should return true when deleting task`(){
+    fun `should return true when deleting task`() {
         // Given
         val task = createSampleTask()
         val task1 = createSampleTask()
@@ -220,7 +219,7 @@ class TaskRepositoryImplTest {
     }
 
     @Test
-    fun `should return false when deleting task failed`(){
+    fun `should return false when deleting task failed`() {
         //given
         val task = createSampleTask()
         every { mockTaskDataSource.deleteTask(any()) } returns false
@@ -234,7 +233,7 @@ class TaskRepositoryImplTest {
 
 
     @Test
-    fun `should return true when updating task successfully`(){
+    fun `should return true when updating task successfully`() {
         //given
         val task = createSampleTask()
         every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns true
@@ -248,7 +247,7 @@ class TaskRepositoryImplTest {
 
 
     @Test
-    fun `should return false when updating task unSuccessfully`(){
+    fun `should return false when updating task unSuccessfully`() {
         //given
         val task = createSampleTask()
         every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns false
@@ -262,7 +261,7 @@ class TaskRepositoryImplTest {
 
 
     @Test
-    fun `should return non-null task object when getting by id successfully`(){
+    fun `should return non-null task object when getting by id successfully`() {
         //given
         val task = createSampleTask()
         val taskRow = taskMapper.mapEntityToRow(task)
@@ -277,7 +276,7 @@ class TaskRepositoryImplTest {
 
 
     @Test
-    fun `should return null  when getting task by id unSuccessfully`(){
+    fun `should return null  when getting task by id unSuccessfully`() {
         //given
         val task = createSampleTask()
         val taskRow = taskMapper.mapEntityToRow(task)
@@ -289,7 +288,6 @@ class TaskRepositoryImplTest {
         //then
         assertThat(result).isNull()
     }
-
 
 
 }

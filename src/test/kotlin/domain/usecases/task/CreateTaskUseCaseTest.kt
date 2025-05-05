@@ -333,13 +333,13 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should add audit when user is logged in and creation is successful`(){
+    fun `should add audit when user is logged in and creation is successful`() {
         //given
         every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
         every { taskRepository.addTask(any()) } returns true
 
         //when
-        val result = createTaskUseCase.createTask(
+        createTaskUseCase.createTask(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -350,7 +350,7 @@ class CreateTaskUseCaseTest {
         )
 
         //then
-        verify { addAuditUseCase.addAudit(any(),any(),any(),any(),any(),any(),any()) }
+        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
 
 }

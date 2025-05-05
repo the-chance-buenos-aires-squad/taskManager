@@ -1,6 +1,5 @@
 package domain.usecases
 
-import data.repositories.AuditRepositoryImpl
 import domain.entities.Audit
 import domain.repositories.AuditRepository
 

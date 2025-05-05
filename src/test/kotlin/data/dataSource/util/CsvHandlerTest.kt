@@ -2,7 +2,6 @@ package data.dataSource.util
 
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +16,7 @@ class CsvHandlerTest {
     fun setUp() {
         testTempFile = File.createTempFile("csv_test", ".csv")
         testTempFile.deleteOnExit()
-        csvHandler = CsvHandler( CsvReader())
+        csvHandler = CsvHandler(CsvReader())
     }
 
     @Test
