@@ -4,6 +4,7 @@ package domain.usecases.task
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
+import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.entities.Task
@@ -19,7 +20,7 @@ class CreateTaskUseCase(
 ) {
 
     fun createTask(
-        id : UUID = UUID.randomUUID(),
+        id : UUID ,
         title: String,
         description: String,
         projectId: UUID,
@@ -43,19 +44,21 @@ class CreateTaskUseCase(
         )
 
 
+        val currentUser = authRepository.getCurrentUser()
+            ?: throw UserNotLoggedInException()
 
-        return taskRepository.addTask(newTask).apply {
-            val currentUser = authRepository.getCurrentUser()
-            if (this && currentUser!=null)addAuditUseCase.addAudit(
-                entityId = newTask.id.toString(),
-                entityType = EntityType.TASK,
-                action = ActionType.CREATE,
-                field = "",
-                oldValue = "",
-                newValue = "creating task:${newTask.title}",
-                userId = currentUser.id.toString()
-            )
-
+        return taskRepository.addTask(newTask).also { result ->
+            if (result) {
+                addAuditUseCase.addAudit(
+                    entityId = newTask.id.toString(),
+                    entityType = EntityType.TASK,
+                    action = ActionType.CREATE,
+                    field = "",
+                    oldValue = "",
+                    newValue = "creating task: ${newTask.title}",
+                    userId = currentUser.id.toString()
+                )
+            }
         }
     }
 
