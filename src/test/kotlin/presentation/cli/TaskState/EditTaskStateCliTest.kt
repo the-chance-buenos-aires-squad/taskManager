@@ -3,9 +3,10 @@ package presentation.cli.TaskState
 import TaskStateInputValidator
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidIdException
-import domain.customeExceptions.InvalidNameException
+import domain.customeExceptions.InvalidTaskStateNameException
 import domain.customeExceptions.InvalidProjectIdException
 import domain.usecases.taskState.EditTaskStateUseCase
+import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
@@ -13,25 +14,29 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
+import java.util.UUID
 import kotlin.test.Test
 
 class EditTaskStateCliTest {
     private val editTaskStateUseCase: EditTaskStateUseCase = mockk(relaxed = true)
+    private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)
     private val inputValidator = TaskStateInputValidator()
     private lateinit var editTaskStateCli: EditTaskStateCli
 
     private val taskState = DummyTaskState.todo
+    private  val taskStates = listOf(DummyTaskState.todo, DummyTaskState.inProgress)
 
     @BeforeEach
     fun setup() {
-        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, uiController, inputValidator)
+        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, getAllTaskStatesUseCase ,uiController, inputValidator)
     }
 
     @Test
     fun `should call execute when editing task state succeeds`() {
+        every { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
         every { editTaskStateUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf("1" , taskState.name,taskState.projectId)
 
         editTaskStateCli.editTaskState()
 
@@ -40,8 +45,9 @@ class EditTaskStateCliTest {
 
     @Test
     fun `should call execute when editing task state fails`() {
+        every { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
         every { editTaskStateUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf("1" , taskState.name, taskState.projectId)
 
         editTaskStateCli.editTaskState()
 
@@ -49,34 +55,42 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should throw exception when ID is empty`() {
-        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId)
+    fun `should print message when no task states available`() {
+        every { getAllTaskStatesUseCase.execute() } returns emptyList()
 
-        val exception = assertThrows<InvalidIdException> {
-            editTaskStateCli.editTaskState()
-        }
-        assertThat(exception.message).isEqualTo("New ID can't be empty")
+        editTaskStateCli.editTaskState()
+
+        verify { uiController.printMessage("No task states available to edit.") }
     }
 
     @Test
-    fun `should throw exception when name is less than 2 letters`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
+    fun `should print invalid selection message when input is not a valid index`() {
+        every { getAllTaskStatesUseCase.execute() } returns taskStates
+        every { uiController.readInput() } returns "99"
 
-        val exception = assertThrows<InvalidNameException> {
-            editTaskStateCli.editTaskState()
-        }
-        assertThat(exception.message).isEqualTo("New Name must be at least 2 letters")
+        editTaskStateCli.editTaskState()
+
+        verify { uiController.printMessage("Invalid selection.") }
     }
 
     @Test
-    fun `should throw exception when project ID is invalid`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, "X01")
+    fun `should print invalid selection when input is not a number`() {
+        every { getAllTaskStatesUseCase.execute() } returns taskStates
+        every { uiController.readInput() } returns "ab"
 
-        val exception = assertThrows<InvalidProjectIdException> {
-            editTaskStateCli.editTaskState()
-        }
-        assertThat(exception.message).isEqualTo("New Project ID must start with 'P' followed by at least two digits (e.g., P01, P123)")
+        editTaskStateCli.editTaskState()
+
+        verify { uiController.printMessage("Invalid selection.") }
     }
 
+    @Test
+    fun `should show invalid selection when index is less than 1`() {
+        every { getAllTaskStatesUseCase.execute() } returns taskStates
+        every { uiController.readInput() } returns "0"
+
+        editTaskStateCli.editTaskState()
+
+        verify { uiController.printMessage("Invalid selection.") }
+    }
 
 }

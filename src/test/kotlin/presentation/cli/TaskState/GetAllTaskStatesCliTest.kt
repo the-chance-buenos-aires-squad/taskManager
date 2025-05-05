@@ -1,5 +1,6 @@
 package presentation.cli.TaskState
 
+import GetAllTaskStatesCli
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every

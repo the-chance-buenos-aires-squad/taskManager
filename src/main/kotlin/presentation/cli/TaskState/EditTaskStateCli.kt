@@ -26,7 +26,7 @@ class EditTaskStateCli(
         val allTaskStates = getAllTaskStatesUseCase.execute()
 
         if (allTaskStates.isEmpty()) {
-            uiController.printMessage("No task states available to edit")
+            uiController.printMessage("No task states available to edit.")
             return
         }
 
