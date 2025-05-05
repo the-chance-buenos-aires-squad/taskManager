@@ -32,7 +32,7 @@ class DeleteTaskCli (
         val confirmation = uiController.readInput().trim().lowercase()
 
         if (confirmation =="yes") {
-            val deleted = deleteTaskUseCase.execute(UUID.fromString(selectedTask.id))
+            val deleted = deleteTaskUseCase.deleteTask(UUID.fromString(selectedTask.id))
             uiController.printMessage(if (deleted)"Task deleted." else "Task not found.")
         } else {
             uiController.printMessage(" Task deletion canceled.")
