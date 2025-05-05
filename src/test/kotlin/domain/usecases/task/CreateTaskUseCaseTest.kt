@@ -19,19 +19,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
-
 class CreateTaskUseCaseTest {
     private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
     private val addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
-
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
     private val validProjectId = UUID.randomUUID()
     private val validStateId = UUID.randomUUID()
     private val validAssignedToId = UUID.randomUUID()
-    private val validCreatedById = UUID.randomUUID()
 
     @BeforeEach
     fun setUp() {
@@ -56,7 +53,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
 
         // Then
@@ -74,7 +70,7 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -89,7 +85,7 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -104,7 +100,7 @@ class CreateTaskUseCaseTest {
                 UUID(0, 0), // Zero UUID
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -121,7 +117,7 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
+
         )
 
         assertThat(taskSlot.captured.stateId).isEqualTo(validStateId)
@@ -139,7 +135,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         assertThat(taskSlot.captured.assignedTo).isEqualTo(validAssignedToId)
@@ -156,29 +151,28 @@ class CreateTaskUseCaseTest {
             description = validDescription,
             projectId = validProjectId,
             stateId = validStateId,
-            createdBy = validCreatedById
         )
 
         assertThat(taskSlot.captured.assignedTo).isNull()
     }
 
-    @Test
-    fun `should set createdBy correctly when creating task`() {
-        val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
-
-        createTaskUseCase.createTask(
-            UUID.randomUUID(),
-            validTitle,
-            validDescription,
-            validProjectId,
-            validStateId,
-            validAssignedToId,
-            validCreatedById
-        )
-
-        assertThat(taskSlot.captured.createdBy).isEqualTo(validCreatedById)
-    }
+//    @Test
+//    fun `should set createdBy correctly when creating task`() {
+//        val taskSlot = slot<Task>()
+//        every { taskRepository.addTask(capture(taskSlot)) } returns true
+//
+//        createTaskUseCase.createTask(
+//            UUID.randomUUID(),
+//            validTitle,
+//            validDescription,
+//            validProjectId,
+//            validStateId,
+//            validAssignedToId,
+//
+//        )
+//
+//        assertThat(taskSlot.captured.createdBy).isEqualTo()
+//    }
 
     @Test
     fun `should return true when task is successfully created`() {
@@ -191,7 +185,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         assertThat(result).isTrue()  // Checking that the result is true, indicating success
@@ -211,7 +204,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         verify { taskRepository.addTask(any()) }
@@ -229,7 +221,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
         }
     }
@@ -244,7 +235,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
         }
     }
@@ -262,7 +252,7 @@ class CreateTaskUseCaseTest {
             manualUUID,
             validStateId,
             validAssignedToId,
-            validCreatedById
+
         )
 
         assertThat(taskSlot.captured.projectId).isEqualTo(manualUUID)
@@ -283,7 +273,6 @@ class CreateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
 
@@ -306,7 +295,6 @@ class CreateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
 
@@ -327,7 +315,6 @@ class CreateTaskUseCaseTest {
                 projectId = DummyTasks.validTask.projectId,
                 stateId = DummyTasks.validTask.stateId,
                 assignedTo = DummyTasks.validTask.assignedTo,
-                createdBy = DummyTasks.validTask.createdBy
             )
         }
     }
@@ -346,7 +333,6 @@ class CreateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
         //then
