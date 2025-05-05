@@ -1,4 +1,4 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import GetAllTaskStatesCli
 import domain.usecases.taskState.GetAllTaskStatesUseCase

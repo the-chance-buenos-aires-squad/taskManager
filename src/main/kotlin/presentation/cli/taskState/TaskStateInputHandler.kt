@@ -1,8 +1,6 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import TaskStateInputValidator
-import domain.customeExceptions.InvalidTaskStateNameException
-import domain.customeExceptions.InvalidProjectIdException
 import domain.entities.TaskState
 import presentation.UiController
 import java.util.*

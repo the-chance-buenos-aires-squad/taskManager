@@ -1,10 +1,6 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import TaskStateInputValidator
-import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.InvalidIdException
-import domain.customeExceptions.InvalidTaskStateNameException
-import domain.customeExceptions.InvalidProjectIdException
 import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.ExistsTaskStateUseCase
 import dummyData.dummyStateData.DummyTaskState
@@ -12,9 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
-import java.util.*
 import kotlin.test.Test
 
 class CreateTaskStateCliTest {

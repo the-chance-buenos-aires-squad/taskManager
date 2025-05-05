@@ -1,10 +1,9 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import TaskStateInputValidator
 import domain.usecases.taskState.EditTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
-import java.util.*
 
 class EditTaskStateCli(
     private val editTaskStateUseCase: EditTaskStateUseCase,
@@ -52,7 +51,7 @@ class EditTaskStateCli(
         val newStateEditing = editTaskStateUseCase.execute(updatedState)
 
         if (newStateEditing) {
-            uiController.printMessage(" Task state edited successfully.")
+            uiController.printMessage("Task state edited successfully.")
             uiController.printMessage(
                 """
                 Updated Task State ${index + 1}: Name: ${updatedState.name}, Project ID: ${updatedState.projectId}

@@ -1,5 +1,7 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
+import GetAllTaskStatesCli
+import TaskStateShowMenu
 import presentation.UiController
 
 class TaskStateCliController(

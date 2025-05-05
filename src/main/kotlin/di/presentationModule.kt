@@ -12,7 +12,7 @@ import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 
 import presentation.UiController
-import presentation.cli.TaskState.*
+import presentation.cli.taskState.*
 import presentation.cli.project.ProjectShowMenu
 import presentation.cli.project.CreateProjectCli
 import presentation.cli.project.UpdateProjectCli

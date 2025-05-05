@@ -1,8 +1,6 @@
-import domain.entities.TaskState
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
-import presentation.cli.TaskState.TaskStatePrinter
-import java.util.*
+import presentation.cli.taskState.TaskStatePrinter
 
 class GetAllTaskStatesCli(
     private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase,

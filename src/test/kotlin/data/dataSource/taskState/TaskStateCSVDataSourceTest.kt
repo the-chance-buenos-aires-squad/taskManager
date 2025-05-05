@@ -40,15 +40,6 @@ class TaskStateCSVDataSourceTest {
     }
 
     @Test
-    fun `should return false when state already exists`() {
-        every { csvHandler.read(testStateFile) } returns csvRows
-
-        val result = taskStateCSVDataSource.createTaskState(listOf(id1.toString(), "To Do", "P001"))
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
     fun `should return true when state is edited successfully`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 

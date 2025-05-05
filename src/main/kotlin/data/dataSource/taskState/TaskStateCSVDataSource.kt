@@ -15,17 +15,13 @@ class TaskStateCSVDataSource(
 ) : TaskStateDataSource {
 
     override fun createTaskState(state: List<String>): Boolean {
-        val existingTaskStates = getAllTaskStates()
-        val newId = UUID.fromString(state[ID])
-        if (existingTaskStates.any { it.id == newId }) return false
-
+        val allTaskStates = getAllTaskStates()
         val newTaskState = TaskState(
-            id = newId,
             name = state[NAME],
             projectId = state[PROJECT_ID]
         )
 
-        val allStates = existingTaskStates + newTaskState
+        val allStates = allTaskStates + newTaskState
         writeTaskStates(allStates)
         return true
     }

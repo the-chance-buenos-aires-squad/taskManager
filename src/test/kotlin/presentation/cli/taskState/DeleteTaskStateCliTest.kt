@@ -1,4 +1,4 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import domain.usecases.taskState.DeleteTaskStateUseCase
 import io.mockk.every
@@ -7,9 +7,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
 import kotlin.test.Test
-import org.junit.jupiter.api.assertThrows
-import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.InvalidIdException
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.dummyStateData.DummyTaskState
 
