@@ -3,9 +3,7 @@ package data.repositories
 import data.dataSource.user.UserDataSource
 import data.repositories.mappers.UserMapper
 import domain.entities.User
-import domain.entities.UserRole
 import domain.repositories.UserRepository
-import java.time.LocalDateTime
 import java.util.*
 
 class UserRepositoryImpl(
@@ -42,7 +40,6 @@ class UserRepositoryImpl(
             userMapper.mapRowToEntity(userRow)
         }
     }
-
 
 
 }

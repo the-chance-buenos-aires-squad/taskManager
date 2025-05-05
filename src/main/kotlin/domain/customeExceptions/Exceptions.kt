@@ -13,5 +13,8 @@ class InvalidLengthPasswordException(
 ) : Exception(message)
 
 class CreateUserException(message: String = "Failed to create user") : Exception(message)
+class UserNotLoggedInException(
+    message: String = "Operation not allowed: User is not logged in."
+) : RuntimeException(message)
 
 class NoTasksFoundException(message: String = "No tasks found.") : Exception(message)

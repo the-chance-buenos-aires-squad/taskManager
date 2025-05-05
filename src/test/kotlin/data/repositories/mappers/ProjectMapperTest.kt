@@ -2,10 +2,9 @@ package data.repositories.mappers
 
 import com.google.common.truth.Truth.assertThat
 import domain.entities.Project
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 class ProjectMapperTest {
     private val mapper = ProjectMapper()

@@ -59,7 +59,7 @@ class MateDashBoardCliTest {
         assertThrows<RuntimeException> { mateDashBoardCli.start() }
 
         // then
-        verify {  uiController.printMessage("View Swimlanes") }
+        verify { uiController.printMessage("View Swimlanes") }
     }
 
     @Test
@@ -71,7 +71,7 @@ class MateDashBoardCliTest {
         assertThrows<RuntimeException> { mateDashBoardCli.start() }
 
         // then
-        verify { uiController.printMessage("View Audit Logs")}
+        verify { uiController.printMessage("View Audit Logs") }
     }
 
     @Test
