@@ -1,11 +1,13 @@
-package domain.usecases
+package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.entities.Task
+import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
+import domain.usecases.AddAuditUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -16,8 +18,10 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class CreateTaskUseCaseTest {
-    private lateinit var taskRepository: TaskRepository
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
+    private val authRepository:AuthRepository = mockk(relaxed = true)
+    private val addAuditUseCase:AddAuditUseCase = mockk(relaxed = true)
 
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
@@ -28,8 +32,7 @@ class CreateTaskUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        taskRepository = mockk(relaxed = true)
-        createTaskUseCase = CreateTaskUseCase(taskRepository)
+        createTaskUseCase = CreateTaskUseCase(taskRepository,addAuditUseCase,authRepository)
 
         // Default mock behavior
         every { taskRepository.addTask(any()) } returns true

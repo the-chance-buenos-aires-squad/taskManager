@@ -5,6 +5,7 @@ import domain.usecases.project.CreateProjectUseCase
 import domain.usecases.project.DeleteProjectUseCase
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
+import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.EditTaskStateUseCase
 import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
@@ -24,7 +25,7 @@ val useCaseModule = module {
     single { DeleteTaskStateUseCase(get()) }
     single { GetAllTaskStatesUseCase(get()) }
     single { ExistsTaskStateUseCase(get()) }
-    single { CreateTaskUseCase(get()) }
+    single { CreateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
 }

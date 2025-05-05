@@ -1,15 +1,21 @@
-package domain.usecases
+package domain.usecases.task
 
 
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
+import domain.entities.ActionType
+import domain.entities.EntityType
 import domain.entities.Task
+import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
+import domain.usecases.AddAuditUseCase
 import java.util.*
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
+    private val addAuditUseCase: AddAuditUseCase,
+    private val authRepository: AuthRepository
 ) {
 
     fun createTask(
@@ -37,8 +43,20 @@ class CreateTaskUseCase(
         )
 
 
-        //TODO: implement audit log for task creation
-        return taskRepository.addTask(newTask)
+
+        return taskRepository.addTask(newTask).apply {
+            val currentUser = authRepository.getCurrentUser()
+            if (this && currentUser!=null)addAuditUseCase.addAudit(
+                entityId = newTask.id.toString(),
+                entityType = EntityType.TASK,
+                action = ActionType.CREATE,
+                field = "",
+                oldValue = "",
+                newValue = "creating task:${newTask.title}",
+                userId = currentUser.id.toString()
+            )
+
+        }
     }
 
     private fun validateTaskTitle(title: String) {
