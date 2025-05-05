@@ -1,11 +1,12 @@
 package data.repositories.mappers
 
 import domain.entities.TaskState
+import java.util.*
 
 class TaskStateMapper : Mapper<TaskState> {
     override fun mapEntityToRow(entity: TaskState): List<String> {
         return listOf(
-            entity.id,
+            entity.id.toString(),
             entity.name,
             entity.projectId
         )
@@ -13,7 +14,7 @@ class TaskStateMapper : Mapper<TaskState> {
 
     override fun mapRowToEntity(row: List<String>): TaskState {
         return TaskState(
-            id = row[ID],
+            id = UUID.fromString(row[ID]),
             name = row[NAME],
             projectId = row[PROJECT_ID]
         )

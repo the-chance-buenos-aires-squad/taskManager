@@ -1,5 +1,7 @@
 package di
 
+import GetAllTaskStatesCli
+import TaskStateShowMenu
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import presentation.cli.GetAllAuditsCli
@@ -28,14 +30,14 @@ val presentationModule = module {
     single { MateDashBoardCli(uiController = get()) }
     single { TaskStateShowMenu(uiController = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get()) }
+    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get(), getAllTaskStatesUseCase = get()) }
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
     single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
     single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
     single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
     single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
-    single { DeleteTaskStateCli( deleteTaskStateUseCase=get(), uiController = get()) }
+    single { DeleteTaskStateCli( deleteTaskStateUseCase=get(), uiController = get(), getAllTaskStatesUseCase = get()) }
     single { TaskStateInputHandler(uiController = get(), inputValidator = get()) }
     single{ CreateTaskCli(
         createTaskUseCase = get(),

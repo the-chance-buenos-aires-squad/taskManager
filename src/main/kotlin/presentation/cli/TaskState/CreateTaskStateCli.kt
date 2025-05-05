@@ -14,19 +14,33 @@ class CreateTaskStateCli(
     private val inputHandler = TaskStateInputHandler(uiController, inputValidator)
 
     fun createTaskState() {
+
+        uiController.printMessage(
+            """
+            
+            ***     Create Task State  📋   ***
+            
+            """.trimIndent()
+        )
+
         val taskState = inputHandler.readAndValidateUserInputs()
 
-
-        if (existsTaskStateUseCase.execute(taskState.id)) {
+        if (existsTaskStateUseCase.execute(taskState.name, taskState.projectId)) {
             uiController.printMessage("Task state already exists.")
             return
         }
 
-        val result = createTaskStateUseCase.execute(taskState)
+        val newState = createTaskStateUseCase.execute(taskState)
 
-        uiController.printMessage(
-            if (result) "Task state created successfully."
-            else "Failed to create task state."
-        )
+        if (newState) {
+            uiController.printMessage("Task state created successfully.")
+            uiController.printMessage(
+                """
+                Name State: ${taskState.name}, Project ID: ${taskState.projectId}
+                """.trimIndent()
+            )
+        } else {
+            uiController.printMessage("Failed to create task state.")
+        }
     }
 }
