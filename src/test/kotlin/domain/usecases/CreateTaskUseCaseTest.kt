@@ -22,7 +22,7 @@ class CreateTaskUseCaseTest {
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
     private val validProjectId = UUID.randomUUID()
-    private val validStateId = UUID.randomUUID()
+    private val validStateId = "1"
     private val validAssignedToId = UUID.randomUUID()
     private val validCreatedById = UUID.randomUUID()
 

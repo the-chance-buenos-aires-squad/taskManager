@@ -22,9 +22,9 @@ class DeleteTaskStateUseCaseTest {
     fun `should edit state successfully when repository returns true`() {
         val deletedTaskState = DummyTaskState.todo.id
 
-        every { repository.deleteTaskState(deletedTaskState) } returns true
+        every { repository.deleteTaskState(deletedTaskState.toString()) } returns true
 
-        val result = deleteTaskStateUseCase.execute(deletedTaskState)
+        val result = deleteTaskStateUseCase.execute(deletedTaskState.toString())
 
         assertThat(result).isTrue()
     }
@@ -33,9 +33,9 @@ class DeleteTaskStateUseCaseTest {
     fun `should fail to edit state when repository returns false`() {
         val deletedTaskState = DummyTaskState.blocked.id
 
-        every { repository.deleteTaskState(deletedTaskState) } returns false
+        every { repository.deleteTaskState(deletedTaskState.toString()) } returns false
 
-        val result = deleteTaskStateUseCase.execute(deletedTaskState)
+        val result = deleteTaskStateUseCase.execute(deletedTaskState.toString())
 
         assertThat(result).isFalse()
     }

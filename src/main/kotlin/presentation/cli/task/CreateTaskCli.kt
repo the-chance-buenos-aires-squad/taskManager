@@ -72,7 +72,7 @@ class CreateTaskCli(
             description = description,
             createdBy = currentUser.id,
             projectId = chosenProject.id,
-            stateId = UUID.fromString(chosenState.id)
+            stateId = chosenState.id
         )
 
         if (taskCreated) {

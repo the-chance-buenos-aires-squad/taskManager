@@ -77,8 +77,8 @@ class CreateTaskCliTest {
                 any(),
                 eq(taskTitle),
                 eq(taskDescription),
-                eq(testUser.id),
                 eq(project.id),
+                eq(state.id),
                 eq(UUID.fromString(state.id)),
                 any() // assignedTo
             )
@@ -93,8 +93,8 @@ class CreateTaskCliTest {
                 any(),
                 eq(taskTitle),
                 eq(taskDescription),
-                eq(testUser.id),
                 eq(project.id),
+                eq(state.id),
                 eq(UUID.fromString(state.id)),
                 any() // assignedTo
             )

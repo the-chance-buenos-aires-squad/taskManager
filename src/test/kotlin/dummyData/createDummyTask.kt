@@ -10,7 +10,7 @@ fun createDummyTask(
     title: String,
     description: String,
     projectId: UUID,
-    stateId: UUID,
+    stateId: String,
     assignedTo: UUID?,
     createdBy: UUID,
     createdAt: LocalDateTime = LocalDateTime.now(),
@@ -25,4 +25,15 @@ fun createDummyTask(
     createdBy = createdBy,
     createdAt = createdAt,
     updatedAt = updatedAt,
+)
+
+fun createDummyTaskForStates(
+    stateId: String ="1"
+): Task = Task(
+    title = "Test Task",
+    description = "Test Description",
+    projectId = UUID.randomUUID(),
+    stateId = stateId,
+    assignedTo = null,
+    createdBy = UUID.randomUUID()
 )

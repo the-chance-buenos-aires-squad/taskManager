@@ -17,7 +17,7 @@ class CreateTaskStateCli(
         val taskState = inputHandler.readAndValidateUserInputs()
 
 
-        if (existsTaskStateUseCase.execute(taskState.id)) {
+        if (existsTaskStateUseCase.execute(taskState.id.toString())) {
             uiController.printMessage("Task state already exists.")
             return
         }

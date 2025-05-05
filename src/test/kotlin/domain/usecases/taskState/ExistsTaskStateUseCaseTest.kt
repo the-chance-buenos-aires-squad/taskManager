@@ -21,9 +21,9 @@ class ExistsTaskStateUseCaseTest {
     @Test
     fun `should return true when state with given id exists`() {
         val stateId = DummyTaskState.todo.id
-        every { repository.existsTaskState(stateId) } returns true
+        every { repository.existsTaskState(stateId.toString()) } returns true
 
-        val result = existsTaskStateUseCase.execute(stateId)
+        val result = existsTaskStateUseCase.execute(stateId.toString())
 
         assertThat(result).isTrue()
     }

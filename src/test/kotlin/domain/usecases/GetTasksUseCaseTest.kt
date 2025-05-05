@@ -32,7 +32,7 @@ class GetTasksUseCaseTest {
     }
 
     @Test
-    fun `should return false if no task created`() {
+    fun `should return empty when no task created`() {
         //given
         every { taskRepository.getAllTasks() } returns emptyList()
 

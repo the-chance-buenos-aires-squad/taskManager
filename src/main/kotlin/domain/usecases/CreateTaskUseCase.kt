@@ -17,7 +17,7 @@ class CreateTaskUseCase(
         title: String,
         description: String,
         projectId: UUID,
-        stateId: UUID,
+        stateId: String,
         assignedTo: UUID? = null,
         createdBy: UUID
     ): Boolean {
