@@ -1,6 +1,7 @@
 package data.dataSource.dummyData
 
 import domain.entities.Task
+import java.time.LocalDateTime
 import java.util.*
 
 object DummyTasks {
@@ -10,6 +11,8 @@ object DummyTasks {
     private val validStateId = UUID.randomUUID()
     private val validAssignedToId = UUID.randomUUID()
     private val validCreatedById = UUID.randomUUID()
+    private val validCreatedAt = LocalDateTime.now()
+    private val validUpdatedAt = LocalDateTime.now()
     val validTask = Task(
         id = UUID.randomUUID(),
         validTitle,
@@ -17,6 +20,8 @@ object DummyTasks {
         validProjectId,
         validStateId,
         validAssignedToId,
-        validCreatedById
+        validCreatedById,
+        validCreatedAt,
+        validUpdatedAt
     )
 }
