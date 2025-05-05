@@ -5,6 +5,7 @@ import domain.usecases.AuthenticationUseCase
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 import presentation.UiController
+import presentation.cli.task.ViewSwimlanesCLI
 
 class LoginCli(
     private val uiController: UiController,

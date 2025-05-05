@@ -25,6 +25,8 @@ val useCaseModule = module {
     single { GetAllTaskStatesUseCase(get()) }
     single { ExistsTaskStateUseCase(get()) }
     single { CreateTaskUseCase(get()) }
+    single { GetTasksUseCase(get()) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
+    single { GetTasksGroupedByStateUseCase(getTasksUseCase = get(), getTaskStatesUseCase = get()) }
 }

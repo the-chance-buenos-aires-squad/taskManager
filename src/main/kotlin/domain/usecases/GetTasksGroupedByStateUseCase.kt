@@ -1,6 +1,6 @@
 package domain.usecases
 
-import com.sun.jdi.request.InvalidRequestStateException
+import domain.entities.Project
 import domain.entities.TaskStateWithTasks
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 
@@ -9,9 +9,9 @@ class GetTasksGroupedByStateUseCase(
     private val getTaskStatesUseCase: GetAllTaskStatesUseCase
 ) {
 
-    fun getTasksGroupedByState(): List<TaskStateWithTasks> {
-        val allStates = getTaskStatesUseCase.execute()
-        val allTasks = getTasksUseCase.getTasks()
+    fun getTasksGroupedByState(project: Project): List<TaskStateWithTasks> {
+        val allStates = getTaskStatesUseCase.execute().sortedBy { it.id }
+        val allTasks = getTasksUseCase.getTasks().filter { it.projectId == project.id }
 
         return allStates.map { state ->
             TaskStateWithTasks(

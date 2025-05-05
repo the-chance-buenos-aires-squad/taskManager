@@ -1,8 +1,12 @@
 package presentation.cli.dashBoard
 
 import presentation.UiController
+import presentation.cli.task.ViewSwimlanesCLI
 
-class MateDashBoardCli(private val uiController: UiController) {
+class MateDashBoardCli(
+    private val uiController: UiController,
+    private val viewSwimlanesCLI: ViewSwimlanesCLI
+) {
     fun start() {
         while (true) {
             uiController.printMessage(
@@ -15,7 +19,7 @@ class MateDashBoardCli(private val uiController: UiController) {
 
             when (uiController.readInput().toIntOrNull()) {
                 1 -> uiController.printMessage("Manage Task")
-                2 -> uiController.printMessage("View Swimlanes")
+                2 -> viewSwimlanesCLI.start()
                 3 -> uiController.printMessage("View Audit Logs")
                 4 -> uiController.printMessage("Logout")
                 else -> uiController.printMessage("Invalid option!")
