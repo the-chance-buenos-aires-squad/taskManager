@@ -5,7 +5,8 @@ import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.customeExceptions.UserNotLoggedInException
-import domain.entities.Project
+import domain.entities.TaskState
+import domain.entities.User
 import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
@@ -17,10 +18,9 @@ class CreateTaskCli(
     private val getAllStatesUseCase: GetAllTaskStatesUseCase,
     private val userRepository: UserRepository,
     private val uiController: UiController,
-    private val project: Project
 ) {
 
-    fun start() {
+    fun create(projectID:UUID) {
         uiController.printMessage("------ Create Task ------")
         uiController.printMessage("-------------------------")
 
@@ -54,14 +54,15 @@ class CreateTaskCli(
             return
         }
 
-        uiController.printMessage("Choose task state:" + "1- todo 2-in progress 3- done")
-        val states = getAllStatesUseCase.execute()
+
+        uiController.printMessage("Choose task state: ", isInline = false)
+        val states = getAllStatesUseCase.execute().filter { it.projectId == projectID.toString() }
         states.forEachIndexed { index, taskState ->
-            uiController.printMessage("${index + 1} - ${taskState.name}")
+            uiController.printMessage("${index + 1} - ${taskState.name}||", isInline = false)
         }
 
-        val chosenState: domain.entities.TaskState?
-        uiController.printMessage("Enter state number: ", false)
+        val chosenState: TaskState?
+        uiController.printMessage("\nEnter state number: ", false)
         var stateInput = uiController.readInput().toIntOrNull()
         if (stateInput == null || stateInput !in 1..states.size) {
             uiController.printMessage("Invalid state selection. Please try again.")
@@ -77,13 +78,13 @@ class CreateTaskCli(
         }
         chosenState = states[stateInput - 1]
 
-        var assignedUser: domain.entities.User?
-        uiController.printMessage("Enter the username to assign the task to: ", false)
+        var assignedUser: User?
+        uiController.printMessage("Enter the user to assign the task to: ", false)
         var username = uiController.readInput()
         assignedUser = userRepository.getUserByUserName(username)
         if (assignedUser == null) {
             uiController.printMessage("User not found. Please try again.")
-            uiController.printMessage("Enter the username to assign the task to: ", false)
+            uiController.printMessage("Enter the user to assign the task to: ", false)
             username = uiController.readInput()
             assignedUser = userRepository.getUserByUserName(username)
         }
@@ -103,11 +104,16 @@ class CreateTaskCli(
                 id = newTaskId,
                 title = title,
                 description = description,
-                projectId = project.id,
+                projectId = projectID,
                 stateId = UUID.fromString(chosenState.id),
                 assignedTo = assignedUser.id
-            )
-            uiController.printMessage("Task created successfully!")
+            ).let {
+                when(it){
+                    true->{uiController.printMessage("Task created successfully!")}
+                    false->{uiController.printMessage("Task did not created successfully!")}
+                }
+            }
+
         } catch (e: UserNotLoggedInException) {
             uiController.printMessage(" user not longed in")
         } catch (e: TaskTitleEmptyException) {

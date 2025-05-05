@@ -37,7 +37,6 @@ val presentationModule = module {
             getAllStatesUseCase = get(),
             userRepository = get(),
             uiController = get(),
-            project = get(),
         )
     }
 
