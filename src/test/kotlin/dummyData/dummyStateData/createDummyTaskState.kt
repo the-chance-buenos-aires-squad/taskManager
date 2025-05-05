@@ -2,7 +2,7 @@ import domain.entities.TaskState
 import java.util.*
 
 fun createDummyTaskState(
-    id: String,
+        id: UUID,
     name: String,
     projectId: String
 ): TaskState {

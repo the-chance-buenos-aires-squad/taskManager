@@ -1,6 +1,5 @@
 package presentation.cli.taskState
 
-import TaskStateInputValidator
 import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.ExistsTaskStateUseCase
 import presentation.UiController
@@ -9,9 +8,8 @@ class CreateTaskStateCli(
     private val createTaskStateUseCase: CreateTaskStateUseCase,
     private val existsTaskStateUseCase: ExistsTaskStateUseCase,
     private val uiController: UiController,
-    private val inputValidator: TaskStateInputValidator
 ) {
-    private val inputHandler = TaskStateInputHandler(uiController, inputValidator)
+    private val inputHandler = TaskStateInputHandler(uiController)
 
     fun createTaskState() {
 

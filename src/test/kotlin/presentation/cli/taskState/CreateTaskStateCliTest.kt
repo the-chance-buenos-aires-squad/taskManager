@@ -1,6 +1,5 @@
 package presentation.cli.taskState
 
-import TaskStateInputValidator
 import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.ExistsTaskStateUseCase
 import dummyData.dummyStateData.DummyTaskState
@@ -16,14 +15,13 @@ class CreateTaskStateCliTest {
     private val existsTaskStateUseCase: ExistsTaskStateUseCase = mockk(relaxed = true)
 
     private val uiController: UiController = mockk(relaxed = true)
-    private val inputValidator = TaskStateInputValidator()
     private lateinit var createTaskStateCli: CreateTaskStateCli
 
     private val taskState = DummyTaskState.todo
 
     @BeforeEach
     fun setup() {
-        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase,uiController, inputValidator)
+        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase,uiController)
     }
 
     @Test

@@ -1,13 +1,11 @@
 package presentation.cli.taskState
 
-import TaskStateInputValidator
 import domain.entities.TaskState
 import presentation.UiController
 import java.util.*
 
 class TaskStateInputHandler(
     private val uiController: UiController,
-    private val inputValidator: TaskStateInputValidator
 ) {
     fun readAndValidateUserInputs(isEdit: Boolean = false, existingId: UUID? = null): TaskState {
         val prefix = if (isEdit) "New " else ""

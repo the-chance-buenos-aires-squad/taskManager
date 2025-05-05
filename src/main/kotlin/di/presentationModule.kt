@@ -30,7 +30,7 @@ val presentationModule = module {
     single { MateDashBoardCli(uiController = get()) }
     single { TaskStateShowMenu(uiController = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get(), getAllTaskStatesUseCase = get()) }
+    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), getAllTaskStatesUseCase = get()) }
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
     single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
     single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
@@ -38,7 +38,7 @@ val presentationModule = module {
     single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
     single { DeleteTaskStateCli( deleteTaskStateUseCase=get(), uiController = get(), getAllTaskStatesUseCase = get()) }
-    single { TaskStateInputHandler(uiController = get(), inputValidator = get()) }
+    single { TaskStateInputHandler(uiController = get()) }
     single{ CreateTaskCli(
         createTaskUseCase = get(),
         getAllProjectsUseCase = get(),
@@ -57,7 +57,6 @@ val presentationModule = module {
         createTaskStateUseCase = get(),
         existsTaskStateUseCase = get(),
         uiController = get(),
-        inputValidator = get()
     ) }
 
     single { ProjectScreenController(get(),get(), get(),get(),get(),get()) }

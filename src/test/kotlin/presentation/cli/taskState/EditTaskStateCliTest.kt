@@ -1,6 +1,5 @@
 package presentation.cli.taskState
 
-import TaskStateInputValidator
 import domain.usecases.taskState.EditTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.dummyStateData.DummyTaskState
@@ -15,7 +14,6 @@ class EditTaskStateCliTest {
     private val editTaskStateUseCase: EditTaskStateUseCase = mockk(relaxed = true)
     private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)
-    private val inputValidator = TaskStateInputValidator()
     private lateinit var editTaskStateCli: EditTaskStateCli
 
     private val taskState = DummyTaskState.todo
@@ -23,7 +21,7 @@ class EditTaskStateCliTest {
 
     @BeforeEach
     fun setup() {
-        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, getAllTaskStatesUseCase ,uiController, inputValidator)
+        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, getAllTaskStatesUseCase ,uiController)
     }
 
     @Test
