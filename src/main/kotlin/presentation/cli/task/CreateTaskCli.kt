@@ -1,10 +1,12 @@
 package presentation.cli.task
 
+import domain.customeExceptions.UserEnterInvalidValueException
 import domain.entities.ActionType
 import domain.entities.EntityType
+import domain.entities.Project
 import domain.repositories.AuthRepository
+import domain.repositories.UserRepository
 import domain.usecases.AddAuditUseCase
-import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
@@ -12,11 +14,12 @@ import java.util.*
 
 class CreateTaskCli(
     private val createTaskUseCase: CreateTaskUseCase,
-    private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val addAuditUseCase: AddAuditUseCase,
     private val authRepository: AuthRepository,
     private val getAllStatesUseCase: GetAllTaskStatesUseCase,
+    private val userRepository: UserRepository,
     private val uiController: UiController,
+    private val project: Project
 ) {
 
     fun start() {
@@ -24,40 +27,54 @@ class CreateTaskCli(
         uiController.printMessage("-------------------------")
 
         uiController.printMessage("Title: ", false)
-        val title = uiController.readInput()
+        var title = uiController.readInput()
+        if (title.isEmpty()) {
+            uiController.printMessage("Title cannot be empty. Please try again.")
+            uiController.printMessage("Title: ", false)
+            title = uiController.readInput()
+        }
+        if (title.isEmpty()) throw UserEnterInvalidValueException("Title can't be empty")
 
         uiController.printMessage("Description: ", false)
-        val description = uiController.readInput()
-
-        // Choose project
-        uiController.printMessage("Choose a project:")
-        val projects = getAllProjectsUseCase.execute()
-        projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1} - ${project.name}")
+        var description = uiController.readInput()
+        if (description.isEmpty()) {
+            uiController.printMessage("Description cannot be empty. Please try again.")
+            uiController.printMessage("Description: ", false)
+            description = uiController.readInput()
         }
+        if (description.isEmpty()) throw UserEnterInvalidValueException("Description can't be empty")
 
-        val chosenProjectIndex = uiController.readInput().toIntOrNull()
-        if (chosenProjectIndex == null || chosenProjectIndex !in 1..projects.size) {
-            uiController.printMessage("Invalid project selection.")
-            return
-        }
-        val chosenProject = projects[chosenProjectIndex - 1]
-
-        // Choose task state
-        uiController.printMessage("Choose task state:")
+        uiController.printMessage("Choose task state:" + "1- todo 2-in progress 3- done")
         val states = getAllStatesUseCase.execute()
         states.forEachIndexed { index, taskState ->
             uiController.printMessage("${index + 1} - ${taskState.name}")
         }
 
-        val chosenStateIndex = uiController.readInput().toIntOrNull()
-        if (chosenStateIndex == null || chosenStateIndex !in 1..states.size) {
-            uiController.printMessage("Invalid task state selection.")
-            return
+        val chosenState: domain.entities.TaskState?
+        uiController.printMessage("Enter state number: ", false)
+        var stateInput = uiController.readInput().toIntOrNull()
+        if (stateInput == null || stateInput !in 1..states.size) {
+            uiController.printMessage("Invalid state selection. Please try again.")
+            uiController.printMessage("Enter state number: ", false)
+            stateInput = uiController.readInput().toIntOrNull()
         }
-        val chosenState = states[chosenStateIndex - 1]
+        if (stateInput == null || stateInput !in 1..states.size) {
+            throw UserEnterInvalidValueException("Invalid task state selection")
+        }
+        chosenState = states[stateInput - 1]
 
-        // Get current user
+        var assignedUser: domain.entities.User?
+        uiController.printMessage("Enter the username to assign the task to: ", false)
+        var username = uiController.readInput()
+        assignedUser = userRepository.getUserByUserName(username)
+        if (assignedUser == null) {
+            uiController.printMessage("User not found. Please try again.")
+            uiController.printMessage("Enter the username to assign the task to: ", false)
+            username = uiController.readInput()
+            assignedUser = userRepository.getUserByUserName(username)
+        }
+        if (assignedUser == null) throw UserEnterInvalidValueException("Invalid user assignment")
+
         val currentUser = authRepository.getCurrentUser()
         if (currentUser == null) {
             uiController.printMessage("Error: No authenticated user.")
@@ -70,9 +87,10 @@ class CreateTaskCli(
             id = newTaskId,
             title = title,
             description = description,
+            projectId = project.id,
             createdBy = currentUser.id,
-            projectId = chosenProject.id,
-            stateId = UUID.fromString(chosenState.id)
+            stateId = UUID.fromString(chosenState.id),
+            assignedTo = assignedUser.id
         )
 
         if (taskCreated) {
@@ -80,9 +98,9 @@ class CreateTaskCli(
                 entityId = newTaskId.toString(),
                 action = ActionType.CREATE,
                 entityType = EntityType.TASK,
-                field = null,
-                newValue = "",
-                oldValue = "",
+                field = "",
+                newValue = "new",
+                oldValue = "old",
                 userId = currentUser.id.toString()
             )
             uiController.printMessage("Task created successfully!")
