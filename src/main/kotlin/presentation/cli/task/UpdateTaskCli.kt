@@ -74,8 +74,8 @@ class UpdateTaskCli(
         }
 
 
-        uiController.printMessage("Change State name or press enter to keep it:")
-        val currentUserAssigned = allUsers.find { it.id == selectedTask.stateId }
+        uiController.printMessage("Enter current username or press enter to keep it:")
+        val currentUserAssigned = allUsers.find { it.id == selectedTask.assignedTo }
         uiController.printMessage(
             "Current task state is ${currentUserAssigned?.username}." +
                     " Enter new name or press enter to keep it:"
@@ -102,7 +102,7 @@ class UpdateTaskCli(
             title = title,
             description = description,
             projectId = selectedTask.projectId,
-            stateId = selectedTask.id,
+            stateId = selectedTask.stateId,
             assignedTo = updateUser?.id,
             createdBy = selectedTask.createdBy,
             createdAt = selectedTask.createdAt,
