@@ -9,6 +9,8 @@ import domain.usecases.project.DeleteProjectUseCase
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
 import domain.usecases.task.CreateTaskUseCase
+import domain.usecases.task.DeleteTaskUseCase
+import domain.usecases.task.UpdateTaskUseCase
 import domain.usecases.taskState.*
 import org.koin.dsl.module
 
@@ -25,6 +27,8 @@ val useCaseModule = module {
     single { GetAllTaskStatesUseCase(get()) }
     single { ExistsTaskStateUseCase(get()) }
     single { CreateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
+    single { DeleteTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
+    single { UpdateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
 }
