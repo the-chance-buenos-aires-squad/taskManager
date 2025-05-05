@@ -3,16 +3,19 @@ package domain.usecases.task
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.UserNotLoggedInException
+import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 
 class UpdateTaskUseCaseTest {
@@ -113,5 +116,25 @@ class UpdateTaskUseCaseTest {
         verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
 
+    @Test
+    fun `should set assignedTo to null when assignedTo is not provided`() {
+        //given
+        val taskSlot = slot<Task>()
+        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        every { taskRepository.updateTask(capture(taskSlot)) } returns true
+
+        //when
+        updateTaskUseCase.updateTask(
+            id = DummyTasks.validTask.id,
+            title = DummyTasks.validTask.title,
+            description = DummyTasks.validTask.description,
+            projectId = DummyTasks.validTask.projectId,
+            stateId = DummyTasks.validTask.stateId,
+            createdBy = DummyTasks.validTask.createdBy
+        )
+
+        //then
+        assertThat(taskSlot.captured.assignedTo).isNull()
+    }
 
 }
