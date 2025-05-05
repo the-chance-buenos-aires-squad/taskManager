@@ -34,8 +34,6 @@ val presentationModule = module {
     single {
         CreateTaskCli(
             createTaskUseCase = get(),
-            addAuditUseCase = get(),
-            authRepository = get(),
             getAllStatesUseCase = get(),
             userRepository = get(),
             uiController = get(),

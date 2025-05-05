@@ -66,12 +66,6 @@ object DummyTaskData {
         "4" // Invalid state second attempt
     )
 
-    val nonNumericStateInputs = listOf(
-        "Test Title", // Valid title
-        "Test Description", // Valid description
-        "abc", // Non-numeric state first attempt
-        "xyz" // Non-numeric state second attempt
-    )
 
     val invalidUserInputs = listOf(
         "Test Title", // Valid title
@@ -81,20 +75,5 @@ object DummyTaskData {
         "anotherNonexistentUser" // Invalid user second attempt
     )
 
-    private val taskId = UUID.randomUUID()
-    private val auditId = UUID.randomUUID()
-    fun createDummyAudit(): Audit {
-        return Audit(
-            id = auditId.toString(),
-            entityId = taskId.toString(),
-            action = ActionType.CREATE,
-            entityType = EntityType.TASK,
-            field = "",
-            newValue = "new",
-            oldValue = "old",
-            userId = currentUser.id.toString(),
-            timestamp = LocalDateTime.now()
-        )
-    }
 
 }
