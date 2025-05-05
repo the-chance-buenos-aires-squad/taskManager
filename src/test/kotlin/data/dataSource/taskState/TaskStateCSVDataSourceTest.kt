@@ -2,7 +2,6 @@ package data.dataSource.taskState
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import domain.entities.TaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach

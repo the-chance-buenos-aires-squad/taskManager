@@ -28,14 +28,15 @@ class CreateTaskStateCliTest {
 
     @BeforeEach
     fun setup() {
-        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase,uiController, inputValidator)
+        createTaskStateCli =
+            CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase, uiController, inputValidator)
     }
 
     @Test
     fun `should call execute when creating task state succeeds`() {
 
         every { createTaskStateUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
 
         createTaskStateCli.createTaskState()
 
@@ -45,7 +46,7 @@ class CreateTaskStateCliTest {
     @Test
     fun `should call execute when failed to create task state`() {
         every { createTaskStateUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
 
         createTaskStateCli.createTaskState()
 

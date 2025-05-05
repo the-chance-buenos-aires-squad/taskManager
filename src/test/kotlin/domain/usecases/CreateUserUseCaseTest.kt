@@ -1,7 +1,10 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.*
+import domain.customeExceptions.CreateUserException
+import domain.customeExceptions.InvalidLengthPasswordException
+import domain.customeExceptions.PasswordEmptyException
+import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.AuthRepository
 import domain.util.UserValidator
 import dummyData.DummyUser
@@ -14,7 +17,7 @@ import kotlin.test.Test
 
 class CreateUserUseCaseTest {
 
-    private lateinit var createUserUseCase:     CreateUserUseCase
+    private lateinit var createUserUseCase: CreateUserUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
     private val userValidator = UserValidator()
     val dummyUser = DummyUser.dummyUserTwo

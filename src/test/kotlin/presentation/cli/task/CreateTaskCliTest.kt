@@ -1,16 +1,14 @@
 package presentation.cli.task
 
-import com.google.common.truth.Truth.assertThat
-import domain.entities.*
+import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.AuthRepository
 import domain.usecases.AddAuditUseCase
-import domain.usecases.CreateTaskUseCase
 import domain.usecases.project.GetAllProjectsUseCase
+import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
-import io.mockk.*
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
-import org.junit.jupiter.api.Test
 import presentation.UiController
 import java.time.LocalDateTime
 import java.util.*

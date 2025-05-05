@@ -4,8 +4,10 @@ import data.repositories.TaskStateRepositoryImpl
 import data.repositories.mappers.TaskStateMapper
 import domain.entities.TaskState
 import dummyData.dummyStateData.DummyTaskState
-import io.mockk.*
-import org.junit.jupiter.api.*
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TaskStateRepositoryImplTest {
 
@@ -16,7 +18,7 @@ class TaskStateRepositoryImplTest {
     @BeforeEach
     fun setUp() {
         taskStateMapper = TaskStateMapper()
-        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource,taskStateMapper)
+        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource, taskStateMapper)
     }
 
     @Test

@@ -43,7 +43,7 @@ class DeleteProjectCliTest {
     @Test
     fun `should throw exception if user input is null`() {
         every { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-        every { uiController.readInput() } returnsMany  project2
+        every { uiController.readInput() } returnsMany project2
 
         val exception = assertThrows<UserEnterInvalidValueException> {
             deleteProjectCli.delete()
@@ -54,7 +54,7 @@ class DeleteProjectCliTest {
     @Test
     fun `should throw exception if user input is zero`() {
         every { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
-        every { uiController.readInput() } returns  "0"
+        every { uiController.readInput() } returns "0"
 
         val exception = assertThrows<UserEnterInvalidValueException> {
             deleteProjectCli.delete()
@@ -65,7 +65,7 @@ class DeleteProjectCliTest {
     @Test
     fun `should throw exception if user input greater than number of projects`() {
         every { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
-        every { uiController.readInput() } returns  "3"
+        every { uiController.readInput() } returns "3"
 
         val exception = assertThrows<UserEnterInvalidValueException> {
             deleteProjectCli.delete()
@@ -76,7 +76,7 @@ class DeleteProjectCliTest {
     @Test
     fun `should call execute function in create use case when I call create function and success to create project`() {
         every { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-        every { uiController.readInput() } returns  "1"
+        every { uiController.readInput() } returns "1"
         every { deleteProjectUseCase.execute(any()) } returns true
 
         deleteProjectCli.delete()

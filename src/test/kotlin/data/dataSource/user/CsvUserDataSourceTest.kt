@@ -171,6 +171,7 @@ class CsvUserDataSourceTest {
         //assertThrows<FileNotFoundException> { dataSource.addUser(dummyUserOneRow) }
 
     }
+
     @Test
     fun `deleteUser should rewrite file correctly after deletion`() {
         // given

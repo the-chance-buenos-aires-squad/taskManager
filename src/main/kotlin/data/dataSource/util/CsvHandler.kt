@@ -20,8 +20,8 @@ class CsvHandler(
         return csvReader.readAll(file)
     }
 
-    fun writeHeaderIfNotExist( header:List<String>, file: File){
-        write(header,file,false)
+    fun writeHeaderIfNotExist(header: List<String>, file: File) {
+        write(header, file, false)
     }
 }
 
