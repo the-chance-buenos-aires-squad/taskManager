@@ -12,6 +12,7 @@ import presentation.UiController
 import kotlin.test.Test
 import java.util.UUID
 
+
 class DeleteTaskStateCliTest {
     private val deleteTaskStateUseCase: DeleteTaskStateUseCase = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)

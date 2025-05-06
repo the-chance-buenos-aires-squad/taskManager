@@ -1,7 +1,7 @@
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version "2.0.20"
+    kotlin("jvm") version "2.0.21"
     id("jacoco")
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
 }
@@ -17,13 +17,11 @@ dependencies {
     implementation("io.insert-koin:koin-core:4.0.4")
     implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
 
-    implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("com.google.truth:truth:1.4.4")
     implementation(kotlin("reflect"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks.test {

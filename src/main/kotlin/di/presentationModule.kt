@@ -10,12 +10,19 @@ import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
+
+import presentation.cli.TaskState.*
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.project.*
+import presentation.cli.project.ProjectShowMenu
+import presentation.cli.project.CreateProjectCli
+import presentation.cli.project.UpdateProjectCli
+import presentation.cli.project.DeleteProjectCli
+import presentation.cli.project.GetAllProjectsCli
+import presentation.cli.project.ProjectScreenController
 import presentation.cli.task.CreateTaskCli
+import presentation.cli.task.ViewSwimlanesCLI
 import presentation.cli.task.DeleteTaskCli
 import presentation.cli.task.UpdateTaskCli
-import presentation.cli.task.ViewSwimlanesCLI
 import java.util.*
 
 
@@ -41,6 +48,7 @@ val presentationModule = module {
             projectCliHelper = get(),
             getTasksGroupedByStateUseCase = get(),
             createTaskCli = get(),
+
         )
     }
     single {
