@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-class TaskMapperTest {
+class CsvTaskMapperTest {
 
-    private lateinit var taskMapper: TaskMapper
+    private lateinit var taskMapper: CsvTaskMapper
     private lateinit var sampleTask: Task
     private lateinit var sampleTaskRow: List<String>
     private val testId = UUID.fromString("00000000-0000-0000-0000-000000000001")
@@ -21,7 +21,7 @@ class TaskMapperTest {
 
     @BeforeEach
     fun setUp() {
-        taskMapper = TaskMapper()
+        taskMapper = CsvTaskMapper()
         sampleTask = Task(
             id = testId,
             title = "Test Task",
@@ -50,7 +50,7 @@ class TaskMapperTest {
     @Test
     fun `should convert Task to correct list of strings`() {
         // When
-        val result = taskMapper.mapEntityToRow(sampleTask)
+        val result = taskMapper.toMap(sampleTask)
 
         // Then
         assertThat(result).isEqualTo(sampleTaskRow)
@@ -59,7 +59,7 @@ class TaskMapperTest {
     @Test
     fun `should convert list of strings to correct Task`() {
         // When
-        val result = taskMapper.mapRowToEntity(sampleTaskRow)
+        val result = taskMapper.fromMap(sampleTaskRow)
 
         // Then
         assertThat(result).isEqualTo(sampleTask)

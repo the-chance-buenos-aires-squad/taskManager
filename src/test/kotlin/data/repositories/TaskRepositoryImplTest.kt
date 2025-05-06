@@ -2,7 +2,7 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.task.TaskDataSource
-import data.repositories.mappers.TaskMapper
+import data.repositories.mappers.CsvTaskMapper
 import domain.entities.Task
 import domain.repositories.TaskRepository
 import io.mockk.every
@@ -16,12 +16,12 @@ import java.util.*
 class TaskRepositoryImplTest {
 
     private val mockTaskDataSource = mockk<TaskDataSource>(relaxed = true)
-    private val taskMapper = mockk<TaskMapper>(relaxed = true)
+    private val taskMapper = mockk<CsvTaskMapper>(relaxed = true)
     private lateinit var taskRepository: TaskRepository
 
     @BeforeEach
     fun setUp() {
-        taskRepository = TaskRepositoryImpl(mockTaskDataSource, taskMapper)
+        taskRepository = TaskRepositoryImpl(mockTaskDataSource,taskMapper)
 
         // Mock mapper and data source to return expected values
 //        every { mockTaskDataSource.addTask(any()) } returns true  // Return true for successful task addition
@@ -83,7 +83,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `should preserve task properties when creating a task`() {
         // Given
-        val initialTask = createSampleTask(title = "Specific Title", description = "Specific Description")
+        val initialTask = createSampleTask(title = "Specific Title",description = "Specific Description")
         every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
@@ -157,10 +157,10 @@ class TaskRepositoryImplTest {
             "2023-01-02T00:00:00",
             "2023-01-02T00:00:00"
         )
-        val rawRows = listOf(rawTaskRow1, rawTaskRow2)
+        val rawRows = listOf(rawTaskRow1,rawTaskRow2)
 
-        val mappedTask1 = createSampleTask(title = "title1", description = "desc1")
-        val mappedTask2 = createSampleTask(title = "title2", description = "desc2")
+        val mappedTask1 = createSampleTask(title = "title1",description = "desc1")
+        val mappedTask2 = createSampleTask(title = "title2",description = "desc2")
 
         every { mockTaskDataSource.getTasks() } returns rawRows
         every { taskMapper.mapRowToEntity(rawTaskRow1) } returns mappedTask1
@@ -175,7 +175,7 @@ class TaskRepositoryImplTest {
         verify(exactly = 1) { taskMapper.mapRowToEntity(rawTaskRow2) }
 
         assertThat(result).hasSize(2)
-        assertThat(result).containsExactly(mappedTask1, mappedTask2)
+        assertThat(result).containsExactly(mappedTask1,mappedTask2)
     }
 
     private fun createSampleTask(

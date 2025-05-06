@@ -1,25 +1,25 @@
 package data.repositories
 
 import data.dataSource.task.TaskDataSource
-import data.repositories.mappers.TaskMapper
+import data.repositories.mappers.CsvTaskMapper
 import domain.entities.Task
 import domain.repositories.TaskRepository
 import java.util.*
 
 class TaskRepositoryImpl(
     private val csvTaskDataSource: TaskDataSource,
-    private val taskMapper: TaskMapper
+    private val taskMapper: CsvTaskMapper
 ) : TaskRepository {
 
     override fun addTask(task: Task): Boolean {
-        val mappedTask = taskMapper.mapEntityToRow(task)
+        val mappedTask = taskMapper.toMap(task)
         return csvTaskDataSource.addTask(mappedTask)
     }
 
     override fun getAllTasks(): List<Task> {
         val allTasks: List<List<String>> = csvTaskDataSource.getTasks()
         return allTasks.map { row ->
-            taskMapper.mapRowToEntity(row)
+            taskMapper.fromMap(row)
         }
     }
 
@@ -28,12 +28,12 @@ class TaskRepositoryImpl(
     }
 
     override fun updateTask(task: Task): Boolean {
-        return csvTaskDataSource.updateTask(taskMapper.mapEntityToRow(task))
+        return csvTaskDataSource.updateTask(taskMapper.toMap(task))
     }
 
     override fun getTaskById(id: UUID): Task? {
         return csvTaskDataSource.getTaskById(id.toString())?.let {
-            taskMapper.mapRowToEntity(it)
+            taskMapper.fromMap(it)
         }
     }
 
