@@ -3,7 +3,7 @@ package presentation.cli.TaskState
 import TaskStateInputValidator
 import domain.usecases.taskState.EditTaskStateUseCase
 import presentation.UiController
-import java.util.*
+import java.util.UUID
 
 class EditTaskStateCli(
     private val editTaskStateUseCase: EditTaskStateUseCase,

@@ -4,7 +4,7 @@ import TaskStateInputValidator
 import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.ExistsTaskStateUseCase
 import presentation.UiController
-import java.util.*
+import java.util.UUID
 
 class CreateTaskStateCli(
     private val createTaskStateUseCase: CreateTaskStateUseCase,
@@ -16,7 +16,6 @@ class CreateTaskStateCli(
 
     fun createTaskState(projectId: UUID) {
         val taskState = inputHandler.readAndValidateUserInputs(projectId)
-
 
         if (existsTaskStateUseCase.execute(taskState.id)) {
             uiController.printMessage("Task state already exists.")

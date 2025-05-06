@@ -2,17 +2,23 @@ package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskRepository
-import dummyData.DummyTask.dummyTodoTask
+import dummyData.createDummyTask
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.UUID
 
 class GetTasksUseCaseTest {
 
     private lateinit var getTasksUseCase: GetTasksUseCase
     private  var taskRepository: TaskRepository = mockk()
+
+    val dummyTodoTask = createDummyTask(
+        title = "Task Todo Title",
+        description = "task Todo description",
+        projectId = UUID.randomUUID(),
+    )
 
     @BeforeEach
     fun setup() {

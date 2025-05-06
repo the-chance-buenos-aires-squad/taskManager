@@ -48,9 +48,6 @@ class CreateTaskCliTest {
         )
     }
 
-
-
-
     @Test
     fun `should create task successfully with valid inputs`() {
         // Given

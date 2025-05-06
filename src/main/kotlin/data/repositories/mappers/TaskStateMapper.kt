@@ -1,7 +1,7 @@
 package data.repositories.mappers
 
 import domain.entities.TaskState
-import java.util.*
+import java.util.UUID
 
 class TaskStateMapper : Mapper<TaskState> {
     override fun mapEntityToRow(entity: TaskState): List<String> {

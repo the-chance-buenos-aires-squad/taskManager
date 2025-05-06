@@ -39,4 +39,5 @@ class GetAllProjectsUseCaseTest {
             getAllProjectsUseCase.execute()
         }
     }
+
 }

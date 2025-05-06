@@ -1,9 +1,10 @@
 package presentation.cli.TaskState
 
 import TaskStateInputValidator
+import domain.customeExceptions.InvalidNameException
 import domain.entities.TaskState
 import presentation.UiController
-import java.util.*
+import java.util.UUID
 
 class TaskStateInputHandler(
     private val uiController: UiController,
@@ -14,6 +15,7 @@ class TaskStateInputHandler(
 
         uiController.printMessage("Enter ${prefix}task state name:")
         val name = uiController.readInput().trim()
+        if (name.length < 2) throw InvalidNameException(prefix)
 
         inputValidator.validate(name, projectID.toString(), isEdit)
 
