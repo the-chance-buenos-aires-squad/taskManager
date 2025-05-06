@@ -2,10 +2,10 @@ package presentation.cli.task
 
 import domain.repositories.AuthRepository
 import domain.usecases.task.DeleteTaskUseCase
-import domain.usecases.task.GetAllTasksUseCase
 import presentation.UiController
 import java.util.UUID
 import domain.entities.Task
+import domain.usecases.task.GetAllTasksUseCase
 
 class DeleteTaskCli(
     private val getAllTasksUseCase: GetAllTasksUseCase,
@@ -39,7 +39,7 @@ class DeleteTaskCli(
             uiController.printMessage("${index + 1}. ${task.title}")
         }
 
-        uiController.printMessage("🔢 Enter the task number to delete:")
+        uiController.printMessage(" Enter the task number to delete:")
         val index = try {
             val input = uiController.readInput().trim()
             val parsedIndex = input.toIntOrNull()
