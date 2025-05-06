@@ -26,12 +26,17 @@ class CreateTaskUseCase(
         projectId: UUID,
         stateId: UUID,
         assignedTo: UUID? = null,
-        createdBy: UUID
     ): Boolean {
+
+        val currentUser = authRepository.getCurrentUser()
+            ?: throw UserNotLoggedInException()
 
         validateTaskTitle(title)
         validateTaskDescription(description)
         validateProjectId(projectId)
+
+
+
 
         val newTask = Task(
             id = id,
@@ -40,12 +45,9 @@ class CreateTaskUseCase(
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy = createdBy,
+            createdBy =currentUser.id ,
         )
 
-
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
 
         return taskRepository.addTask(newTask).also { result ->
             if (result) {
