@@ -40,7 +40,7 @@ class TaskStateCliController(
                     editTaskStateCli.editTaskState(selectedProject.id)
                     break
                 }
-                3 -> deleteTaskStateCli.deleteTaskState()
+                3 -> deleteTaskStateCli.deleteTaskState(selectedProject.id)
                 4 -> getAllTaskStatesCli.getAllTaskStates()
                 5 -> return
                 null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)

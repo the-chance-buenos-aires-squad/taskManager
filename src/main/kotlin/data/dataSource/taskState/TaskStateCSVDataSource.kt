@@ -21,7 +21,7 @@ class TaskStateCSVDataSource(
         val newTaskState = TaskState(
             id = UUID.fromString(state[ID]),
             name = state[NAME],
-            projectId =  UUID.fromString(state[PROJECT_ID])
+            projectId = UUID.fromString(state[PROJECT_ID])
         )
 
         val allStates = existingTaskStates + newTaskState
@@ -46,12 +46,14 @@ class TaskStateCSVDataSource(
         } else false
     }
 
-    override fun deleteTaskState(stateId: String): Boolean {
-        val states = getAllTaskStates().toMutableList()
-        val removed = states.removeIf { it.id.toString() == stateId }
+    override fun deleteTaskState(stateId: String, projectId: String): Boolean {
+        val allStates = getAllTaskStates().toMutableList()
+        val removed = allStates.removeIf {
+            it.id.toString() == stateId && it.projectId.toString() == projectId
+        }
 
         if (removed) {
-            writeTaskStates(states)
+            writeTaskStates(allStates)
             return true
         }
         return false
@@ -65,7 +67,7 @@ class TaskStateCSVDataSource(
 
     override fun existsTaskState(stateId: String): Boolean {
         val allStates = getAllTaskStates()
-        return allStates.any { it.id.toString()  == stateId }
+        return allStates.any { it.id.toString() == stateId }
     }
 
     private fun writeTaskStates(states: List<TaskState>) {
@@ -76,7 +78,8 @@ class TaskStateCSVDataSource(
                     listOf(state.id.toString(), state.name, state.projectId.toString()),
                     file,
                     append = true
-                ) }
+                )
+            }
         } catch (e: Exception) {
             println("Failed to write states: ${e.message}")
         }

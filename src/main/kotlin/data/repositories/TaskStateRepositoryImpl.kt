@@ -18,8 +18,8 @@ class TaskStateRepositoryImpl(
         return taskStateCSVDataSource.editTaskState(taskStateMapper.mapEntityToRow(state))
     }
 
-    override fun deleteTaskState(stateId: UUID): Boolean {
-        return taskStateCSVDataSource.deleteTaskState(stateId.toString())
+    override fun deleteTaskState(stateId: UUID,projectId : UUID): Boolean {
+        return taskStateCSVDataSource.deleteTaskState(stateId.toString(),projectId.toString())
     }
 
     override fun getAllTaskStates(): List<TaskState> {

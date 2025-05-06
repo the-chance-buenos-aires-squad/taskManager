@@ -40,11 +40,23 @@ class CreateTaskCli(
         }
 
         uiController.printMessage("Description: ", false)
-        val description = uiController.readInput()
+        var description = uiController.readInput()
+        if (description.isEmpty()) {
+            uiController.printMessage("Description cannot be empty. Please try again.")
+            uiController.printMessage("Description: ", false)
+            description = uiController.readInput()
+        }
+        if (description.isEmpty()) {
+            uiController.printMessage(
+                "It seams that you do not want to enter a Description"
+                        + " let us go to past screen", false
+            )
+            return
+        }
 
-        // Choose task state
-        uiController.printMessage("Choose task state:")
-        val states = getAllStatesUseCase.execute()
+
+        uiController.printMessage("Choose task state: ", isInline = false)
+        val states = getAllStatesUseCase.execute().filter { it.projectId == projectId }
         states.forEachIndexed { index, taskState ->
             uiController.printMessage("${index + 1} - ${taskState.name}||", isInline = false)
         }

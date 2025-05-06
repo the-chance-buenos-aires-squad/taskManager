@@ -53,18 +53,9 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should throw exception when ID is empty`() {
-        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId.toString())
-
-        val exception = assertThrows<InvalidIdException> {
-            editTaskStateCli.editTaskState(dummyProject.id)
-        }
-        assertThat(exception.message).isEqualTo("New ID can't be empty")
-    }
-
-    @Test
     fun `should throw exception when name is less than 2 letters`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), "A", taskState.projectId.toString())
+        every { editTaskStateUseCase.execute(any()) } returns true
+        every { uiController.readInput() } returnsMany listOf("A", taskState.projectId.toString())
 
         val exception = assertThrows<InvalidNameException> {
             editTaskStateCli.editTaskState(dummyProject.id)
@@ -72,16 +63,6 @@ class EditTaskStateCliTest {
         assertThat(exception.message).isEqualTo("New Name must be at least 2 letters")
     }
 
-    @Disabled
-    @Test
-    fun `should throw exception when project ID is invalid`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), taskState.name, "X01")
-
-        val exception = assertThrows<InvalidProjectIdException> {
-            editTaskStateCli.editTaskState(dummyProject.id)
-        }
-        assertThat(exception.message).isEqualTo("New Project ID must start with 'P' followed by at least two digits (e.g., P01, P123)")
-    }
 
 
 }

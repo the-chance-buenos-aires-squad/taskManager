@@ -159,7 +159,7 @@ class TaskStateCliControllerTest {
 
         // then
         verify(exactly = 1) {
-            deleteTaskStateCli.deleteTaskState()
+            deleteTaskStateCli.deleteTaskState(sampleProject.id)
         }
     }
 

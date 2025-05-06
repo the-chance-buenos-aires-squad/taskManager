@@ -4,7 +4,7 @@ import domain.repositories.TaskStateRepository
 import java.util.UUID
 
 class DeleteTaskStateUseCase(private val repository: TaskStateRepository) {
-    fun execute(stateId: UUID): Boolean {
-        return repository.deleteTaskState(stateId)
+    fun execute(stateId: UUID,projectId: UUID): Boolean {
+        return repository.deleteTaskState(stateId,projectId)
     }
 }
