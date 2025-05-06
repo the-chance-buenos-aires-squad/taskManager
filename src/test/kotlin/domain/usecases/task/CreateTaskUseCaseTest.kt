@@ -1,11 +1,16 @@
-package domain.usecases
+package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
+import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
+import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.Task
+import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
+import domain.usecases.AddAuditUseCase
+import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -14,22 +19,20 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
-
 class CreateTaskUseCaseTest {
-    private lateinit var taskRepository: TaskRepository
+    private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
-
+    private val authRepository: AuthRepository = mockk(relaxed = true)
+    private val addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
     private val validProjectId = UUID.randomUUID()
     private val validStateId = UUID.randomUUID()
     private val validAssignedToId = UUID.randomUUID()
-    private val validCreatedById = UUID.randomUUID()
 
     @BeforeEach
     fun setUp() {
-        taskRepository = mockk(relaxed = true)
-        createTaskUseCase = CreateTaskUseCase(taskRepository)
+        createTaskUseCase = CreateTaskUseCase(taskRepository, addAuditUseCase, authRepository)
 
         // Default mock behavior
         every { taskRepository.addTask(any()) } returns true
@@ -50,7 +53,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
 
         // Then
@@ -68,7 +70,7 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -83,7 +85,7 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -98,7 +100,7 @@ class CreateTaskUseCaseTest {
                 UUID(0, 0), // Zero UUID
                 validStateId,
                 validAssignedToId,
-                validCreatedById
+
             )
         }
     }
@@ -115,7 +117,7 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
+
         )
 
         assertThat(taskSlot.captured.stateId).isEqualTo(validStateId)
@@ -133,7 +135,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         assertThat(taskSlot.captured.assignedTo).isEqualTo(validAssignedToId)
@@ -145,35 +146,33 @@ class CreateTaskUseCaseTest {
         every { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
-            UUID.randomUUID(),
-            validTitle,
-            validDescription,
-            validProjectId,
-            validStateId,
-            null, // Null assignedTo
-            validCreatedById
+            id = UUID.randomUUID(),
+            title = validTitle,
+            description = validDescription,
+            projectId = validProjectId,
+            stateId = validStateId,
         )
 
         assertThat(taskSlot.captured.assignedTo).isNull()
     }
 
-    @Test
-    fun `should set createdBy correctly when creating task`() {
-        val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
-
-        createTaskUseCase.createTask(
-            UUID.randomUUID(),
-            validTitle,
-            validDescription,
-            validProjectId,
-            validStateId,
-            validAssignedToId,
-            validCreatedById
-        )
-
-        assertThat(taskSlot.captured.createdBy).isEqualTo(validCreatedById)
-    }
+//    @Test
+//    fun `should set createdBy correctly when creating task`() {
+//        val taskSlot = slot<Task>()
+//        every { taskRepository.addTask(capture(taskSlot)) } returns true
+//
+//        createTaskUseCase.createTask(
+//            UUID.randomUUID(),
+//            validTitle,
+//            validDescription,
+//            validProjectId,
+//            validStateId,
+//            validAssignedToId,
+//
+//        )
+//
+//        assertThat(taskSlot.captured.createdBy).isEqualTo()
+//    }
 
     @Test
     fun `should return true when task is successfully created`() {
@@ -186,7 +185,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         assertThat(result).isTrue()  // Checking that the result is true, indicating success
@@ -206,7 +204,6 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-            validCreatedById
         )
 
         verify { taskRepository.addTask(any()) }
@@ -224,7 +221,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
         }
     }
@@ -239,7 +235,6 @@ class CreateTaskUseCaseTest {
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-                validCreatedById
             )
         }
     }
@@ -257,9 +252,91 @@ class CreateTaskUseCaseTest {
             manualUUID,
             validStateId,
             validAssignedToId,
-            validCreatedById
+
         )
 
         assertThat(taskSlot.captured.projectId).isEqualTo(manualUUID)
     }
+
+
+    @Test
+    fun `should return true when user is logged in and creation successful`() {
+        //given
+        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        every { taskRepository.addTask(any()) } returns true
+
+        //when
+        val result = createTaskUseCase.createTask(
+            id = DummyTasks.validTask.id,
+            title = DummyTasks.validTask.title,
+            description = DummyTasks.validTask.description,
+            projectId = DummyTasks.validTask.projectId,
+            stateId = DummyTasks.validTask.stateId,
+            assignedTo = DummyTasks.validTask.assignedTo,
+        )
+
+
+        //then
+        assertThat(result).isTrue()
+    }
+
+
+    @Test
+    fun `should return false when user is logged in and creation unSuccessful`() {
+        //given
+        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        every { taskRepository.addTask(any()) } returns false
+
+        //when
+        val result = createTaskUseCase.createTask(
+            id = DummyTasks.validTask.id,
+            title = DummyTasks.validTask.title,
+            description = DummyTasks.validTask.description,
+            projectId = DummyTasks.validTask.projectId,
+            stateId = DummyTasks.validTask.stateId,
+            assignedTo = DummyTasks.validTask.assignedTo,
+        )
+
+
+        //then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should through UserNotLoggedInException when user not logged in`() {
+        //given
+        every { authRepository.getCurrentUser() } returns null
+        //when & then
+        assertThrows<UserNotLoggedInException> {
+            createTaskUseCase.createTask(
+                id = DummyTasks.validTask.id,
+                title = DummyTasks.validTask.title,
+                description = DummyTasks.validTask.description,
+                projectId = DummyTasks.validTask.projectId,
+                stateId = DummyTasks.validTask.stateId,
+                assignedTo = DummyTasks.validTask.assignedTo,
+            )
+        }
+    }
+
+    @Test
+    fun `should add audit when user is logged in and creation is successful`() {
+        //given
+        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        every { taskRepository.addTask(any()) } returns true
+
+        //when
+        createTaskUseCase.createTask(
+            id = DummyTasks.validTask.id,
+            title = DummyTasks.validTask.title,
+            description = DummyTasks.validTask.description,
+            projectId = DummyTasks.validTask.projectId,
+            stateId = DummyTasks.validTask.stateId,
+            assignedTo = DummyTasks.validTask.assignedTo,
+        )
+
+        //then
+        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
 }

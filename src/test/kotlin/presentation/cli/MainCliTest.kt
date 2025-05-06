@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.assertThrows
-import presentation.cli.auth.LoginCli
 import presentation.UiController
+import presentation.cli.auth.LoginCli
 import kotlin.test.Test
 
 class MainCliTest {
