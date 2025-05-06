@@ -28,21 +28,21 @@ class DeleteTaskStateCliTest {
     @Test
     fun `should call execute when delete task state successfully`() {
         every { uiController.readInput() } returns "1"
-        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000"),UUID.fromString("00000000-1000-1000-0000-000000000000")) } returns true
+        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) } returns true
 
         deleteTaskStateCli.deleteTaskState(UUID.fromString("00000000-1000-1000-0000-000000000000"),)
 
-        verify { deleteTaskStateUseCase.execute(any(), UUID.fromString("00000000-1000-1000-0000-000000000000")) }
+        verify { deleteTaskStateUseCase.execute(any()) }
     }
 
     @Test
     fun `should call execute when failed to delete task state`() {
         every { uiController.readInput() } returns "2"
-        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000"),UUID.fromString("11000000-1000-0000-0000-000000000000")) } returns false
+        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000"),) } returns false
 
         deleteTaskStateCli.deleteTaskState(UUID.fromString("11000000-1000-0000-0000-000000000000"))
 
-        verify { deleteTaskStateUseCase.execute(any(),UUID.fromString("11000000-1000-0000-0000-000000000000")) }
+        verify { deleteTaskStateUseCase.execute(any()) }
     }
 
     @Test

@@ -49,8 +49,8 @@ class ProjectCliHelper(
 
     companion object {
         const val EXCEPTION_MESSAGE = "An unexpected error occurred: %S"
-         const val ENTER_PROJECT_MESSAGE = "Enter project number: "
-         const val SELECT_PROJECT_MESSAGE = "Select project number: "
+        const val ENTER_PROJECT_MESSAGE = "Enter project number: "
+        const val SELECT_PROJECT_MESSAGE = "Select project number: "
         const val EMPTY_INPUT_MESSAGE = "Invalid input: please enter a valid number."
         const val INVALID_INPUT_MESSAGE = "Invalid Input: please enter a valid number from the menu."
     }

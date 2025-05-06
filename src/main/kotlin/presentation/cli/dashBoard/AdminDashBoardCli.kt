@@ -37,13 +37,14 @@ class AdminDashBoardCli(
     companion object {
         private const val HEADER_ADMIN_DASHBOARD_MESSAGE =
             " === Admin Dashboard ===\n" +
-                " 1. Create User Mate\n" +
-                " 2. Manage Project\n" +
-                " 3. Manage task States\n" +
-                " 4. View Audit Logs\n" +
-                " 5. Logout\n"
+                    " 1. Create User Mate\n" +
+                    " 2. Manage Project\n" +
+                    " 3. Manage task States\n" +
+                    " 4. View Audit Logs\n" +
+                    " 5. Logout\n"
         private const val CHOOSE_AN_OPTION_MESSAGE = " Choose an option (1-5):"
         private const val INVALID_OPTION_MESSAGE = "Invalid option!"
         private const val LOGOUT_MESSAGE = "Logout"
     }
+
 }

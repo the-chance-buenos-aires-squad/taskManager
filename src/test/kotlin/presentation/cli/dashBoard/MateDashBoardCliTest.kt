@@ -88,5 +88,4 @@ class MateDashBoardCliTest {
         // then
         verify { uiController.printMessage("Invalid option!") }
     }
-
 }

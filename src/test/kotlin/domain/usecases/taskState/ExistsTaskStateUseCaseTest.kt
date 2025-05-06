@@ -38,4 +38,3 @@ class ExistsTaskStateUseCaseTest {
         assertThat(result).isFalse()
     }
 }
-

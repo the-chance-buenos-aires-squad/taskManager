@@ -65,7 +65,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return true when state is deleted`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.deleteTaskState("10000000-0000-0000-0000-000000000002","10000000-1000-0000-0000-000000000002")
+        val result = taskStateCSVDataSource.deleteTaskState("10000000-0000-0000-0000-000000000002")
 
         assertThat(result).isTrue()
     }
@@ -74,7 +74,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when trying to delete non-existing state`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.deleteTaskState("90000000-0000-0000-0000-000000000002","10000000-1000-0000-0000-000000000002")
+        val result = taskStateCSVDataSource.deleteTaskState("90000000-0000-0000-0000-000000000002")
 
         assertThat(result).isFalse()
     }

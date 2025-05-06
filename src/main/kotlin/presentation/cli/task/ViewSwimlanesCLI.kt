@@ -17,42 +17,42 @@ class ViewSwimlanesCLI(
 ) {
 
     fun start() {
-       while (true){
-           try {
-               uiController.printMessage(HEADER_MESSAGE)
+        while (true){
+            try {
+                uiController.printMessage(HEADER_MESSAGE)
 
-               val projects = projectCliHelper.getProjects()
-               val selectedProject = projectCliHelper.selectProject(projects)
+                val projects = projectCliHelper.getProjects()
+                val selectedProject = projectCliHelper.selectProject(projects)
 
-               if (selectedProject == null){
-                   uiController.printMessage("invalid project")
-                   return
-               }
-               val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
+                if (selectedProject == null){
+                    uiController.printMessage("invalid project")
+                    return
+                }
+                val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
 
-               displaySwimlanes(swimlanes)
+                displaySwimlanes(swimlanes)
 
-               uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
+                uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
-               when (uiController.readInput().toIntOrNull()) {
-                   1 -> {
-                       createTaskCli.start(selectedProject.id)
-                   }
-                   2 -> {
-                       uiController.printMessage("update task cli")
-                   }
-                   3 -> uiController.printMessage("delete task cli")
-                   4 -> return
-                   null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
-                   else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
-               }
+                when (uiController.readInput().toIntOrNull()) {
+                    1 -> {
+                        createTaskCli.create(selectedProject.id)
+                    }
+                    2 -> {
+                        uiController.printMessage("update task cli")
+                    }
+                    3 -> uiController.printMessage("delete task cli")
+                    4 -> return
+                    null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
+                    else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+                }
 
-           } catch (ex: NoProjectsFoundException) {
-               uiController.printMessage(NO_PROJECT_ERROR_MESSAGE.format(ex.message))
-           } catch (ex: Exception) {
-               uiController.printMessage(EXCEPTION_ERROR_MESSAGE.format(ex.message))
-           }
-       }
+            } catch (ex: NoProjectsFoundException) {
+                uiController.printMessage(NO_PROJECT_ERROR_MESSAGE.format(ex.message))
+            } catch (ex: Exception) {
+                uiController.printMessage(EXCEPTION_ERROR_MESSAGE.format(ex.message))
+            }
+        }
     }
 
     private fun displaySwimlanes(swimlanes: List<TaskStateWithTasks>) {

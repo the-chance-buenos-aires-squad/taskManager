@@ -9,4 +9,3 @@ val domainUtilModule = module {
     single { UserValidator() }
     single { TaskStateInputValidator() }
 }
-

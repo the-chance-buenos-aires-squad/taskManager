@@ -19,7 +19,7 @@ class DeleteTaskStateCli(
 
         //todo show all tasks on project to select task
 
-        val result = deleteTaskStateUseCase.execute(UUID.randomUUID(),projectId)
+        val result = deleteTaskStateUseCase.execute(UUID.randomUUID())
 
         uiController.printMessage(
             if (result) "Task state deleted successfully."

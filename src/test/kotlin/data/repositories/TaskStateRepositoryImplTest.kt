@@ -86,9 +86,9 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should delete state successfully when state exists`() {
-        every { mockCSVDataSource.deleteTaskState(DummyTaskState.done.id.toString(), DummyTaskState.done.projectId.toString()) } returns true
+        every { mockCSVDataSource.deleteTaskState(DummyTaskState.done.id.toString()) } returns true
 
-        val result = stateRepository.deleteTaskState(DummyTaskState.done.id,DummyTaskState.done.projectId)
+        val result = stateRepository.deleteTaskState(DummyTaskState.done.id)
 
         assertThat(result).isTrue()
     }
@@ -97,7 +97,7 @@ class TaskStateRepositoryImplTest {
     fun `should return false when delete non-existing state`() {
         every { mockCSVDataSource.getAllTaskStates() } returns listOf(DummyTaskState.readyForReview)
 
-        val result = stateRepository.deleteTaskState(UUID.randomUUID(), UUID.fromString("50000000-1000-0000-0000-000000000000"))
+        val result = stateRepository.deleteTaskState(UUID.randomUUID())
 
         assertThat(result).isFalse()
     }
@@ -106,7 +106,7 @@ class TaskStateRepositoryImplTest {
     fun `should return false when states list is empty`() {
         every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
 
-        val result = stateRepository.deleteTaskState(UUID.randomUUID(),UUID.fromString("50000000-1000-0000-0000-000000000000"))
+        val result = stateRepository.deleteTaskState(UUID.randomUUID())
 
         assertThat(result).isFalse()
     }
