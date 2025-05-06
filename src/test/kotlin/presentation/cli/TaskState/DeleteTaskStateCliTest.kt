@@ -10,9 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import kotlin.test.Test
-import org.junit.jupiter.api.assertThrows
-import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.InvalidIdException
 import java.util.UUID
 
 

@@ -4,6 +4,8 @@ import domain.usecases.AddAuditUseCase
 import domain.usecases.AuthenticationUseCase
 import domain.usecases.CreateUserUseCase
 import domain.usecases.GetAllAuditUseCase
+import domain.usecases.GetTasksGroupedByStateUseCase
+import domain.usecases.GetTasksUseCase
 import domain.usecases.project.CreateProjectUseCase
 import domain.usecases.project.DeleteProjectUseCase
 import domain.usecases.project.GetAllProjectsUseCase
@@ -26,12 +28,12 @@ val useCaseModule = module {
     single { DeleteTaskStateUseCase(get()) }
     single { GetAllTaskStatesUseCase(get()) }
     single { ExistsTaskStateUseCase(get()) }
+    single { GetTasksUseCase(get()) }
+    single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
+    single { GetTasksGroupedByStateUseCase(getTasksUseCase = get(), getTaskStatesUseCase = get()) }
     single { CreateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
     single { DeleteTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
     single { UpdateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
-    single { CreateTaskUseCase(get()) }
-    single { GetTasksUseCase(get()) }
+    single { CreateTaskUseCase(taskRepository = get(), addAuditUseCase = get(), authRepository = get()) }
     single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
-    single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
-    single { GetTasksGroupedByStateUseCase(getTasksUseCase = get(), getTaskStatesUseCase = get()) }
 }

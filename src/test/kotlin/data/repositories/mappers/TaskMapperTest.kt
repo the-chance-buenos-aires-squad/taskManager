@@ -39,7 +39,7 @@ class TaskMapperTest {
             "Test Task",
             "Test Description",
             testProjectId.toString(),
-            testStateId,
+            testStateId.toString(),
             testAssignedTo.toString(),
             testCreatedBy.toString(),
             testDateTime.toString(),

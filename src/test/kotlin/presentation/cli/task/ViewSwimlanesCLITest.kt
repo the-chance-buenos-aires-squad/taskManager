@@ -31,12 +31,13 @@ class ViewSwimlanesCLITest {
         id = UUID.randomUUID(),
         name = "dummy project"
     )
+    private val stateId = UUID.randomUUID()
     private val swimlanes = listOf(
         TaskStateWithTasks(
             state = createDummyTaskState(
-                id = "1",
+                id = stateId,
                 name = "in progress",
-                projectId = sampleProject.id.toString()
+                projectId = sampleProject.id
             ),
             tasks = listOf(
                 createDummyTask(
@@ -44,15 +45,15 @@ class ViewSwimlanesCLITest {
                     description = "task desc",
                     projectId = sampleProject.id,
                     assignedTo = null,
-                    stateId = "1"
+                    stateId = stateId
                 )
             )
         ),
         TaskStateWithTasks(
             state = createDummyTaskState(
-                id = "2",
+                id = UUID.randomUUID(),
                 name = "Done",
-                projectId = sampleProject.id.toString()
+                projectId = sampleProject.id
             ),
             tasks = emptyList()
         )

@@ -15,8 +15,6 @@ import java.util.*
 
 class CreateTaskCli(
     private val createTaskUseCase: CreateTaskUseCase,
-    private val addAuditUseCase: AddAuditUseCase,
-    private val authRepository: AuthRepository,
     private val getAllStatesUseCase: GetAllTaskStatesUseCase,
     private val userRepository: UserRepository,
     private val uiController: UiController,
@@ -89,18 +87,20 @@ class CreateTaskCli(
 
         val newTaskId = UUID.randomUUID()
 
-        val taskCreated = createTaskUseCase.createTask(
-            id = newTaskId,
-            title = title,
-            description = description,
-            projectId = projectId,
-            stateId = chosenState.id,
-                    assignedTo = assignedUser.id
-        ).let {
-            when(it){
-                true->{uiController.printMessage("Task created successfully!")}
-                false->{uiController.printMessage("Task did not created successfully!")}
-            }}
+        try {
+            createTaskUseCase.createTask(
+                id = newTaskId,
+                title = title,
+                description = description,
+                projectId = projectId,
+                stateId = chosenState.id,
+                assignedTo = assignedUser.id
+            ).let {
+                when(it){
+                    true->{uiController.printMessage("Task created successfully!")}
+                    false->{uiController.printMessage("Task did not created successfully!")}
+                }
+            }
 
         } catch (e: UserNotLoggedInException) {
             uiController.printMessage(" user not longed in")

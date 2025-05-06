@@ -10,7 +10,7 @@ object DummyTask {
         title = "Task Todo Title",
         description = "task Todo description",
         projectId = UUID.randomUUID(),
-        stateId = "1",
+        stateId = UUID.randomUUID(),
         assignedTo = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e053422"),
         createdBy = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b222"),
         createdAt = LocalDateTime.now(),
