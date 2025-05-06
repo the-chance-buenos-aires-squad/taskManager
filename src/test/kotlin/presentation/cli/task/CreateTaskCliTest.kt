@@ -7,6 +7,8 @@ import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.TaskState
+import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
@@ -18,9 +20,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import dummyData.createDummyProject
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import java.time.LocalDateTime
 import java.util.*
 
 class CreateTaskCliTest {
@@ -34,6 +39,15 @@ class CreateTaskCliTest {
 
     private val dummyStateList: List<TaskState> = listOf(DummyTaskState.todo,DummyTaskState.inProgress,DummyTaskState.done)
     private val dummyProjectID = UUID.randomUUID()
+    private val testUser = User(
+        id = UUID.randomUUID(),
+        username = "tester",
+        password = "secret",
+        role = UserRole.ADMIN,
+        createdAt = LocalDateTime.now()
+    )
+    val dummyProject = createDummyProject(name = "Test Project", description = "Test Description")
+
 
     @BeforeEach
     fun setup() {
@@ -53,7 +67,7 @@ class CreateTaskCliTest {
         // Given
         val dummyProjectID = UUID.randomUUID()
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(id = UUID.randomUUID().toString(), name = "To Do", projectId = dummyProjectID.toString())
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
 
         every { uiController.readInput() } returnsMany listOf("title", "description", "1", "username")
         every { getAllStatesUseCase.execute() } returns listOf(dummyTaskState)
@@ -62,6 +76,7 @@ class CreateTaskCliTest {
 
         // When
         createTaskCli.create(dummyProjectID)
+
 
         // Then
         verify { uiController.printMessage("Task created successfully!") }
@@ -169,9 +184,9 @@ class CreateTaskCliTest {
         // Arrange
         val dummyUser = DummyUser.dummyUserOne
         val dummyTaskState = TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "To Do",
-            projectId = dummyProjectID.toString() // Ensure it matches the project ID
+            projectId = dummyProjectID // Ensure it matches the project ID
         )
         val dummyStateList = listOf(dummyTaskState) // List with the valid state
 
@@ -192,31 +207,14 @@ class CreateTaskCliTest {
         verify { uiController.printMessage(" user not longed in", false) }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Test
     fun `should catch TaskTitleEmptyException and print error`() {
         // Arrange
         val dummyUser = DummyUser.dummyUserOne
         val dummyTaskState = TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "To Do",
-            projectId = dummyProjectID.toString()
+            projectId = dummyProjectID
         )
         val dummyStateList = listOf(dummyTaskState)
 
@@ -244,9 +242,9 @@ class CreateTaskCliTest {
         // Arrange
         val dummyUser = DummyUser.dummyUserOne
         val dummyTaskState = TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "To Do",
-            projectId = dummyProjectID.toString()
+            projectId = dummyProjectID
         )
         val dummyStateList = listOf(dummyTaskState)
 

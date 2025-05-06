@@ -3,6 +3,7 @@ package presentation.cli.TaskState
 import TaskStateInputValidator
 import domain.usecases.taskState.EditTaskStateUseCase
 import presentation.UiController
+import java.util.*
 
 class EditTaskStateCli(
     private val editTaskStateUseCase: EditTaskStateUseCase,
@@ -11,8 +12,8 @@ class EditTaskStateCli(
 ) {
     private val inputHandler = TaskStateInputHandler(uiController, inputValidator)
 
-    fun editTaskState() {
-        val taskState = inputHandler.readAndValidateUserInputs(isEdit = true)
+    fun editTaskState(projectID: UUID) {
+        val taskState = inputHandler.readAndValidateUserInputs(projectID,isEdit = true)
         val result = editTaskStateUseCase.execute(taskState)
 
         uiController.printMessage(
@@ -22,4 +23,3 @@ class EditTaskStateCli(
     }
 
 }
-

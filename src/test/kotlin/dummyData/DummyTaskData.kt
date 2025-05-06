@@ -30,14 +30,14 @@ object DummyTaskData {
 
     val taskStates = listOf(
         TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "todo",
-            projectId = project.id.toString()
+            projectId = project.id
         ),
         TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "in progress",
-            projectId = project.id.toString()
+            projectId = project.id
         )
     )
 

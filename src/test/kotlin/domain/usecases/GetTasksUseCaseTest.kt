@@ -1,8 +1,8 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
+import data.dataSource.dummyData.DummyTasks.validTask
 import domain.repositories.TaskRepository
-import dummyData.DummyTask.dummyTodoTask
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
@@ -22,7 +22,7 @@ class GetTasksUseCaseTest {
     @Test
     fun `should return list of tasks success`() {
         //given
-        every { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
+        every { taskRepository.getAllTasks() } returns listOf(validTask)
 
         //when
         val result = getTasksUseCase.getTasks()

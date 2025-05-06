@@ -7,6 +7,7 @@ import data.repositories.mappers.TaskStateMapper.Companion.NAME
 import data.repositories.mappers.TaskStateMapper.Companion.PROJECT_ID
 import domain.entities.TaskState
 import java.io.File
+import java.util.*
 
 class TaskStateCSVDataSource(
     private val file: File,
@@ -15,12 +16,12 @@ class TaskStateCSVDataSource(
 
     override fun createTaskState(state: List<String>): Boolean {
         val existingTaskStates = getAllTaskStates()
-        if (existingTaskStates.any { it.id == state[ID] }) return false
+        if (existingTaskStates.any { it.id.toString() == state[ID] }) return false
 
         val newTaskState = TaskState(
-            id = state[ID],
+            id = UUID.fromString(state[ID]),
             name = state[NAME],
-            projectId = state[PROJECT_ID]
+            projectId =  UUID.fromString(state[PROJECT_ID])
         )
 
         val allStates = existingTaskStates + newTaskState
@@ -30,13 +31,13 @@ class TaskStateCSVDataSource(
 
     override fun editTaskState(editState: List<String>): Boolean {
         val allStates = getAllTaskStates().toMutableList()
-        val index = allStates.indexOfFirst { it.id == editState[ID] }
+        val index = allStates.indexOfFirst { it.id.toString() == editState[ID] }
 
         return if (index != -1) {
             val editTaskState = TaskState(
-                id = editState[ID],
+                id = UUID.fromString(editState[ID]),
                 name = editState[NAME],
-                projectId = editState[PROJECT_ID]
+                projectId = UUID.fromString(editState[PROJECT_ID])
             )
 
             allStates[index] = editTaskState
@@ -47,7 +48,7 @@ class TaskStateCSVDataSource(
 
     override fun deleteTaskState(stateId: String): Boolean {
         val states = getAllTaskStates().toMutableList()
-        val removed = states.removeIf { it.id == stateId }
+        val removed = states.removeIf { it.id.toString() == stateId }
 
         if (removed) {
             writeTaskStates(states)
@@ -64,7 +65,7 @@ class TaskStateCSVDataSource(
 
     override fun existsTaskState(stateId: String): Boolean {
         val allStates = getAllTaskStates()
-        return allStates.any { it.id == stateId }
+        return allStates.any { it.id.toString()  == stateId }
     }
 
     private fun writeTaskStates(states: List<TaskState>) {
@@ -72,7 +73,7 @@ class TaskStateCSVDataSource(
         try {
             states.forEach { state ->
                 csvHandler.write(
-                    listOf(state.id, state.name, state.projectId),
+                    listOf(state.id.toString(), state.name, state.projectId.toString()),
                     file,
                     append = true
                 )
@@ -81,7 +82,6 @@ class TaskStateCSVDataSource(
             println("Failed to write states: ${e.message}")
         }
     }
-
 }
 
 
