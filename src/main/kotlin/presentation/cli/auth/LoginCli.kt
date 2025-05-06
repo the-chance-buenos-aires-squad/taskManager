@@ -2,9 +2,9 @@ package presentation.cli.auth
 
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
+import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
-import presentation.UiController
 
 class LoginCli(
     private val uiController: UiController,

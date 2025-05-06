@@ -1,30 +1,42 @@
-package domain.usecases
+package domain.usecases.task
 
 
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
+import domain.customeExceptions.UserNotLoggedInException
+import domain.entities.ActionType
+import domain.entities.EntityType
 import domain.entities.Task
+import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
+import domain.usecases.AddAuditUseCase
 import java.util.*
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
+    private val addAuditUseCase: AddAuditUseCase,
+    private val authRepository: AuthRepository
 ) {
 
     fun createTask(
-        id : UUID = UUID.randomUUID(),
+        id: UUID,
         title: String,
         description: String,
         projectId: UUID,
         stateId: UUID,
         assignedTo: UUID? = null,
-        createdBy: UUID
     ): Boolean {
+
+        val currentUser = authRepository.getCurrentUser()
+            ?: throw UserNotLoggedInException()
 
         validateTaskTitle(title)
         validateTaskDescription(description)
         validateProjectId(projectId)
+
+
+
 
         val newTask = Task(
             id = id,
@@ -33,12 +45,23 @@ class CreateTaskUseCase(
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy = createdBy,
+            createdBy =currentUser.id ,
         )
 
 
-        //TODO: implement audit log for task creation
-        return taskRepository.addTask(newTask)
+        return taskRepository.addTask(newTask).also { result ->
+            if (result) {
+                addAuditUseCase.addAudit(
+                    entityId = newTask.id.toString(),
+                    entityType = EntityType.TASK,
+                    action = ActionType.CREATE,
+                    field = "",
+                    oldValue = "",
+                    newValue = "creating task: ${newTask.title}",
+                    userId = currentUser.id.toString()
+                )
+            }
+        }
     }
 
     private fun validateTaskTitle(title: String) {

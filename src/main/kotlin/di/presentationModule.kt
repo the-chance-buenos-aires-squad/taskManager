@@ -2,8 +2,10 @@ package di
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import presentation.UiController
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.MainCli
+import presentation.cli.TaskState.*
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
@@ -101,6 +103,45 @@ val presentationModule = module {
             auditsCli = get()
         )
     }
+    single {
+        CreateTaskCli(
+            createTaskUseCase = get(),
+            getAllStatesUseCase = get(),
+            userRepository = get(),
+            uiController = get(),
+        )
+    }
+
+    single {
+        LoginCli(
+            uiController = get(),
+            authenticationUseCase = get(),
+            adminDashBoardCli = get(),
+            mateDashBoardCli = get()
+        )
+    }
+    single {
+        CreateTaskStateCli(
+            createTaskStateUseCase = get(),
+            existsTaskStateUseCase = get(),
+            uiController = get(),
+            inputValidator = get()
+        )
+    }
+
+    single { ProjectScreenController(get(), get(), get(), get(), get(), get()) }
+    single { TaskStateCliController(get(), get(), get(), get(), get(), get()) }
+
+    single {
+        AdminDashBoardCli(
+            uiController = get(),
+            createUserCli = get(),
+            projectScreenController = get(),
+            taskStateCliController = get(),
+            auditsCli = get()
+        )
+    }
+
 
     singleOf(::MainCli)
 }

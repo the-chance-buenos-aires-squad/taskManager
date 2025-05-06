@@ -5,10 +5,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import presentation.cli.auth.CreateUserCli
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.TaskState.TaskStateCliController
+import presentation.cli.auth.CreateUserCli
 import presentation.cli.project.ProjectScreenController
 
 class AdminDashBoardCliTest {
@@ -19,7 +19,8 @@ class AdminDashBoardCliTest {
     private val taskStateCliController: TaskStateCliController = mockk(relaxed = true)
     private val auditsCli: GetAllAuditsCli = mockk(relaxed = true)
 
-    private var adminDashBoardCli: AdminDashBoardCli = AdminDashBoardCli(uiController, createUserCli,projectScreenController,taskStateCliController,auditsCli)
+    private var adminDashBoardCli: AdminDashBoardCli =
+        AdminDashBoardCli(uiController, createUserCli, projectScreenController, taskStateCliController, auditsCli)
 
 
     @Test

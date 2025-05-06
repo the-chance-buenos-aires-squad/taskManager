@@ -16,22 +16,22 @@ import java.util.*
 class TaskRepositoryImplTest {
 
     private val mockTaskDataSource = mockk<TaskDataSource>(relaxed = true)
-    private val mockTaskMapper = mockk<TaskMapper>(relaxed = true)
+    private val taskMapper = mockk<TaskMapper>(relaxed = true)
     private lateinit var taskRepository: TaskRepository
 
     @BeforeEach
     fun setUp() {
-        taskRepository = TaskRepositoryImpl(mockTaskDataSource, mockTaskMapper)
+        taskRepository = TaskRepositoryImpl(mockTaskDataSource, taskMapper)
 
         // Mock mapper and data source to return expected values
-        every { mockTaskMapper.mapEntityToRow(any()) } returns listOf("mapped-task-data")
-        every { mockTaskDataSource.addTask(any()) } returns true  // Return true for successful task addition
+//        every { mockTaskDataSource.addTask(any()) } returns true  // Return true for successful task addition
     }
 
     @Test
     fun `should return true when task is successfully created`() {
         // Given
         val task = createSampleTask()
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(task)
@@ -45,6 +45,7 @@ class TaskRepositoryImplTest {
         // Given
         val initialId = UUID.randomUUID()
         val initialTask = createSampleTask(id = initialId)
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(initialTask)
@@ -57,6 +58,7 @@ class TaskRepositoryImplTest {
     fun `should set current time as createdAt when creating a task`() {
         // Given
         val initialTask = createSampleTask(createdAt = LocalDateTime.now().minusDays(5))
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(initialTask)
@@ -69,6 +71,7 @@ class TaskRepositoryImplTest {
     fun `should set current time as updatedAt when creating a task`() {
         // Given
         val initialTask = createSampleTask(updatedAt = LocalDateTime.now().minusDays(5))
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(initialTask)
@@ -81,6 +84,7 @@ class TaskRepositoryImplTest {
     fun `should preserve task properties when creating a task`() {
         // Given
         val initialTask = createSampleTask(title = "Specific Title", description = "Specific Description")
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(initialTask)
@@ -98,7 +102,7 @@ class TaskRepositoryImplTest {
         taskRepository.addTask(task)
 
         // Then
-        verify(exactly = 1) { mockTaskMapper.mapEntityToRow(any()) }  // Ensure the mapper is called once
+        verify(exactly = 1) { taskMapper.mapEntityToRow(any()) }  // Ensure the mapper is called once
     }
 
     @Test
@@ -106,7 +110,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = createSampleTask()
         val mappedTask = listOf("mapped-task-data")
-        every { mockTaskMapper.mapEntityToRow(any()) } returns mappedTask
+        every { taskMapper.mapEntityToRow(any()) } returns mappedTask
 
         // When
         taskRepository.addTask(task)
@@ -119,6 +123,7 @@ class TaskRepositoryImplTest {
     fun `should return true when task is added to data source`() {
         // Given
         val task = createSampleTask()
+        every { mockTaskDataSource.addTask(any()) } returns true
 
         // When
         val result = taskRepository.addTask(task)
@@ -158,16 +163,16 @@ class TaskRepositoryImplTest {
         val mappedTask2 = createSampleTask(title = "title2", description = "desc2")
 
         every { mockTaskDataSource.getTasks() } returns rawRows
-        every { mockTaskMapper.mapRowToEntity(rawTaskRow1) } returns mappedTask1
-        every { mockTaskMapper.mapRowToEntity(rawTaskRow2) } returns mappedTask2
+        every { taskMapper.mapRowToEntity(rawTaskRow1) } returns mappedTask1
+        every { taskMapper.mapRowToEntity(rawTaskRow2) } returns mappedTask2
 
         // When
         val result = taskRepository.getAllTasks()
 
         // Then
         verify(exactly = 1) { mockTaskDataSource.getTasks() }
-        verify(exactly = 1) { mockTaskMapper.mapRowToEntity(rawTaskRow1) }
-        verify(exactly = 1) { mockTaskMapper.mapRowToEntity(rawTaskRow2) }
+        verify(exactly = 1) { taskMapper.mapRowToEntity(rawTaskRow1) }
+        verify(exactly = 1) { taskMapper.mapRowToEntity(rawTaskRow2) }
 
         assertThat(result).hasSize(2)
         assertThat(result).containsExactly(mappedTask1, mappedTask2)
@@ -196,4 +201,93 @@ class TaskRepositoryImplTest {
             updatedAt = updatedAt
         )
     }
+
+
+    @Test
+    fun `should return true when deleting task`() {
+        // Given
+        val task = createSampleTask()
+        val task1 = createSampleTask()
+        val task2 = createSampleTask()
+        every { mockTaskDataSource.deleteTask(any()) } returns true
+
+        //when
+        val result = taskRepository.deleteTask(task.id)
+
+        //then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return false when deleting task failed`() {
+        //given
+        val task = createSampleTask()
+        every { mockTaskDataSource.deleteTask(any()) } returns false
+
+        //when
+        val result = taskRepository.deleteTask(task.id)
+
+        //then
+        assertThat(result).isFalse()
+    }
+
+
+    @Test
+    fun `should return true when updating task successfully`() {
+        //given
+        val task = createSampleTask()
+        every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns true
+
+        //when
+        val result = taskRepository.updateTask(task)
+
+        //then
+        assertThat(result).isTrue()
+    }
+
+
+    @Test
+    fun `should return false when updating task unSuccessfully`() {
+        //given
+        val task = createSampleTask()
+        every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns false
+
+        //when
+        val result = taskRepository.updateTask(task)
+
+        //then
+        assertThat(result).isFalse()
+    }
+
+
+    @Test
+    fun `should return non-null task object when getting by id successfully`() {
+        //given
+        val task = createSampleTask()
+        val taskRow = taskMapper.mapEntityToRow(task)
+        every { mockTaskDataSource.getTaskById(task.id.toString()) } returns taskRow
+
+        //when
+        val result = taskRepository.getTaskById(task.id)
+
+        //then
+        assertThat(result).isNotNull()
+    }
+
+
+    @Test
+    fun `should return null  when getting task by id unSuccessfully`() {
+        //given
+        val task = createSampleTask()
+        val taskRow = taskMapper.mapEntityToRow(task)
+        every { mockTaskDataSource.getTaskById(task.id.toString()) } returns null
+
+        //when
+        val result = taskRepository.getTaskById(task.id)
+
+        //then
+        assertThat(result).isNull()
+    }
+
+
 }

@@ -15,11 +15,13 @@ class TaskMapper : Mapper<Task> {
             entity.assignedTo.toString(),
             entity.createdBy.toString(),
             entity.createdAt.toString(),
-            entity.updatedAt.toString())
+            entity.updatedAt.toString()
+        )
     }
 
     override fun mapRowToEntity(row: List<String>): Task {
-        return Task(id = UUID.fromString(row[0]),
+        return Task(
+            id = UUID.fromString(row[0]),
             title = row[1],
             description = row[2],
             projectId = UUID.fromString(row[3]),
@@ -27,7 +29,8 @@ class TaskMapper : Mapper<Task> {
             assignedTo = row[5].toUUIDOrNull(),
             createdBy = UUID.fromString(row[6]),
             createdAt = LocalDateTime.parse(row[7]),
-            updatedAt = LocalDateTime.parse(row[8]))
+            updatedAt = LocalDateTime.parse(row[8])
+        )
     }
 
 

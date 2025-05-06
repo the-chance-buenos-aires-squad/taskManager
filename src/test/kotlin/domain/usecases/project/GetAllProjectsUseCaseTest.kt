@@ -7,7 +7,6 @@ import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

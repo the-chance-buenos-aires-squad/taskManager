@@ -1,11 +1,8 @@
 package data.dataSource.project
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import data.repositories.mappers.ProjectMapper
-import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -28,7 +25,7 @@ class CsvProjectDataSourceTest {
     @BeforeEach
     fun setup() {
         csvReader = mockk(relaxed = true)
-        csvHandler = CsvHandler( csvReader)
+        csvHandler = CsvHandler(csvReader)
         testFile = File.createTempFile("testFile", ".csv")
         csvProjectDataSource = CsvProjectDataSource(testFile, csvHandler)
     }
@@ -110,7 +107,7 @@ class CsvProjectDataSourceTest {
 
     @Test
     fun `should return update project successfully if user enter valid id`() {
-        every { csvHandler.read(testFile) } returns listOf(project,project2)
+        every { csvHandler.read(testFile) } returns listOf(project, project2)
 
         val isProjectUpdated = csvProjectDataSource.updateProject(project)
 

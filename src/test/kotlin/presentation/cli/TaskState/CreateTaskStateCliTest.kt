@@ -32,7 +32,8 @@ class CreateTaskStateCliTest {
 
     @BeforeEach
     fun setup() {
-        createTaskStateCli = CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase,uiController, inputValidator)
+        createTaskStateCli =
+            CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase, uiController, inputValidator)
     }
 
     @Test
