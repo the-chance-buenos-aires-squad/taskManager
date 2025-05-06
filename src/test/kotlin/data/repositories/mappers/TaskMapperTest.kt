@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 class TaskMapperTest {
-    
+
     private lateinit var taskMapper: TaskMapper
     private lateinit var sampleTask: Task
     private lateinit var sampleTaskRow: List<String>
@@ -18,7 +18,7 @@ class TaskMapperTest {
     private val testAssignedTo = UUID.fromString("00000000-0000-0000-0000-000000000004")
     private val testCreatedBy = UUID.fromString("00000000-0000-0000-0000-000000000005")
     private val testDateTime = LocalDateTime.parse("2025-01-01T10:00:00")
-    
+
     @BeforeEach
     fun setUp() {
         taskMapper = TaskMapper()
@@ -33,7 +33,7 @@ class TaskMapperTest {
             createdAt = testDateTime,
             updatedAt = testDateTime
         )
-        
+
         sampleTaskRow = listOf(
             testId.toString(),
             "Test Task",
@@ -46,23 +46,23 @@ class TaskMapperTest {
             testDateTime.toString()
         )
     }
-    
+
     @Test
     fun `should convert Task to correct list of strings`() {
         // When
         val result = taskMapper.mapEntityToRow(sampleTask)
-        
+
         // Then
         assertThat(result).isEqualTo(sampleTaskRow)
     }
-    
+
     @Test
     fun `should convert list of strings to correct Task`() {
         // When
         val result = taskMapper.mapRowToEntity(sampleTaskRow)
-        
+
         // Then
         assertThat(result).isEqualTo(sampleTask)
     }
-    
+
 }

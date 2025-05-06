@@ -1,11 +1,12 @@
 package data.dataSource.task
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
-import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import io.mockk.*
-import org.junit.jupiter.api.*
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.time.LocalDateTime
 import java.util.*
@@ -22,7 +23,7 @@ class CsvTaskDataSourceTest {
             writeText("")
             deleteOnExit()
         }
-        csvHandler = CsvHandler( CsvReader())
+        csvHandler = CsvHandler(CsvReader())
         dataSource = CsvTaskDataSource(csvHandler, file)
     }
 
@@ -84,6 +85,7 @@ class CsvTaskDataSourceTest {
         assertThat(result).isTrue()
         assertThat(dataSource.getTasks()).doesNotContain(row)
     }
+
     @Test
     fun `addTask should return false and print message if write fails`() {
         // Given
@@ -101,6 +103,7 @@ class CsvTaskDataSourceTest {
         // Then
         assertThat(result).isFalse()
     }
+
     @Test
     fun `updateTask should return false and print message if write fails`() {
         // Given
@@ -122,7 +125,6 @@ class CsvTaskDataSourceTest {
         // Then
         assertThat(result).isFalse()
     }
-
 
 
     private fun generateTaskRow(): List<String> {

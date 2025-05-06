@@ -31,7 +31,7 @@ class EditTaskStateCliTest {
     @Test
     fun `should call execute when editing task state succeeds`() {
         every { editTaskStateUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
 
         editTaskStateCli.editTaskState()
 

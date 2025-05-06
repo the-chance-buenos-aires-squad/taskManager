@@ -1,7 +1,5 @@
 package data.dataSource.task
 
-import domain.entities.Task
-
 interface TaskDataSource {
     fun addTask(taskRow: List<String>): Boolean
     fun getTasks(): List<List<String>>

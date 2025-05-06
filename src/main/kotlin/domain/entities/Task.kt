@@ -12,4 +12,5 @@ data class Task(
     val assignedTo: UUID?,
     val createdBy: UUID,
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val updatedAt: LocalDateTime = LocalDateTime.now())
+    val updatedAt: LocalDateTime = LocalDateTime.now()
+)

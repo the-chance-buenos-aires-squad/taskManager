@@ -29,5 +29,4 @@ object DummyUser {
     val dummyUpdatedUserOneRow = userMapper.mapEntityToRow(dummyUserOne.copy(username = dummyUpdatedUserOneUserName))
 
 
-
 }

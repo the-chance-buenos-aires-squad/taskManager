@@ -1,7 +1,6 @@
 package domain.customeExceptions
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NoProjectsFoundExceptionTest {

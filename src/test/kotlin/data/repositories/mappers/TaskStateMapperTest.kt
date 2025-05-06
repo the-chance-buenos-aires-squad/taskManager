@@ -2,7 +2,6 @@ package data.repositories.mappers
 
 import com.google.common.truth.Truth.assertThat
 import dummyData.dummyStateData.DummyTaskState
-import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
 
 class TaskStateMapperTest {
