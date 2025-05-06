@@ -12,7 +12,6 @@ class DeleteTaskCli(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val uiController: UiController,
-    private val authRepository: AuthRepository
 ) {
 
     fun delete(projectID: UUID) {
