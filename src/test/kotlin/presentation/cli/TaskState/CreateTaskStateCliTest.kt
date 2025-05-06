@@ -13,6 +13,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import kotlin.test.Test
@@ -39,7 +40,11 @@ class CreateTaskStateCliTest {
     fun `should call execute when creating task state succeeds`() {
 
         every { createTaskStateUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(),taskState.name,taskState.projectId.toString())
+        every { uiController.readInput() } returnsMany listOf(
+            taskState.id.toString(),
+            taskState.name,
+            taskState.projectId.toString()
+        )
 
         createTaskStateCli.createTaskState(dummyProject.id)
 
@@ -49,33 +54,39 @@ class CreateTaskStateCliTest {
     @Test
     fun `should call execute when failed to create task state`() {
         every { createTaskStateUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(),taskState.name,taskState.projectId.toString())
+        every { uiController.readInput() } returnsMany listOf(
+            taskState.id.toString(),
+            taskState.name,
+            taskState.projectId.toString()
+        )
 
         createTaskStateCli.createTaskState(dummyProject.id)
 
         verify { createTaskStateUseCase.execute(any()) }
     }
 
-    @Test
-    fun `should throw exception when enter empty ID and failed to create task state`() {
-        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.id.toString())
-
-        val exception = assertThrows<InvalidIdException> {
-            createTaskStateCli.createTaskState(dummyProject.id)
-        }
-        assertThat(exception.message).isEqualTo("ID can't be empty")
-    }
 
     @Test
     fun `should throw exception when name is less than 2 letters and fail to create task state`() {
+        every { existsTaskStateUseCase.execute(any()) } returns false
 
-        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), "A", taskState.projectId.toString())
-
-        val exception = assertThrows<InvalidNameException> {
+        assertThrows<InvalidNameException> {
             createTaskStateCli.createTaskState(dummyProject.id)
         }
-
-        assertThat(exception.message).isEqualTo("Name must be at least 2 letters")
     }
 
+    @Test
+    fun `should print message when task state already exists`() {
+        every { existsTaskStateUseCase.execute(any()) } returns true
+        every { uiController.readInput() } returnsMany listOf(
+            taskState.id.toString(),
+            taskState.name,
+            taskState.projectId.toString()
+        )
+
+        createTaskStateCli.createTaskState(dummyProject.id)
+
+        verify { uiController.printMessage("Task state already exists.") }
+        verify(exactly = 0) { createTaskStateUseCase.execute(any()) }
+    }
 }

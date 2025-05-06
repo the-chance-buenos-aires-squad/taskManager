@@ -4,7 +4,7 @@ import data.dataSource.taskState.TaskStateDataSource
 import data.repositories.mappers.TaskStateMapper
 import domain.entities.TaskState
 import domain.repositories.TaskStateRepository
-import java.util.*
+import java.util.UUID
 
 class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateDataSource,
@@ -18,8 +18,8 @@ class TaskStateRepositoryImpl(
         return taskStateCSVDataSource.editTaskState(taskStateMapper.mapEntityToRow(state))
     }
 
-    override fun deleteTaskState(stateId: UUID): Boolean {
-        return taskStateCSVDataSource.deleteTaskState(stateId.toString())
+    override fun deleteTaskState(stateId: UUID,projectId : UUID): Boolean {
+        return taskStateCSVDataSource.deleteTaskState(stateId.toString(),projectId.toString())
     }
 
     override fun getAllTaskStates(): List<TaskState> {

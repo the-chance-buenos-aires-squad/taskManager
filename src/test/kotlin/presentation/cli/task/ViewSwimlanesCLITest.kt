@@ -1,4 +1,3 @@
-
 package presentation.cli.task
 
 import createDummyTaskState

@@ -9,15 +9,12 @@ import dummyData.DummyUser
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class DeleteTaskUseCaseTest {
-
     private val taskRepository: TaskRepository = mockk()
     private val authRepository: AuthRepository = mockk()
     private val addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
@@ -67,7 +64,6 @@ class DeleteTaskUseCaseTest {
         assertThrows<UserNotLoggedInException> {
             deleteTaskUseCase.deleteTask(UUID.randomUUID())
         }
-
 
     }
 

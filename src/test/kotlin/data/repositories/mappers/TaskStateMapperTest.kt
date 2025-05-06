@@ -20,7 +20,7 @@ class TaskStateMapperTest {
     fun `mapRowToEntity should convert list of strings to TaskState correctly`() {
 
         val expectedRow = DummyTaskState.blocked
-        val row = listOf("4", "Blocked", "P004")
+        val row = listOf("00000000-4000-0000-0000-000000000000", "Blocked", "40000000-1000-0000-0000-000000000000")
 
         val actualRow = taskStateMapper.mapRowToEntity(row)
 

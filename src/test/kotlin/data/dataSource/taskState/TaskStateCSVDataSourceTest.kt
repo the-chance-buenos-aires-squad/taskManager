@@ -15,8 +15,8 @@ class TaskStateCSVDataSourceTest {
     private lateinit var taskStateCSVDataSource: TaskStateCSVDataSource
 
     private val csvRows = listOf(
-        listOf("1", "To Do", "P001"),
-        listOf("2", "In Progress", "P002")
+        listOf("10000000-0000-0000-0000-000000000002", "To Do", "10000000-1000-0000-0000-000000000002"),
+        listOf("20000000-0000-0000-0000-000000000002", "In Progress", "10000000-2000-0000-0000-000000000002")
     )
 
     @BeforeEach
@@ -29,7 +29,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return true when state is created successfully`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.createTaskState(listOf("5", "blocked", "P005"))
+        val result = taskStateCSVDataSource.createTaskState(listOf("50000000-0000-0000-0000-000000000002", "blocked", "10000000-2000-0000-0000-000000000002"))
 
         assertThat(result).isTrue()
     }
@@ -38,7 +38,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when state already exists`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.createTaskState(listOf("1", "To Do", "P001"))
+        val result = taskStateCSVDataSource.createTaskState(listOf("10000000-0000-0000-0000-000000000002", "To Do", "10000000-2000-0000-0000-000000000002"))
 
         assertThat(result).isFalse()
     }
@@ -47,7 +47,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return true when state is edited successfully`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.editTaskState(listOf("2", "Review", "P002"))
+        val result = taskStateCSVDataSource.editTaskState(listOf("20000000-0000-0000-0000-000000000002", "Review", "10000000-2000-0000-0000-000000000002"))
 
         assertThat(result).isTrue()
     }
@@ -56,7 +56,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when trying to edit non-existing state`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.editTaskState(listOf("7", "Blocked", "P007"))
+        val result = taskStateCSVDataSource.editTaskState(listOf("70000000-0000-0000-0000-000000000002", "Blocked", "10000000-7000-0000-0000-000000000002"))
 
         assertThat(result).isFalse()
     }
@@ -65,7 +65,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return true when state is deleted`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.deleteTaskState("1")
+        val result = taskStateCSVDataSource.deleteTaskState("10000000-0000-0000-0000-000000000002","10000000-1000-0000-0000-000000000002")
 
         assertThat(result).isTrue()
     }
@@ -74,7 +74,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when trying to delete non-existing state`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.deleteTaskState("9")
+        val result = taskStateCSVDataSource.deleteTaskState("90000000-0000-0000-0000-000000000002","10000000-1000-0000-0000-000000000002")
 
         assertThat(result).isFalse()
     }
@@ -92,7 +92,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return true when state exists`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.existsTaskState("1")
+        val result = taskStateCSVDataSource.existsTaskState("10000000-0000-0000-0000-000000000002")
 
         assertThat(result).isTrue()
     }
@@ -101,7 +101,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when state does not exist`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.existsTaskState("99")
+        val result = taskStateCSVDataSource.existsTaskState("990000000-0000-0000-0000-000000000002")
 
         assertThat(result).isFalse()
     }

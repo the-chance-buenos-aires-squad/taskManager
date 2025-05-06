@@ -46,12 +46,14 @@ class TaskStateCSVDataSource(
         } else false
     }
 
-    override fun deleteTaskState(stateId: String): Boolean {
-        val states = getAllTaskStates().toMutableList()
-        val removed = states.removeIf { it.id.toString() == stateId }
+    override fun deleteTaskState(stateId: String, projectId: String): Boolean {
+        val allStates = getAllTaskStates().toMutableList()
+        val removed = allStates.removeIf {
+            it.id.toString() == stateId && it.projectId.toString() == projectId
+        }
 
         if (removed) {
-            writeTaskStates(states)
+            writeTaskStates(allStates)
             return true
         }
         return false
@@ -83,5 +85,7 @@ class TaskStateCSVDataSource(
         }
     }
 }
+
+
 
 

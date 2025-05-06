@@ -31,23 +31,12 @@ import java.util.*
 class CreateTaskCliTest {
     private lateinit var createTaskCli: CreateTaskCli
     private val createTaskUseCase = mockk<CreateTaskUseCase>()
-    private val authRepository = mockk<AuthRepository>()
     private val getAllStatesUseCase = mockk<GetAllTaskStatesUseCase>()
     private val userRepository = mockk<UserRepository>()
     private val uiController = mockk<UiController>(relaxed = true)
 
 
-    private val dummyStateList: List<TaskState> = listOf(DummyTaskState.todo,DummyTaskState.inProgress,DummyTaskState.done)
     private val dummyProjectID = UUID.randomUUID()
-    private val testUser = User(
-        id = UUID.randomUUID(),
-        username = "tester",
-        password = "secret",
-        role = UserRole.ADMIN,
-        createdAt = LocalDateTime.now()
-    )
-    val dummyProject = createDummyProject(name = "Test Project", description = "Test Description")
-
 
     @BeforeEach
     fun setup() {
@@ -77,12 +66,9 @@ class CreateTaskCliTest {
         // When
         createTaskCli.create(dummyProjectID)
 
-
         // Then
         verify { uiController.printMessage("Task created successfully!") }
     }
-
-
 
     @Test
     fun `should return early when both title inputs are empty`() {
@@ -129,14 +115,12 @@ class CreateTaskCliTest {
         verify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
     }
 
-
-
     @Test
     fun `should return early when both description inputs are empty`() {
         // Arrange
         val mockCreateTaskUseCase = mockk<CreateTaskUseCase>(relaxed = true)
-        val mockGetAllStatesUseCase = mockk<GetAllTaskStatesUseCase>()
-        val mockUserRepository = mockk<UserRepository>()
+        val mockGetAllStatesUseCase = mockk<GetAllTaskStatesUseCase>(relaxed = true)
+        val mockUserRepository = mockk<UserRepository>(relaxed = true)
         val mockUiController = mockk<UiController>(relaxed = true)
 
         val createTaskCli = CreateTaskCli(
@@ -165,7 +149,7 @@ class CreateTaskCliTest {
             mockUiController.readInput()
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
-            mockUiController.printMessage("Description cannot be empty. Please try again.")
+            mockUiController.printMessage("Description cannot be empty. Please try again.",false)
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
             mockUiController.printMessage(

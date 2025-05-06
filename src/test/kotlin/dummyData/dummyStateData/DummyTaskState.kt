@@ -1,7 +1,7 @@
 package dummyData.dummyStateData
 
 import domain.entities.TaskState
-import java.util.*
+import java.util.UUID
 
 
 object DummyTaskState {
