@@ -2,7 +2,6 @@ package presentation.cli.task
 
 import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.Task
-import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import domain.usecases.task.GetAllTasksUseCase
 import domain.usecases.task.UpdateTaskUseCase
