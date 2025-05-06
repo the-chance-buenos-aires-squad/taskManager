@@ -1,10 +1,7 @@
 package data.dataSource.project
 
-
 import data.dataSource.util.CsvHandler
-import domain.entities.Project
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
 
 class CsvProjectDataSource(
@@ -19,45 +16,37 @@ class CsvProjectDataSource(
 
     override fun deleteProject(projectId: UUID): Boolean {
         val all = getAllProjects()
-        val updated = all.filterNot { it.id == projectId }
+        val updated = all.filterNot { it[0] == projectId.toString() }
         if (all.size == updated.size) return false
 
         rewriteAllProjects(updated)
         return true
     }
 
-    override fun getProjectById(projectId: UUID): Project? {
-        return getAllProjects().find { it.id == projectId }
+    override fun getProjectById(projectId: UUID): List<String>? {
+        return getAllProjects().find { it[0] == projectId.toString() }
     }
 
     override fun updateProject(project: List<String>): Boolean {
         val all = getAllProjects()
-        if (all.none { it.id.toString() == project[0] }) return false
+        if (all.none { it[0] == project[0] }) return false
         val updatedProject = all.map {
-            if (it.id.toString() == project[0]) {
-                Project(UUID.fromString(project[0]), project[1], project[2], LocalDateTime.parse(project[3]))
-            } else it
+            if (it[0] == project[0]) project else it
         }
 
         rewriteAllProjects(updatedProject)
         return true
     }
 
-    override fun getAllProjects(): List<Project> {
-        val rows = csvHandler.read(file)
-        return rows.mapNotNull {
-            try {
-                Project(UUID.fromString(it[0]), it[1], it[2], LocalDateTime.parse(it[3]))
-            } catch (e: Exception) {
-                null
-            }
-        }
+    override fun getAllProjects(): List<List<String>> {
+        if (!file.exists()) return emptyList()
+        return csvHandler.read(file)
     }
 
-    private fun rewriteAllProjects(projects: List<Project>) {
+    private fun rewriteAllProjects(projects: List<List<String>>) {
         file.writeText("") // clear file
         projects.forEach {
-            csvHandler.write(listOf(it.id.toString(), it.name, it.description, it.createdAt.toString()), file)
+            csvHandler.write(it, file)
         }
     }
 }
