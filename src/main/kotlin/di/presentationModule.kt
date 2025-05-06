@@ -23,7 +23,6 @@ import presentation.cli.task.CreateTaskCli
 import presentation.cli.task.ViewSwimlanesCLI
 import presentation.cli.task.DeleteTaskCli
 import presentation.cli.task.UpdateTaskCli
-import presentation.cli.task.ViewSwimlanesCLI
 import java.util.*
 
 

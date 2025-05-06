@@ -9,7 +9,7 @@ class DeleteTaskStateCli(
     private val deleteTaskStateUseCase: DeleteTaskStateUseCase,
     private val uiController: UiController
 ) {
-    fun deleteTaskState(projectId : UUID) {
+    fun deleteTaskState() {
         uiController.printMessage("Enter task state ID to delete:")
         val taskId = uiController.readInput().trim()
 
