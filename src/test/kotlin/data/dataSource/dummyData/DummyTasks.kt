@@ -10,6 +10,7 @@ object DummyTasks {
     private val validStateId = UUID.randomUUID()
     private val validAssignedToId = UUID.randomUUID()
     private val validCreatedById = UUID.randomUUID()
+
     val validTask = Task(
         id = UUID.randomUUID(),
         validTitle,

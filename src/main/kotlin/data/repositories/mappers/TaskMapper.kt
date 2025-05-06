@@ -7,8 +7,7 @@ import java.util.*
 class TaskMapper : Mapper<Task> {
 
     override fun mapEntityToRow(entity: Task): List<String> {
-        return listOf<String>(
-            entity.id.toString(),
+        return listOf(entity.id.toString(),
             entity.title,
             entity.description,
             entity.projectId.toString(),
@@ -27,10 +26,17 @@ class TaskMapper : Mapper<Task> {
             description = row[2],
             projectId = UUID.fromString(row[3]),
             stateId = UUID.fromString(row[4]),
-            assignedTo = UUID.fromString(row[5].ifBlank { null }),
+            assignedTo = row[5].toUUIDOrNull(),
             createdBy = UUID.fromString(row[6]),
             createdAt = LocalDateTime.parse(row[7]),
             updatedAt = LocalDateTime.parse(row[8])
         )
+    }
+
+
+    fun String?.toUUIDOrNull(): UUID? = try {
+        this?.takeUnless { it.isBlank() }?.let { UUID.fromString(it) }
+    } catch (e: IllegalArgumentException) {
+        null
     }
 }

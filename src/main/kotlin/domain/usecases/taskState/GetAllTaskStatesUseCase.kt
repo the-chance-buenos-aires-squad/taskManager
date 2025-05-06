@@ -2,6 +2,7 @@ package domain.usecases.taskState
 
 import domain.entities.TaskState
 import domain.repositories.TaskStateRepository
+import java.util.UUID
 
 class GetAllTaskStatesUseCase(private val repository: TaskStateRepository) {
     fun execute(): List<TaskState> {

@@ -7,6 +7,7 @@ import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
+import java.time.LocalDateTime
 import java.util.*
 
 class UpdateTaskUseCase(
@@ -21,8 +22,11 @@ class UpdateTaskUseCase(
         projectId: UUID,
         stateId: UUID,
         assignedTo: UUID?=null,
-        createdBy: UUID
     ): Boolean {
+
+        val currentUser = authRepository.getCurrentUser()
+            ?: throw UserNotLoggedInException()
+
         val updatedTask = Task(
             id = id,
             title = title,
@@ -30,11 +34,9 @@ class UpdateTaskUseCase(
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy = createdBy,
+            createdBy = currentUser.id,
         )
 
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
 
         return taskRepository.updateTask(updatedTask).also { result->
             if (result){

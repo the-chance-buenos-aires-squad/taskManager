@@ -3,6 +3,7 @@ package presentation.cli.TaskState
 import domain.customeExceptions.InvalidIdException
 import domain.usecases.taskState.DeleteTaskStateUseCase
 import presentation.UiController
+import java.util.UUID
 
 class DeleteTaskStateCli(
     private val deleteTaskStateUseCase: DeleteTaskStateUseCase,
@@ -16,7 +17,9 @@ class DeleteTaskStateCli(
             throw InvalidIdException("ID can't be empty")
         }
 
-        val result = deleteTaskStateUseCase.execute(taskId)
+        //todo show all tasks on project to select task
+
+        val result = deleteTaskStateUseCase.execute(UUID.randomUUID())
 
         uiController.printMessage(
             if (result) "Task state deleted successfully."

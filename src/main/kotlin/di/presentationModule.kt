@@ -10,8 +10,19 @@ import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
-import presentation.cli.project.*
+
+import presentation.cli.TaskState.*
+import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.project.ProjectShowMenu
+import presentation.cli.project.CreateProjectCli
+import presentation.cli.project.UpdateProjectCli
+import presentation.cli.project.DeleteProjectCli
+import presentation.cli.project.GetAllProjectsCli
+import presentation.cli.project.ProjectScreenController
 import presentation.cli.task.CreateTaskCli
+import presentation.cli.task.ViewSwimlanesCLI
+import presentation.cli.task.DeleteTaskCli
+import presentation.cli.task.UpdateTaskCli
 import java.util.*
 
 
@@ -19,8 +30,8 @@ val presentationModule = module {
     single { UiController(System.out, Scanner(System.`in`)) }
 
     single { ProjectShowMenu(uiController = get()) }
-    single { MateDashBoardCli(uiController = get()) }
-    single { TaskStateShowMenu(uiController = get()) }
+    single { ProjectCliHelper(getProjectsUseCase = get(), uiController = get()) }
+    single { MateDashBoardCli(uiController = get(), viewSwimlanesCLI = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
     single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get()) }
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
@@ -32,6 +43,24 @@ val presentationModule = module {
     single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), uiController = get()) }
     single { TaskStateInputHandler(uiController = get(), inputValidator = get()) }
     single {
+        ViewSwimlanesCLI(
+            uiController = get(),
+            projectCliHelper = get(),
+            getTasksGroupedByStateUseCase = get(),
+            createTaskCli = get(),
+
+        )
+    }
+    single {
+        AdminDashBoardCli(
+            uiController = get(),
+            createUserCli = get(),
+            projectScreenController = get(),
+            taskStateCliController = get(),
+            auditsCli = get()
+        )
+    }
+    single {
         CreateTaskCli(
             createTaskUseCase = get(),
             getAllStatesUseCase = get(),
@@ -39,6 +68,23 @@ val presentationModule = module {
             uiController = get(),
         )
     }
+    single {
+        DeleteTaskCli(
+            getAllTasksUseCase = get(),
+            deleteTaskUseCase = get(),
+            uiController = get()
+        )
+    }
+    single {
+        UpdateTaskCli(
+            getAllTasksUseCase = get(),
+            updateTaskUseCase = get(),
+            getAllTaskStatesUseCase = get(),
+            userRepository = get(),
+            uiController = get(),
+        )
+    }
+
 
     single {
         LoginCli(
@@ -57,18 +103,27 @@ val presentationModule = module {
         )
     }
 
-    single { ProjectScreenController(get(), get(), get(), get(), get(), get()) }
-    single { TaskStateCliController(get(), get(), get(), get(), get(), get()) }
-
     single {
-        AdminDashBoardCli(
-            uiController = get(),
-            createUserCli = get(),
-            projectScreenController = get(),
-            taskStateCliController = get(),
-            auditsCli = get()
+        ProjectScreenController(
+            projectShowMenu = get(),
+            createProjectCli = get(),
+            updateProjectCli = get(),
+            deleteProjectCli = get(),
+            getAllProjectsCli = get(),
+            uiController = get()
         )
     }
+    single {
+        TaskStateCliController(
+            projectCliHelper = get(),
+            createTaskStateCli = get(),
+            editTaskStateCli = get(),
+            deleteTaskStateCli = get(),
+            getAllTaskStatesCli = get(),
+            uiController = get()
+        )
+    }
+
 
 
     singleOf(::MainCli)

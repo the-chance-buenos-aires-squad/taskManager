@@ -1,9 +1,10 @@
 import domain.entities.TaskState
+import java.util.UUID
 
 fun createDummyTaskState(
-    id: String,
+    id: UUID= UUID.randomUUID(),
     name: String,
-    projectId: String
+    projectId: UUID = UUID.randomUUID()
 ): TaskState {
     return TaskState(
         id = id,
