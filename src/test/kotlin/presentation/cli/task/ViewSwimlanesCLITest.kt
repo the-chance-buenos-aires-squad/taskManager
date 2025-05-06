@@ -25,7 +25,9 @@ class ViewSwimlanesCLITest {
     private val projectCliHelper: ProjectCliHelper= mockk(relaxed = true)
     private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase=mockk(relaxed = true)
     private val createTaskCli: CreateTaskCli = mockk(relaxed = true)
-    private val viewSwimlanesCLI : ViewSwimlanesCLI = ViewSwimlanesCLI(uiController,projectCliHelper,getTasksGroupedByStateUseCase,createTaskCli)
+    private val updateTaskCli :UpdateTaskCli = mockk(relaxed = true)
+    private val deleteTaskCli :DeleteTaskCli = mockk(relaxed = true)
+    private val viewSwimlanesCLI : ViewSwimlanesCLI = ViewSwimlanesCLI(uiController,projectCliHelper,getTasksGroupedByStateUseCase,createTaskCli,updateTaskCli,deleteTaskCli)
 
     private val sampleProject = createDummyProject(
         id = UUID.randomUUID(),
@@ -145,7 +147,7 @@ class ViewSwimlanesCLITest {
 
         // then
         verify (exactly = 1){
-            uiController.printMessage("update task cli")
+            updateTaskCli.update(any())
         }
     }
 
@@ -162,7 +164,7 @@ class ViewSwimlanesCLITest {
 
         // then
         verify(exactly = 1) {
-            uiController.printMessage("delete task cli")
+            deleteTaskCli.delete(any())
         }
     }
 
