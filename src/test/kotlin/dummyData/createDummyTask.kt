@@ -8,10 +8,10 @@ import java.util.UUID
 fun createDummyTask(
     id: UUID = UUID.randomUUID(),
     title: String,
-    description: String="task description",
+    description: String = "task description",
     projectId: UUID,
-    stateId: String,
-    assignedTo: UUID?= UUID.randomUUID(),
+    stateId: UUID = UUID.randomUUID(),
+    assignedTo: UUID? = UUID.randomUUID(),
     createdBy: UUID = UUID.randomUUID(),
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now()
@@ -25,15 +25,4 @@ fun createDummyTask(
     createdBy = createdBy,
     createdAt = createdAt,
     updatedAt = updatedAt,
-)
-
-fun createDummyTaskForStates(
-    stateId: String ="1"
-): Task = Task(
-    title = "Test Task",
-    description = "Test Description",
-    projectId = UUID.randomUUID(),
-    stateId = stateId,
-    assignedTo = null,
-    createdBy = UUID.randomUUID()
 )

@@ -178,7 +178,7 @@ class TaskRepositoryImplTest {
         title: String = "Test Task",
         description: String = "Test Description",
         projectId: UUID = UUID.randomUUID(),
-        stateId: String = "1",
+        stateId: UUID = UUID.randomUUID(),
         assignedTo: UUID? = UUID.randomUUID(),
         createdBy: UUID = UUID.randomUUID(),
         createdAt: LocalDateTime = LocalDateTime.now().minusDays(1),

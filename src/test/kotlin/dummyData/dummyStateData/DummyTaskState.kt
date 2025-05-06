@@ -1,37 +1,38 @@
 package dummyData.dummyStateData
 
 import domain.entities.TaskState
+import java.util.UUID
 
 
 object DummyTaskState {
     val todo = TaskState(
-        id = "1",
+        id = UUID.fromString("00000000-1000-0000-0000-000000000000"),
         name = "To Do",
-        projectId = "P001"
+        projectId = UUID.fromString("10000000-1000-0000-0000-000000000000")
     )
 
     val inProgress = TaskState(
-        id = "2",
+        id = UUID.fromString("00000000-2000-0000-0000-000000000000"),
         name = "In Progress",
-        projectId = "P002"
+        projectId = UUID.fromString("20000000-1000-0000-0000-000000000000")
     )
 
     val done = TaskState(
-        id = "3",
+        id = UUID.fromString("00000000-3000-0000-0000-000000000000"),
         name = "Done",
-        projectId = "P003"
+        projectId =UUID.fromString("30000000-1000-0000-0000-000000000000")
     )
 
     val blocked = TaskState(
-        id = "4",
+        id = UUID.fromString("00000000-4000-0000-0000-000000000000"),
         name = "Blocked",
-        projectId = "P004"
+        projectId = UUID.fromString("40000000-1000-0000-0000-000000000000")
     )
 
     val readyForReview = TaskState(
-        id = "5",
+        id = UUID.fromString("50000000-1000-0000-0000-000000000000"),
         name = "Ready For Review",
-        projectId = "P005"
+        projectId = UUID.fromString("50000000-1000-0000-0000-000000000000")
     )
 
 }

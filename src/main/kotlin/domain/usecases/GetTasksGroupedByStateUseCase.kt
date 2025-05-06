@@ -10,7 +10,7 @@ class GetTasksGroupedByStateUseCase(
 ) {
 
     fun getTasksGroupedByState(project: Project): List<TaskStateWithTasks> {
-        val allStates = getTaskStatesUseCase.execute().filter { it.projectId == project.id.toString()}
+        val allStates = getTaskStatesUseCase.execute().filter { it.projectId == project.id}
         val allTasks = getTasksUseCase.getTasks().filter { it.projectId == project.id }
 
         return allStates.map { state ->

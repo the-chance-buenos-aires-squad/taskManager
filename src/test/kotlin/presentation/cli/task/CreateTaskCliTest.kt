@@ -62,9 +62,9 @@ class CreateTaskCliTest {
         )
 
         val state = TaskState(
-            id = UUID.randomUUID().toString(),
+            id = UUID.randomUUID(),
             name = "In Progress",
-            projectId = project.id.toString()
+            projectId = project.id
         )
 
         val inputSequence = listOf(taskTitle, taskDescription, "1", "1")
@@ -81,7 +81,7 @@ class CreateTaskCliTest {
                 eq(taskDescription),
                 eq(project.id),
                 eq(state.id),
-                eq(UUID.fromString(state.id)),
+                eq(state.id),
                 any() // assignedTo
             )
         } returns true
@@ -97,7 +97,7 @@ class CreateTaskCliTest {
                 eq(taskDescription),
                 eq(project.id),
                 eq(state.id),
-                eq(UUID.fromString(state.id)),
+                eq(state.id),
                 any() // assignedTo
             )
         }

@@ -10,6 +10,7 @@ import kotlin.test.Test
 import org.junit.jupiter.api.assertThrows
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidIdException
+import java.util.UUID
 
 
 class DeleteTaskStateCliTest {
@@ -27,21 +28,21 @@ class DeleteTaskStateCliTest {
     @Test
     fun `should call execute when delete task state successfully`() {
         every { uiController.readInput() } returns "1"
-        every { deleteTaskStateUseCase.execute("1") } returns true
+        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) } returns true
 
         deleteTaskStateCli.deleteTaskState()
 
-        verify { deleteTaskStateUseCase.execute("1") }
+        verify { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) }
     }
 
     @Test
     fun `should call execute when failed to delete task state`() {
         every { uiController.readInput() } returns "2"
-        every { deleteTaskStateUseCase.execute("2") } returns false
+        every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) } returns false
 
         deleteTaskStateCli.deleteTaskState()
 
-        verify { deleteTaskStateUseCase.execute("2") }
+        verify { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) }
     }
 
     @Test

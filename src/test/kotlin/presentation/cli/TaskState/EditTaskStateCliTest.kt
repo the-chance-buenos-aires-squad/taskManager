@@ -35,7 +35,7 @@ class EditTaskStateCliTest {
     @Test
     fun `should call execute when editing task state succeeds`() {
         every { editTaskStateUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany listOf(taskState.id,taskState.name,taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(),taskState.name,taskState.projectId.toString())
 
         editTaskStateCli.editTaskState(dummyProject.id)
 
@@ -45,7 +45,7 @@ class EditTaskStateCliTest {
     @Test
     fun `should call execute when editing task state fails`() {
         every { editTaskStateUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), taskState.name, taskState.projectId.toString())
 
         editTaskStateCli.editTaskState(dummyProject.id)
 
@@ -54,7 +54,7 @@ class EditTaskStateCliTest {
 
     @Test
     fun `should throw exception when ID is empty`() {
-        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf("", taskState.name, taskState.projectId.toString())
 
         val exception = assertThrows<InvalidIdException> {
             editTaskStateCli.editTaskState(dummyProject.id)
@@ -64,7 +64,7 @@ class EditTaskStateCliTest {
 
     @Test
     fun `should throw exception when name is less than 2 letters`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id, "A", taskState.projectId)
+        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), "A", taskState.projectId.toString())
 
         val exception = assertThrows<InvalidNameException> {
             editTaskStateCli.editTaskState(dummyProject.id)
@@ -75,7 +75,7 @@ class EditTaskStateCliTest {
     @Disabled
     @Test
     fun `should throw exception when project ID is invalid`() {
-        every { uiController.readInput() } returnsMany listOf(taskState.id, taskState.name, "X01")
+        every { uiController.readInput() } returnsMany listOf(taskState.id.toString(), taskState.name, "X01")
 
         val exception = assertThrows<InvalidProjectIdException> {
             editTaskStateCli.editTaskState(dummyProject.id)
