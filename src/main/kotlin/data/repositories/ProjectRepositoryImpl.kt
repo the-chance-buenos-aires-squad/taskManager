@@ -23,10 +23,14 @@ class ProjectRepositoryImpl(
     }
 
     override fun getProjectById(projectId: UUID): Project? {
-        return projectDataSource.getProjectById(projectId)
+        val projectRow = projectDataSource.getProjectById(projectId)
+        return projectRow?.let { projectMapper.mapRowToEntity(it) }
     }
 
     override fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
+            .map { projectRow ->
+                projectMapper.mapRowToEntity(projectRow)
+            }
     }
 }
