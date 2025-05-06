@@ -8,9 +8,9 @@ class CsvTaskDataSource(
     private val file: File
 ) : TaskDataSource {
 
-    override fun addTask(taskRow: List<String>): Boolean {
+    override suspend fun addTask(taskRow: List<String>): Boolean {
         return try {
-            csvHandler.write(row = taskRow, file = file, append = true)
+            csvHandler.write(row = taskRow,file = file,append = true)
             true
         } catch (e: Exception) {
             println("Failed to write task: ${e.message}")
@@ -18,16 +18,16 @@ class CsvTaskDataSource(
         }
     }
 
-    override fun getTasks(): List<List<String>> {
+    override suspend fun getTasks(): List<List<String>> {
         if (!file.exists()) return emptyList()
         return csvHandler.read(file)
     }
 
-    override fun getTaskById(taskId: String): List<String>? {
+    override suspend fun getTaskById(taskId: String): List<String>? {
         return getTasks().find { it[ID_INDEX] == taskId }
     }
 
-    override fun updateTask(taskRow: List<String>): Boolean {
+    override suspend fun updateTask(taskRow: List<String>): Boolean {
         val allTasks = getTasks()
         val exists = allTasks.any { it[ID_INDEX] == taskRow[ID_INDEX] }
 
@@ -41,7 +41,7 @@ class CsvTaskDataSource(
         return try {
             file.writeText("") // Clear file
             updatedTasks.forEach { row ->
-                csvHandler.write(row = row, file = file, append = true)
+                csvHandler.write(row = row,file = file,append = true)
             }
             true
         } catch (e: Exception) {
@@ -50,7 +50,7 @@ class CsvTaskDataSource(
         }
     }
 
-    override fun deleteTask(taskId: String): Boolean {
+    override suspend fun deleteTask(taskId: String): Boolean {
         val allTasks = getTasks()
         val updatedTasks = allTasks.filterNot { it[ID_INDEX] == taskId }
 
@@ -59,7 +59,7 @@ class CsvTaskDataSource(
         return try {
             file.writeText("") // Clear file
             updatedTasks.forEach { row ->
-                csvHandler.write(row = row, file = file, append = true)
+                csvHandler.write(row = row,file = file,append = true)
             }
             true
         } catch (e: Exception) {
@@ -69,6 +69,7 @@ class CsvTaskDataSource(
     }
 
     companion object {
+
         private const val ID_INDEX = 0
     }
 }
