@@ -43,7 +43,6 @@ class UpdateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
         //then
@@ -65,7 +64,6 @@ class UpdateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
         //then
@@ -87,7 +85,6 @@ class UpdateTaskUseCaseTest {
                 projectId = DummyTasks.validTask.projectId,
                 stateId = DummyTasks.validTask.stateId,
                 assignedTo = DummyTasks.validTask.assignedTo,
-                createdBy = DummyTasks.validTask.createdBy
             )
         }
 
@@ -109,7 +106,6 @@ class UpdateTaskUseCaseTest {
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
             assignedTo = DummyTasks.validTask.assignedTo,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
         //then
@@ -130,7 +126,6 @@ class UpdateTaskUseCaseTest {
             description = DummyTasks.validTask.description,
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
-            createdBy = DummyTasks.validTask.createdBy
         )
 
         //then
