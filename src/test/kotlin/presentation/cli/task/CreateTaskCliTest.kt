@@ -61,7 +61,7 @@ class CreateTaskCliTest {
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } returns true
 
         // When
-        createTaskCli.start(dummyProjectID)
+        createTaskCli.create(dummyProjectID)
 
         // Then
         verify { uiController.printMessage("Task created successfully!") }
@@ -90,7 +90,7 @@ class CreateTaskCliTest {
         val projectId = UUID.randomUUID()
 
         // Act
-        createTaskCli.start(projectId)
+        createTaskCli.create(projectId)
 
         // Assert
         verifySequence {
@@ -136,7 +136,7 @@ class CreateTaskCliTest {
         val projectId = UUID.randomUUID()
 
         // Act
-        createTaskCli.start(projectId)
+        createTaskCli.create(projectId)
 
         // Assert
         verifySequence {
@@ -182,7 +182,7 @@ class CreateTaskCliTest {
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws UserNotLoggedInException()
 
         // Act
-        createTaskCli.start(dummyProjectID)
+        createTaskCli.create(dummyProjectID)
 
         // Assert
         verify { uiController.printMessage(" user not longed in", false) }
@@ -211,7 +211,7 @@ class CreateTaskCliTest {
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws TaskTitleEmptyException()
 
         // Act
-        createTaskCli.start(dummyProjectID)
+        createTaskCli.create(dummyProjectID)
 
         // Assert
         verify { uiController.printMessage("Not valid task Title", false) }
@@ -240,7 +240,7 @@ class CreateTaskCliTest {
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws InvalidProjectIdException()
 
         // Act
-        createTaskCli.start(dummyProjectID)
+        createTaskCli.create(dummyProjectID)
 
         // Assert
         verify { uiController.printMessage("Not valid Project", false) }

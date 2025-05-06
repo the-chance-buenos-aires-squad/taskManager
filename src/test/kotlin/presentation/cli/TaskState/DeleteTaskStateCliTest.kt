@@ -30,7 +30,7 @@ class DeleteTaskStateCliTest {
         every { uiController.readInput() } returns "1"
         every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000")) } returns true
 
-        deleteTaskStateCli.deleteTaskState(UUID.fromString("00000000-1000-1000-0000-000000000000"),)
+        deleteTaskStateCli.deleteTaskState()
 
         verify { deleteTaskStateUseCase.execute(any()) }
     }
@@ -40,7 +40,7 @@ class DeleteTaskStateCliTest {
         every { uiController.readInput() } returns "2"
         every { deleteTaskStateUseCase.execute(UUID.fromString("00000000-1000-0000-0000-000000000000"),) } returns false
 
-        deleteTaskStateCli.deleteTaskState(UUID.fromString("11000000-1000-0000-0000-000000000000"))
+        deleteTaskStateCli.deleteTaskState()
 
         verify { deleteTaskStateUseCase.execute(any()) }
     }
@@ -50,7 +50,7 @@ class DeleteTaskStateCliTest {
         every { uiController.readInput() } returns ""
 
         val exception = assertThrows<InvalidIdException> {
-            deleteTaskStateCli.deleteTaskState(UUID.randomUUID())
+            deleteTaskStateCli.deleteTaskState()
         }
 
         assertThat(exception.message).contains("ID can't be empty")
