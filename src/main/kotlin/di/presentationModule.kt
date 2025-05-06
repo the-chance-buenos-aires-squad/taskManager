@@ -48,7 +48,8 @@ val presentationModule = module {
             projectCliHelper = get(),
             getTasksGroupedByStateUseCase = get(),
             createTaskCli = get(),
-
+            updateTaskCli = get(),
+            deleteTaskCli = get()
         )
     }
     single {

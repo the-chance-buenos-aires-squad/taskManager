@@ -13,7 +13,9 @@ class ViewSwimlanesCLI(
     private val uiController: UiController,
     private val projectCliHelper: ProjectCliHelper,
     private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase,
-    private val createTaskCli: CreateTaskCli
+    private val createTaskCli: CreateTaskCli,
+    private val updateTaskCli: UpdateTaskCli,
+    private val deleteTaskCli: DeleteTaskCli
 ) {
 
     fun start() {
@@ -35,13 +37,9 @@ class ViewSwimlanesCLI(
                 uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
                 when (uiController.readInput().toIntOrNull()) {
-                    1 -> {
-                        createTaskCli.create(selectedProject.id)
-                    }
-                    2 -> {
-                        uiController.printMessage("update task cli")
-                    }
-                    3 -> uiController.printMessage("delete task cli")
+                    1 -> createTaskCli.create(selectedProject.id)
+                    2 -> updateTaskCli.update(selectedProject.id)
+                    3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return
                     null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
                     else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
