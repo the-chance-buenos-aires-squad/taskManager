@@ -2,7 +2,6 @@ package presentation.cli.task
 
 import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.Task
-import domain.repositories.AuthRepository
 import domain.usecases.task.DeleteTaskUseCase
 import domain.usecases.task.GetAllTasksUseCase
 import presentation.UiController
@@ -15,47 +14,17 @@ class DeleteTaskCli(
 ) {
 
     fun delete(projectID: UUID) {
-        val tasks = fetchProjectTasks(projectID)
+        val allTasks = getAllTasksUseCase.execute()
+        val tasks = TaskCliUtils.fetchProjectTasks(allTasks, projectID, uiController)
         if (tasks.isEmpty()) return
 
-        val selectedTask = selectTask(tasks) ?: return
+        val selectedTask = TaskCliUtils.selectTask(tasks, uiController) ?: return
 
         if (confirmDeletion(selectedTask.title)) {
             handleDeletion(selectedTask.id)
         } else {
             uiController.printMessage("Deletion canceled. Returning to dashboard.")
         }
-    }
-
-    private fun fetchProjectTasks(projectID: UUID): List<Task> {
-        val tasks = getAllTasksUseCase.execute().filter { it.projectId == projectID }
-        if (tasks.isEmpty()) {
-            uiController.printMessage("No tasks found for this project.")
-        } else {
-            showTasks(tasks)
-        }
-        return tasks
-    }
-
-    private fun showTasks(tasks: List<Task>) {
-        tasks.forEachIndexed { index, task ->
-            uiController.printMessage("${index + 1} - ${task.title}")
-        }
-    }
-
-    private fun selectTask(tasks: List<Task>): Task? {
-        val index = promptForTaskIndex(tasks.size) ?: return null
-        return tasks[index]
-    }
-
-    private fun promptForTaskIndex(taskCount: Int): Int? {
-        repeat(2) {
-            uiController.printMessage("Please choose task number: ", isInline = true)
-            val input = uiController.readInput().toIntOrNull()
-            if (input != null && input in 1..taskCount) return input - 1
-        }
-        uiController.printMessage("Invalid input. Returning to dashboard.")
-        return null
     }
 
     private fun confirmDeletion(taskTitle: String): Boolean {

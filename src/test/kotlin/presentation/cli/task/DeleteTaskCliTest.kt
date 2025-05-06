@@ -18,7 +18,6 @@ class DeleteTaskCliTest {
     private lateinit var getAllTasksUseCase: GetAllTasksUseCase
     private lateinit var deleteTaskUseCase: DeleteTaskUseCase
     private lateinit var uiController: UiController
-    private lateinit var authRepository: AuthRepository
     private lateinit var deleteTaskCli: DeleteTaskCli
 
     private val projectId = UUID.randomUUID()
