@@ -9,7 +9,7 @@ class DeleteTaskStateCli(
     private val deleteTaskStateUseCase: DeleteTaskStateUseCase,
     private val uiController: UiController
 ) {
-    fun deleteTaskState(projectId : UUID) {
+    fun deleteTaskState() {
         uiController.printMessage("Enter task state ID to delete:")
         val taskId = uiController.readInput().trim()
 
@@ -19,7 +19,7 @@ class DeleteTaskStateCli(
 
         //todo show all tasks on project to select task
 
-        val result = deleteTaskStateUseCase.execute(UUID.randomUUID(),projectId)
+        val result = deleteTaskStateUseCase.execute(UUID.randomUUID())
 
         uiController.printMessage(
             if (result) "Task state deleted successfully."
