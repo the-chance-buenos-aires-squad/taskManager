@@ -76,8 +76,7 @@ class TaskStateCSVDataSource(
                     listOf(state.id.toString(), state.name, state.projectId.toString()),
                     file,
                     append = true
-                )
-            }
+                ) }
         } catch (e: Exception) {
             println("Failed to write states: ${e.message}")
         }
