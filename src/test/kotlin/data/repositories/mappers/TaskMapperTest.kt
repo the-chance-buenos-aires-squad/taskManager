@@ -14,7 +14,7 @@ class TaskMapperTest {
     private lateinit var sampleTaskRow: List<String>
     private val testId = UUID.fromString("00000000-0000-0000-0000-000000000001")
     private val testProjectId = UUID.fromString("00000000-0000-0000-0000-000000000002")
-    private val testStateId = UUID.fromString("00000000-0000-0000-0000-000000000003")
+    private val testStateId = UUID.fromString("00000000-1000-0000-0000-000000000000")
     private val testAssignedTo = UUID.fromString("00000000-0000-0000-0000-000000000004")
     private val testCreatedBy = UUID.fromString("00000000-0000-0000-0000-000000000005")
     private val testDateTime = LocalDateTime.parse("2025-01-01T10:00:00")

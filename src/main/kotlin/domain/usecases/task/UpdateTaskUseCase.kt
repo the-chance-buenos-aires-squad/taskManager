@@ -22,8 +22,11 @@ class UpdateTaskUseCase(
         projectId: UUID,
         stateId: UUID,
         assignedTo: UUID?=null,
-        createdBy: UUID
     ): Boolean {
+
+        val currentUser = authRepository.getCurrentUser()
+            ?: throw UserNotLoggedInException()
+
         val updatedTask = Task(
             id = id,
             title = title,
@@ -31,11 +34,9 @@ class UpdateTaskUseCase(
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy = createdBy,
+            createdBy = currentUser.id,
         )
 
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
 
         return taskRepository.updateTask(updatedTask).also { result->
             if (result){
