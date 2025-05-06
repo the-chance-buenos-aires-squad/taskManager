@@ -1,5 +1,6 @@
 package presentation.cli.TaskState
 
+import domain.entities.Project
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
@@ -14,32 +15,30 @@ class TaskStateCliController(
     private val uiController: UiController
 ) {
     fun start() {
+        uiController.printMessage(HEADER_MESSAGE_TASK_STATE)
+
+        val projects = projectCliHelper.getProjects()
+        if (projects.isEmpty()) {
+            uiController.printMessage("No Projects yet, try to create project")
+            return
+        }
+
+        val selectedProject = projectCliHelper.selectProject(projects)
+        if (selectedProject == null) {
+            uiController.printMessage("invalid project")
+            return
+        }
+
+        showTaskStateMenu(selectedProject)
+        return
+    }
+
+    private fun showTaskStateMenu(selectedProject: Project) {
         while (true) {
-            uiController.printMessage(HEADER_MESSAGE_TASK_STATE)
-
-            val projects = projectCliHelper.getProjects()
-            if (projects.isEmpty()){
-                uiController.printMessage("No Projects yet, try to create project")
-                return
-            }
-
-            val selectedProject = projectCliHelper.selectProject(projects)
-            if (selectedProject == null){
-                uiController.printMessage("invalid project")
-                return
-            }
-
             uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
-
             when (uiController.readInput().toIntOrNull()) {
-                1 -> {
-                    createTaskStateCli.createTaskState(selectedProject.id)
-                    break
-                }
-                2 -> {
-                    editTaskStateCli.editTaskState(selectedProject.id)
-                    break
-                }
+                1 -> createTaskStateCli.createTaskState(projectId = selectedProject.id)
+                2 -> editTaskStateCli.editTaskState(selectedProject.id)
                 3 -> deleteTaskStateCli.deleteTaskState()
                 4 -> getAllTaskStatesCli.getAllTaskStates()
                 5 -> return

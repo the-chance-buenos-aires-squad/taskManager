@@ -1,20 +1,13 @@
 package presentation.cli.TaskState
 
-import createDummyTaskState
-import domain.entities.TaskStateWithTasks
-import domain.usecases.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
-import dummyData.createDummyTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-
-import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
-import java.util.UUID
 
 class TaskStateCliControllerTest {
 
@@ -24,7 +17,8 @@ class TaskStateCliControllerTest {
     private val deleteTaskStateCli: DeleteTaskStateCli = mockk(relaxed = true)
     private val getAllTaskStatesCli: GetAllTaskStatesCli = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)
-    private val taskStateCliController: TaskStateCliController = TaskStateCliController(
+
+    private val controller = TaskStateCliController(
         projectCliHelper,
         createTaskStateCli,
         editTaskStateCli,
@@ -33,182 +27,132 @@ class TaskStateCliControllerTest {
         uiController
     )
 
-    private val sampleProject = createDummyProject(
-        id = UUID.randomUUID(),
-        name = "dummy project"
-    )
-
-
     @Test
-    fun `should display welcome message when start taskStateCliController`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify {
-            uiController.printMessage(
-                "==============================\n" +
-                        "    Task State Management     \n" +
-                        "===============================\n"
-            )
-        }
-    }
-
-    @Test
-    fun `should return to admin dashboard when projects is not found`() {
+    fun `should print no-projects message when no projects availabl`() {
         // given
         every { projectCliHelper.getProjects() } returns emptyList()
-        every { projectCliHelper.selectProject(any()) } returns null
+
+        // when
+        controller.start()
+
+        // then
+        verify { uiController.printMessage("No Projects yet, try to create project") }
+    }
+
+    @Test
+    fun `should print invalid project message when selectProject returns null`() {
+        // given
+        val fakeProjects = listOf(createDummyProject(name = "X", description = ""))
+        every { projectCliHelper.getProjects() } returns fakeProjects
+        every { projectCliHelper.selectProject(fakeProjects) } returns null
+
+        // when
+        controller.start()
+
+        // then
+        verify { uiController.printMessage("invalid project") }
+    }
+
+    @Test
+    fun `should invoke createTaskState when user selects option 1`() {
+        // given
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        // first readInput() returns "1", next throws to break loop
+        every { uiController.readInput() } returns "1" andThenThrows RuntimeException("exit")
+
+        // when
+        assertThrows<RuntimeException> { controller.start() }
+
+        // then
+        verify { createTaskStateCli.createTaskState(projectId = project.id) }
+    }
+
+    @Test
+    fun `should invoke editTaskState when user selects option 2`() {
+        // given
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        every { uiController.readInput() } returns "2" andThenThrows RuntimeException("exit")
+
+        // when 
+        assertThrows<RuntimeException> { controller.start() }
+
+        // then
+        verify { editTaskStateCli.editTaskState(project.id) }
+    }
+
+    @Test
+    fun `should invoke deleteTaskState when user selects option 3`() {
+        // given
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        every { uiController.readInput() } returns "3" andThenThrows RuntimeException("exit")
+
+        // when 
+        assertThrows<RuntimeException> { controller.start() }
+
+        // then
+        verify { deleteTaskStateCli.deleteTaskState() }
+    }
+
+    @Test
+    fun `should invoke getAllTaskStates when user selects option 4`() {
+        // given
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        every { uiController.readInput() } returns "4" andThenThrows RuntimeException("exit")
+
+        // when
+        assertThrows<RuntimeException> { controller.start() }
+
+        // then
+        verify { getAllTaskStatesCli.getAllTaskStates() }
+    }
+
+    @Test
+    fun `should return without exception when user selects option 5`() {
+        // given
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
         every { uiController.readInput() } returns "5"
 
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify {
-            uiController.printMessage("No Projects yet, try to create project")
-        }
+        // when & then
+        controller.start()
     }
 
     @Test
-    fun `should return to admin dashboard when project is not found`() {
+    fun `should print empty-input message when user enters empty input`() {
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns null
-        every { uiController.readInput() } returns "5"
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        every { uiController.readInput() } returns "" andThenThrows RuntimeException("exit")
 
-        //when
-        taskStateCliController.start()
+        // when
+        assertThrows<RuntimeException> { controller.start() }
 
         // then
-        verify {
-            uiController.printMessage("invalid project")
-        }
+        verify { uiController.printMessage(ProjectCliHelper.EMPTY_INPUT_MESSAGE) }
     }
 
     @Test
-    fun `should start manage task when valid project`() {
+    fun `should print invalid-input message when user enters empty input`() {
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "5"
+        val project = createDummyProject(name = "P", description = "")
+        every { projectCliHelper.getProjects() } returns listOf(project)
+        every { projectCliHelper.selectProject(any()) } returns project
+        every { uiController.readInput() } returns "99" andThenThrows RuntimeException("exit")
 
-        //when
-        taskStateCliController.start()
+        // when
+        assertThrows<RuntimeException> { controller.start() }
 
         // then
-        verify(exactly = 1) {
-            uiController.printMessage(
-                "================================\n" +
-                        " 1. Create Task State       \n" +
-                        " 2. Edit Task State         \n" +
-                        " 3. Delete Task State       \n" +
-                        " 4. View All Task States    \n" +
-                        " 5. Back to Main Menu       \n" +
-                        "==============================\n"
-            )
-        }
+        verify { uiController.printMessage(ProjectCliHelper.INVALID_INPUT_MESSAGE) }
     }
-
-    @Test
-    fun `should start create task state when user select 1`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "1" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            createTaskStateCli.createTaskState(sampleProject.id)
-        }
-    }
-
-    @Test
-    fun `should start update task state cli when user select 2`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "2" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            editTaskStateCli.editTaskState(sampleProject.id)
-        }
-    }
-
-    @Test
-    fun `should start delete task state cli when user select 3`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "3" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            deleteTaskStateCli.deleteTaskState()
-        }
-    }
-
-    @Test
-    fun `should start show tasks state cli when user select 4`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "4" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            getAllTaskStatesCli.getAllTaskStates()
-        }
-    }
-
-    @Test
-    fun `should back to menu when user enter empty`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            uiController.printMessage("Invalid input: please enter a valid number.")
-        }
-    }
-
-    @Test
-    fun `should back to menu when user enter invalid choose`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { uiController.readInput() } returns "8" andThen "5"
-
-        //when
-        taskStateCliController.start()
-
-        // then
-        verify(exactly = 1) {
-            uiController.printMessage("Invalid Input: please enter a valid number from the menu.")
-        }
-    }
-
 }

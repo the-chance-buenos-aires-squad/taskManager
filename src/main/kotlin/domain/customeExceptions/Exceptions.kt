@@ -18,3 +18,4 @@ class UserNotLoggedInException(
 ) : RuntimeException(message)
 
 class NoTasksFoundException(message: String = "No tasks found.") : Exception(message)
+class NameTaskStateException(message : String = "State Name already exist" ) : Exception(message)
