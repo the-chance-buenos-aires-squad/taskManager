@@ -26,6 +26,7 @@ class UpdateTaskCliTest {
     private lateinit var uiController: UiController
     private lateinit var updateTaskCli: UpdateTaskCli
 
+
     private val projectId = UUID.randomUUID()
     private val createdBy = UUID.randomUUID()
     private val task = DummyTasks.validTask.copy(projectId = projectId, createdBy = createdBy)
@@ -53,7 +54,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should update task successfully`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
         coEvery {
@@ -71,7 +72,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should print failed to update task`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
         coEvery {
@@ -89,7 +90,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should handle UserNotLoggedInException when updating task`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
         coEvery {

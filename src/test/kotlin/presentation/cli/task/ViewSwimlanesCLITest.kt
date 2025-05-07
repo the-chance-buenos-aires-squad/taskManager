@@ -134,7 +134,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             updateTaskCli.update(any())
         }
     }
@@ -149,8 +149,8 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         // then
-        verify(exactly = 1) {
-            uiController.printMessage("delete task cli")
+        coVerify(exactly = 1) {
+            deleteTaskCli.delete(sampleProject.id)
         }
     }
 
