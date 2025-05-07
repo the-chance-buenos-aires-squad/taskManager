@@ -13,3 +13,11 @@ val mongoModule = module {
         get<MongoClient>().getDatabase("planmate")
     }
 }
+
+object MongoCollections{
+    const val USERS_COLLECTION = "users"
+    const val TASKS_COLLECTION =  "tasks"
+    const val TASK_STATES_COLLECTION =  "task_states"
+    const val PROJECTS_COLLECTION =  "projects"
+    const val AUDITS_COLLECTION =  "audits"
+}
