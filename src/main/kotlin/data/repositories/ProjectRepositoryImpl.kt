@@ -2,13 +2,14 @@ package data.repositories
 
 import data.dataSource.project.ProjectDataSource
 import data.repositories.mappers.Mapper
+import data.repositories.mappers.ProjectMapper
 import domain.entities.Project
 import domain.repositories.ProjectRepository
 import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val projectMapper: Mapper<Project>
+    private val projectMapper: ProjectMapper
 ) : ProjectRepository {
     override fun createProject(project: Project): Boolean {
         return projectDataSource.addProject(projectMapper.mapEntityToRow(project))

@@ -8,7 +8,7 @@ class CsvTaskDataSource(
     private val file: File
 ) : TaskDataSource {
 
-    override suspend fun addTask(taskRow: List<String>): Boolean {
+    override  fun addTask(taskRow: List<String>): Boolean {
         return try {
             csvHandler.write(row = taskRow,file = file,append = true)
             true
@@ -18,16 +18,16 @@ class CsvTaskDataSource(
         }
     }
 
-    override suspend fun getTasks(): List<List<String>> {
+    override  fun getTasks(): List<List<String>> {
         if (!file.exists()) return emptyList()
         return csvHandler.read(file)
     }
 
-    override suspend fun getTaskById(taskId: String): List<String>? {
+    override  fun getTaskById(taskId: String): List<String>? {
         return getTasks().find { it[ID_INDEX] == taskId }
     }
 
-    override suspend fun updateTask(taskRow: List<String>): Boolean {
+    override  fun updateTask(taskRow: List<String>): Boolean {
         val allTasks = getTasks()
         val exists = allTasks.any { it[ID_INDEX] == taskRow[ID_INDEX] }
 
@@ -50,7 +50,7 @@ class CsvTaskDataSource(
         }
     }
 
-    override suspend fun deleteTask(taskId: String): Boolean {
+    override  fun deleteTask(taskId: String): Boolean {
         val allTasks = getTasks()
         val updatedTasks = allTasks.filterNot { it[ID_INDEX] == taskId }
 

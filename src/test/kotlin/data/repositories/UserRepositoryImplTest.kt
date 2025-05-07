@@ -2,7 +2,7 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.user.CsvUserDataSource
-import data.repositories.mappers.UserMapper
+import data.repositories.mappers.userMappers.UserCsvMapper
 import dummyData.DummyUser.dummyUserOne
 import dummyData.DummyUser.dummyUserOneRow
 import io.mockk.every
@@ -16,7 +16,7 @@ class UserRepositoryImplTest {
 
     private val mockDataSource = mockk<CsvUserDataSource>(relaxed = true)
     private lateinit var userRepository: UserRepositoryImpl
-    private val userMapper = UserMapper()
+    private val userMapper = UserCsvMapper()
 
     @BeforeEach
     fun setUp() {
