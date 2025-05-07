@@ -5,7 +5,12 @@ import org.koin.dsl.module
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.MainCli
-import presentation.cli.taskState.*
+import presentation.cli.taskState.EditTaskStateCli
+import presentation.cli.taskState.GetAllTaskStatesCli
+import presentation.cli.taskState.DeleteTaskStateCli
+import presentation.cli.taskState.TaskStateInputHandler
+import presentation.cli.taskState.TaskStateCliController
+import presentation.cli.taskState.CreateTaskStateCli
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli

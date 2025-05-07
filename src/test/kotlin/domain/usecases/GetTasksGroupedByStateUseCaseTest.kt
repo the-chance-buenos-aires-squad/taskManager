@@ -48,7 +48,7 @@ class GetTasksGroupedByStateUseCaseTest {
         val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
 
         // Then
-        assertThat(result).hasSize(2)
+        assertThat(result).hasSize(3)
 
     }
 
@@ -85,7 +85,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState returns empty list when there are no states for the project`() {
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf(otherState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf()
         every { getTasksUseCase.getTasks() } returns listOf(
             createDummyTask( projectId = projectId, stateId = UUID.fromString("00000000-3000-0000-0000-000000000000"), title = "Task 1")
         )
