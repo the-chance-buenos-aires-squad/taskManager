@@ -1,27 +1,23 @@
 package presentation.cli.task
 
-import com.google.common.truth.Truth.assertThat
-import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.InvalidProjectIdException
-import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.TaskState
-import domain.entities.User
-import domain.entities.UserRole
-import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
-import dummyData.DummyTaskData
 import dummyData.DummyUser
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
-import java.time.LocalDateTime
 import java.util.*
 
 class CreateTaskCliTest {

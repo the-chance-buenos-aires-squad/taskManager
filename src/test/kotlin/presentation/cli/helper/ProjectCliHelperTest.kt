@@ -1,9 +1,7 @@
 package presentation.cli.helper
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.CreateUserException
 import domain.customeExceptions.NoProjectsFoundException
-import domain.entities.Project
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
 import io.mockk.every
@@ -11,11 +9,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper.Companion.EXCEPTION_MESSAGE
-import java.util.UUID
-import kotlin.Exception
+import java.util.*
 
 class ProjectCliHelperTest {
     private lateinit var projectCliHelper: ProjectCliHelper
@@ -80,7 +76,7 @@ class ProjectCliHelperTest {
     fun `selectProject retries on invalid and empty inputs then returns project`() {
         every { uiController.readInput() } returns "" andThen "x" andThen "1"
 
-         projectCliHelper.selectProject(sampleProjects)
+        projectCliHelper.selectProject(sampleProjects)
 
         verify {
             uiController.printMessage(ProjectCliHelper.SELECT_PROJECT_MESSAGE)

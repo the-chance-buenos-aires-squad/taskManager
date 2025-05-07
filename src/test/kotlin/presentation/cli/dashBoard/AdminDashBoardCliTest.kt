@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
-import presentation.cli.TaskState.TaskStateCliController
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.project.ProjectScreenController
 import kotlinx.coroutines.test.runTest
+import presentation.cli.taskState.TaskStateCliController
 
 class AdminDashBoardCliTest {
 

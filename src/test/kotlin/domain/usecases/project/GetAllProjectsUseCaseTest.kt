@@ -1,7 +1,6 @@
 package domain.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.InvalidCredentialsException
 import domain.customeExceptions.NoProjectsFoundException
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject

@@ -7,7 +7,6 @@ import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
-import java.time.LocalDateTime
 import java.util.*
 
 class UpdateTaskUseCase(
@@ -21,7 +20,7 @@ class UpdateTaskUseCase(
         description: String,
         projectId: UUID,
         stateId: UUID,
-        assignedTo: UUID?=null,
+        assignedTo: UUID? = null,
     ): Boolean {
 
         val currentUser = authRepository.getCurrentUser()
@@ -38,8 +37,8 @@ class UpdateTaskUseCase(
         )
 
 
-        return taskRepository.updateTask(updatedTask).also { result->
-            if (result){
+        return taskRepository.updateTask(updatedTask).also { result ->
+            if (result) {
                 addAuditUseCase.addAudit(
                     entityId = updatedTask.id.toString(),
                     entityType = EntityType.TASK,
