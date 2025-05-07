@@ -5,28 +5,17 @@ import org.koin.dsl.module
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.MainCli
-import presentation.cli.taskState.EditTaskStateCli
-import presentation.cli.taskState.GetAllTaskStatesCli
-import presentation.cli.taskState.DeleteTaskStateCli
-import presentation.cli.taskState.TaskStateInputHandler
-import presentation.cli.taskState.TaskStateCliController
-import presentation.cli.taskState.CreateTaskStateCli
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
-
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.project.ProjectShowMenu
-import presentation.cli.project.CreateProjectCli
-import presentation.cli.project.UpdateProjectCli
-import presentation.cli.project.DeleteProjectCli
-import presentation.cli.project.GetAllProjectsCli
-import presentation.cli.project.ProjectScreenController
+import presentation.cli.project.*
 import presentation.cli.task.CreateTaskCli
-import presentation.cli.task.ViewSwimlanesCLI
 import presentation.cli.task.DeleteTaskCli
 import presentation.cli.task.UpdateTaskCli
+import presentation.cli.task.ViewSwimlanesCLI
+import presentation.cli.taskState.*
 import java.util.*
 
 
@@ -44,7 +33,7 @@ val presentationModule = module {
     single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
     single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
-    single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), get(),get()) }
+    single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), get(), get()) }
     single { TaskStateInputHandler(uiController = get()) }
     single {
         ViewSwimlanesCLI(

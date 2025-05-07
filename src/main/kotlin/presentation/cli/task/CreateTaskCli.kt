@@ -20,7 +20,7 @@ class CreateTaskCli(
     private val uiController: UiController,
 ) {
 
-    fun create(projectID:UUID) {
+    fun create(projectID: UUID) {
         uiController.printMessage("------ Create Task ------")
         uiController.printMessage("-------------------------")
 
@@ -108,9 +108,14 @@ class CreateTaskCli(
                 stateId = chosenState.id,
                 assignedTo = assignedUser.id
             ).let {
-                when(it){
-                    true->{uiController.printMessage("Task created successfully!")}
-                    false->{uiController.printMessage("Task did not created successfully!")}
+                when (it) {
+                    true -> {
+                        uiController.printMessage("Task created successfully!")
+                    }
+
+                    false -> {
+                        uiController.printMessage("Task did not created successfully!")
+                    }
                 }
             }
 

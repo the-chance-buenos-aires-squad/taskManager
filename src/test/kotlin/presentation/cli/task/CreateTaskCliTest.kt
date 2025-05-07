@@ -1,31 +1,20 @@
 package presentation.cli.task
 
-import com.google.common.truth.Truth.assertThat
-import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.InvalidProjectIdException
-import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
 import domain.customeExceptions.UserNotLoggedInException
 import domain.entities.TaskState
-import domain.entities.User
-import domain.entities.UserRole
-import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
-import dummyData.DummyTaskData
 import dummyData.DummyUser
-import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
-import dummyData.createDummyProject
-import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
-import java.time.LocalDateTime
 import java.util.*
 
 class CreateTaskCliTest {
@@ -146,7 +135,7 @@ class CreateTaskCliTest {
             mockUiController.readInput()
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
-            mockUiController.printMessage("Description cannot be empty. Please try again.",false)
+            mockUiController.printMessage("Description cannot be empty. Please try again.", false)
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
             mockUiController.printMessage(
@@ -179,7 +168,16 @@ class CreateTaskCliTest {
         )
         every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws UserNotLoggedInException()
+        every {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws UserNotLoggedInException()
 
         // Act
         createTaskCli.create(dummyProjectID)
@@ -208,7 +206,16 @@ class CreateTaskCliTest {
         )
         every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws TaskTitleEmptyException()
+        every {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws TaskTitleEmptyException()
 
         // Act
         createTaskCli.create(dummyProjectID)
@@ -237,7 +244,16 @@ class CreateTaskCliTest {
         )
         every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws InvalidProjectIdException()
+        every {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws InvalidProjectIdException()
 
         // Act
         createTaskCli.create(dummyProjectID)

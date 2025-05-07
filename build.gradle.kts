@@ -16,13 +16,13 @@ repositories {
 dependencies {
     implementation("io.insert-koin:koin-core:4.0.4")
     implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
-    
+
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     //to see mongo logger
     implementation("org.slf4j:slf4j-simple:2.0.13")
-    
+
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
     testImplementation("io.mockk:mockk:1.14.0")

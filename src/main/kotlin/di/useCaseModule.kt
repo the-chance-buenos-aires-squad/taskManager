@@ -1,11 +1,6 @@
 package di
 
-import domain.usecases.AddAuditUseCase
-import domain.usecases.AuthenticationUseCase
-import domain.usecases.CreateUserUseCase
-import domain.usecases.GetAllAuditUseCase
-import domain.usecases.GetTasksGroupedByStateUseCase
-import domain.usecases.GetTasksUseCase
+import domain.usecases.*
 import domain.usecases.project.CreateProjectUseCase
 import domain.usecases.project.DeleteProjectUseCase
 import domain.usecases.project.GetAllProjectsUseCase

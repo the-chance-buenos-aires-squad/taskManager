@@ -7,18 +7,17 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
-import presentation.cli.dashBoard.MateDashBoardCli
 import presentation.cli.task.ViewSwimlanesCLI
 
 class MateDashBoardCliTest {
     private val uiController: UiController = mockk(relaxed = true)
     private val viewSwimlanesCLI: ViewSwimlanesCLI = mockk(relaxed = true)
-    private lateinit var mateDashBoardCli : MateDashBoardCli
+    private lateinit var mateDashBoardCli: MateDashBoardCli
 
 
     @BeforeEach
-    fun setUp(){
-        mateDashBoardCli  = MateDashBoardCli(uiController, viewSwimlanesCLI)
+    fun setUp() {
+        mateDashBoardCli = MateDashBoardCli(uiController, viewSwimlanesCLI)
     }
 
     @Test

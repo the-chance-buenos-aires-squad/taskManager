@@ -18,14 +18,14 @@ class ViewSwimlanesCLI(
 ) {
 
     fun start() {
-        while (true){
+        while (true) {
             try {
                 uiController.printMessage(HEADER_MESSAGE)
 
                 val projects = projectCliHelper.getProjects()
                 val selectedProject = projectCliHelper.selectProject(projects)
 
-                if (selectedProject == null){
+                if (selectedProject == null) {
                     uiController.printMessage("invalid project")
                     return
                 }

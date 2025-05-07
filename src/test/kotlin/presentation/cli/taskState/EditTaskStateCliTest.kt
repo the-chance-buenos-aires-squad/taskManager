@@ -18,14 +18,14 @@ class EditTaskStateCliTest {
     private lateinit var editTaskStateCli: EditTaskStateCli
 
     private val taskState = DummyTaskState.todo
-    private  val taskStates = listOf(DummyTaskState.todo, DummyTaskState.inProgress)
+    private val taskStates = listOf(DummyTaskState.todo, DummyTaskState.inProgress)
 
     val dummyProject = createDummyProject(name = "Test Project", description = "Test Description")
 
 
     @BeforeEach
     fun setup() {
-        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, getAllTaskStatesUseCase ,uiController)
+        editTaskStateCli = EditTaskStateCli(editTaskStateUseCase, getAllTaskStatesUseCase, uiController)
     }
 
     @Test
@@ -89,7 +89,6 @@ class EditTaskStateCliTest {
 
         verify { uiController.printMessage("Invalid selection.") }
     }
-
 
 
 }

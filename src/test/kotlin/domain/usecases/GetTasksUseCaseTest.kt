@@ -7,12 +7,12 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 
 class GetTasksUseCaseTest {
 
     private lateinit var getTasksUseCase: GetTasksUseCase
-    private  var taskRepository: TaskRepository = mockk()
+    private var taskRepository: TaskRepository = mockk()
 
     val dummyTodoTask = createDummyTask(
         title = "Task Todo Title",

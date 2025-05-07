@@ -1,6 +1,5 @@
 package domain.usecases.taskState
 
-import com.google.common.base.CharMatcher.any
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState

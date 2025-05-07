@@ -9,13 +9,14 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 class ProjectRepositoryImplTest {
     private lateinit var projectDataSource: ProjectDataSource
     private lateinit var projectMapper: ProjectMapper
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
     val id: UUID = UUID.randomUUID()
+
     @BeforeEach
     fun setup() {
         projectMapper = ProjectMapper()
@@ -79,8 +80,10 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return project if project exist`() {
-        every { projectDataSource.getProjectById(any()) } returns listOf(id.toString(),"ahmed","ahmed mate",
-            LocalDateTime.now().toString())
+        every { projectDataSource.getProjectById(any()) } returns listOf(
+            id.toString(), "ahmed", "ahmed mate",
+            LocalDateTime.now().toString()
+        )
 
         val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
 
@@ -98,7 +101,14 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return list of projects if there are projects`() {
-        every { projectDataSource.getAllProjects() } returns listOf(listOf(id.toString(),"ahmed","ahmed mate",LocalDateTime.now().toString()))
+        every { projectDataSource.getAllProjects() } returns listOf(
+            listOf(
+                id.toString(),
+                "ahmed",
+                "ahmed mate",
+                LocalDateTime.now().toString()
+            )
+        )
 
         val result = projectRepositoryImpl.getAllProjects()
 

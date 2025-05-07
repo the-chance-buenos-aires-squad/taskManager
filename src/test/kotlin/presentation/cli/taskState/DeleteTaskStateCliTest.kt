@@ -8,8 +8,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
+import java.util.*
 import kotlin.test.Test
-import java.util.UUID
 
 
 class DeleteTaskStateCliTest {
@@ -26,7 +26,7 @@ class DeleteTaskStateCliTest {
 
     @BeforeEach
     fun setup() {
-        deleteTaskStateCli = DeleteTaskStateCli(deleteTaskStateUseCase,getAllTaskStatesUseCase,uiController)
+        deleteTaskStateCli = DeleteTaskStateCli(deleteTaskStateUseCase, getAllTaskStatesUseCase, uiController)
     }
 
 

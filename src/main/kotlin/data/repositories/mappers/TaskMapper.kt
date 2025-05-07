@@ -7,7 +7,8 @@ import java.util.*
 class TaskMapper : Mapper<Task> {
 
     override fun mapEntityToRow(entity: Task): List<String> {
-        return listOf(entity.id.toString(),
+        return listOf(
+            entity.id.toString(),
             entity.title,
             entity.description,
             entity.projectId.toString(),

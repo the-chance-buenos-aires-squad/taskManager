@@ -38,7 +38,13 @@ class TaskStateCSVDataSourceTest {
 
     @Test
     fun `should return true when state is created successfully`() {
-        val result = taskStateCSVDataSource.createTaskState(listOf(UUID.randomUUID().toString(), "blocked", UUID.randomUUID().toString()))
+        val result = taskStateCSVDataSource.createTaskState(
+            listOf(
+                UUID.randomUUID().toString(),
+                "blocked",
+                UUID.randomUUID().toString()
+            )
+        )
 
         assertThat(result).isTrue()
     }
@@ -57,7 +63,13 @@ class TaskStateCSVDataSourceTest {
     fun `should return false when trying to edit non-existing state`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.editTaskState(listOf(UUID.randomUUID().toString(), "Blocked", UUID.randomUUID().toString()))
+        val result = taskStateCSVDataSource.editTaskState(
+            listOf(
+                UUID.randomUUID().toString(),
+                "Blocked",
+                UUID.randomUUID().toString()
+            )
+        )
 
         assertThat(result).isFalse()
     }

@@ -7,8 +7,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-
-import java.util.UUID
+import java.util.*
 
 class TaskStateCliControllerTest {
 

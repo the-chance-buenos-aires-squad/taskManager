@@ -1,7 +1,6 @@
 package presentation.cli.task
 
 import domain.customeExceptions.UserNotLoggedInException
-import domain.entities.Task
 import domain.usecases.task.DeleteTaskUseCase
 import domain.usecases.task.GetAllTasksUseCase
 import presentation.UiController

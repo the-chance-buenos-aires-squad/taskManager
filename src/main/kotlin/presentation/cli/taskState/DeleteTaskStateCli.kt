@@ -3,7 +3,7 @@ package presentation.cli.taskState
 import domain.usecases.taskState.DeleteTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
-import java.util.UUID
+import java.util.*
 
 class DeleteTaskStateCli(
     private val deleteTaskStateUseCase: DeleteTaskStateUseCase,

@@ -36,8 +36,6 @@ class CreateTaskUseCase(
         validateProjectId(projectId)
 
 
-
-
         val newTask = Task(
             id = id,
             title = title,
@@ -45,7 +43,7 @@ class CreateTaskUseCase(
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy =currentUser.id ,
+            createdBy = currentUser.id,
         )
 
 

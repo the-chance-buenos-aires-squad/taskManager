@@ -1,7 +1,7 @@
 package dummyData.dummyStateData
 
 import domain.entities.TaskState
-import java.util.UUID
+import java.util.*
 
 
 object DummyTaskState {
@@ -20,7 +20,7 @@ object DummyTaskState {
     val done = TaskState(
         id = UUID.fromString("00000000-3000-0000-0000-000000000000"),
         name = "Done",
-        projectId =UUID.fromString("30000000-1000-0000-0000-000000000000")
+        projectId = UUID.fromString("30000000-1000-0000-0000-000000000000")
     )
 
     val blocked = TaskState(
