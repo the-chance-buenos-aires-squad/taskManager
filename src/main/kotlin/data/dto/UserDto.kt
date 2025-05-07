@@ -1,11 +1,13 @@
 package data.dto
 
 import domain.entities.UserRole
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserDto(
-    val id: String,
+    @SerialName(value = "_id")
+    val _id: String,
     val username: String,
     val password: String,
     val role: UserRole?,

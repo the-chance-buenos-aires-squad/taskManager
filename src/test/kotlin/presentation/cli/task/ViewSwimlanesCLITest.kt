@@ -1,31 +1,27 @@
 package presentation.cli.task
 
 import createDummyTaskState
-import domain.entities.TaskState
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
 import dummyData.createDummyTask
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
 import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
 import java.util.UUID
-import javax.swing.text.View
 
 class ViewSwimlanesCLITest {
 
     private val uiController: UiController = mockk(relaxed = true)
-    private val projectCliHelper: ProjectCliHelper= mockk(relaxed = true)
-    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase=mockk(relaxed = true)
+    private val projectCliHelper: ProjectCliHelper = mockk(relaxed = true)
+    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase = mockk(relaxed = true)
     private val createTaskCli: CreateTaskCli = mockk(relaxed = true)
-    private val viewSwimlanesCLI : ViewSwimlanesCLI = ViewSwimlanesCLI(uiController,projectCliHelper,getTasksGroupedByStateUseCase,createTaskCli)
+    private val viewSwimlanesCLI = ViewSwimlanesCLI(uiController, projectCliHelper, getTasksGroupedByStateUseCase, createTaskCli)
 
     private val sampleProject = createDummyProject(
         id = UUID.randomUUID(),
@@ -59,20 +55,16 @@ class ViewSwimlanesCLITest {
         )
     )
 
-
     @Test
-    fun `should display welcome message when start viewSwimLanceCli`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "4"
+    fun `should display welcome message when start viewSwimLanceCli`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify {
+        coVerify {
             uiController.printMessage(
                 "========================================\n" +
                         "         TASK SWIMLANES VIEW             \n" +
@@ -82,120 +74,99 @@ class ViewSwimlanesCLITest {
     }
 
     @Test
-    fun `should return to mate dashboard when project is not found`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns null
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "4"
+    fun `should return to mate dashboard when project is not found`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns null
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify {
+        coVerify {
             uiController.printMessage("invalid project")
         }
     }
 
     @Test
-    fun `should start manage task when valid project`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "4"
+    fun `should start manage task when valid project`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
         }
     }
 
     @Test
-    fun `should start create task when user select 1`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "1" andThen "4"
+    fun `should start create task when user select 1`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "1" andThen "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             createTaskCli.create(sampleProject.id)
         }
     }
 
     @Test
-    fun `should start update task cli when user select 2`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "2" andThen "4"
+    fun `should start update task cli when user select 2`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "2" andThen "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify (exactly = 1){
+        coVerify(exactly = 1) {
             uiController.printMessage("update task cli")
         }
     }
 
     @Test
-    fun `should start delete task cli when user select 3`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "3" andThen "4"
+    fun `should start delete task cli when user select 3`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "3" andThen "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             uiController.printMessage("delete task cli")
         }
     }
 
     @Test
-    fun `should back to menu when user enter empty`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "" andThen "4"
+    fun `should back to menu when user enter empty`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "" andThen "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify(exactly = 1){
+        coVerify(exactly = 1) {
             uiController.printMessage("Invalid input: please enter a valid number.")
         }
     }
 
     @Test
-    fun `should back to menu when user enter invalid choose`() {
-        // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
-        every { projectCliHelper.selectProject(any()) } returns sampleProject
-        every { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
-        every { uiController.readInput() } returns "8" andThen "4"
+    fun `should back to menu when user enter invalid choose`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
+        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { uiController.readInput() } returns "8" andThen "4"
 
-        //when
         viewSwimlanesCLI.start()
 
-        // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             uiController.printMessage("Invalid Input: please enter a valid number from the menu.")
         }
     }

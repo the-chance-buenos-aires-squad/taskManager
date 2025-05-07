@@ -15,7 +15,7 @@ class UpdateTaskUseCase(
     private val addAuditUseCase: AddAuditUseCase,
     private val authRepository: AuthRepository
 ) {
-    fun updateTask(
+    suspend fun updateTask(
         id: UUID,
         title: String,
         description: String,

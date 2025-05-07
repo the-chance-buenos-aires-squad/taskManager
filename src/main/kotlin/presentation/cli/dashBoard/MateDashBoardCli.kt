@@ -7,7 +7,7 @@ class MateDashBoardCli(
     private val uiController: UiController,
     private val viewSwimlanesCLI: ViewSwimlanesCLI
 ) {
-    fun start() {
+    suspend fun start() {
         while (true) {
             uiController.printMessage(
                 " === Mate Dashboard ===\n" +

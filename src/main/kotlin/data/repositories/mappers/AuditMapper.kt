@@ -5,8 +5,8 @@ import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
 
-class AuditMapper : Mapper<Audit> {
-    override fun mapEntityToRow(entity: Audit): List<String> {
+class AuditMapper : Mapper<Audit,List<String>> {
+     fun mapEntityToRow(entity: Audit): List<String> {
         return listOf(
             entity.id,
             entity.entityId,
@@ -20,7 +20,7 @@ class AuditMapper : Mapper<Audit> {
         )
     }
 
-    override fun mapRowToEntity(row: List<String>): Audit {
+     fun mapRowToEntity(row: List<String>): Audit {
         return Audit(
             id = row[ID_ROW],
             entityId = row[ENTITY_IT],
@@ -44,6 +44,14 @@ class AuditMapper : Mapper<Audit> {
         const val NEW_VALUE_ROW = 6
         const val USER_ID_ROW = 7
         const val TIMESTAMP_ROW = 8
+    }
+
+    override fun fromEntity(entity: Audit): List<String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun toEntity(type: List<String>): Audit {
+        TODO("Not yet implemented")
     }
 
 

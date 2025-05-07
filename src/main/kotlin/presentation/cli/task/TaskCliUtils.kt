@@ -49,7 +49,7 @@ object TaskCliUtils {
         return null
     }
 
-    fun promptForUpdatedTask(
+    suspend fun promptForUpdatedTask(
         task: Task,
         projectStates: List<TaskState>,
         userRepository: UserRepository,
@@ -99,7 +99,7 @@ object TaskCliUtils {
         return index?.let { states[it - 1].id } ?: currentStateId
     }
 
-    private fun promptForAssignedTo(
+    private suspend fun promptForAssignedTo(
         current: UUID?,
         userRepo: UserRepository,
         ui: UiController

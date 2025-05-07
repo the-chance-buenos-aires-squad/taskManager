@@ -5,8 +5,9 @@ import data.dataSource.dummyData.DummyTasks
 import domain.repositories.UserRepository
 import dummyData.DummyUser
 import dummyData.dummyStateData.DummyTaskState
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -42,7 +43,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `fetchProjectTasks should return tasks matching project ID`() {
+    fun `fetchProjectTasks should return tasks matching project ID`() = runTest {
         val projectId = UUID.randomUUID()
         val task1 = DummyTasks.validTask.copy(title = "Task One", projectId = projectId)
         val task2 = DummyTasks.validTask.copy(title = "Task Two", projectId = projectId)
@@ -59,7 +60,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `fetchProjectTasks should return empty list and print message when no tasks match`() {
+    fun `fetchProjectTasks should return empty list and print message when no tasks match`() = runTest {
         val projectId = UUID.randomUUID()
 
         val output = ByteArrayOutputStream()
@@ -72,7 +73,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `selectTask should return selected task when valid input is given`() {
+    fun `selectTask should return selected task when valid input is given`() = runTest {
         val input = ByteArrayInputStream("1\n".toByteArray())
         val output = ByteArrayOutputStream()
         val uiController = UiController(PrintStream(output), Scanner(input))
@@ -86,7 +87,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `selectTask should return null after two invalid attempts`() {
+    fun `selectTask should return null after two invalid attempts`() = runTest {
         val input = ByteArrayInputStream("5\n0\n".toByteArray())
         val output = ByteArrayOutputStream()
         val uiController = UiController(PrintStream(output), Scanner(input))
@@ -101,7 +102,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `promptForTaskIndex should return correct index`() {
+    fun `promptForTaskIndex should return correct index`() = runTest {
         val input = ByteArrayInputStream("2\n".toByteArray())
         val output = ByteArrayOutputStream()
         val uiController = UiController(PrintStream(output), Scanner(input))
@@ -112,7 +113,7 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `promptForTaskIndex should return null after invalid inputs`() {
+    fun `promptForTaskIndex should return null after invalid inputs`() = runTest {
         val input = ByteArrayInputStream("abc\n9\n".toByteArray())
         val output = ByteArrayOutputStream()
         val uiController = UiController(PrintStream(output), Scanner(input))
@@ -124,14 +125,14 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `promptForUpdatedTask should update all fields when new inputs are provided`() {
-        every { uiController.readInput() } returnsMany listOf(
+    fun `promptForUpdatedTask should update all fields when new inputs are provided`() = runTest {
+        coEvery { uiController.readInput() } returnsMany listOf(
             "New Title",       // title
             "New Description", // description
             "2",               // state index
             dummyUser.username // username
         )
-        every { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
+        coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
 
         val updatedTask = TaskCliUtils.promptForUpdatedTask(
             task, dummyStates, userRepository, uiController
@@ -145,14 +146,14 @@ class TaskCliUtilsTest {
     }
 
     @Test
-    fun `promptForUpdatedTask should keep current values when inputs are empty or invalid`() {
-        every { uiController.readInput() } returnsMany listOf(
+    fun `promptForUpdatedTask should keep current values when inputs are empty or invalid`() = runTest {
+        coEvery { uiController.readInput() } returnsMany listOf(
             "",   // title → keep old
             "",   // description → keep old
             "9",  // invalid state index → keep old
             "unknownUser" // unknown user → keep old
         )
-        every { userRepository.getUserByUserName("unknownUser") } returns null
+        coEvery { userRepository.getUserByUserName("unknownUser") } returns null
 
         val updatedTask = TaskCliUtils.promptForUpdatedTask(
             task.copy(stateId = dummyStates[0].id), dummyStates, userRepository, uiController

@@ -4,8 +4,8 @@ import domain.entities.Project
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectMapper : Mapper<Project> {
-    override fun mapEntityToRow(entity: Project): List<String> {
+class ProjectMapper : Mapper<Project,List<String>> {
+     fun mapEntityToRow(entity: Project): List<String> {
         return listOf(
             entity.id.toString(),
             entity.name,
@@ -14,7 +14,7 @@ class ProjectMapper : Mapper<Project> {
         )
     }
 
-    override fun mapRowToEntity(row: List<String>): Project {
+     fun mapRowToEntity(row: List<String>): Project {
         return Project(
             id = UUID.fromString(row[ID]),
             name = row[NAME],
@@ -28,6 +28,14 @@ class ProjectMapper : Mapper<Project> {
         private const val NAME = 1
         private const val DESCRIPTION = 2
         private const val CREATED_AT = 3
+    }
+
+    override fun fromEntity(entity: Project): List<String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun toEntity(type: List<String>): Project {
+        TODO("Not yet implemented")
     }
 
 }

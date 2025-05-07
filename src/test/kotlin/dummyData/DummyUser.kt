@@ -1,7 +1,6 @@
 package dummyData
 
 import data.dto.UserDto
-import data.repositories.mappers.userMappers.UserCsvMapper
 import domain.entities.UserRole
 import java.util.*
 
@@ -14,7 +13,7 @@ object DummyUser {
     )
 
     val dummyUserOneDto = UserDto(
-        id = dummyUserOne.id.toString(),
+        _id = dummyUserOne.id.toString(),
         username = dummyUserOne.username,
         password = dummyUserOne.password,
         role = dummyUserOne.role,
@@ -22,10 +21,11 @@ object DummyUser {
     )
 
     val dummyUserOneRow = listOf(
-        "e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221",
+        dummyUserOne.id.toString(),
         "adminUserName",
         "adminPassword",
-        UserRole.ADMIN.name
+        UserRole.ADMIN.name,
+        dummyUserOne.createdAt.toString()
     )
 
     val dummyUserTwo = createDummyUser(

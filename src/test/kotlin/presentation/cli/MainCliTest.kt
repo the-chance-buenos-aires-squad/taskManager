@@ -1,8 +1,10 @@
 package presentation.cli
 
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.auth.LoginCli
@@ -15,9 +17,9 @@ class MainCliTest {
     private val mainCli: MainCli = MainCli(uiController, loginCli)
 
     @Test
-    fun `should print welcome message`() {
+    fun `should print welcome message`() = runTest {
         //given
-        every { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
+        coEvery { uiController.readInput() } returns "1" andThenThrows RuntimeException("Exit loop")
 
         //when
         assertThrows<RuntimeException> { mainCli.startCli() }
@@ -33,32 +35,28 @@ class MainCliTest {
                         "Choose an option (1 - 2): "
             )
         }
-
     }
 
     @Test
-    fun `should start login CLI on option 1`() {
-
+    fun `should start login CLI on option 1`() = runTest {
         //given
         val userInput = "1"
-        every { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
+        coEvery { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
 
         //when
         assertThrows<RuntimeException> { mainCli.startCli() }
 
         //then
-        verify {
+        coVerify {
             loginCli.start()
         }
-
     }
 
     @Test
-    fun `should exit CLI on option 2`() {
-
+    fun `should exit CLI on option 2`() = runTest {
         //given
         val userInput = "2"
-        every { uiController.readInput() }.returns(userInput)
+        coEvery { uiController.readInput() }.returns(userInput)
 
         //when
         mainCli.startCli()
@@ -67,15 +65,13 @@ class MainCliTest {
         verify {
             uiController.printMessage("Exiting PlanMate... Goodbye!")
         }
-
     }
 
     @Test
-    fun `should recall startCli on invalid input`() {
-
+    fun `should recall startCli on invalid input`() = runTest {
         //given
         val userInput = "3"
-        every { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
+        coEvery { uiController.readInput() }.returns(userInput) andThenThrows RuntimeException("Exit loop")
 
         //when
         assertThrows<RuntimeException> { mainCli.startCli() }
@@ -84,7 +80,5 @@ class MainCliTest {
         verify {
             uiController.printMessage("Invalid option! Please try again.")
         }
-
     }
-
 }

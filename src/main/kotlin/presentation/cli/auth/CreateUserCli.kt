@@ -9,7 +9,7 @@ class CreateUserCli(
     private val createUserUseCase: CreateUserUseCase,
 ) {
 
-    fun start() {
+    suspend fun start() {
         uiController.printMessage(HEADER_MESSAGE)
 
         uiController.printMessage(USERNAME_PROMPT_MESSAGE)
