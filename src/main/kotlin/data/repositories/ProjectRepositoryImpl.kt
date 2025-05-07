@@ -1,36 +1,39 @@
 package data.repositories
 
 import data.dataSource.project.ProjectDataSource
+import data.dto.ProjectDto
 import data.repositories.mappers.Mapper
+import data.repositories.mappers.ProjectDtoMapper
 import domain.entities.Project
 import domain.repositories.ProjectRepository
 import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val csvProjectMapper: Mapper<Project,List<String>>
+    private val projectMapper: ProjectDtoMapper
 ) : ProjectRepository {
-    override fun createProject(project: Project): Boolean {
-        return projectDataSource.addProject(csvProjectMapper.toMap(project))
+
+    override suspend fun createProject(project: Project): Boolean {
+        return projectDataSource.addProject(projectMapper.fromEntity(project))
     }
 
-    override fun updateProject(project: Project): Boolean {
-        return projectDataSource.updateProject(csvProjectMapper.toMap(project))
+    override suspend fun updateProject(project: Project): Boolean {
+        return projectDataSource.updateProject(projectMapper.fromEntity(project))
     }
 
-    override fun deleteProject(projectId: UUID): Boolean {
+    override suspend fun deleteProject(projectId: UUID): Boolean {
         return projectDataSource.deleteProject(projectId)
     }
 
-    override fun getProjectById(projectId: UUID): Project? {
+    override  suspend fun getProjectById(projectId: UUID): Project? {
         val projectRow = projectDataSource.getProjectById(projectId)
-        return projectRow?.let { csvProjectMapper.fromMap(it) }
+        return projectRow?.let { projectMapper.toEntity(it) }
     }
 
-    override fun getAllProjects(): List<Project> {
+    override suspend fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
             .map { projectRow ->
-                csvProjectMapper.fromMap(projectRow)
+                projectMapper.toEntity(projectRow)
             }
     }
 }

@@ -5,8 +5,8 @@ import domain.entities.Project
 import java.time.LocalDateTime
 import java.util.*
 
-class MongoProjectMapper:Mapper<Project,ProjectDto> {
-    override fun toMap(entity: Project): ProjectDto {
+class ProjectDtoMapper:Mapper<Project,ProjectDto> {
+    override fun fromEntity(entity: Project): ProjectDto {
         return ProjectDto(
             entity.id.toString(),
             entity.name,
@@ -15,7 +15,7 @@ class MongoProjectMapper:Mapper<Project,ProjectDto> {
         )
     }
 
-    override fun fromMap(row: ProjectDto): Project {
+    override fun toEntity(row: ProjectDto): Project {
         return Project(
             UUID.fromString(row.id),
             row.name,

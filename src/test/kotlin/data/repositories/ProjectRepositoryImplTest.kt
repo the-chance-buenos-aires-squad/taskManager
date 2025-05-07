@@ -2,10 +2,13 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.project.ProjectDataSource
-import data.repositories.mappers.CsvProjectMapper
+import data.dto.ProjectDto
+import data.repositories.mappers.ProjectDtoMapper
 import dummyData.createDummyProject
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -13,19 +16,20 @@ import java.util.UUID
 
 class ProjectRepositoryImplTest {
     private lateinit var projectDataSource: ProjectDataSource
-    private lateinit var csvProjectMapper: CsvProjectMapper
+    private lateinit var csvProjectMapper: ProjectDtoMapper
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
     val id: UUID = UUID.randomUUID()
+
     @BeforeEach
     fun setup() {
-        csvProjectMapper = CsvProjectMapper()
+        csvProjectMapper = mockk(relaxed = true)
         projectDataSource = mockk(relaxed = true)
         projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, csvProjectMapper)
     }
 
     @Test
-    fun `should return true if project created successfully`() {
-        every { projectDataSource.addProject(any()) } returns true
+    fun `should return true if project created successfully`() = runTest {
+        coEvery { projectDataSource.addProject(any()) } returns true
 
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
@@ -33,8 +37,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return false if project not created successfully`() {
-        every { projectDataSource.addProject(any()) } returns false
+    fun `should return false if project not created successfully`() = runTest{
+        coEvery { projectDataSource.addProject(any()) } returns false
 
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
@@ -42,8 +46,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return true if project updated successfully`() {
-        every { projectDataSource.updateProject(any()) } returns true
+    fun `should return true if project updated successfully`() = runTest{
+        coEvery { projectDataSource.updateProject(any()) } returns true
 
         val result = projectRepositoryImpl.updateProject(createDummyProject())
 
@@ -51,8 +55,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return false if project not updated successfully`() {
-        every { projectDataSource.updateProject(any()) } returns false
+    fun `should return false if project not updated successfully`() = runTest{
+        coEvery { projectDataSource.updateProject(any()) } returns false
 
         val result = projectRepositoryImpl.updateProject(createDummyProject())
 
@@ -60,8 +64,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return true if project deleted successfully`() {
-        every { projectDataSource.deleteProject(any()) } returns true
+    fun `should return true if project deleted successfully`() = runTest{
+        coEvery { projectDataSource.deleteProject(any()) } returns true
 
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
@@ -69,8 +73,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return false if project not deleted successfully`() {
-        every { projectDataSource.deleteProject(any()) } returns false
+    fun `should return false if project not deleted successfully`() = runTest{
+        coEvery { projectDataSource.deleteProject(any()) } returns false
 
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
@@ -78,9 +82,11 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return project if project exist`() {
-        every { projectDataSource.getProjectById(any()) } returns listOf(id.toString(),"ahmed","ahmed mate",
-            LocalDateTime.now().toString())
+    fun `should return project if project exist`() =runTest{
+        coEvery { projectDataSource.getProjectById(any()) } returns ProjectDto(
+            id.toString(), "ahmed", "ahmed mate",
+            LocalDateTime.now().toString()
+        )
 
         val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
 
@@ -88,8 +94,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return null if project not exist`() {
-        every { projectDataSource.getProjectById(any()) } returns null
+    fun `should return null if project not exist`() = runTest{
+        coEvery { projectDataSource.getProjectById(any()) } returns null
 
         val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
 
@@ -97,8 +103,15 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return list of projects if there are projects`() {
-        every { projectDataSource.getAllProjects() } returns listOf(listOf(id.toString(),"ahmed","ahmed mate",LocalDateTime.now().toString()))
+    fun `should return list of projects if there are projects`() = runTest{
+        coEvery { projectDataSource.getAllProjects() } returns listOf(
+            ProjectDto(
+                id.toString(),
+                "ahmed",
+                "ahmed mate",
+                LocalDateTime.now().toString()
+            )
+        )
 
         val result = projectRepositoryImpl.getAllProjects()
 
@@ -106,8 +119,8 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return empty list if there aren't projects`() {
-        every { projectDataSource.getAllProjects() } returns emptyList()
+    fun `should return empty list if there aren't projects`() =runTest{
+        coEvery { projectDataSource.getAllProjects() } returns emptyList()
 
         val result = projectRepositoryImpl.getAllProjects()
 

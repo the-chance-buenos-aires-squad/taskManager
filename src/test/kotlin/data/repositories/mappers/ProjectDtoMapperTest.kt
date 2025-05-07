@@ -1,16 +1,18 @@
 package data.repositories.mappers
 
 import com.google.common.truth.Truth.assertThat
+import data.dto.ProjectDto
 import domain.entities.Project
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-class CsvProjectMapperTest {
-    private val mapper = CsvProjectMapper()
+class ProjectDtoMapperTest {
+    private val mapper = ProjectDtoMapper()
 
     @Test
-    fun `mapEntityToRow should map Project to List of Strings`() {
+    fun `mapEntityToRow should map Project to Project DTO`() {
         val now = LocalDateTime.now()
         val id = UUID.randomUUID()
         val project = Project(
@@ -20,23 +22,23 @@ class CsvProjectMapperTest {
             createdAt = now
         )
 
-        val expectedRow = listOf(
+        val expectedRow = ProjectDto(
             id.toString(),
             "Test Project",
             "This is a test project",
             now.toString()
         )
 
-        val actualRow = mapper.toMap(project)
+        val actualRow = mapper.fromEntity(project)
 
-        assertThat(expectedRow[1]).isEqualTo(actualRow[1])
+        assertThat(expectedRow.id).isEqualTo(actualRow.id)
     }
 
     @Test
-    fun `mapRowToEntity should map List of Strings to Project`() {
+    fun `mapRowToEntity should map Project DTO to Project`() {
         val now = LocalDateTime.now()
         val id = UUID.randomUUID()
-        val row = listOf(
+        val row = ProjectDto(
             id.toString(),
             "Test Project",
             "This is a test project",
@@ -50,7 +52,7 @@ class CsvProjectMapperTest {
             createdAt = now
         )
 
-        val actualProject = mapper.fromMap(row)
+        val actualProject = mapper.toEntity(row)
         assertThat(expectedProject.name).isEqualTo(actualProject.name)
 
     }
