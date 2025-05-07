@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
+
 class CreateTaskUseCaseTest {
     private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
@@ -71,7 +72,7 @@ class CreateTaskUseCaseTest {
                 validStateId,
                 validAssignedToId,
 
-            )
+                )
         }
     }
 
@@ -86,7 +87,7 @@ class CreateTaskUseCaseTest {
                 validStateId,
                 validAssignedToId,
 
-            )
+                )
         }
     }
 
@@ -101,7 +102,7 @@ class CreateTaskUseCaseTest {
                 validStateId,
                 validAssignedToId,
 
-            )
+                )
         }
     }
 
@@ -118,7 +119,7 @@ class CreateTaskUseCaseTest {
             validStateId,
             validAssignedToId,
 
-        )
+            )
 
         assertThat(taskSlot.captured.stateId).isEqualTo(validStateId)
     }
@@ -253,7 +254,7 @@ class CreateTaskUseCaseTest {
             validStateId,
             validAssignedToId,
 
-        )
+            )
 
         assertThat(taskSlot.captured.projectId).isEqualTo(manualUUID)
     }

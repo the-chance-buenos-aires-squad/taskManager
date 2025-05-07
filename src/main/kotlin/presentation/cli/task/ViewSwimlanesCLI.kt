@@ -4,7 +4,6 @@ import domain.customeExceptions.NoProjectsFoundException
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import presentation.UiController
-import presentation.cli.TaskState.DeleteTaskStateCli
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
@@ -19,14 +18,14 @@ class ViewSwimlanesCLI(
 ) {
 
     fun start() {
-        while (true){
+        while (true) {
             try {
                 uiController.printMessage(HEADER_MESSAGE)
 
                 val projects = projectCliHelper.getProjects()
                 val selectedProject = projectCliHelper.selectProject(projects)
 
-                if (selectedProject == null){
+                if (selectedProject == null) {
                     uiController.printMessage("invalid project")
                     return
                 }

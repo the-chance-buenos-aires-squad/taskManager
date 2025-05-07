@@ -20,7 +20,7 @@ class CreateTaskCli(
     private val uiController: UiController,
 ) {
 
-    fun create(projectID:UUID) {
+    fun create(projectID: UUID) {
         uiController.printMessage("------ Create Task ------")
         uiController.printMessage("-------------------------")
 
@@ -56,7 +56,7 @@ class CreateTaskCli(
 
 
         uiController.printMessage("Choose task state: ", isInline = false)
-        val states = getAllStatesUseCase.execute().filter { it.projectId == projectID }
+        val states = getAllStatesUseCase.execute(projectID)
         states.forEachIndexed { index, taskState ->
             uiController.printMessage("${index + 1} - ${taskState.name}||", isInline = false)
         }
@@ -108,9 +108,14 @@ class CreateTaskCli(
                 stateId = chosenState.id,
                 assignedTo = assignedUser.id
             ).let {
-                when(it){
-                    true->{uiController.printMessage("Task created successfully!")}
-                    false->{uiController.printMessage("Task did not created successfully!")}
+                when (it) {
+                    true -> {
+                        uiController.printMessage("Task created successfully!")
+                    }
+
+                    false -> {
+                        uiController.printMessage("Task did not created successfully!")
+                    }
                 }
             }
 

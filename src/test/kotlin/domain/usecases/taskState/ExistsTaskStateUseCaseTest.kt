@@ -6,7 +6,7 @@ import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
 
 class ExistsTaskStateUseCaseTest {
@@ -20,20 +20,20 @@ class ExistsTaskStateUseCaseTest {
 
     @Test
     fun `should return true when state with given id exists`() {
-        val stateId = DummyTaskState.todo.id
-        every { repository.existsTaskState(stateId) } returns true
+        val name = DummyTaskState.todo.name
+        every { repository.existsTaskState(any(), any()) } returns true
 
-        val result = existsTaskStateUseCase.execute(stateId)
+        val result = existsTaskStateUseCase.execute(DummyTaskState.todo.name, DummyTaskState.todo.projectId)
 
         assertThat(result).isTrue()
     }
 
     @Test
     fun `should return false when state with given id does not exist`() {
-        val nonExistId = UUID.fromString("00000000-1000-0000-0000-000000000000")
-        every { repository.existsTaskState(nonExistId) } returns false
+        val nonExistName = "nonExistName"
+        every { repository.existsTaskState(any(), any()) } returns false
 
-        val result = existsTaskStateUseCase.execute(nonExistId)
+        val result = existsTaskStateUseCase.execute(nonExistName, UUID.randomUUID())
 
         assertThat(result).isFalse()
     }

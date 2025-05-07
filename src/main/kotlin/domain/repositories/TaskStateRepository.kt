@@ -1,12 +1,12 @@
 package domain.repositories
 
 import domain.entities.TaskState
-import java.util.UUID
+import java.util.*
 
 interface TaskStateRepository {
     fun createTaskState(state: TaskState): Boolean
     fun editTaskState(state: TaskState): Boolean
     fun deleteTaskState(stateId: UUID): Boolean
     fun getAllTaskStates(): List<TaskState>
-    fun existsTaskState(stateId: UUID): Boolean
+    fun existsTaskState(name: String, projectId: UUID): Boolean
 }

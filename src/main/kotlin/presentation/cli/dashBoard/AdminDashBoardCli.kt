@@ -2,9 +2,9 @@ package presentation.cli.dashBoard
 
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
-import presentation.cli.TaskState.TaskStateCliController
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.project.ProjectScreenController
+import presentation.cli.taskState.TaskStateCliController
 
 class AdminDashBoardCli(
     private val uiController: UiController,
@@ -17,7 +17,7 @@ class AdminDashBoardCli(
         while (true) {
             uiController.printMessage(HEADER_ADMIN_DASHBOARD_MESSAGE)
 
-            uiController.printMessage(CHOOSE_AN_OPTION_MESSAGE,true)
+            uiController.printMessage(CHOOSE_AN_OPTION_MESSAGE, true)
 
             when (uiController.readInput().toIntOrNull()) {
                 1 -> createUserCli.start()

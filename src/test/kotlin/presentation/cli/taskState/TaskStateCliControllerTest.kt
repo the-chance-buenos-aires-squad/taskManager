@@ -1,20 +1,13 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
-import createDummyTaskState
-import domain.entities.TaskStateWithTasks
-import domain.usecases.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
-import dummyData.createDummyTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-
-import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
-import java.util.UUID
+import java.util.*
 
 class TaskStateCliControllerTest {
 
@@ -110,7 +103,8 @@ class TaskStateCliControllerTest {
                         " 3. Delete Task State       \n" +
                         " 4. View All Task States    \n" +
                         " 5. Back to Main Menu       \n" +
-                        "==============================\n"
+                        "==============================\n" +
+                        "Choose an option (1-5):"
             )
         }
     }
@@ -159,7 +153,7 @@ class TaskStateCliControllerTest {
 
         // then
         verify(exactly = 1) {
-            deleteTaskStateCli.deleteTaskState()
+            deleteTaskStateCli.deleteTaskState(any())
         }
     }
 
@@ -175,7 +169,7 @@ class TaskStateCliControllerTest {
 
         // then
         verify(exactly = 1) {
-            getAllTaskStatesCli.getAllTaskStates()
+            getAllTaskStatesCli.getAllTaskStates(any())
         }
     }
 

@@ -1,7 +1,6 @@
 package presentation.cli.task
 
 import createDummyTaskState
-import domain.entities.TaskState
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
@@ -9,25 +8,28 @@ import dummyData.createDummyTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
 import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
-import java.util.UUID
-import javax.swing.text.View
+import java.util.*
 
 class ViewSwimlanesCLITest {
 
     private val uiController: UiController = mockk(relaxed = true)
-    private val projectCliHelper: ProjectCliHelper= mockk(relaxed = true)
-    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase=mockk(relaxed = true)
+    private val projectCliHelper: ProjectCliHelper = mockk(relaxed = true)
+    private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase = mockk(relaxed = true)
     private val createTaskCli: CreateTaskCli = mockk(relaxed = true)
-    private val updateTaskCli :UpdateTaskCli = mockk(relaxed = true)
-    private val deleteTaskCli :DeleteTaskCli = mockk(relaxed = true)
-    private val viewSwimlanesCLI : ViewSwimlanesCLI = ViewSwimlanesCLI(uiController,projectCliHelper,getTasksGroupedByStateUseCase,createTaskCli,updateTaskCli,deleteTaskCli)
+    private val updateTaskCli: UpdateTaskCli = mockk(relaxed = true)
+    private val deleteTaskCli: DeleteTaskCli = mockk(relaxed = true)
+    private val viewSwimlanesCLI: ViewSwimlanesCLI = ViewSwimlanesCLI(
+        uiController,
+        projectCliHelper,
+        getTasksGroupedByStateUseCase,
+        createTaskCli,
+        updateTaskCli,
+        deleteTaskCli
+    )
 
     private val sampleProject = createDummyProject(
         id = UUID.randomUUID(),
@@ -146,7 +148,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         // then
-        verify (exactly = 1){
+        verify(exactly = 1) {
             updateTaskCli.update(any())
         }
     }
@@ -180,7 +182,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         // then
-        verify(exactly = 1){
+        verify(exactly = 1) {
             uiController.printMessage("Invalid input: please enter a valid number.")
         }
     }
