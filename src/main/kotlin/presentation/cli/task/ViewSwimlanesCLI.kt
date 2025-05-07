@@ -16,7 +16,7 @@ class ViewSwimlanesCLI(
     private val createTaskCli: CreateTaskCli
 ) {
 
-    fun start() {
+    suspend fun start() {
         while (true){
             try {
                 uiController.printMessage(HEADER_MESSAGE)

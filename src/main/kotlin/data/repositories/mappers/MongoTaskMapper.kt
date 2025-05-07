@@ -7,7 +7,7 @@ import java.util.*
 
 class MongoTaskMapper : Mapper<Task,TaskDto> {
     
-    override fun toMap(entity: Task): TaskDto {
+    override fun fromEntity(entity: Task): TaskDto {
         return TaskDto(id = entity.id.toString(),
             title = entity.title,
             description = entity.description,
@@ -20,17 +20,17 @@ class MongoTaskMapper : Mapper<Task,TaskDto> {
         )
     }
 
-    override fun fromMap(row: TaskDto): Task {
+    override fun toEntity(type: TaskDto): Task {
         return Task(
-            id = UUID.fromString(row.id),
-            title = row.title,
-            description = row.description,
-            projectId = UUID.fromString(row.projectId),
-            stateId = UUID.fromString(row.stateId),
-            assignedTo = row.assignedTo?.let { UUID.fromString(it) },
-            createdBy = UUID.fromString(row.createdBy),
-            createdAt = LocalDateTime.parse(row.createdAt),
-            updatedAt = LocalDateTime.parse(row.updatedAt)
+            id = UUID.fromString(type.id),
+            title = type.title,
+            description = type.description,
+            projectId = UUID.fromString(type.projectId),
+            stateId = UUID.fromString(type.stateId),
+            assignedTo = type.assignedTo?.let { UUID.fromString(it) },
+            createdBy = UUID.fromString(type.createdBy),
+            createdAt = LocalDateTime.parse(type.createdAt),
+            updatedAt = LocalDateTime.parse(type.updatedAt)
         )
     }
 }

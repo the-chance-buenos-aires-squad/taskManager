@@ -6,12 +6,10 @@ import java.util.*
 
 interface UserRepository {
 
-    fun addUser(user: User): Boolean
-    fun updateUser(user: User): Boolean
-    fun deleteUser(user: User): Boolean
-    fun getUserById(id: UUID): User?
-    fun getUserByUserName(userName: String): User?
-    fun getUsers(): List<User>
-
-
+    suspend fun addUser(user: User): Boolean
+    suspend fun updateUser(user: User): Boolean
+    suspend fun deleteUser(user: User): Boolean
+    suspend fun getUserById(id: UUID): User?
+    suspend fun getUserByUserName(userName: String): User?
+    suspend fun getUsers(): List<User>
 }

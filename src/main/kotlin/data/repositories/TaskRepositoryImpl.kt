@@ -12,14 +12,14 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
 
     override fun addTask(task: Task): Boolean {
-        val mappedTask = taskMapper.toMap(task)
+        val mappedTask = taskMapper.fromEntity(task)
         return csvTaskDataSource.addTask(mappedTask)
     }
 
     override fun getAllTasks(): List<Task> {
         val allTasks: List<List<String>> = csvTaskDataSource.getTasks()
         return allTasks.map { row ->
-            taskMapper.fromMap(row)
+            taskMapper.toEntity(row)
         }
     }
 
@@ -28,12 +28,12 @@ class TaskRepositoryImpl(
     }
 
     override fun updateTask(task: Task): Boolean {
-        return csvTaskDataSource.updateTask(taskMapper.toMap(task))
+        return csvTaskDataSource.updateTask(taskMapper.fromEntity(task))
     }
 
     override fun getTaskById(id: UUID): Task? {
         return csvTaskDataSource.getTaskById(id.toString())?.let {
-            taskMapper.fromMap(it)
+            taskMapper.toEntity(it)
         }
     }
 

@@ -19,7 +19,7 @@ class CreateTaskUseCase(
     private val authRepository: AuthRepository
 ) {
 
-    fun createTask(
+    suspend fun createTask(
         id: UUID,
         title: String,
         description: String,

@@ -6,7 +6,7 @@ import java.util.*
 
 class CsvTaskMapper : Mapper<Task,List<String>> {
 
-    override fun toMap(entity: Task): List<String> {
+    override fun fromEntity(entity: Task): List<String> {
         return listOf(entity.id.toString(),
             entity.title,
             entity.description,
@@ -19,7 +19,7 @@ class CsvTaskMapper : Mapper<Task,List<String>> {
         )
     }
 
-    override fun fromMap(row: List<String>): Task {
+    override fun toEntity(row: List<String>): Task {
         return Task(
             id = UUID.fromString(row[0]),
             title = row[1],

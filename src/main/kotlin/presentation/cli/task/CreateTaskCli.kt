@@ -20,7 +20,7 @@ class CreateTaskCli(
     private val uiController: UiController,
 ) {
 
-    fun create(projectID:UUID) {
+    suspend fun create(projectID:UUID) {
         uiController.printMessage("------ Create Task ------")
         uiController.printMessage("-------------------------")
 
