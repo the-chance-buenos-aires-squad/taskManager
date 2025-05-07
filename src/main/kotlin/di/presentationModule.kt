@@ -5,13 +5,12 @@ import org.koin.dsl.module
 import presentation.UiController
 import presentation.cli.GetAllAuditsCli
 import presentation.cli.MainCli
-import presentation.cli.TaskState.*
+import presentation.cli.taskState.*
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 
-import presentation.cli.TaskState.*
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.project.ProjectShowMenu
 import presentation.cli.project.CreateProjectCli
@@ -33,15 +32,15 @@ val presentationModule = module {
     single { ProjectCliHelper(getProjectsUseCase = get(), uiController = get()) }
     single { MateDashBoardCli(uiController = get(), viewSwimlanesCLI = get()) }
     single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), inputValidator = get()) }
+    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), getAllTaskStatesUseCase = get()) }
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
     single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
     single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
     single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
     single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
-    single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), uiController = get()) }
-    single { TaskStateInputHandler(uiController = get(), inputValidator = get()) }
+    single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), get(),get()) }
+    single { TaskStateInputHandler(uiController = get()) }
     single {
         ViewSwimlanesCLI(
             uiController = get(),
@@ -100,7 +99,6 @@ val presentationModule = module {
             createTaskStateUseCase = get(),
             existsTaskStateUseCase = get(),
             uiController = get(),
-            inputValidator = get()
         )
     }
 

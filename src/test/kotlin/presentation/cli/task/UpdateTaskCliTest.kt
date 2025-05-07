@@ -52,7 +52,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should update task successfully`() {
         every { getAllTasksUseCase.execute() } returns listOf(task)
-        every { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        every { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
         every { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         every { TaskCliUtils.selectTask(any(), any()) } returns task
         every {
@@ -70,7 +70,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should print failed to update task`() {
         every { getAllTasksUseCase.execute() } returns listOf(task)
-        every { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        every { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
         every { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         every { TaskCliUtils.selectTask(any(), any()) } returns task
         every {
@@ -88,7 +88,7 @@ class UpdateTaskCliTest {
     @Test
     fun `should handle UserNotLoggedInException when updating task`() {
         every { getAllTasksUseCase.execute() } returns listOf(task)
-        every { getAllTaskStatesUseCase.execute() } returns listOf(taskState)
+        every { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
         every { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         every { TaskCliUtils.selectTask(any(), any()) } returns task
         every {

@@ -4,7 +4,6 @@ import domain.customeExceptions.NoProjectsFoundException
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import presentation.UiController
-import presentation.cli.TaskState.DeleteTaskStateCli
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE

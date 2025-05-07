@@ -8,5 +8,5 @@ interface TaskStateRepository {
     fun editTaskState(state: TaskState): Boolean
     fun deleteTaskState(stateId: UUID): Boolean
     fun getAllTaskStates(): List<TaskState>
-    fun existsTaskState(stateId: UUID): Boolean
+    fun existsTaskState(name: String, projectId: UUID): Boolean
 }

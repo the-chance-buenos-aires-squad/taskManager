@@ -24,8 +24,8 @@ class UpdateTaskCli(
 
         val selectedTask = TaskCliUtils.selectTask(tasks, uiController) ?: return
 
-        val allStates = getAllTaskStatesUseCase.execute()
-        val statesForProject = allStates.filter { it.projectId == projectID }
+        val statesForProject = getAllTaskStatesUseCase.execute(projectID)
+        // val statesForProject = allStates.filter { it.projectId == projectID }
 
         val updatedTask = TaskCliUtils.promptForUpdatedTask(
             selectedTask,

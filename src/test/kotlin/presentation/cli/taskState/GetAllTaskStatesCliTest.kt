@@ -1,4 +1,4 @@
-package presentation.cli.TaskState
+package presentation.cli.taskState
 
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.dummyStateData.DummyTaskState
@@ -7,6 +7,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
+import java.util.*
 import kotlin.test.Test
 
 class GetAllTaskStatesCliTest {
@@ -22,23 +23,23 @@ class GetAllTaskStatesCliTest {
 
     @Test
     fun `should return list of task states when available`() {
-        every { getAllTaskStatesUseCase.execute() } returns listOf(
+        every { getAllTaskStatesUseCase.execute(any()) } returns listOf(
             DummyTaskState.todo,
             DummyTaskState.blocked
         )
 
-        getAllTaskStatesCli.getAllTaskStates()
+        getAllTaskStatesCli.getAllTaskStates(UUID.randomUUID())
 
-        verify { getAllTaskStatesUseCase.execute() }
+        verify { getAllTaskStatesUseCase.execute(any()) }
     }
 
     @Test
     fun `should return empty list when no task states exist`() {
-        every { getAllTaskStatesUseCase.execute() } returns emptyList()
+        every { getAllTaskStatesUseCase.execute(any()) } returns emptyList()
 
-        val result = getAllTaskStatesCli.getAllTaskStates()
+        val result = getAllTaskStatesCli.getAllTaskStates(UUID.randomUUID())
 
-        verify { getAllTaskStatesUseCase.execute() }
+        verify { getAllTaskStatesUseCase.execute(any()) }
     }
 
 }

@@ -56,7 +56,7 @@ class CreateTaskCliTest {
         val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
 
         every { uiController.readInput() } returnsMany listOf("title", "description", "1", "username")
-        every { getAllStatesUseCase.execute() } returns listOf(dummyTaskState)
+        every { getAllStatesUseCase.execute(any()) } returns listOf(dummyTaskState)
         every { userRepository.getUserByUserName("username") } returns dummyUser
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } returns true
 
@@ -108,7 +108,7 @@ class CreateTaskCliTest {
         }
 
         // Make sure task creation logic was never reached
-        verify(exactly = 0) { mockGetAllStatesUseCase.execute() }
+        verify(exactly = 0) { mockGetAllStatesUseCase.execute(any()) }
         verify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
     }
 
@@ -156,7 +156,7 @@ class CreateTaskCliTest {
         }
 
         // Ensure it exited before going to task state selection
-        verify(exactly = 0) { mockGetAllStatesUseCase.execute() }
+        verify(exactly = 0) { mockGetAllStatesUseCase.execute(any()) }
         verify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
     }
 
@@ -177,7 +177,7 @@ class CreateTaskCliTest {
             "1",                     // task state number
             DummyUser.dummyUserOne.username // assigned user
         )
-        every { getAllStatesUseCase.execute() } returns dummyStateList
+        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws UserNotLoggedInException()
 
@@ -206,7 +206,7 @@ class CreateTaskCliTest {
             "1",
             DummyUser.dummyUserOne.username
         )
-        every { getAllStatesUseCase.execute() } returns dummyStateList
+        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws TaskTitleEmptyException()
 
@@ -235,7 +235,7 @@ class CreateTaskCliTest {
             "1",
             DummyUser.dummyUserOne.username
         )
-        every { getAllStatesUseCase.execute() } returns dummyStateList
+        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
         every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
         every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws InvalidProjectIdException()
 

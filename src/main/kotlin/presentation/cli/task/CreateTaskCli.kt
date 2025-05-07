@@ -56,7 +56,7 @@ class CreateTaskCli(
 
 
         uiController.printMessage("Choose task state: ", isInline = false)
-        val states = getAllStatesUseCase.execute().filter { it.projectId == projectID }
+        val states = getAllStatesUseCase.execute(projectID)
         states.forEachIndexed { index, taskState ->
             uiController.printMessage("${index + 1} - ${taskState.name}||", isInline = false)
         }

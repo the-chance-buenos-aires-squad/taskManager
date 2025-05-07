@@ -86,7 +86,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should delete state successfully when state exists`() {
-        every { mockCSVDataSource.deleteTaskState(DummyTaskState.done.id.toString()) } returns true
+        every { mockCSVDataSource.deleteTaskState(DummyTaskState.done.id) } returns true
 
         val result = stateRepository.deleteTaskState(DummyTaskState.done.id)
 
@@ -132,18 +132,18 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return true when the state exists`() {
-        every { mockCSVDataSource.existsTaskState(DummyTaskState.todo.id.toString()) } returns true
+        every { mockCSVDataSource.existsTaskState(DummyTaskState.todo.name.toString(), DummyTaskState.todo.projectId) } returns true
 
-        val result = stateRepository.existsTaskState(DummyTaskState.todo.id)
+        val result = stateRepository.existsTaskState(DummyTaskState.todo.name, DummyTaskState.todo.projectId)
 
         assertThat(result).isTrue()
     }
 
     @Test
     fun `should return false when the state does not exist`() {
-        every { mockCSVDataSource.existsTaskState(UUID.randomUUID().toString()) } returns false
+        every { mockCSVDataSource.existsTaskState(any(),any()) } returns false
 
-        val result = stateRepository.existsTaskState(UUID.randomUUID())
+        val result = stateRepository.existsTaskState("NonExists", UUID.randomUUID())
 
         assertThat(result).isFalse()
     }

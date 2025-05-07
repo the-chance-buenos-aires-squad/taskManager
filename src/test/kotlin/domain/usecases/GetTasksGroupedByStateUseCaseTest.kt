@@ -41,7 +41,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState should return list of states when state have task in specific project`() {
         // Given
-        every { getTaskStatesUseCase.execute() } returns listOf(todoState, inProgressState, otherState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
         every { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
@@ -55,7 +55,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState should group tasks by their state correctly`() {
         // Given
-        every { getTaskStatesUseCase.execute() } returns listOf(todoState, inProgressState, otherState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
         every { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
@@ -72,7 +72,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState returns states with empty tasks when no tasks exist`() {
         // Given
-        every { getTaskStatesUseCase.execute() } returns listOf(todoState, inProgressState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState)
         every { getTasksUseCase.getTasks() } returns emptyList()
 
         // When
@@ -85,7 +85,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState returns empty list when there are no states for the project`() {
         // Given
-        every { getTaskStatesUseCase.execute() } returns listOf(otherState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf(otherState)
         every { getTasksUseCase.getTasks() } returns listOf(
             createDummyTask( projectId = projectId, stateId = UUID.fromString("00000000-3000-0000-0000-000000000000"), title = "Task 1")
         )
@@ -100,7 +100,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState filters out tasks and states from other projects`() {
         // Given
-        every { getTaskStatesUseCase.execute() } returns listOf(projectState, otherProjectState)
+        every { getTaskStatesUseCase.execute(any()) } returns listOf(projectState, otherProjectState)
         every { getTasksUseCase.getTasks() } returns listOf(task1, task4)
 
         // When

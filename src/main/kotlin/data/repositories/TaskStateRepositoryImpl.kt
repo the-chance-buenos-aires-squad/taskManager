@@ -19,14 +19,14 @@ class TaskStateRepositoryImpl(
     }
 
     override fun deleteTaskState(stateId: UUID): Boolean {
-        return taskStateCSVDataSource.deleteTaskState(stateId.toString())
+        return taskStateCSVDataSource.deleteTaskState(stateId)
     }
 
     override fun getAllTaskStates(): List<TaskState> {
         return taskStateCSVDataSource.getAllTaskStates()
     }
 
-    override fun existsTaskState(stateId: UUID): Boolean {
-        return taskStateCSVDataSource.existsTaskState(stateId.toString())
+    override fun existsTaskState(name: String, projectId: UUID): Boolean {
+        return taskStateCSVDataSource.existsTaskState(name, projectId)
     }
 }
