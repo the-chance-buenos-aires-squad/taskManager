@@ -8,14 +8,14 @@ import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
-    private val projectMapper: Mapper<Project>
+    private val csvProjectMapper: Mapper<Project,List<String>>
 ) : ProjectRepository {
     override fun createProject(project: Project): Boolean {
-        return projectDataSource.addProject(projectMapper.mapEntityToRow(project))
+        return projectDataSource.addProject(csvProjectMapper.toMap(project))
     }
 
     override fun updateProject(project: Project): Boolean {
-        return projectDataSource.updateProject(projectMapper.mapEntityToRow(project))
+        return projectDataSource.updateProject(csvProjectMapper.toMap(project))
     }
 
     override fun deleteProject(projectId: UUID): Boolean {
@@ -24,13 +24,13 @@ class ProjectRepositoryImpl(
 
     override fun getProjectById(projectId: UUID): Project? {
         val projectRow = projectDataSource.getProjectById(projectId)
-        return projectRow?.let { projectMapper.mapRowToEntity(it) }
+        return projectRow?.let { csvProjectMapper.fromMap(it) }
     }
 
     override fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
             .map { projectRow ->
-                projectMapper.mapRowToEntity(projectRow)
+                csvProjectMapper.fromMap(projectRow)
             }
     }
 }

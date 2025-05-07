@@ -2,7 +2,7 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.project.ProjectDataSource
-import data.repositories.mappers.ProjectMapper
+import data.repositories.mappers.CsvProjectMapper
 import dummyData.createDummyProject
 import io.mockk.every
 import io.mockk.mockk
@@ -13,14 +13,14 @@ import java.util.UUID
 
 class ProjectRepositoryImplTest {
     private lateinit var projectDataSource: ProjectDataSource
-    private lateinit var projectMapper: ProjectMapper
+    private lateinit var csvProjectMapper: CsvProjectMapper
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
     val id: UUID = UUID.randomUUID()
     @BeforeEach
     fun setup() {
-        projectMapper = ProjectMapper()
+        csvProjectMapper = CsvProjectMapper()
         projectDataSource = mockk(relaxed = true)
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectMapper)
+        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, csvProjectMapper)
     }
 
     @Test

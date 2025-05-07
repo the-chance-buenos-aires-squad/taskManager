@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectMapperTest {
-    private val mapper = ProjectMapper()
+class CsvProjectMapperTest {
+    private val mapper = CsvProjectMapper()
 
     @Test
     fun `mapEntityToRow should map Project to List of Strings`() {
@@ -27,7 +27,7 @@ class ProjectMapperTest {
             now.toString()
         )
 
-        val actualRow = mapper.mapEntityToRow(project)
+        val actualRow = mapper.toMap(project)
 
         assertThat(expectedRow[1]).isEqualTo(actualRow[1])
     }
@@ -50,7 +50,7 @@ class ProjectMapperTest {
             createdAt = now
         )
 
-        val actualProject = mapper.mapRowToEntity(row)
+        val actualProject = mapper.fromMap(row)
         assertThat(expectedProject.name).isEqualTo(actualProject.name)
 
     }

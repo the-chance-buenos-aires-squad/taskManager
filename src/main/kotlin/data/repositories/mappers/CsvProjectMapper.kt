@@ -4,8 +4,9 @@ import domain.entities.Project
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectMapper : Mapper<Project> {
-    override fun mapEntityToRow(entity: Project): List<String> {
+class CsvProjectMapper : Mapper<Project, List<String>> {
+
+    override fun toMap(entity: Project): List<String> {
         return listOf(
             entity.id.toString(),
             entity.name,
@@ -14,7 +15,7 @@ class ProjectMapper : Mapper<Project> {
         )
     }
 
-    override fun mapRowToEntity(row: List<String>): Project {
+    override fun fromMap(row: List<String>): Project {
         return Project(
             id = UUID.fromString(row[ID]),
             name = row[NAME],
