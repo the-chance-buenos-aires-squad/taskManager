@@ -2,8 +2,6 @@ package data.dataSource.user
 
 import data.dto.UserDto
 import java.util.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class FakeMongoUserDataSource : UserDataSource {
 
@@ -13,7 +11,7 @@ class FakeMongoUserDataSource : UserDataSource {
        return users.add(userDto) }
 
     override suspend fun getUserById(id: UUID): UserDto? {
-        return users.find { it._id == id.toString() }
+        return users.find { it.id == id.toString() }
     }
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
@@ -21,7 +19,7 @@ class FakeMongoUserDataSource : UserDataSource {
     }
 
     override suspend fun deleteUser(id: UUID): Boolean  {
-       return users.removeIf { it._id == id.toString() }
+       return users.removeIf { it.id == id.toString() }
     }
 
     override suspend fun getUsers(): List<UserDto>  {
@@ -29,7 +27,7 @@ class FakeMongoUserDataSource : UserDataSource {
     }
 
     override suspend fun updateUser(userDto: UserDto): Boolean  {
-        val index = users.indexOfFirst { it._id == userDto._id }
+        val index = users.indexOfFirst { it.id == userDto.id }
         return if (index != -1) {
             users[index] = userDto
             true

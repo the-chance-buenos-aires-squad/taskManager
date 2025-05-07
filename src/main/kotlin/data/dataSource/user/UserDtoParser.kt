@@ -9,16 +9,16 @@ class UserDtoParser : DtoParser<List<String>, UserDto> {
 
     override fun toDto(type: List<String>): UserDto {
         return UserDto(
-            _id = type[ID_ROW],
+            id = type[ID_ROW],
             username = type[USER_NAME_ROW],
             password = type[PASSWORD_ROW],
-            role = UserRole.entries.find { it.name == type[USER_ROLE_ROW]},
+            role = UserRole.entries.find { it.name == type[USER_ROLE_ROW] },
             createdAt = type[USER_CREATED_AT_ROW]
         )
     }
 
     override fun fromDto(dto: UserDto): List<String> {
-        return listOf(dto._id,dto.username,dto.password,dto.role!!.name,dto.createdAt)
+        return listOf(dto.id, dto.username, dto.password, dto.role!!.name, dto.createdAt)
     }
 
     companion object {
