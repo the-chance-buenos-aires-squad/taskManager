@@ -36,7 +36,7 @@ object DummyUser {
     )
 
 
-    val userMapper = UserCsvMapper()
+//    val userMapper = UserCsvMapper()
 //
 //    val dummyUserOneRow = userMapper.mapEntityToRow(dummyUserOne)
 //    val dummyUserTwoRow = userMapper.mapEntityToRow(dummyUserTwo)
