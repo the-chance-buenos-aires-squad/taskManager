@@ -1,10 +1,17 @@
 package data.dataSource.task
 
+import data.dto.TaskDto
+import java.util.*
+
 interface TaskDataSource {
 
-     fun addTask(taskRow: List<String>): Boolean
-     fun getTasks(): List<List<String>>
-     fun getTaskById(taskId: String): List<String>?
-     fun deleteTask(taskId: String): Boolean
-     fun updateTask(taskRow: List<String>): Boolean
+    suspend fun addTask(taskDto: TaskDto): Boolean
+
+    suspend fun getTasks(): List<TaskDto>
+
+    suspend fun getTaskById(taskId: UUID): TaskDto?
+
+    suspend fun deleteTask(taskId: UUID): Boolean
+
+    suspend fun updateTask(taskDto: TaskDto): Boolean
 }
