@@ -3,8 +3,10 @@ package domain.usecases.taskState
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -19,10 +21,10 @@ class CreateTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should create state successfully when repository returns true`() {
+    fun `should create state successfully when repository returns true`() = runTest{
         val newState = DummyTaskState.inProgress
 
-        every { repository.createTaskState(newState) } returns true
+        coEvery { repository.createTaskState(newState) } returns true
 
         val result = createTaskStateUseCase.execute(newState)
 
@@ -30,11 +32,11 @@ class CreateTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should fail to create state when repository returns false`() {
+    fun `should fail to create state when repository returns false`() = runTest{
         val newState = DummyTaskState.inProgress
 
 
-        every { repository.createTaskState(newState) } returns false
+        coEvery { repository.createTaskState(newState) } returns false
 
         val result = createTaskStateUseCase.execute(newState)
 

@@ -3,8 +3,10 @@ package domain.usecases.taskState
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 import kotlin.test.Test
@@ -19,9 +21,8 @@ class ExistsTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should return true when state with given id exists`() {
-        val name = DummyTaskState.todo.name
-        every { repository.existsTaskState(any(), any()) } returns true
+    fun `should return true when state with given id exists`() = runTest {
+        coEvery { repository.existsTaskState(any(), any()) } returns true
 
         val result = existsTaskStateUseCase.execute(DummyTaskState.todo.name, DummyTaskState.todo.projectId)
 
@@ -29,9 +30,9 @@ class ExistsTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should return false when state with given id does not exist`() {
+    fun `should return false when state with given id does not exist`() = runTest {
         val nonExistName = "nonExistName"
-        every { repository.existsTaskState(any(), any()) } returns false
+        coEvery { repository.existsTaskState(any(), any()) } returns false
 
         val result = existsTaskStateUseCase.execute(nonExistName, UUID.randomUUID())
 

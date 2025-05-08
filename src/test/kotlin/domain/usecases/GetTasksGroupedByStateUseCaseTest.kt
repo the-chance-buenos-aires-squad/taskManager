@@ -5,8 +5,10 @@ import createDummyTaskState
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.createDummyProject
 import dummyData.createDummyTask
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -83,10 +85,10 @@ class GetTasksGroupedByStateUseCaseTest {
     }
 
     @Test
-    fun `getTasksGroupedByState should return list of states when state have task in specific project`() {
+    fun `getTasksGroupedByState should return list of states when state have task in specific project`() = runTest{
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
-        every { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
+        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
         val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
@@ -97,9 +99,9 @@ class GetTasksGroupedByStateUseCaseTest {
     }
 
     @Test
-    fun `getTasksGroupedByState should group tasks by their state correctly`() {
+    fun `getTasksGroupedByState should group tasks by their state correctly`() = runTest{
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
         every { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
@@ -114,9 +116,9 @@ class GetTasksGroupedByStateUseCaseTest {
     }
 
     @Test
-    fun `getTasksGroupedByState returns states with empty tasks when no tasks exist`() {
+    fun `getTasksGroupedByState returns states with empty tasks when no tasks exist`()= runTest {
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState)
         every { getTasksUseCase.getTasks() } returns emptyList()
 
         // When
@@ -127,9 +129,9 @@ class GetTasksGroupedByStateUseCaseTest {
     }
 
     @Test
-    fun `getTasksGroupedByState returns empty list when there are no states for the project`() {
+    fun `getTasksGroupedByState returns empty list when there are no states for the project`() = runTest {
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf()
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf()
         every { getTasksUseCase.getTasks() } returns listOf(
             createDummyTask(
                 projectId = projectId,
@@ -146,9 +148,9 @@ class GetTasksGroupedByStateUseCaseTest {
     }
 
     @Test
-    fun `getTasksGroupedByState filters out tasks and states from other projects`() {
+    fun `getTasksGroupedByState filters out tasks and states from other projects`() = runTest{
         // Given
-        every { getTaskStatesUseCase.execute(any()) } returns listOf(projectState, otherProjectState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(projectState, otherProjectState)
         every { getTasksUseCase.getTasks() } returns listOf(task1, task4)
 
         // When

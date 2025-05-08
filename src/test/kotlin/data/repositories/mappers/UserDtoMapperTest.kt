@@ -1,8 +1,7 @@
-package data.repositories.mappers.userMappers
+package data.repositories.mappers
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import data.dto.UserDto
-import data.repositories.mappers.UserDtoMapper
 import dummyData.DummyUser
 import org.junit.jupiter.api.Test
 
@@ -18,7 +17,7 @@ class UserDtoMapperTest {
         val result = userDtoMapper.fromEntity(entityUser)
 
         //then
-        assertThat(result).isInstanceOf(UserDto::class.java)
+        Truth.assertThat(result).isInstanceOf(UserDto::class.java)
     }
 
 }

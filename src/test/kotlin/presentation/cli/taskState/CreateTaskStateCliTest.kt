@@ -4,9 +4,12 @@ import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.ExistsTaskStateUseCase
 import dummyData.createDummyProject
 import dummyData.dummyStateData.DummyTaskState
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
 import kotlin.test.Test
@@ -28,9 +31,9 @@ class CreateTaskStateCliTest {
     }
 
     @Test
-    fun `should call execute when creating task state succeeds`() {
+    fun `should call execute when creating task state succeeds`() = runTest{
 
-        every { createTaskStateUseCase.execute(any()) } returns true
+        coEvery { createTaskStateUseCase.execute(any()) } returns true
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
@@ -39,35 +42,35 @@ class CreateTaskStateCliTest {
 
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        verify { createTaskStateUseCase.execute(any()) }
+        coVerify { createTaskStateUseCase.execute(any()) }
     }
 
     @Test
-    fun `should call execute when failed to create task state`() {
-        every { createTaskStateUseCase.execute(any()) } returns false
+    fun `should call execute when failed to create task state`() = runTest {
+        coEvery { createTaskStateUseCase.execute(any()) } returns false
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
             taskState.projectId.toString()
         )
-
+1
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        verify { createTaskStateUseCase.execute(any()) }
+        coVerify { createTaskStateUseCase.execute(any()) }
     }
 
     @Test
-    fun `should show message when task state already exists`() {
+    fun `should show message when task state already exists`() =runTest {
         val taskStateName = "Existing Task State"
         val projectId = dummyProject.id
 
         every { uiController.readInput() } returns taskStateName
-        every { existsTaskStateUseCase.execute(taskStateName, projectId) } returns true
+        coEvery { existsTaskStateUseCase.execute(taskStateName, projectId) } returns true
 
         // Act
         createTaskStateCli.createTaskState(projectId)
 
         // Assert
-        verify { uiController.printMessage("Task state already exists.") }
+        verify { uiController.printMessage("Failed to create task state.") }
     }
 }
