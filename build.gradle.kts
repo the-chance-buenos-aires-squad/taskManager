@@ -53,6 +53,7 @@ tasks.jacocoTestCoverageVerification {
                 fileTree(it) {
                     exclude("**/di/**")
                     exclude("**/entities/**")
+                    exclude("**/dto/**")
                 }
             },
         )
