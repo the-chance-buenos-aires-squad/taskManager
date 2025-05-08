@@ -1,6 +1,6 @@
 package data.dataSource.dummyData
 
-import data.repositories.mappers.AuditMapper
+import data.repositories.mappers.AuditDtoMapper
 import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
@@ -20,8 +20,8 @@ object createDummyAudits {
         userId = "admin123",
         timestamp = LocalDateTime.now()
     )
-    val auditMapper = AuditMapper()
-    val dummyTaskCreateActionRow = auditMapper.mapEntityToRow(dummyTaskCreateAction)
+    val auditDtoMapper = AuditDtoMapper()
+    val dummyTaskCreateActionRow = auditDtoMapper.fromEntity(dummyTaskCreateAction)
 
 
     val dummyProjectCreateAction = Audit(
@@ -35,7 +35,7 @@ object createDummyAudits {
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
-    val dummyProjectCreateActionRow = auditMapper.mapEntityToRow(dummyProjectCreateAction)
+    val dummyProjectCreateActionRow = auditDtoMapper.fromEntity(dummyProjectCreateAction)
 
 
     val dummyUserUpdateAction = Audit(

@@ -5,7 +5,6 @@ import data.dto.AuditDto
 import data.dummyData.DummyAudits.DummyTaskAuditDto
 import data.dummyData.DummyAudits.DummyTaskAuditRow
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 
 class AuditDtoParserTest{
     private val dto = DummyTaskAuditDto
@@ -56,15 +55,11 @@ class AuditDtoParserTest{
 
 
     private companion object {
-        private const val ID_ROW = 0
-        private const val ENTITY_ID_ROW = 1
         private const val ENTITY_TYPE_ROW = 2
         private const val ACTION_ROW = 3
         private const val FIELD_ROW = 4
         private const val OLD_VALUE_ROW = 5
         private const val NEW_VALUE_ROW = 6
-        private const val USER_ID_ROW = 7
-        private const val TIME_STAMP_ROW = 8
     }
 
 }

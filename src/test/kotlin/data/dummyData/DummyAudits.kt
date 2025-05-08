@@ -35,8 +35,8 @@ object DummyAudits {
     val DummyTaskAuditRow = listOf(
         dummyTaskAudit_CreateAction.id.toString(),
         dummyTaskAudit_CreateAction.entityId,
-        dummyTaskAudit_CreateAction.entityType.name,
-        dummyTaskAudit_CreateAction.action.name,
+        dummyTaskAudit_CreateAction.entityType!!.name,
+        dummyTaskAudit_CreateAction.action!!.name,
         dummyTaskAudit_CreateAction.field ?: "",
         dummyTaskAudit_CreateAction.oldValue ?: "",
         dummyTaskAudit_CreateAction.newValue ?: "",

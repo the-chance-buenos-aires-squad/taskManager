@@ -13,8 +13,8 @@ class AddAuditUseCase(
 
     suspend fun addAudit(
         entityId: String,
-        entityType: EntityType,
-        action: ActionType,
+        entityType: EntityType?,
+        action: ActionType?,
         field: String?,
         oldValue: String?,
         newValue: String?,

@@ -2,23 +2,23 @@ package data.repositories
 
 
 import data.dataSource.audit.AuditDataSource
-import data.repositories.mappers.AuditMapper
+import data.repositories.mappers.AuditDtoMapper
 import domain.entities.Audit
 import domain.repositories.AuditRepository
 
 class AuditRepositoryImpl(
     private val auditDataSource: AuditDataSource,
-    private val auditMapper: AuditMapper
+    private val auditDtoMapper: AuditDtoMapper
 ) : AuditRepository {
 
     override suspend fun addAudit(audit: Audit): Boolean {
-        return auditDataSource.addAudit(auditMapper.mapEntityToRow(audit))
+        return auditDataSource.addAudit(auditDtoMapper.fromEntity(audit))
     }
 
     override suspend fun getAllAudit(): List<Audit> {
         val auditsRowList = auditDataSource.getAllAudit()
         return auditsRowList.map { row ->
-            auditMapper.mapRowToEntity(row)
+            auditDtoMapper.toEntity(row)
         }
     }
 

@@ -1,18 +1,20 @@
 package data.dataSource.audit
 
 import data.dataSource.util.CsvHandler
+import data.dto.AuditDto
 import java.io.File
 
 
 class CsvAuditDataSource(
     private val csvHandler: CsvHandler,
+    private val auditDtoParser: AuditDtoParser,
     private val file: File
 ) : AuditDataSource {
 
-    override suspend fun addAudit(auditRow: List<String>): Boolean {
+    override suspend fun addAudit(auditDto: AuditDto): Boolean {
         return try {
             csvHandler.write(
-                row = auditRow,
+                row = auditDtoParser.fromDto(auditDto),
                 file = file,
                 append = true
             )
@@ -23,9 +25,9 @@ class CsvAuditDataSource(
         }
     }
 
-    override suspend fun getAllAudit(): List<List<String>> {
+    override suspend fun getAllAudit(): List<AuditDto> {
         val rows = csvHandler.read(file)
-        return rows
+        return rows.map { auditDtoParser.toDto(it) }
     }
 
 

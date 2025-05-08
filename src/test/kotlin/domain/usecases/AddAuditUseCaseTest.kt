@@ -28,13 +28,13 @@ class AddAuditUseCaseTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         val resultAudit = addAuditUseCase.addAudit(
-            DummyAudits.dummyProjectAudit_CreateAction.entityId,
-            DummyAudits.dummyProjectAudit_CreateAction.entityType,
-            DummyAudits.dummyProjectAudit_CreateAction.action,
-            DummyAudits.dummyProjectAudit_CreateAction.field,
-            DummyAudits.dummyProjectAudit_CreateAction.oldValue,
-            DummyAudits.dummyProjectAudit_CreateAction.newValue,
-            DummyAudits.dummyProjectAudit_CreateAction.userId
+            dummyProjectAudit_CreateAction.entityId,
+            dummyProjectAudit_CreateAction.entityType,
+            dummyProjectAudit_CreateAction.action,
+            dummyProjectAudit_CreateAction.field,
+            dummyProjectAudit_CreateAction.oldValue,
+            dummyProjectAudit_CreateAction.newValue,
+            dummyProjectAudit_CreateAction.userId
         )
         //then
         assertThat(resultAudit).isNotNull()

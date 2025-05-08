@@ -1,7 +1,6 @@
-package data.repositories.mappers.userMappers
+package data.repositories.mappers
 
 import data.dto.UserDto
-import data.repositories.mappers.Mapper
 import domain.entities.User
 import domain.entities.UserRole
 import java.time.LocalDateTime

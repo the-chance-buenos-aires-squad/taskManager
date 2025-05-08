@@ -6,9 +6,8 @@ import data.dataSource.dummyData.createDummyAudits
 import data.dataSource.dummyData.createDummyAudits.dummyProjectCreateAction
 import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateAction
 import data.dummyData.DummyAudits
-import data.repositories.mappers.AuditMapper
+import data.repositories.mappers.AuditDtoMapper
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -18,7 +17,7 @@ class AuditRepositoryImplTest {
 
     private val mockedDataSource = mockk<CsvAuditDataSource>(relaxed = true)
     private lateinit var auditRepository: AuditRepositoryImpl
-    private val mapper: AuditMapper = AuditMapper()
+    private val mapper: AuditDtoMapper = AuditDtoMapper()
 
 
     @BeforeEach
@@ -39,7 +38,7 @@ class AuditRepositoryImplTest {
     @Test
     fun `should return true when add audit successful in the data source`() = runTest{
         //given
-        coEvery { mockedDataSource.addAudit(mapper.mapEntityToRow(DummyAudits.dummyProjectAudit_CreateAction)) } returns true
+        coEvery { mockedDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns true
 
         //when
         val result = auditRepository.addAudit(DummyAudits.dummyProjectAudit_CreateAction)
@@ -63,7 +62,7 @@ class AuditRepositoryImplTest {
     @Test
     fun `should return false when add audit unSuccessful in the data source`() = runTest{
         //given
-        coEvery { mockedDataSource.addAudit(mapper.mapEntityToRow(DummyAudits.dummyProjectAudit_CreateAction)) } returns false
+        coEvery { mockedDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns false
 
         //when
         val result = auditRepository.addAudit(DummyAudits.dummyProjectAudit_CreateAction)

@@ -1,6 +1,7 @@
 package di
 
 import data.dataSource.audit.AuditDataSource
+import data.dataSource.audit.AuditDtoParser
 import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
@@ -12,6 +13,7 @@ import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.user.UserDtoParser
+import domain.entities.Audit
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -36,7 +38,8 @@ val dataSourceModule = module {
         File(Paths.TASK_FILE_PATH)
     }
 
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
+     single { AuditDtoParser() }
+    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
     single { UserDtoParser() }
 
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
