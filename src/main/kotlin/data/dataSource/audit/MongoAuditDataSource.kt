@@ -1,14 +1,14 @@
 package data.dataSource.audit
 
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import data.dto.AuditDto
 import di.MongoCollections
 import kotlinx.coroutines.flow.toList
 
 class MongoAuditDataSource(
-    private val mongoDb: MongoDatabase
+    private val auditCollection: MongoCollection<AuditDto>
 ):AuditDataSource {
-    private val auditCollection = mongoDb.getCollection<AuditDto>(MongoCollections.AUDITS_COLLECTION)
     override suspend fun addAudit(auditDto: AuditDto): Boolean {
        return auditCollection.insertOne(auditDto).wasAcknowledged()
     }
