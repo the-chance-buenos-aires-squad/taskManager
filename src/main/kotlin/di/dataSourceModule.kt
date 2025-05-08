@@ -1,7 +1,9 @@
 package di
 
 import data.dataSource.audit.AuditDataSource
+import data.dataSource.audit.AuditDtoParser
 import data.dataSource.audit.CsvAuditDataSource
+import data.dataSource.audit.MongoAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.MongoProjectDataSource
 import data.dataSource.project.ProjectDataSource
@@ -13,6 +15,8 @@ import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.user.UserDtoParser
+import di.MongoCollections.auditQualifier
+import domain.entities.Audit
 import di.MongoCollections.projectCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
@@ -38,6 +42,12 @@ val dataSourceModule = module {
         File(Paths.TASK_FILE_PATH)
     }
 
+     single { AuditDtoParser() }
+//    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
+    single<AuditDataSource> { MongoAuditDataSource(auditCollection = get(auditQualifier)) }
+
+
+    single { UserDtoParser() }
     single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
     //single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
     single<ProjectDataSource> { MongoProjectDataSource( get(projectCollectionQualifier)) }
@@ -46,6 +56,8 @@ val dataSourceModule = module {
 
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single <UserDataSource>{ MongoUserDataSource(get()) }
+    single <UserDataSource>{ MongoUserDataSource(mongoDb = get()) }
+    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), csvHandler = get()) }
     single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), csvHandler = get()) }
     single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
 
