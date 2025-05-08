@@ -4,14 +4,13 @@ import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
-import data.dataSource.task.CsvTaskDataSource
+import data.dataSource.task.MongoTaskDataSource
 import data.dataSource.task.TaskDataSource
+import data.dataSource.task.TaskDtoParser
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
-import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
-import data.dataSource.user.UserDtoParser
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -36,22 +35,25 @@ val dataSourceModule = module {
         File(Paths.TASK_FILE_PATH)
     }
 
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
-    single { UserDtoParser() }
+    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(),file = get(Paths.AuditFileQualifier)) }
+    single { TaskDtoParser() }
 
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
-    single <UserDataSource>{ MongoUserDataSource(get()) }
-    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), csvHandler = get()) }
-    single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), csvHandler = get()) }
-    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
+    single<UserDataSource> { MongoUserDataSource(get()) }
+    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier),csvHandler = get()) }
+    single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier),csvHandler = get()) }
+//    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
+    single<TaskDataSource> { MongoTaskDataSource(get()) }
 
 }
 
 object Paths {
+
     /*
     when injecting the file to data source use qualifier before injecting
     @Named("UserFilePath") private val userFile: File
      */
+
     const val USER_FILE_PATH = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
 
