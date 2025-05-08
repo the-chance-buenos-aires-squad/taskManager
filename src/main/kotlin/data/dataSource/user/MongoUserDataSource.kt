@@ -22,7 +22,7 @@ class MongoUserDataSource(
     override suspend fun getUserById(id: UUID): UserDto? {
         return userCollection
             .find(
-                Filters.eq(UserDto::_id.name,id)
+                Filters.eq(UserDto::id.name,id)
             ).firstOrNull()
     }
 
@@ -36,7 +36,7 @@ class MongoUserDataSource(
     override suspend fun deleteUser(id: UUID): Boolean {
         return userCollection
             .deleteOne(
-                Filters.eq(UserDto::_id.name,id)
+                Filters.eq(UserDto::id.name,id)
             ).wasAcknowledged()
     }
 
@@ -47,7 +47,7 @@ class MongoUserDataSource(
     override suspend fun updateUser(userDto: UserDto): Boolean {
         return userCollection
             .updateOne(
-                Filters.eq(UserDto::_id.name, userDto._id),
+                Filters.eq(UserDto::id.name, userDto.id),
                 Updates.combine(
                     Updates.set(UserDto::username.name, userDto.username),
                     Updates.set(UserDto::password.name, userDto.password),

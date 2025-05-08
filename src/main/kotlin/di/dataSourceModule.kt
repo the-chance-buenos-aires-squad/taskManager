@@ -42,22 +42,14 @@ val dataSourceModule = module {
         File(Paths.TASK_FILE_PATH)
     }
 
-     single { AuditDtoParser() }
 //    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
     single<AuditDataSource> { MongoAuditDataSource(auditCollection = get(auditQualifier)) }
 
-
-    single { UserDtoParser() }
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
     //single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
     single<ProjectDataSource> { MongoProjectDataSource( get(projectCollectionQualifier)) }
 
-
-
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single <UserDataSource>{ MongoUserDataSource(get()) }
-    single <UserDataSource>{ MongoUserDataSource(mongoDb = get()) }
-    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), csvHandler = get()) }
     single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), csvHandler = get()) }
     single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
 
