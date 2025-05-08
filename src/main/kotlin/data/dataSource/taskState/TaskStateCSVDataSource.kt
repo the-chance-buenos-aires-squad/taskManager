@@ -1,6 +1,7 @@
 package data.dataSource.taskState
 
 import data.dataSource.util.CsvHandler
+import data.repositories.dataSource.TaskStateDataSource
 import data.repositories.mappers.TaskStateMapper
 import data.repositories.mappers.TaskStateMapper.Companion.ID
 import data.repositories.mappers.TaskStateMapper.Companion.NAME
@@ -49,8 +50,7 @@ class TaskStateCSVDataSource(
     }
 
     override fun getAllTaskStates(): List<TaskState> {
-        return csvHandler.read(file)
-            .mapNotNull { parts -> TaskStateMapper().mapRowToEntity(parts) }
+        return csvHandler.read(file).map { parts -> TaskStateMapper().mapRowToEntity(parts) }
     }
 
     override fun existsTaskState(name: String, projectId: UUID): Boolean {
