@@ -42,7 +42,6 @@ class CsvProjectDataSource(
     }
 
     override suspend fun getAllProjects(): List<ProjectDto> {
-        if (!file.exists()) return emptyList()
         return csvHandler.read(file).map { projectDtoParser.toDto(it) }
     }
 

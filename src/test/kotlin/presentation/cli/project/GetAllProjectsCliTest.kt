@@ -4,9 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,7 +22,7 @@ class GetAllProjectsCliTest {
     }
 
     @Test
-    fun `should throw exception if no projects`() {
+    fun `should throw exception if no projects`() = runTest{
         val exception = assertThrows<NoProjectsFoundException> {
             getAllProjectsCli.getAll()
         }
@@ -31,11 +30,11 @@ class GetAllProjectsCliTest {
     }
 
     @Test
-    fun `should call execute function in create use case when I call create function and success to create project`() {
-        every { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
+    fun `should call execute function in create use case when I call create function and success to create project`() =runTest{
+        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
 
         getAllProjectsCli.getAll()
 
-        verify { getAllProjectsUseCase.execute() }
+        coVerify { getAllProjectsUseCase.execute() }
     }
 }

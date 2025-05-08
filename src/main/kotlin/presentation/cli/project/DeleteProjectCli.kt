@@ -11,7 +11,7 @@ class DeleteProjectCli(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val uiController: UiController
 ) {
-    fun delete() {
+    suspend fun delete() {
         val projects = getAllProjectsUseCase.execute()
 
         uiController.printMessage(" Select a project to delete:")

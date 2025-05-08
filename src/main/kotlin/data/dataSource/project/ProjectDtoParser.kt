@@ -9,7 +9,7 @@ class ProjectDtoParser: DtoParser<List<String>,ProjectDto> {
             id=type[0],
             name = type[1],
             description = type[2],
-            createdAt = type[4]
+            createdAt = type[3]
         )
     }
 

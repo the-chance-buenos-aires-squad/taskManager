@@ -31,7 +31,7 @@ class ProjectDtoParserTest {
 
         val actualRow = parser.toDto(list)
 
-        assertThat(expectedRow.id).isEqualTo(actualRow.id)
+        assertThat(list[0]).isEqualTo(actualRow.id)
     }
 
     @Test

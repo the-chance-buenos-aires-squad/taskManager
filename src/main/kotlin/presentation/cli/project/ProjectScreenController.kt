@@ -12,7 +12,7 @@ class ProjectScreenController(
     private val getAllProjectsCli: GetAllProjectsCli,
     private val uiController: UiController
 ) {
-    fun show() {
+    suspend fun show() {
         while (true) {
             projectShowMenu.showMenu()
             when (uiController.readInput().toIntOrNull()) {

@@ -6,7 +6,7 @@ import java.util.*
 class DeleteProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    fun execute(projectId: UUID): Boolean {
+    suspend fun execute(projectId: UUID): Boolean {
         return projectRepository.deleteProject(projectId)
     }
 

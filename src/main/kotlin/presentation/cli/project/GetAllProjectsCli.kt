@@ -8,7 +8,7 @@ class GetAllProjectsCli(
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val uiController: UiController
 ) {
-    fun getAll() {
+    suspend fun getAll() {
         val projects = getAllProjectsUseCase.execute()
 
         if (projects.isEmpty()) throw NoProjectsFoundException()
