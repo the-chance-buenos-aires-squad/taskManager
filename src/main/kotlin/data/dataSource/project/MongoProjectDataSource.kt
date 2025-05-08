@@ -2,6 +2,7 @@ package data.dataSource.project
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import data.dto.ProjectDto
 import di.MongoCollections
@@ -10,10 +11,8 @@ import kotlinx.coroutines.flow.toList
 import java.util.*
 
 class MongoProjectDataSource(
-    mongoDb: MongoDatabase,
+     private val projectCollection : MongoCollection<ProjectDto>
 ) : ProjectDataSource {
-
-    private val projectCollection = mongoDb.getCollection<ProjectDto>(MongoCollections.PROJECTS_COLLECTION)
 
     override suspend fun addProject(projectDto: ProjectDto): Boolean {
         return projectCollection.insertOne(projectDto).wasAcknowledged()
@@ -29,8 +28,8 @@ class MongoProjectDataSource(
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         return projectCollection.updateOne(
-            Filters.eq(ProjectDto::_id.name,projectDto._id),
-            Updates.combine(
+            filter = Filters.eq(ProjectDto::_id.name,projectDto._id),
+            update = Updates.combine(
                 Updates.set(ProjectDto::name.name,projectDto.name),
                 Updates.set(ProjectDto::description.name,projectDto.description),
                 Updates.set(ProjectDto::createdAt.name,projectDto.createdAt)

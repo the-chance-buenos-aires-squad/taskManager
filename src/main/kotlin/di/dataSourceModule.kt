@@ -13,6 +13,7 @@ import data.dataSource.user.CsvUserDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
 import data.dataSource.user.UserDtoParser
+import di.MongoCollections.projectCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -39,7 +40,9 @@ val dataSourceModule = module {
 
     single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), file = get(Paths.AuditFileQualifier)) }
     //single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
-    single<ProjectDataSource> { MongoProjectDataSource(get()) }
+    single<ProjectDataSource> { MongoProjectDataSource( get(projectCollectionQualifier)) }
+
+
 
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single <UserDataSource>{ MongoUserDataSource(get()) }
