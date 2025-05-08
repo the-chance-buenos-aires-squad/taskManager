@@ -10,7 +10,7 @@ class AuthenticationUseCase(
     private val userValidator: UserValidator
 ) {
 
-    fun login(
+    suspend fun login(
         username: String,
         password: String
     ): User {

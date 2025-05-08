@@ -2,12 +2,13 @@ package presentation.cli.task
 
 import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.UserNotLoggedInException
-import domain.repositories.AuthRepository
 import domain.usecases.task.DeleteTaskUseCase
 import domain.usecases.task.GetAllTasksUseCase
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import presentation.UiController
 import java.util.*
 import kotlin.test.BeforeTest
@@ -33,119 +34,119 @@ class DeleteTaskCliTest {
     }
 
     @Test
-    fun `should delete task when valid input and confirmation given`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1, task2)
-        every { uiController.readInput() } returns "2" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task2.id) } returns true
+    fun `should delete task when valid input and confirmation given`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1, task2)
+        coEvery { uiController.readInput() } returns "2" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task2.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("Task deleted successfully.") }
-        verify { deleteTaskUseCase.deleteTask(task2.id) }
+        coVerify { uiController.printMessage("Task deleted successfully.") }
+        coVerify { deleteTaskUseCase.deleteTask(task2.id) }
     }
 
     @Test
-    fun `should cancel deletion if user says no`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "1" andThen "no"
+    fun `should cancel deletion if user says no`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "1" andThen "no"
 
         deleteTaskCli.delete(projectId)
 
-        verify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
-        verify { uiController.printMessage("Deletion canceled. Returning to dashboard.") }
+        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify { uiController.printMessage("Deletion canceled. Returning to dashboard.") }
     }
 
     @Test
-    fun `should handle invalid index and retry once`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "999" andThen "1" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task1.id) } returns true
+    fun `should handle invalid index and retry once`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "999" andThen "1" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        verify { deleteTaskUseCase.deleteTask(task1.id) }
-        verify { uiController.printMessage("Task deleted successfully.") }
+        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
     @Test
-    fun `should return early if no tasks found`() {
-        every { getAllTasksUseCase.execute() } returns emptyList()
+    fun `should return early if no tasks found`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns emptyList()
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("No tasks found for this project.") }
-        verify(exactly = 0) { uiController.readInput() }
-        verify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify { uiController.printMessage("No tasks found for this project.") }
+        coVerify(exactly = 0) { uiController.readInput() }
+        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
     }
 
     @Test
-    fun `should handle confirmation with invalid then valid response`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "1" andThen "maybe" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task1.id) } returns true
+    fun `should handle confirmation with invalid then valid response`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "1" andThen "maybe" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        verify { deleteTaskUseCase.deleteTask(task1.id) }
-        verify { uiController.printMessage("Task deleted successfully.") }
+        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
     @Test
-    fun `should handle UserNotLoggedInException`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "1" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task1.id) } throws UserNotLoggedInException("Operation not allowed: User is not logged in.")
+    fun `should handle UserNotLoggedInException`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "1" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task1.id) } throws UserNotLoggedInException("Operation not allowed: User is not logged in.")
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("Operation not allowed: User is not logged in.") }
+        coVerify { uiController.printMessage("Operation not allowed: User is not logged in.") }
     }
 
     @Test
-    fun `should exit if invalid input provided twice`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "abc" andThen "xyz"
+    fun `should exit if invalid input provided twice`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "abc" andThen "xyz"
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("Invalid input. Returning to dashboard.") }
-        verify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify { uiController.printMessage("Invalid input. Returning to dashboard.") }
+        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
     }
 
     @Test
-    fun `should show filtered tasks only for given project`() {
+    fun `should show filtered tasks only for given project`() = runTest {
         val otherProjectId = UUID.randomUUID()
         val taskInOtherProject = DummyTasks.validTask.copy(title = "Other", projectId = otherProjectId)
 
-        every { getAllTasksUseCase.execute() } returns listOf(task1, taskInOtherProject)
-        every { uiController.readInput() } returns "1" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task1.id) } returns true
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1, taskInOtherProject)
+        coEvery { uiController.readInput() } returns "1" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        verify { deleteTaskUseCase.deleteTask(task1.id) }
-        verify { uiController.printMessage("Task deleted successfully.") }
+        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
     @Test
-    fun `should cancel deletion after two invalid confirmation inputs`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "1" andThen "maybe" andThen "what"
+    fun `should cancel deletion after two invalid confirmation inputs`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "1" andThen "maybe" andThen "what"
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("Invalid confirmation. Returning to dashboard.") }
-        verify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify { uiController.printMessage("Invalid confirmation. Returning to dashboard.") }
+        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
     }
 
     @Test
-    fun `should show error message when task deletion fails`() {
-        every { getAllTasksUseCase.execute() } returns listOf(task1)
-        every { uiController.readInput() } returns "1" andThen "yes"
-        every { deleteTaskUseCase.deleteTask(task1.id) } returns false
+    fun `should show error message when task deletion fails`() = runTest {
+        coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
+        coEvery { uiController.readInput() } returns "1" andThen "yes"
+        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns false
 
         deleteTaskCli.delete(projectId)
 
-        verify { uiController.printMessage("Error: Task was not deleted.") }
+        coVerify { uiController.printMessage("Error: Task was not deleted.") }
     }
 }

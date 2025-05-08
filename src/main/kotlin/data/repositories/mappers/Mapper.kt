@@ -2,7 +2,7 @@ package data.repositories.mappers
 
 interface Mapper<T,R> {
 
-    fun toMap(entity: T): R
+    fun fromEntity(entity: T): R
 
-    fun fromMap(row: R): T
+    fun toEntity(type: R): T
 }

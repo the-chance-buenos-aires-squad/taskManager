@@ -50,7 +50,7 @@ class CsvTaskMapperTest {
     @Test
     fun `should convert Task to correct list of strings`() {
         // When
-        val result = taskMapper.toMap(sampleTask)
+        val result = taskMapper.fromEntity(sampleTask)
 
         // Then
         assertThat(result).isEqualTo(sampleTaskRow)
@@ -59,7 +59,7 @@ class CsvTaskMapperTest {
     @Test
     fun `should convert list of strings to correct Task`() {
         // When
-        val result = taskMapper.fromMap(sampleTaskRow)
+        val result = taskMapper.toEntity(sampleTaskRow)
 
         // Then
         assertThat(result).isEqualTo(sampleTask)

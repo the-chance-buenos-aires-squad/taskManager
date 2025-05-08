@@ -5,9 +5,10 @@ import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.UserNameEmptyException
 import domain.usecases.CreateUserUseCase
 import dummyData.DummyUser
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -24,14 +25,14 @@ class CreateUserCliTest {
     }
 
     @Test
-    fun `should create user successfully and show success message`() {
+    fun `should create user successfully and show success message`() = runTest {
         // given
-        every { uiController.readInput() } returnsMany listOf(
+        coEvery { uiController.readInput() } returnsMany listOf(
             testUser.username,
             testUser.password,
             testUser.password
         )
-        every { createUserUseCase.addUser(any(), any(), any()) } returns testUser
+        coEvery { createUserUseCase.addUser(any(), any(), any()) } returns testUser
 
         // when
         createUserCli.start()
@@ -47,14 +48,14 @@ class CreateUserCliTest {
     }
 
     @Test
-    fun `should show error when password confirmation fails`() {
+    fun `should show error when password confirmation fails`() = runTest {
         // given
-        every { uiController.readInput() } returnsMany listOf(
+        coEvery { uiController.readInput() } returnsMany listOf(
             "testUser",
             "password1",
             "password2"
         )
-        every { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
                 InvalidConfirmPasswordException()
 
         // when
@@ -67,10 +68,10 @@ class CreateUserCliTest {
     }
 
     @Test
-    fun `should handle empty username error`() {
+    fun `should handle empty username error`() = runTest {
         // given
-        every { uiController.readInput() } returnsMany listOf("", "pass", "pass")
-        every { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { uiController.readInput() } returnsMany listOf("", "pass", "pass")
+        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
                 UserNameEmptyException()
 
         // when
@@ -83,10 +84,10 @@ class CreateUserCliTest {
     }
 
     @Test
-    fun `should handle existing username error`() {
+    fun `should handle existing username error`() = runTest {
         // given
-        every { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
-        every { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
+        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
                 CreateUserException()
 
         // when
@@ -97,5 +98,4 @@ class CreateUserCliTest {
             uiController.printMessage("Error: Failed to create user")
         }
     }
-
 }

@@ -8,15 +8,15 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
-
 
 class UpdateTaskUseCaseTest {
     private val taskRepository: TaskRepository = mockk()
@@ -30,10 +30,10 @@ class UpdateTaskUseCaseTest {
     }
 
     @Test
-    fun `should return true when current user is logged in and updating Successful`() {
+    fun `should return true when current user is logged in and updating Successful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        every { taskRepository.updateTask(any()) } returns true
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        coEvery { taskRepository.updateTask(any()) } returns true
 
         //.when
         val result = updateTaskUseCase.updateTask(
@@ -49,12 +49,11 @@ class UpdateTaskUseCaseTest {
         assertThat(result).isTrue()
     }
 
-
     @Test
-    fun `should return false when current user is logged in and updating unSuccessful`() {
+    fun `should return false when current user is logged in and updating unSuccessful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        every { taskRepository.updateTask(any()) } returns false
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        coEvery { taskRepository.updateTask(any()) } returns false
 
         //.when
         val result = updateTaskUseCase.updateTask(
@@ -70,11 +69,10 @@ class UpdateTaskUseCaseTest {
         assertThat(result).isFalse()
     }
 
-
     @Test
-    fun `should through UserNotLoggedInException when user not logged in`() {
+    fun `should through UserNotLoggedInException when user not logged in`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns null
+        coEvery { authRepository.getCurrentUser() } returns null
 
         //when & then
         assertThrows<UserNotLoggedInException> {
@@ -87,16 +85,13 @@ class UpdateTaskUseCaseTest {
                 assignedTo = DummyTasks.validTask.assignedTo,
             )
         }
-
     }
 
-
-
     @Test
-    fun `should add audit when user is logged in and updating is successful`() {
+    fun `should add audit when user is logged in and updating is successful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        every { taskRepository.updateTask(any()) } returns true
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        coEvery { taskRepository.updateTask(any()) } returns true
 
         //when
         updateTaskUseCase.updateTask(
@@ -113,11 +108,11 @@ class UpdateTaskUseCaseTest {
     }
 
     @Test
-    fun `should set assignedTo to null when assignedTo is not provided`() {
+    fun `should set assignedTo to null when assignedTo is not provided`() = runTest {
         //given
         val taskSlot = slot<Task>()
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        every { taskRepository.updateTask(capture(taskSlot)) } returns true
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        coEvery { taskRepository.updateTask(capture(taskSlot)) } returns true
 
         //when
         updateTaskUseCase.updateTask(
@@ -131,5 +126,4 @@ class UpdateTaskUseCaseTest {
         //then
         assertThat(taskSlot.captured.assignedTo).isNull()
     }
-
 }

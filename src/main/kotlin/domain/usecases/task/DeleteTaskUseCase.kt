@@ -14,7 +14,7 @@ class DeleteTaskUseCase(
     private val authRepository: AuthRepository
 ) {
 
-    fun deleteTask(id: UUID): Boolean {
+    suspend fun deleteTask(id: UUID): Boolean {
         val currentUser = authRepository.getCurrentUser()
             ?: throw UserNotLoggedInException()
         return taskRepository.deleteTask(id).also { result ->

@@ -102,7 +102,7 @@ class TaskRepositoryImplTest {
         taskRepository.addTask(task)
 
         // Then
-        verify(exactly = 1) { taskMapper.mapEntityToRow(any()) }  // Ensure the mapper is called once
+        verify(exactly = 1) { taskMapper.fromEntity(any()) }  // Ensure the mapper is called once
     }
 
     @Test
@@ -110,7 +110,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = createSampleTask()
         val mappedTask = listOf("mapped-task-data")
-        every { taskMapper.mapEntityToRow(any()) } returns mappedTask
+        every { taskMapper.fromEntity(any()) } returns mappedTask
 
         // When
         taskRepository.addTask(task)
@@ -163,16 +163,16 @@ class TaskRepositoryImplTest {
         val mappedTask2 = createSampleTask(title = "title2",description = "desc2")
 
         every { mockTaskDataSource.getTasks() } returns rawRows
-        every { taskMapper.mapRowToEntity(rawTaskRow1) } returns mappedTask1
-        every { taskMapper.mapRowToEntity(rawTaskRow2) } returns mappedTask2
+        every { taskMapper.toEntity(rawTaskRow1) } returns mappedTask1
+        every { taskMapper.toEntity(rawTaskRow2) } returns mappedTask2
 
         // When
         val result = taskRepository.getAllTasks()
 
         // Then
         verify(exactly = 1) { mockTaskDataSource.getTasks() }
-        verify(exactly = 1) { taskMapper.mapRowToEntity(rawTaskRow1) }
-        verify(exactly = 1) { taskMapper.mapRowToEntity(rawTaskRow2) }
+        verify(exactly = 1) { taskMapper.toEntity(rawTaskRow1) }
+        verify(exactly = 1) { taskMapper.toEntity(rawTaskRow2) }
 
         assertThat(result).hasSize(2)
         assertThat(result).containsExactly(mappedTask1,mappedTask2)
@@ -236,7 +236,7 @@ class TaskRepositoryImplTest {
     fun `should return true when updating task successfully`() {
         //given
         val task = createSampleTask()
-        every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns true
+        every { mockTaskDataSource.updateTask(taskMapper.fromEntity(task)) } returns true
 
         //when
         val result = taskRepository.updateTask(task)
@@ -250,7 +250,7 @@ class TaskRepositoryImplTest {
     fun `should return false when updating task unSuccessfully`() {
         //given
         val task = createSampleTask()
-        every { mockTaskDataSource.updateTask(taskMapper.mapEntityToRow(task)) } returns false
+        every { mockTaskDataSource.updateTask(taskMapper.fromEntity(task)) } returns false
 
         //when
         val result = taskRepository.updateTask(task)
@@ -264,7 +264,7 @@ class TaskRepositoryImplTest {
     fun `should return non-null task object when getting by id successfully`() {
         //given
         val task = createSampleTask()
-        val taskRow = taskMapper.mapEntityToRow(task)
+        val taskRow = taskMapper.fromEntity(task)
         every { mockTaskDataSource.getTaskById(task.id.toString()) } returns taskRow
 
         //when
@@ -279,7 +279,7 @@ class TaskRepositoryImplTest {
     fun `should return null  when getting task by id unSuccessfully`() {
         //given
         val task = createSampleTask()
-        val taskRow = taskMapper.mapEntityToRow(task)
+        val taskRow = taskMapper.fromEntity(task)
         every { mockTaskDataSource.getTaskById(task.id.toString()) } returns null
 
         //when

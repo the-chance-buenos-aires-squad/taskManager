@@ -7,7 +7,7 @@ import domain.usecases.task.GetAllTasksUseCase
 import domain.usecases.task.UpdateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
-import java.util.UUID
+import java.util.*
 
 class UpdateTaskCli(
     private val getAllTasksUseCase: GetAllTasksUseCase,
@@ -17,15 +17,15 @@ class UpdateTaskCli(
     private val uiController: UiController
 ) {
 
-    fun update(projectID: UUID) {
+    suspend fun update(projectID: UUID) {
         val allTasks = getAllTasksUseCase.execute()
         val tasks = TaskCliUtils.fetchProjectTasks(allTasks, projectID, uiController)
         if (tasks.isEmpty()) return
 
         val selectedTask = TaskCliUtils.selectTask(tasks, uiController) ?: return
 
-        val allStates = getAllTaskStatesUseCase.execute()
-        val statesForProject = allStates.filter { it.projectId == projectID }
+        val statesForProject = getAllTaskStatesUseCase.execute(projectID)
+        // val statesForProject = allStates.filter { it.projectId == projectID }
 
         val updatedTask = TaskCliUtils.promptForUpdatedTask(
             selectedTask,
@@ -38,7 +38,7 @@ class UpdateTaskCli(
         handleTaskUpdating(updatedTask)
     }
 
-    private fun handleTaskUpdating(updatedTask: Task) {
+    private suspend fun handleTaskUpdating(updatedTask: Task) {
         try {
             updateTaskUseCase.updateTask(
                 updatedTask.id,
@@ -47,15 +47,15 @@ class UpdateTaskCli(
                 updatedTask.projectId,
                 updatedTask.stateId,
                 updatedTask.assignedTo,
-            ).also { result->
-                when(result){
+            ).also { result ->
+                when (result) {
                     true -> uiController.printMessage("Task updated successfully.")
                     false -> uiController.printMessage("Failed to update task.")
                 }
             }
 
-        }catch (e: UserNotLoggedInException){
-            uiController.printMessage(e.message?:"")
+        } catch (e: UserNotLoggedInException) {
+            uiController.printMessage(e.message ?: "")
         }
     }
 

@@ -6,7 +6,7 @@ import domain.repositories.TaskRepository
 class GetAllTasksUseCase(
     private val taskRepository: TaskRepository
 ) {
-    fun execute():List<Task>{
+    fun execute(): List<Task> {
         return taskRepository.getAllTasks()
     }
 }
