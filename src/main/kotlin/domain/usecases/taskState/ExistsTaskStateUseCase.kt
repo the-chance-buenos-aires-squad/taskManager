@@ -4,7 +4,7 @@ import domain.repositories.TaskStateRepository
 import java.util.*
 
 class ExistsTaskStateUseCase(private val repository: TaskStateRepository) {
-    fun execute(name: String, projectId: UUID): Boolean {
+    suspend fun execute(name: String, projectId: UUID): Boolean {
         return repository.existsTaskState(name, projectId)
     }
 }

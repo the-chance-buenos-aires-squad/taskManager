@@ -12,7 +12,7 @@ class CreateTaskStateCli(
 ) {
     private val inputHandler = TaskStateInputHandler(uiController)
 
-    fun createTaskState(selectedProject: UUID) {
+    suspend fun createTaskState(selectedProject: UUID) {
 
         uiController.printMessage(
             """
@@ -22,14 +22,14 @@ class CreateTaskStateCli(
             """.trimIndent()
         )
 
-        val taskState = inputHandler.readAndValidateUserInputs(projectId = selectedProject)
+        val taskState = inputHandler.readAndValidateUserInputs(projectId = UUID.fromString("eddb0f91-0ea2-403c-8bfd-1617efa945c3"))
 
-        if (existsTaskStateUseCase.execute(taskState.name, taskState.projectId)) {
+        if (existsTaskStateUseCase.execute(taskState.name, UUID.fromString("eddb0f91-0ea2-403c-8bfd-1617efa945c3"))) {
             uiController.printMessage("Task state already exists.")
             return
         }
 
-        val newState = createTaskStateUseCase.execute(taskState)
+        val newState = createTaskStateUseCase.execute(taskState.copy(projectId = UUID.fromString("eddb0f91-0ea2-403c-8bfd-1617efa945c3")))
 
         if (newState) {
             uiController.printMessage("Task state created successfully.")

@@ -1,12 +1,13 @@
 package data.dataSource.taskState
 
+import data.dto.TaskStateDto
 import domain.entities.TaskState
 import java.util.*
 
 interface TaskStateDataSource {
-    fun createTaskState(state: List<String>): Boolean
-    fun editTaskState(editState: List<String>): Boolean
-    fun deleteTaskState(stateId: UUID): Boolean
-    fun getAllTaskStates(): List<TaskState>
-    fun existsTaskState(name: String, projectId: UUID): Boolean
+    suspend fun createTaskState(state: TaskStateDto): Boolean
+    suspend fun editTaskState(editState: TaskStateDto): Boolean
+    suspend fun deleteTaskState(stateId: String): Boolean
+    suspend fun getTaskStates(): List<TaskStateDto>
+    suspend fun existsTaskState(name: String, projectId: String): Boolean
 }

@@ -9,6 +9,6 @@ val repositoryModule = module {
     single<AuthRepository> { AuthRepositoryImpl(userRepository = get(), mD5Hasher = get()) }
     single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(projectDataSource = get(), projectMapper = get()) }
-    single<TaskStateRepository> { TaskStateRepositoryImpl(taskStateCSVDataSource = get(), taskStateMapper = get()) }
+    single<TaskStateRepository> { TaskStateRepositoryImpl(taskStateCSVDataSource = get(), taskStateDtoMapper = get()) }
     single<TaskRepository> { TaskRepositoryImpl(csvTaskDataSource = get(), taskMapper = get()) }
 }

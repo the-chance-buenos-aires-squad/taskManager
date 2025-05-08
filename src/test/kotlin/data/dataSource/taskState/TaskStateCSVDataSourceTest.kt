@@ -96,7 +96,7 @@ class TaskStateCSVDataSourceTest {
     fun `should return all states except header`() {
         every { csvHandler.read(testStateFile) } returns csvRows
 
-        val result = taskStateCSVDataSource.getAllTaskStates()
+        val result = taskStateCSVDataSource.getTaskStates()
 
         assertThat(result).hasSize(2)
     }

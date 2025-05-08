@@ -2,6 +2,7 @@ package data.repositories.mappers.userMappers
 
 import com.google.common.truth.Truth.assertThat
 import data.dto.UserDto
+import data.repositories.mappers.UserDtoMapper
 import dummyData.DummyUser
 import org.junit.jupiter.api.Test
 

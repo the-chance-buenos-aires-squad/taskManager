@@ -1,7 +1,7 @@
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.repositories.TaskStateRepositoryImpl
-import data.repositories.mappers.TaskStateMapper
+import data.repositories.mappers.TaskStateDtoMapper
 import domain.entities.TaskState
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.every
@@ -13,13 +13,13 @@ import java.util.*
 class TaskStateRepositoryImplTest {
 
     private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
-    private lateinit var taskStateMapper: TaskStateMapper
+    private lateinit var taskStateDtoMapper: TaskStateDtoMapper
     private lateinit var stateRepository: TaskStateRepositoryImpl
 
     @BeforeEach
     fun setUp() {
-        taskStateMapper = TaskStateMapper()
-        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource, taskStateMapper)
+        taskStateDtoMapper = TaskStateDtoMapper()
+        stateRepository = TaskStateRepositoryImpl(mockCSVDataSource, taskStateDtoMapper)
     }
 
     @Test
@@ -53,7 +53,7 @@ class TaskStateRepositoryImplTest {
         val updatedStateRow =
             listOf(updatedToDoState.id.toString(), updatedToDoState.name, updatedToDoState.projectId.toString())
 
-        every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
+        every { mockCSVDataSource.getTaskStates() } returns listOf(todoState)
         every { mockCSVDataSource.editTaskState(updatedStateRow) } returns true
 
         val result = stateRepository.editTaskState(updatedToDoState)
@@ -64,7 +64,7 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should return false when editing non existent state`() {
         val nonExistentState = TaskState(UUID.randomUUID(), "Non-existent State", UUID.randomUUID())
-        every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
+        every { mockCSVDataSource.getTaskStates() } returns emptyList()
 
         val result = stateRepository.editTaskState(nonExistentState)
 
@@ -76,7 +76,7 @@ class TaskStateRepositoryImplTest {
         val todoState = DummyTaskState.done
         val updatedDoState = TaskState(UUID.randomUUID(), "In Progress", UUID.randomUUID())
 
-        every { mockCSVDataSource.getAllTaskStates() } returns listOf(todoState)
+        every { mockCSVDataSource.getTaskStates() } returns listOf(todoState)
 
         val result = stateRepository.editTaskState(updatedDoState)
 
@@ -94,7 +94,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return false when delete non-existing state`() {
-        every { mockCSVDataSource.getAllTaskStates() } returns listOf(DummyTaskState.readyForReview)
+        every { mockCSVDataSource.getTaskStates() } returns listOf(DummyTaskState.readyForReview)
 
         val result = stateRepository.deleteTaskState(UUID.randomUUID())
 
@@ -103,7 +103,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return false when states list is empty`() {
-        every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
+        every { mockCSVDataSource.getTaskStates() } returns emptyList()
 
         val result = stateRepository.deleteTaskState(UUID.randomUUID())
 
@@ -112,7 +112,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return all states when they exist`() {
-        every { mockCSVDataSource.getAllTaskStates() } returns
+        every { mockCSVDataSource.getTaskStates() } returns
                 listOf(DummyTaskState.readyForReview, DummyTaskState.blocked)
 
         val result = stateRepository.getAllTaskStates()
@@ -122,7 +122,7 @@ class TaskStateRepositoryImplTest {
 
     @Test
     fun `should return an empty list when no states exist`() {
-        every { mockCSVDataSource.getAllTaskStates() } returns emptyList()
+        every { mockCSVDataSource.getTaskStates() } returns emptyList()
 
         val result = stateRepository.getAllTaskStates()
 
