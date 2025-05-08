@@ -1,7 +1,7 @@
 package data.repositories
 
 import data.dataSource.user.UserDataSource
-import data.repositories.mappers.userMappers.UserDtoMapper
+import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.repositories.UserRepository
 import java.util.*

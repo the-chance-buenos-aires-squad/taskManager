@@ -3,9 +3,8 @@ package presentation.cli
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits
 import domain.usecases.GetAllAuditUseCase
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
 import kotlin.test.Test
@@ -23,18 +22,18 @@ class GetAllAuditsCliTest {
     }
 
     @Test
-    fun `should return all audits we entered`() {
+    fun `should return all audits we entered`() = runTest{
         //given
         val expectedAudits = listOf(
             createDummyAudits.dummyTaskCreateAction,
             createDummyAudits.dummyTaskCreateAction,
             createDummyAudits.dummyUserUpdateAction
         )
-        every { getAllAuditUseCase.getAllAudit() } returns expectedAudits
+        coEvery { getAllAuditUseCase.getAllAudit() } returns expectedAudits
         //when
         getAllAuditCli.displayAllAudits()
         //then
-        verify { getAllAuditUseCase.getAllAudit() }
+        coVerify { getAllAuditUseCase.getAllAudit() }
     }
 
 

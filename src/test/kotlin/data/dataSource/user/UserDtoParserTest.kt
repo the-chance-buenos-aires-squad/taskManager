@@ -2,7 +2,6 @@ package data.dataSource.user
 
 import com.google.common.truth.Truth.assertThat
 import dummyData.DummyUser
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class UserDtoParserTest{
@@ -13,7 +12,7 @@ class UserDtoParserTest{
 
 
     @Test
-    fun `mapping to dto should return dto object with the same properties values`(){
+    fun `parsing to dto should return dto object with the same properties values`(){
         //when
         val result = userDtoParser.toDto(row)
 
@@ -21,7 +20,7 @@ class UserDtoParserTest{
     }
 
     @Test
-    fun `mapping from dto should return row  with the same values`(){
+    fun `parsing from dto should return row  with the same values`(){
         //when
         val result = userDtoParser.fromDto(dto)
 

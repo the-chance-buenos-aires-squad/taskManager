@@ -1,12 +1,11 @@
-package data.dataSource
+package data.dataSource.audit
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.audit.CsvAuditDataSource
-import data.dataSource.dummyData.createDummyAudits.dummyProjectCreateActionRow
-import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateActionRow
 import data.dataSource.util.CsvHandler
+import data.dummyData.DummyAudits.DummyTaskAuditDto
 import data.dummyData.DummyAudits.DummyTaskAuditRow
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -16,16 +15,17 @@ class CsvAuditDataSourceTest {
     private lateinit var file: File
     private val csvHandler = CsvHandler(CsvReader())
     private lateinit var dataSource: CsvAuditDataSource
+    private val auditDtoParser = AuditDtoParser()
 
     @BeforeEach
     fun setUp() {
         file = File.createTempFile("audit_test", ".csv")
         file.writeText("")
-        dataSource = CsvAuditDataSource(csvHandler, file)
+        dataSource = CsvAuditDataSource(csvHandler,auditDtoParser, file)
     }
 
     @Test
-    fun `getAllAudit should return empty list when no audits exist`() {
+    fun `getAllAudit should return empty list when no audits exist`() = runTest{
         //when
         val result = dataSource.getAllAudit()
         //then
@@ -34,20 +34,20 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `should return true when add audit`() {
+    fun `should return true when add audit`() = runTest{
         //when
-        val result = dataSource.addAudit(DummyTaskAuditRow)
+        val result = dataSource.addAudit(DummyTaskAuditDto)
         //then
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `first line in the file is exactly equal to the first added audit`() {
+    fun `first line in the file is exactly equal to the first added audit`() = runTest{
         //given
         val expectedRow = DummyTaskAuditRow
 
         //when
-        dataSource.addAudit(DummyTaskAuditRow)
+        dataSource.addAudit(DummyTaskAuditDto)
 
         //then
         val resultFirstRow = file.readLines()[0].split(",")
@@ -56,25 +56,25 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `add audit should return false when changing file writing permission`() {
+    fun `add audit should return false when changing file writing permission`() = runTest{
         //given
         file.setReadOnly()
         //when
-        val result = dataSource.addAudit(DummyTaskAuditRow)
+        val result = dataSource.addAudit(DummyTaskAuditDto)
 
         //then
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `should return all audits from file`() {
+    fun `should return all audits from file`() = runTest{
 
         //when
-        dataSource.addAudit(dummyTaskCreateActionRow)
-        dataSource.addAudit(dummyProjectCreateActionRow)
+        dataSource.addAudit(DummyTaskAuditDto)
+        dataSource.addAudit(DummyTaskAuditDto)
         val result = dataSource.getAllAudit()
         //then
-        assertThat(result).isEqualTo(listOf(dummyTaskCreateActionRow, dummyProjectCreateActionRow))
+        assertThat(result).isEqualTo(listOf(DummyTaskAuditDto, DummyTaskAuditDto))
     }
 
 
