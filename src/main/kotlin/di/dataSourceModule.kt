@@ -3,6 +3,7 @@ package di
 import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.AuditDtoParser
 import data.dataSource.audit.CsvAuditDataSource
+import data.dataSource.audit.MongoAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
 import data.dataSource.project.ProjectDataSource
 import data.dataSource.task.CsvTaskDataSource
@@ -39,11 +40,13 @@ val dataSourceModule = module {
     }
 
      single { AuditDtoParser() }
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
-    single { UserDtoParser() }
+//    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
+    single<AuditDataSource> { MongoAuditDataSource(mongoDb = get()) }
 
+
+    single { UserDtoParser() }
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
-    single <UserDataSource>{ MongoUserDataSource(get()) }
+    single <UserDataSource>{ MongoUserDataSource(mongoDb = get()) }
     single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), csvHandler = get()) }
     single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), csvHandler = get()) }
     single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
