@@ -19,17 +19,17 @@ class MongoProjectDataSource(
         return projectCollection.insertOne(projectDto).wasAcknowledged()
     }
 
-    override suspend fun deleteProject(projectId: UUID): Boolean {
-        return projectCollection.deleteOne(Filters.eq(ProjectDto::id.name, projectId)).wasAcknowledged()
+    override suspend fun deleteProject(projectId: String): Boolean {
+        return projectCollection.deleteOne(Filters.eq(ProjectDto::_id.name, projectId)).wasAcknowledged()
     }
 
-    override suspend fun getProjectById(projectId: UUID): ProjectDto? {
-        return projectCollection.find(Filters.eq(ProjectDto::id.name, projectId)).firstOrNull()
+    override suspend fun getProjectById(projectId: String): ProjectDto? {
+        return projectCollection.find(Filters.eq(ProjectDto::_id.name, projectId)).firstOrNull()
     }
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         return projectCollection.updateOne(
-            Filters.eq(ProjectDto::id.name,projectDto.id),
+            Filters.eq(ProjectDto::_id.name,projectDto._id),
             Updates.combine(
                 Updates.set(ProjectDto::name.name,projectDto.name),
                 Updates.set(ProjectDto::description.name,projectDto.description),

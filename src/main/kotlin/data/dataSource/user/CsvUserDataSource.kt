@@ -27,7 +27,7 @@ class CsvUserDataSource(
     }
 
     override suspend fun getUserById(id: UUID): UserDto? {
-        return getUsers().find { it.id == id.toString() }
+        return getUsers().find { it._id == id.toString() }
     }
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
@@ -36,7 +36,7 @@ class CsvUserDataSource(
 
     override suspend fun deleteUser(id: UUID): Boolean {
         val allUsers = this.getUsers()
-        val updatedUsers = allUsers.filterNot { it.id == id.toString() }
+        val updatedUsers = allUsers.filterNot { it._id == id.toString() }
 
         if (allUsers.size == updatedUsers.size) {
             return false // No user with the given ID was found
@@ -70,12 +70,12 @@ class CsvUserDataSource(
 
     override suspend fun updateUser(userDto: UserDto): Boolean {
         val allUsers = this.getUsers()
-        val exists = allUsers.any { it.id == userDto.id }
+        val exists = allUsers.any { it._id == userDto._id }
 
         if (!exists) return false
 
         val updatedUsers = allUsers
-            .filterNot { it.id == userDto.id }
+            .filterNot { it._id == userDto._id }
             .toMutableList()
             .apply { add(userDto) }
 

@@ -17,24 +17,24 @@ class CsvProjectDataSource(
         return true
     }
 
-    override suspend fun deleteProject(projectId: UUID): Boolean {
+    override suspend fun deleteProject(projectId: String): Boolean {
         val all = getAllProjects()
-        val updated = all.filterNot { it.id == projectId.toString() }
+        val updated = all.filterNot { it._id == projectId }
         if (all.size == updated.size) return false
 
         rewriteAllProjects(updated)
         return true
     }
 
-    override suspend fun getProjectById(projectId: UUID): ProjectDto? {
-        return getAllProjects().find { it.id == projectId.toString() }
+    override suspend fun getProjectById(projectId: String): ProjectDto? {
+        return getAllProjects().find { it._id == projectId }
     }
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         val all = getAllProjects()
-        if (all.none { it.id == projectDto.id }) return false
+        if (all.none { it._id == projectDto._id }) return false
         val updatedProject = all.map {
-            if (it.id == projectDto.id) projectDto else it
+            if (it._id == projectDto._id) projectDto else it
         }
 
         rewriteAllProjects(updatedProject)

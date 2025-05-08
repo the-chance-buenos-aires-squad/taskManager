@@ -35,13 +35,13 @@ class CsvUserDataSourceTest {
     @Test
     fun `get user by id for an existing user will return same user object`()= runTest {
         dataSource.addUser(dummyUserOneDto)
-        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto.id))
+        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto._id))
         assertThat(resultUser).isEqualTo(dummyUserOneDto)
     }
 
     @Test
     fun `get user by id for not existed user will return null`() = runTest {
-        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto.id))
+        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto._id))
         assertThat(resultUser).isNull()
     }
 
@@ -49,7 +49,7 @@ class CsvUserDataSourceTest {
     fun `get user by userName for an existing user will return same user object`() = runTest {
         dataSource.addUser(dummyUserOneDto)
         val users = dataSource.getUsers()
-        println(users.find { it.id == dummyUserOneDto.id })
+        println(users.find { it._id == dummyUserOneDto._id })
         val resultUser = dataSource.getUserByUserName(dummyUserOneDto.username)
         assertThat(resultUser).isEqualTo(dummyUserOneDto)
     }
@@ -69,7 +69,7 @@ class CsvUserDataSourceTest {
 
     @Test
     fun `delete user will return false if unsuccessful`() = runTest{
-        val result = dataSource.deleteUser(UUID.fromString(dummyUserOneDto.id))
+        val result = dataSource.deleteUser(UUID.fromString(dummyUserOneDto._id))
         assertThat(result).isFalse()
     }
 

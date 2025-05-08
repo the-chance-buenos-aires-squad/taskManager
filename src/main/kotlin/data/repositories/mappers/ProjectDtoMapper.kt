@@ -17,7 +17,7 @@ class ProjectDtoMapper:Mapper<Project,ProjectDto> {
 
     override fun toEntity(row: ProjectDto): Project {
         return Project(
-            UUID.fromString(row.id),
+            UUID.fromString(row._id),
             row.name,
             row.description,
             LocalDateTime.parse(row.createdAt)

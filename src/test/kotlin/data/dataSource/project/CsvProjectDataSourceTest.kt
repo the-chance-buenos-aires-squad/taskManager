@@ -4,7 +4,6 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import data.dto.ProjectDto
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -20,15 +19,15 @@ class CsvProjectDataSourceTest {
     private lateinit var csvReader: CsvReader
     private lateinit var csvProjectDataSource: CsvProjectDataSource
     private lateinit var projectDtoParser: ProjectDtoParser
-    private lateinit var fileMock:File
+    private lateinit var fileMock: File
 
     val now = LocalDateTime.now().toString()
     val id: UUID = UUID.randomUUID()
     private val projectDto = ProjectDto(id.toString(), "ahmed", "ahmed mohamed egypt", now)
     private val projectDto2 = ProjectDto(UUID.randomUUID().toString(), "ahmed", "ahmed mohamed egypt", now)
 
-    private val rawProject = listOf(projectDto.id, projectDto.name, projectDto.description, projectDto.createdAt)
-    private val rawProject2 = listOf(projectDto2.id, projectDto2.name, projectDto2.description, projectDto2.createdAt)
+    private val rawProject = listOf(projectDto._id, projectDto.name, projectDto.description, projectDto.createdAt)
+    private val rawProject2 = listOf(projectDto2._id, projectDto2.name, projectDto2.description, projectDto2.createdAt)
 
     @BeforeEach
     fun setup() {
@@ -52,7 +51,7 @@ class CsvProjectDataSourceTest {
         every { csvHandler.read(testFile) } returns listOf(rawProject)
         every { projectDtoParser.toDto(rawProject) } returns projectDto
 
-        val projectIsFound = csvProjectDataSource.getProjectById(UUID.fromString(projectDto.id))
+        val projectIsFound = csvProjectDataSource.getProjectById(projectDto._id)
 
         assertThat(projectIsFound).isEqualTo(projectDto)
     }
@@ -62,7 +61,7 @@ class CsvProjectDataSourceTest {
         every { csvHandler.read(testFile) } returns listOf(rawProject2)
         every { projectDtoParser.toDto(rawProject) } returns projectDto2
 
-        val projectIsFound = csvProjectDataSource.getProjectById(UUID.randomUUID())
+        val projectIsFound = csvProjectDataSource.getProjectById(UUID.randomUUID().toString())
 
         assertThat(projectIsFound).isNull()
     }
@@ -72,7 +71,7 @@ class CsvProjectDataSourceTest {
         every { csvHandler.read(testFile) } returns listOf(rawProject)
         every { projectDtoParser.toDto(rawProject) } returns projectDto
 
-        val isProjectDeleted = csvProjectDataSource.deleteProject(UUID.fromString(projectDto.id))
+        val isProjectDeleted = csvProjectDataSource.deleteProject(projectDto._id)
 
         assertThat(isProjectDeleted).isTrue()
     }
@@ -82,7 +81,7 @@ class CsvProjectDataSourceTest {
         every { csvHandler.read(testFile) } returns listOf(rawProject2)
         every { projectDtoParser.toDto(rawProject) } returns projectDto2
 
-        val isProjectDeleted = csvProjectDataSource.deleteProject(UUID.randomUUID())
+        val isProjectDeleted = csvProjectDataSource.deleteProject(UUID.randomUUID().toString())
 
         assertThat(isProjectDeleted).isFalse()
     }
@@ -94,6 +93,7 @@ class CsvProjectDataSourceTest {
         every { projectDtoParser.toDto(rawProject2) } returns projectDto2
 
         val isProjectUpdated = csvProjectDataSource.updateProject(projectDto)
+
         assertThat(isProjectUpdated).isTrue()
     }
 
@@ -111,9 +111,9 @@ class CsvProjectDataSourceTest {
     fun `should return emptyList of projects`() = runTest {
         every { fileMock.exists() } returns true
         every { csvHandler.read(fileMock) } returns emptyList()
-        val dataSource = CsvProjectDataSource(fileMock, projectDtoParser, csvHandler)
 
-        val all = dataSource.deleteProject(UUID.randomUUID())
+        val dataSource = CsvProjectDataSource(fileMock, projectDtoParser, csvHandler)
+        val all = dataSource.deleteProject(UUID.randomUUID().toString())
 
         assertThat(all).isFalse()
     }
@@ -122,7 +122,9 @@ class CsvProjectDataSourceTest {
     fun `should return list of projects`() = runTest {
         every { csvHandler.read(testFile) } returns listOf(rawProject)
         every { projectDtoParser.toDto(rawProject) } returns projectDto
+
         val all = csvProjectDataSource.getAllProjects()
+
         assertThat(all).hasSize(1)
     }
 }

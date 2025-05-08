@@ -3,7 +3,6 @@ package data.repositories.mappers
 import com.google.common.truth.Truth.assertThat
 import data.dto.ProjectDto
 import domain.entities.Project
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -31,7 +30,7 @@ class ProjectDtoMapperTest {
 
         val actualRow = mapper.fromEntity(project)
 
-        assertThat(expectedRow.id).isEqualTo(actualRow.id)
+        assertThat(expectedRow._id).isEqualTo(actualRow._id)
     }
 
     @Test

@@ -13,7 +13,7 @@ object DummyUser {
     )
 
     val dummyUserOneDto = UserDto(
-        id = dummyUserOne.id.toString(),
+        _id = dummyUserOne.id.toString(),
         username = dummyUserOne.username,
         password = dummyUserOne.password,
         role = dummyUserOne.role,

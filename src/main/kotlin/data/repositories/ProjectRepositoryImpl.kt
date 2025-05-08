@@ -22,11 +22,11 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun deleteProject(projectId: UUID): Boolean {
-        return projectDataSource.deleteProject(projectId)
+        return projectDataSource.deleteProject(projectId.toString())
     }
 
     override  suspend fun getProjectById(projectId: UUID): Project? {
-        val projectRow = projectDataSource.getProjectById(projectId)
+        val projectRow = projectDataSource.getProjectById(projectId.toString())
         return projectRow?.let { projectMapper.toEntity(it) }
     }
 

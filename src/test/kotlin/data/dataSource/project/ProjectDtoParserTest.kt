@@ -2,7 +2,6 @@ package data.dataSource.project
 
 import com.google.common.truth.Truth.assertThat
 import data.dto.ProjectDto
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -20,7 +19,7 @@ class ProjectDtoParserTest {
     )
 
     val list = listOf(
-        expectedRow.id,
+        expectedRow._id,
         expectedRow.name,
         expectedRow.description,
         expectedRow.createdAt
@@ -31,7 +30,7 @@ class ProjectDtoParserTest {
 
         val actualRow = parser.toDto(list)
 
-        assertThat(list[0]).isEqualTo(actualRow.id)
+        assertThat(list[0]).isEqualTo(actualRow._id)
     }
 
     @Test

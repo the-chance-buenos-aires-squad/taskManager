@@ -24,7 +24,7 @@ class MongoUserDataSourceTest {
         val added = dataSource.addUser(testUser)
         assertThat(added).isTrue()
 
-        val result = dataSource.getUserById(UUID.fromString(testUser.id))
+        val result = dataSource.getUserById(UUID.fromString(testUser._id))
         assertThat(result).isEqualTo(testUser)
     }
 
@@ -40,16 +40,16 @@ class MongoUserDataSourceTest {
     @Test
     fun `deleteUser should remove the user`() = runTest {
         dataSource.addUser(testUser)
-        val deleted = dataSource.deleteUser(UUID.fromString(testUser.id))
+        val deleted = dataSource.deleteUser(UUID.fromString(testUser._id))
         assertThat(deleted).isTrue()
 
-        val result = dataSource.getUserById(UUID.fromString(testUser.id))
+        val result = dataSource.getUserById(UUID.fromString(testUser._id))
         assertThat(result).isNull()
     }
 
     @Test
     fun `getUsers should return all users`() = runTest {
-        val user2 = testUser.copy(id = UUID.randomUUID().toString(), username = "second")
+        val user2 = testUser.copy(_id = UUID.randomUUID().toString(), username = "second")
         dataSource.addUser(testUser)
         dataSource.addUser(user2)
 
@@ -66,7 +66,7 @@ class MongoUserDataSourceTest {
         val updated = dataSource.updateUser(updatedUser)
         assertThat(updated).isTrue()
 
-        val result = dataSource.getUserById(UUID.fromString(testUser.id))
+        val result = dataSource.getUserById(UUID.fromString(testUser._id))
         assertThat(result?.username).isEqualTo("updatedUser")
     }
 }
