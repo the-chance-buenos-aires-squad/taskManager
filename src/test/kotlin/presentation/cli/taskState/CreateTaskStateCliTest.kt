@@ -71,6 +71,6 @@ class CreateTaskStateCliTest {
         createTaskStateCli.createTaskState(projectId)
 
         // Assert
-        verify { uiController.printMessage("Failed to create task state.") }
+        verify { uiController.printMessage("Task state already exists.") }
     }
 }
