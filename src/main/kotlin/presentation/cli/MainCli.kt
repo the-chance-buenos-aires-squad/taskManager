@@ -1,14 +1,21 @@
 package presentation.cli
 
+import data.dataSource.user.MongoUserDataSource
+import data.dto.UserDto
+import domain.entities.UserRole
+import org.koin.mp.KoinPlatform.getKoin
 import presentation.UiController
 import presentation.cli.auth.LoginCli
+import java.time.LocalDateTime
+import java.util.UUID
 
 class MainCli(
     private val uiController: UiController,
     private val loginCli: LoginCli,
 ) {
 
-    fun startCli() {
+
+    suspend fun startCli() {
         while (true) {
             uiController.printMessage(
                 "========================================\n" +

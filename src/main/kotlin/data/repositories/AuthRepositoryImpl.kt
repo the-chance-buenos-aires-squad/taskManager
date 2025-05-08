@@ -15,7 +15,7 @@ class AuthRepositoryImpl(
 
     private var currentUser: User? = null
 
-    override fun login(username: String, password: String): User? {
+    override suspend fun login(username: String, password: String): User? {
 
         val user = userRepository.getUserByUserName(username.trim()) ?: return null
 
@@ -28,7 +28,7 @@ class AuthRepositoryImpl(
         return user;
     }
 
-    override fun addUser(userName: String, password: String): User? {
+    override suspend fun addUser(userName: String, password: String): User? {
 
         if (getCurrentUser() == null || getCurrentUser()!!.role == UserRole.MATE) return null
 
@@ -49,10 +49,10 @@ class AuthRepositoryImpl(
     }
 
 
-    override fun logout() {
+    override suspend fun logout() {
         currentUser = null
     }
 
-    override fun getCurrentUser(): User? = currentUser
+    override suspend fun getCurrentUser(): User? = currentUser
 
 }

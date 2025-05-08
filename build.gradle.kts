@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("jacoco")
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 group = "org.buinos"
@@ -21,7 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     //to see mongo logger
-    implementation("org.slf4j:slf4j-simple:2.0.13")
+//    implementation("org.slf4j:slf4j-simple:2.0.13")
 
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")

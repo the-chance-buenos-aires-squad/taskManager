@@ -1,6 +1,9 @@
 package dummyData
 
-import domain.entities.*
+import domain.entities.Project
+import domain.entities.TaskState
+import domain.entities.User
+import domain.entities.UserRole
 import java.time.LocalDateTime
 import java.util.*
 

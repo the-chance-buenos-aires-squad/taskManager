@@ -2,12 +2,14 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.user.CsvUserDataSource
-import data.repositories.mappers.UserMapper
+import data.dto.UserDto
+import data.repositories.mappers.userMappers.UserDtoMapper
 import dummyData.DummyUser.dummyUserOne
-import dummyData.DummyUser.dummyUserOneRow
-import io.mockk.every
+import dummyData.DummyUser.dummyUserOneDto
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -16,7 +18,7 @@ class UserRepositoryImplTest {
 
     private val mockDataSource = mockk<CsvUserDataSource>(relaxed = true)
     private lateinit var userRepository: UserRepositoryImpl
-    private val userMapper = UserMapper()
+    private val userMapper = UserDtoMapper()
 
     @BeforeEach
     fun setUp() {
@@ -24,98 +26,102 @@ class UserRepositoryImplTest {
     }
 
     @Test
-    fun `should return true when adding a new user`() {
-        //given
-        every { mockDataSource.addUser(any()) } returns true
+    fun `should return true when adding a new user`() = runTest {
+        // given
+        coEvery { mockDataSource.addUser(any()) } returns true
 
-        //when
+        // when
         val result = userRepository.addUser(dummyUserOne)
 
-        //then
+        // then
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `should return user when searching by valid user id`() {
-        //given
-        every { mockDataSource.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) } returns dummyUserOneRow
+    fun `should return user when searching by valid user id`() = runTest {
+        // given
+        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
+        coEvery { mockDataSource.getUserById(id) } returns dummyUserOneDto
 
-        //when
-        val result = userRepository.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221"))
+        // when
+        val result = userRepository.getUserById(id)
 
-        //then
+        // then
         assertThat(result).isEqualTo(dummyUserOne)
     }
 
     @Test
-    fun `should return null when user id does not exist`() {
-        //given
-        every { mockDataSource.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223")) } returns null
+    fun `should return null when user id does not exist`() = runTest {
+        // given
+        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223")
+        coEvery { mockDataSource.getUserById(id) } returns null
 
-        //when
-        val result = userRepository.getUserById(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223"))
+        // when
+        val result = userRepository.getUserById(id)
 
-        //then
+        // then
         assertThat(result).isNull()
     }
 
     @Test
-    fun `should return user when searching by valid userName`() {
-        //given
-        every { mockDataSource.getUserByUserName("adminUserName") } returns dummyUserOneRow
+    fun `should return user when searching by valid userName`() = runTest {
+        // given
+        coEvery { mockDataSource.getUserByUserName("adminUserName") } returns dummyUserOneDto
 
-        //when
+        // when
         val result = userRepository.getUserByUserName("adminUserName")
 
-        //then
+        // then
         assertThat(result).isEqualTo(dummyUserOne)
     }
 
     @Test
-    fun `should return null when userName does not exist`() {
-        //given
-        every { mockDataSource.getUserByUserName("testUser3") } returns null
+    fun `should return null when userName does not exist`() = runTest {
+        // given
+        coEvery { mockDataSource.getUserByUserName("testUser3") } returns null
 
-        //when
+        // when
         val result = userRepository.getUserByUserName("testUser3")
 
-        //then
+        // then
         assertThat(result).isNull()
     }
 
     @Test
-    fun `should return all users when retrieving users`() {
-        //given
-        every { mockDataSource.getUsers() } returns listOf(dummyUserOneRow, dummyUserOneRow)
+    fun `should return all users when retrieving users`() = runTest {
+        // given
+        coEvery { mockDataSource.getUsers() } returns listOf(dummyUserOneDto, dummyUserOneDto)
 
-        //when
+        // when
         val result = userRepository.getUsers()
 
-        //then
+        // then
         assertThat(result.size).isEqualTo(2)
+        assertThat(result).containsExactly(dummyUserOne, dummyUserOne)
     }
 
     @Test
-    fun `should call updateItem on data source when updating a user`() {
-        //given
-        every { mockDataSource.updateUser(dummyUserOneRow) } returns true
+    fun `should call updateItem on data source when updating a user`() = runTest {
+        // given
+        coEvery { mockDataSource.updateUser(dummyUserOneDto) } returns true
 
-        //when
+        // when
         userRepository.updateUser(dummyUserOne)
 
-        //then
-        verify(exactly = 1) { mockDataSource.updateUser(dummyUserOneRow) }
+        // then
+        coVerify(exactly = 1) { mockDataSource.updateUser(dummyUserOneDto) }
     }
 
     @Test
-    fun `should call deleteItem on data source when deleting a user`() {
-        //given
-        every { mockDataSource.deleteUser(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) } returns true
+    fun `should call deleteItem on data source when deleting a user`() = runTest {
+        // given
+        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
+        coEvery { mockDataSource.deleteUser(id) } returns true
 
-        //when
+        // when
         userRepository.deleteUser(dummyUserOne)
 
-        //then
-        verify(exactly = 1) { mockDataSource.deleteUser(UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")) }
+        // then
+        coVerify(exactly = 1) { mockDataSource.deleteUser(id) }
     }
 }

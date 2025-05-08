@@ -13,7 +13,7 @@ class LoginCli(
     private val mateDashBoardCli: MateDashBoardCli
 ) {
 
-    fun start(loginAttempts: Int = INITIAL_ATTEMPT_COUNT) {
+    suspend fun start(loginAttempts: Int = INITIAL_ATTEMPT_COUNT) {
         if (loginAttempts >= MAX_ALLOWED_ATTEMPTS) {
             uiController.printMessage("Too many failed attempts. Returning to main menu.")
             return

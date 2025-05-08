@@ -4,7 +4,6 @@ import domain.customeExceptions.NoProjectsFoundException
 import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import presentation.UiController
-import presentation.cli.TaskState.DeleteTaskStateCli
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
@@ -13,10 +12,12 @@ class ViewSwimlanesCLI(
     private val uiController: UiController,
     private val projectCliHelper: ProjectCliHelper,
     private val getTasksGroupedByStateUseCase: GetTasksGroupedByStateUseCase,
-    private val createTaskCli: CreateTaskCli
+    private val createTaskCli: CreateTaskCli,
+    private val updateTaskCli: UpdateTaskCli,
+    private val deleteTaskCli: DeleteTaskCli
 ) {
 
-    fun start() {
+    suspend fun start() {
         while (true){
             try {
                 uiController.printMessage(HEADER_MESSAGE)
@@ -24,7 +25,7 @@ class ViewSwimlanesCLI(
                 val projects = projectCliHelper.getProjects()
                 val selectedProject = projectCliHelper.selectProject(projects)
 
-                if (selectedProject == null){
+                if (selectedProject == null) {
                     uiController.printMessage("invalid project")
                     return
                 }
@@ -35,13 +36,9 @@ class ViewSwimlanesCLI(
                 uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
                 when (uiController.readInput().toIntOrNull()) {
-                    1 -> {
-                        createTaskCli.create(selectedProject.id)
-                    }
-                    2 -> {
-                        uiController.printMessage("update task cli")
-                    }
-                    3 -> uiController.printMessage("delete task cli")
+                    1 -> createTaskCli.create(selectedProject.id)
+                    2 -> updateTaskCli.update(selectedProject.id)
+                    3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return
                     null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
                     else -> uiController.printMessage(INVALID_INPUT_MESSAGE)

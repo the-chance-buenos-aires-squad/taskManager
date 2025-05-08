@@ -8,10 +8,10 @@ import java.util.*
 fun createDummyProject(
     id: UUID = UUID.randomUUID(),
     name: String = "Test Project",
-    description : String = "desc",
+    description: String = "desc",
 ) = Project(
     id = id,
     name = name,
-    description =description,
+    description = description,
     createdAt = LocalDateTime.now()
 )

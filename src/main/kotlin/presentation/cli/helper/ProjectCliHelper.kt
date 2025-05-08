@@ -12,7 +12,7 @@ class ProjectCliHelper(
     fun getProjects(): List<Project> {
         return try {
             getProjectsUseCase.execute()
-        }  catch (ex: Exception) {
+        } catch (ex: Exception) {
             uiController.printMessage(EXCEPTION_MESSAGE.format(ex.message))
             emptyList()
         }
