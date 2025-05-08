@@ -23,7 +23,7 @@ class AddAuditUseCase(
         val id = UUID.randomUUID()
         val timeStamp = LocalDateTime.now()
         val newAudit = Audit(
-            id = id.toString(),
+            id = id,
             entityId = entityId,
             entityType = entityType,
             action = action,

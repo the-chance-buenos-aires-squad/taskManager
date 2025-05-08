@@ -5,11 +5,12 @@ import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
+import java.util.*
 
 
 object createDummyAudits {
     val dummyTaskCreateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.TASK,
         action = ActionType.CREATE,
@@ -24,7 +25,7 @@ object createDummyAudits {
 
 
     val dummyProjectCreateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.PROJECT,
         action = ActionType.CREATE,
@@ -38,7 +39,7 @@ object createDummyAudits {
 
 
     val dummyUserUpdateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.USER,
         action = ActionType.UPDATE,
