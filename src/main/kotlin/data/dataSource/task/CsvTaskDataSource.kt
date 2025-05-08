@@ -1,6 +1,7 @@
 package data.dataSource.task
 
 import data.dataSource.util.CsvHandler
+import data.repositories.dataSource.TaskDataSource
 import java.io.File
 
 class CsvTaskDataSource(
@@ -39,7 +40,7 @@ class CsvTaskDataSource(
             .apply { add(taskRow) }
 
         return try {
-            file.writeText("") // Clear file
+            file.writeText("")
             updatedTasks.forEach { row ->
                 csvHandler.write(row = row, file = file, append = true)
             }

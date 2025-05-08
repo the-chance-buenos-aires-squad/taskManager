@@ -1,7 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.task.TaskDataSource
+import data.repositories.dataSource.TaskDataSource
 import data.repositories.mappers.TaskMapper
 import domain.entities.Task
 import domain.repositories.TaskRepository

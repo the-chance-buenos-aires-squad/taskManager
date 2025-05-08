@@ -2,6 +2,7 @@ package data.dataSource.project
 
 
 import data.dataSource.util.CsvHandler
+import data.repositories.dataSource.ProjectDataSource
 import java.io.File
 import java.util.*
 
@@ -45,7 +46,7 @@ class CsvProjectDataSource(
     }
 
     private fun rewriteAllProjects(projects: List<List<String>>) {
-        file.writeText("") // clear file
+        file.writeText("")
         projects.forEach {
             csvHandler.write(it, file)
         }

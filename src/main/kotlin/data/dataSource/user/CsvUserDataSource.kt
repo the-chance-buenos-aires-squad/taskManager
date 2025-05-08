@@ -1,6 +1,7 @@
 package data.dataSource.user
 
 import data.dataSource.util.CsvHandler
+import data.repositories.dataSource.UserDataSource
 import java.io.File
 import java.util.*
 
@@ -37,14 +38,12 @@ class CsvUserDataSource(
         val updatedUsers = allUsers.filterNot { it[ID_ROW] == id.toString() }
 
         if (allUsers.size == updatedUsers.size) {
-            return false // No user with the given ID was found
+            return false
         }
 
         return try {
-            // Clear the file before rewriting
-            file.writeText("") // truncate file contents
+            file.writeText("")
 
-            // Write each remaining user back to the file
             updatedUsers.forEach { userRow ->
                 csvHandler.write(
                     row = listOf(
@@ -83,8 +82,7 @@ class CsvUserDataSource(
             .apply { add(userRow) }
 
         return try {
-            // Clear the file before rewriting all users
-            file.writeText("") // truncate file
+            file.writeText("")
 
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(

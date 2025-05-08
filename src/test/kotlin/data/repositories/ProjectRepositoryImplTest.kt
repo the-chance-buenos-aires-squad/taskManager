@@ -1,7 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.project.ProjectDataSource
+import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectMapper
 import dummyData.createDummyProject
 import io.mockk.every

@@ -1,4 +1,4 @@
-package data.dataSource.task
+package data.repositories.dataSource
 
 interface TaskDataSource {
     fun addTask(taskRow: List<String>): Boolean

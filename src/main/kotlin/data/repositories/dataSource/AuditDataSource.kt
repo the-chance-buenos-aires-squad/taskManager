@@ -1,4 +1,4 @@
-package data.dataSource.audit
+package data.repositories.dataSource
 
 interface AuditDataSource {
     fun addAudit(auditRow: List<String>): Boolean

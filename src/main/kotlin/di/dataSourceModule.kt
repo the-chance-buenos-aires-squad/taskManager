@@ -1,15 +1,11 @@
 package di
 
-import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.CsvAuditDataSource
 import data.dataSource.project.CsvProjectDataSource
-import data.dataSource.project.ProjectDataSource
 import data.dataSource.task.CsvTaskDataSource
-import data.dataSource.task.TaskDataSource
 import data.dataSource.taskState.TaskStateCSVDataSource
-import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.CsvUserDataSource
-import data.dataSource.user.UserDataSource
+import data.repositories.dataSource.*
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -43,10 +39,6 @@ val dataSourceModule = module {
 }
 
 object Paths {
-    /*
-    when injecting the file to data source use qualifier before injecting
-    @Named("UserFilePath") private val userFile: File
-     */
     const val USER_FILE_PATH = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
 
@@ -61,6 +53,4 @@ object Paths {
 
     const val TASK_STATE_FILE_PATH = "src/main/kotlin/data/resource/task_state.csv"
     val TaskStateFileQualifier: Qualifier = named("TaskStateFilePath")
-
-
 }
