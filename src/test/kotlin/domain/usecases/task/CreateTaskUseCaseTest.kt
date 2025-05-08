@@ -11,10 +11,7 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.coEvery
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -297,6 +294,6 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

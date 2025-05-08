@@ -9,7 +9,7 @@ class CsvAuditDataSource(
     private val file: File
 ) : AuditDataSource {
 
-    override fun addAudit(auditRow: List<String>): Boolean {
+    override suspend fun addAudit(auditRow: List<String>): Boolean {
         return try {
             csvHandler.write(
                 row = auditRow,
@@ -23,7 +23,7 @@ class CsvAuditDataSource(
         }
     }
 
-    override fun getAllAudit(): List<List<String>> {
+    override suspend fun getAllAudit(): List<List<String>> {
         val rows = csvHandler.read(file)
         return rows
     }

@@ -1,6 +1,6 @@
 package data.dataSource.audit
 
 interface AuditDataSource {
-    fun addAudit(auditRow: List<String>): Boolean
-    fun getAllAudit(): List<List<String>>
+    suspend fun addAudit(auditRow: List<String>): Boolean
+    suspend fun getAllAudit(): List<List<String>>
 }

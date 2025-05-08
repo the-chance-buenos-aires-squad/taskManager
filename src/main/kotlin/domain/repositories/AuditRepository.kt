@@ -3,6 +3,6 @@ package domain.repositories
 import domain.entities.Audit
 
 interface AuditRepository {
-    fun addAudit(audit: Audit): Boolean
-    fun getAllAudit(): List<Audit>
+    suspend fun addAudit(audit: Audit): Boolean
+    suspend fun getAllAudit(): List<Audit>
 }

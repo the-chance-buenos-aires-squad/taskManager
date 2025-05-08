@@ -11,11 +11,11 @@ class AuditRepositoryImpl(
     private val auditMapper: AuditMapper
 ) : AuditRepository {
 
-    override fun addAudit(audit: Audit): Boolean {
+    override suspend fun addAudit(audit: Audit): Boolean {
         return auditDataSource.addAudit(auditMapper.mapEntityToRow(audit))
     }
 
-    override fun getAllAudit(): List<Audit> {
+    override suspend fun getAllAudit(): List<Audit> {
         val auditsRowList = auditDataSource.getAllAudit()
         return auditsRowList.map { row ->
             auditMapper.mapRowToEntity(row)

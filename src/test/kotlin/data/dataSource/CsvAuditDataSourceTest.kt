@@ -7,6 +7,7 @@ import data.dataSource.dummyData.createDummyAudits.dummyProjectCreateActionRow
 import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateActionRow
 import data.dataSource.util.CsvHandler
 import data.dummyData.DummyAudits.DummyTaskAuditRow
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -25,7 +26,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `getAllAudit should return empty list when no audits exist`() {
+    fun `getAllAudit should return empty list when no audits exist`() = runTest{
         //when
         val result = dataSource.getAllAudit()
         //then
@@ -34,7 +35,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `should return true when add audit`() {
+    fun `should return true when add audit`() = runTest{
         //when
         val result = dataSource.addAudit(DummyTaskAuditRow)
         //then
@@ -42,7 +43,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `first line in the file is exactly equal to the first added audit`() {
+    fun `first line in the file is exactly equal to the first added audit`() = runTest{
         //given
         val expectedRow = DummyTaskAuditRow
 
@@ -56,7 +57,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `add audit should return false when changing file writing permission`() {
+    fun `add audit should return false when changing file writing permission`() = runTest{
         //given
         file.setReadOnly()
         //when
@@ -67,7 +68,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `should return all audits from file`() {
+    fun `should return all audits from file`() = runTest{
 
         //when
         dataSource.addAudit(dummyTaskCreateActionRow)

@@ -6,7 +6,7 @@ import domain.repositories.AuditRepository
 class GetAllAuditUseCase(
     private val auditRepositoryImpl: AuditRepository
 ) {
-    fun getAllAudit(): List<Audit> {
+    suspend fun getAllAudit(): List<Audit> {
         return auditRepositoryImpl.getAllAudit()
     }
 }
