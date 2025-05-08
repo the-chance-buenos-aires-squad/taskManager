@@ -11,8 +11,8 @@ data class AuditDto(
     @BsonId
     val id: String,
     val entityId: String,
-    val entityType: EntityType,
-    val action: ActionType,
+    val entityType: EntityType?,
+    val action: ActionType?,
     val field: String?,
     val oldValue: String?,
     val newValue: String?,
