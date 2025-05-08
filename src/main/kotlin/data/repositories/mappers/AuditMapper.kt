@@ -4,11 +4,12 @@ import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
+import java.util.*
 
 class AuditMapper : Mapper<Audit,List<String>> {
      fun mapEntityToRow(entity: Audit): List<String> {
         return listOf(
-            entity.id,
+            entity.id.toString(),
             entity.entityId,
             entity.entityType.name,
             entity.action.name,
@@ -22,7 +23,7 @@ class AuditMapper : Mapper<Audit,List<String>> {
 
      fun mapRowToEntity(row: List<String>): Audit {
         return Audit(
-            id = row[ID_ROW],
+            id = UUID.fromString(row[ID_ROW]),
             entityId = row[ENTITY_IT],
             entityType = EntityType.entries.find { it.name == row[ENTITY_TYPE_ROW] }!!,
             action = ActionType.valueOf(row[ACTION_ROW]),
