@@ -2,18 +2,15 @@ package data.dataSource.user
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.UserDto
-import di.MongoCollections
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import java.util.*
 
 class MongoUserDataSource(
-    private val mongoDb: MongoDatabase
+    private val userCollection: MongoCollection<UserDto>
 ) : UserDataSource {
-
-    private val userCollection = mongoDb.getCollection<UserDto>(MongoCollections.USERS_COLLECTION)
 
     override suspend fun addUser(userDto: UserDto): Boolean {
         return userCollection.insertOne(userDto).wasAcknowledged()
@@ -22,21 +19,21 @@ class MongoUserDataSource(
     override suspend fun getUserById(id: UUID): UserDto? {
         return userCollection
             .find(
-                Filters.eq(UserDto::id.name,id)
+                Filters.eq(UserDto::id.name, id)
             ).firstOrNull()
     }
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
         return userCollection
             .find(
-                Filters.eq(UserDto::username.name,userName)
+                Filters.eq(UserDto::username.name, userName)
             ).firstOrNull()
     }
 
     override suspend fun deleteUser(id: UUID): Boolean {
         return userCollection
             .deleteOne(
-                Filters.eq(UserDto::id.name,id)
+                Filters.eq(UserDto::id.name, id)
             ).wasAcknowledged()
     }
 

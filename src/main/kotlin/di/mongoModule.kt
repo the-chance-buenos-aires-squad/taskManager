@@ -7,7 +7,9 @@ import di.MongoCollections.projectCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import data.dto.AuditDto
+import data.dto.UserDto
 import di.MongoCollections.auditQualifier
+import di.MongoCollections.userQualifier
 import org.koin.dsl.module
 
 val mongoModule = module {
@@ -20,8 +22,8 @@ val mongoModule = module {
     }
 
 
-    single (qualifier = auditQualifier){
-        val mongoDb:MongoDatabase = get()
+    single(qualifier = auditQualifier) {
+        val mongoDb: MongoDatabase = get()
         mongoDb.getCollection<AuditDto>(MongoCollections.AUDITS_COLLECTION)
     }
 
@@ -31,16 +33,22 @@ val mongoModule = module {
         mangoDb.getCollection<ProjectDto>(MongoCollections.PROJECTS_COLLECTION)
     }
 
+    single(qualifier = userQualifier) {
+        val mongoDB: MongoDatabase = get()
+        mongoDB.getCollection<UserDto>(MongoCollections.USERS_COLLECTION)
+    }
+
 }
 
 object MongoCollections {
     const val USERS_COLLECTION = "users"
-    const val TASKS_COLLECTION =  "tasks"
-     const val AUDITS_COLLECTION =  "audits"
-    val auditQualifier : Qualifier = named(AUDITS_COLLECTION)
+    const val TASKS_COLLECTION = "tasks"
+    const val AUDITS_COLLECTION = "audits"
+    val auditQualifier: Qualifier = named(AUDITS_COLLECTION)
     const val TASK_STATES_COLLECTION = "task_states"
     const val PROJECTS_COLLECTION = "projects"
-    val projectCollectionQualifier : Qualifier = named(PROJECTS_COLLECTION)
+    val projectCollectionQualifier: Qualifier = named(PROJECTS_COLLECTION)
+    val userQualifier: Qualifier = named(USERS_COLLECTION)
 }
 
 
