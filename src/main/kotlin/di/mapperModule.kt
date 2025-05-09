@@ -4,22 +4,22 @@ import data.dataSource.taskState.TaskStateDtoParser
 import data.dataSource.user.UserDtoParser
 import data.dataSource.audit.AuditDtoParser
 import data.dataSource.project.ProjectDtoParser
-import data.dataSource.user.UserDtoParser
 import data.repositories.mappers.*
 import data.repositories.mappers.UserDtoMapper
 import org.koin.dsl.module
 
 val mapperModule = module {
-    single { UserDtoMapper() }
     single { AuditDtoMapper() }
-    single { ProjectDtoMapper() }
-    single { TaskStateMapper() }
-    single { CsvTaskMapper() }
+    single { AuditDtoParser() }
 
-    single { UserDtoParser() }
+    single { ProjectDtoMapper() }
+    single { ProjectDtoParser() }
+
+    single { TaskStateDtoMapper() }
     single { TaskStateDtoParser() }
 
-    single { ProjectDtoParser() }
+    single { CsvTaskMapper() }
+
+    single { UserDtoMapper() }
     single { UserDtoParser() }
-    single { AuditDtoParser() }
 }
