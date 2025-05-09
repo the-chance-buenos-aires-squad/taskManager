@@ -2,9 +2,8 @@ package presentation.cli.project
 
 import domain.customeExceptions.NoProjectsFoundException
 import domain.customeExceptions.UserEnterInvalidValueException
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -37,18 +36,18 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call create project function when user input number one`() {
+    fun `should call create project function when user input number one`() =runTest{
         every { uiController.readInput() } returns "1" andThen "5"
 
         projectScreenController.show()
 
-        verify { createProjectCli.create() }
+        coVerify { createProjectCli.create() }
     }
 
     @Test
-    fun `should handle createProjectCli with UserEnterInvalidValueException`() {
+    fun `should handle createProjectCli with UserEnterInvalidValueException`() = runTest{
         every { uiController.readInput() } returns "1" andThen "5"
-        every { createProjectCli.create() } throws UserEnterInvalidValueException("Invalid Input")
+        coEvery { createProjectCli.create() } throws UserEnterInvalidValueException("Invalid Input")
 
         projectScreenController.show()
 
@@ -56,18 +55,18 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call edit project function when user input number tow`() {
+    fun `should call edit project function when user input number tow`() = runTest{
         every { uiController.readInput() } returns "2" andThen "5"
 
         projectScreenController.show()
 
-        verify { updateProjectCli.update() }
+        coVerify { updateProjectCli.update() }
     }
 
     @Test
-    fun `should handle updateProjectCli with UserEnterInvalidValueException`() {
+    fun `should handle updateProjectCli with UserEnterInvalidValueException`() =runTest{
         every { uiController.readInput() } returns "2" andThen "5"
-        every { updateProjectCli.update() } throws UserEnterInvalidValueException("Invalid update")
+        coEvery { updateProjectCli.update() } throws UserEnterInvalidValueException("Invalid update")
 
         projectScreenController.show()
 
@@ -75,9 +74,9 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle updateProjectCli with NoProjectsFoundException`() {
+    fun `should handle updateProjectCli with NoProjectsFoundException`() =runTest{
         every { uiController.readInput() } returns "2" andThen "5"
-        every { updateProjectCli.update() } throws NoProjectsFoundException("No projects")
+        coEvery { updateProjectCli.update() } throws NoProjectsFoundException("No projects")
 
         projectScreenController.show()
 
@@ -85,18 +84,18 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call delete project function when user input number three`() {
+    fun `should call delete project function when user input number three`() = runTest{
         every { uiController.readInput() } returns "3" andThen "5"
 
         projectScreenController.show()
 
-        verify { deleteProjectCli.delete() }
+        coVerify { deleteProjectCli.delete() }
     }
 
     @Test
-    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() {
+    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() =runTest{
         every { uiController.readInput() } returns "3" andThen "5"
-        every { deleteProjectCli.delete() } throws UserEnterInvalidValueException("Can't delete")
+        coEvery { deleteProjectCli.delete() } throws UserEnterInvalidValueException("Can't delete")
 
         projectScreenController.show()
 
@@ -104,9 +103,9 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle deleteProjectCli with NoProjectsFoundException`() {
+    fun `should handle deleteProjectCli with NoProjectsFoundException`() = runTest{
         every { uiController.readInput() } returns "3" andThen "5"
-        every { deleteProjectCli.delete() } throws NoProjectsFoundException("Empty list")
+        coEvery { deleteProjectCli.delete() } throws NoProjectsFoundException("Empty list")
 
         projectScreenController.show()
 
@@ -114,9 +113,9 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle getAllProjectsCli with NoProjectsFoundException`() {
+    fun `should handle getAllProjectsCli with NoProjectsFoundException`() = runTest{
         every { uiController.readInput() } returns "4" andThen "5"
-        every { getAllProjectsCli.getAll() } throws NoProjectsFoundException("Empty list")
+        coEvery { getAllProjectsCli.getAll() } throws NoProjectsFoundException("Empty list")
 
         projectScreenController.show()
 
@@ -124,16 +123,16 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should getAllProjectsCli when projects found`() {
+    fun `should getAllProjectsCli when projects found`() = runTest{
         every { uiController.readInput() } returns "4" andThen "5"
 
         projectScreenController.show()
 
-        verify { getAllProjectsCli.getAll() }
+        coVerify { getAllProjectsCli.getAll() }
     }
 
     @Test
-    fun `should handel Invalid Input when user input empty value`() {
+    fun `should handel Invalid Input when user input empty value`() = runTest{
         every { uiController.readInput() } returns "" andThen "5"
 
         projectScreenController.show()
@@ -142,7 +141,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handel Invalid Input when user input invalid value`() {
+    fun `should handel Invalid Input when user input invalid value`() = runTest{
         every { uiController.readInput() } returns "7" andThen "5"
 
         projectScreenController.show()
@@ -151,7 +150,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handel Invalid Input when user input is return null`() {
+    fun `should handel Invalid Input when user input is return null`() = runTest{
         every { uiController.readInput() } returns "j" andThen "5"
 
         projectScreenController.show()

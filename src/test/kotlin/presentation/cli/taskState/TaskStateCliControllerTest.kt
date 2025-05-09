@@ -1,9 +1,11 @@
 package presentation.cli.taskState
 
 import dummyData.createDummyProject
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
@@ -33,9 +35,9 @@ class TaskStateCliControllerTest {
 
 
     @Test
-    fun `should display welcome message when start taskStateCliController`() {
+    fun `should display welcome message when start taskStateCliController`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "5"
 
@@ -53,9 +55,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should return to admin dashboard when projects is not found`() {
+    fun `should return to admin dashboard when projects is not found`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns emptyList()
+        coEvery { projectCliHelper.getProjects() } returns emptyList()
         every { projectCliHelper.selectProject(any()) } returns null
         every { uiController.readInput() } returns "5"
 
@@ -69,9 +71,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should return to admin dashboard when project is not found`() {
+    fun `should return to admin dashboard when project is not found`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns null
         every { uiController.readInput() } returns "5"
 
@@ -85,9 +87,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should start manage task when valid project`() {
+    fun `should start manage task when valid project`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "5"
 
@@ -110,9 +112,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should start create task state when user select 1`() {
+    fun `should start create task state when user select 1`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "1" andThen "5"
 
@@ -126,9 +128,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should start update task state cli when user select 2`() {
+    fun `should start update task state cli when user select 2`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "2" andThen "5"
 
@@ -142,9 +144,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should start delete task state cli when user select 3`() {
+    fun `should start delete task state cli when user select 3`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "3" andThen "5"
 
@@ -158,9 +160,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should start show tasks state cli when user select 4`() {
+    fun `should start show tasks state cli when user select 4`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "4" andThen "5"
 
@@ -174,9 +176,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should back to menu when user enter empty`() {
+    fun `should back to menu when user enter empty`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "" andThen "5"
 
@@ -190,9 +192,9 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should back to menu when user enter invalid choose`() {
+    fun `should back to menu when user enter invalid choose`() = runTest{
         // given
-        every { projectCliHelper.getProjects() } returns listOf(sampleProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns sampleProject
         every { uiController.readInput() } returns "8" andThen "5"
 

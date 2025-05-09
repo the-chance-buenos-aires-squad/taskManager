@@ -3,8 +3,10 @@ package domain.usecases.project
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -19,8 +21,8 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should return true if project created success`() {
-        every { projectRepository.createProject(any()) } returns true
+    fun `should return true if project created success`() = runTest{
+        coEvery { projectRepository.createProject(any()) } returns true
 
         val result = createProjectUseCase.execute(createDummyProject())
 
@@ -28,8 +30,8 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should return false if project don't created`() {
-        every { projectRepository.createProject(any()) } returns false
+    fun `should return false if project don't created`() = runTest{
+        coEvery { projectRepository.createProject(any()) } returns false
 
         val result = createProjectUseCase.execute(createDummyProject())
 

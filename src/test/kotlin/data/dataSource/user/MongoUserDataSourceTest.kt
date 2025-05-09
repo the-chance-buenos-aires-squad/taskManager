@@ -2,10 +2,8 @@ package data.dataSource.user
 
 import com.google.common.truth.Truth.assertThat
 import data.dto.UserDto
-import dummyData.DummyUser
 import dummyData.DummyUser.dummyUserOneDto
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
