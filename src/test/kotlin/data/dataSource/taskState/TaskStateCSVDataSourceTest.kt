@@ -3,12 +3,17 @@ package data.dataSource.taskState
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import data.dto.TaskStateDto
+import data.exceptions.TaskStateNameException
+import dummyData.dummyStateData.DummyTaskState.todoDto
 import io.mockk.Runs
+import io.mockk.coEvery
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import java.io.File
 import java.util.*
 import kotlin.test.Test
@@ -16,7 +21,7 @@ import kotlin.test.Test
 class TaskStateCSVDataSourceTest {
 
     private lateinit var testStateFile: File
-    private lateinit var csvHandler: CsvHandler
+    private var csvHandler: CsvHandler= mockk(relaxed = true)
     private var taskStateDtoParser: TaskStateDtoParser = TaskStateDtoParser()
     private lateinit var taskStateCSVDataSource: TaskStateCSVDataSource
 
@@ -34,7 +39,6 @@ class TaskStateCSVDataSourceTest {
 
     @BeforeEach
     fun setup() {
-        csvHandler = mockk(relaxed = true)
         testStateFile = File.createTempFile("test_states", "csv")
         taskStateCSVDataSource = TaskStateCSVDataSource(testStateFile, taskStateDtoParser, csvHandler)
     }
@@ -102,43 +106,6 @@ class TaskStateCSVDataSourceTest {
         val result = taskStateCSVDataSource.getTaskStates()
 
         assertThat(result).hasSize(2)
-    }
-
-
-    @Test
-    fun `should return true when state exists`() = runTest {
-        every { csvHandler.read(testStateFile) } returns csvRows
-
-        val result = taskStateCSVDataSource.existsTaskState("To Do", projectId1.toString())
-
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should return false when state name exists but projectId is different`() = runTest {
-        every { csvHandler.read(testStateFile) } returns csvRows
-
-        val result = taskStateCSVDataSource.existsTaskState("To Do", projectId2.toString())
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when state name is incorrect but projectId exists`() = runTest {
-        every { csvHandler.read(testStateFile) } returns csvRows
-
-        val result = taskStateCSVDataSource.existsTaskState("Done", projectId1.toString())
-
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when state does not exist`() = runTest {
-        every { csvHandler.read(testStateFile) } returns csvRows
-
-        val result = taskStateCSVDataSource.existsTaskState("Block", UUID.randomUUID().toString())
-
-        assertThat(result).isFalse()
     }
 
 }

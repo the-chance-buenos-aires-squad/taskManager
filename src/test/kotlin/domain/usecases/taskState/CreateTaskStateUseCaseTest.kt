@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -26,7 +25,7 @@ class CreateTaskStateUseCaseTest {
 
         coEvery { repository.createTaskState(newState) } returns true
 
-        val result = createTaskStateUseCase.execute(newState)
+        val result = createTaskStateUseCase.CreateTask(newState)
 
         assertThat(result).isTrue()
     }
@@ -38,7 +37,7 @@ class CreateTaskStateUseCaseTest {
 
         coEvery { repository.createTaskState(newState) } returns false
 
-        val result = createTaskStateUseCase.execute(newState)
+        val result = createTaskStateUseCase.CreateTask(newState)
 
         assertThat(result).isFalse()
     }

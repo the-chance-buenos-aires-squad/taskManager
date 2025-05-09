@@ -1,7 +1,8 @@
 package presentation.cli.taskState
 
+import data.exceptions.TaskStateNameException
+import domain.entities.TaskState
 import domain.usecases.taskState.CreateTaskStateUseCase
-import domain.usecases.taskState.ExistsTaskStateUseCase
 import dummyData.createDummyProject
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
@@ -11,13 +12,16 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import presentation.UiController
+import java.util.UUID
+import javax.naming.InvalidNameException
 import kotlin.test.Test
 
 class CreateTaskStateCliTest {
     private val createTaskStateUseCase: CreateTaskStateUseCase = mockk(relaxed = true)
-    private val existsTaskStateUseCase: ExistsTaskStateUseCase = mockk(relaxed = true)
     private val uiController: UiController = mockk(relaxed = true)
+    private val inputHandler: TaskStateInputHandler = mockk(relaxed = true)
     private lateinit var createTaskStateCli: CreateTaskStateCli
 
     private val taskState = DummyTaskState.todo
@@ -27,13 +31,13 @@ class CreateTaskStateCliTest {
     @BeforeEach
     fun setup() {
         createTaskStateCli =
-            CreateTaskStateCli(createTaskStateUseCase, existsTaskStateUseCase, uiController)
+            CreateTaskStateCli(createTaskStateUseCase, uiController, inputHandler)
     }
 
     @Test
-    fun `should call execute when creating task state succeeds`() = runTest{
+    fun `should call execute when creating task state succeeds`() = runTest {
 
-        coEvery { createTaskStateUseCase.execute(any()) } returns true
+        coEvery { createTaskStateUseCase.CreateTask(any()) } returns true
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
@@ -42,35 +46,39 @@ class CreateTaskStateCliTest {
 
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        coVerify { createTaskStateUseCase.execute(any()) }
+        coVerify { createTaskStateUseCase.CreateTask(any()) }
     }
 
     @Test
     fun `should call execute when failed to create task state`() = runTest {
-        coEvery { createTaskStateUseCase.execute(any()) } returns false
+        coEvery { createTaskStateUseCase.CreateTask(any()) } returns false
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
             taskState.projectId.toString()
         )
-1
+        1
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        coVerify { createTaskStateUseCase.execute(any()) }
+        coVerify { createTaskStateUseCase.CreateTask(any()) }
     }
 
     @Test
-    fun `should show message when task state already exists`() =runTest {
-        val taskStateName = "Existing Task State"
-        val projectId = dummyProject.id
+    fun `when useCase throws exception should print error message`() = runTest {
+        // given
+        val projectId = UUID.fromString("00000000-1000-0000-0000-000000000000")
+        val dummyState = taskState
+        coEvery { inputHandler.readAndValidateUserInputs(projectId = projectId) } returns dummyState
 
-        every { uiController.readInput() } returns taskStateName
-        coEvery { existsTaskStateUseCase.execute(taskStateName, projectId) } returns true
+        val exception = InvalidNameException()
+        coEvery { createTaskStateUseCase.CreateTask(dummyState.copy(projectId = projectId)) } throws exception
 
-        // Act
+        // when
         createTaskStateCli.createTaskState(projectId)
 
-        // Assert
-        verify { uiController.printMessage("Task state already exists.") }
+        // then
+        coVerify {
+            uiController.printMessage("Error : ${exception.localizedMessage}")
+        }
     }
 }

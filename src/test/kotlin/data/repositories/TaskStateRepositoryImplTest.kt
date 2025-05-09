@@ -1,16 +1,17 @@
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dto.TaskStateDto
+import data.exceptions.TaskStateNameException
 import data.repositories.TaskStateRepositoryImpl
 import data.repositories.mappers.TaskStateDtoMapper
 import domain.entities.TaskState
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class TaskStateRepositoryImplTest {
@@ -31,8 +32,8 @@ class TaskStateRepositoryImplTest {
     @Test
     fun `should return true when creating a new state`() = runTest {
         val newState = DummyTaskState.readyForReview
-        val stateRow = TaskStateDto(newState.id.toString(), newState.name, newState.projectId.toString())
-
+        val stateRow = DummyTaskState.readyForReviewDto
+        coEvery { mockCSVDataSource.getTaskStates() } returns emptyList()
         coEvery { mockCSVDataSource.createTaskState(stateRow) } returns true
 
         val result = stateRepository.createTaskState(newState)
@@ -40,23 +41,38 @@ class TaskStateRepositoryImplTest {
         assertThat(result).isTrue()
     }
 
+
     @Test
-    fun `should return false when state already exists`() = runTest{
-        val existingState = DummyTaskState.todo
-        val stateRow = TaskStateDto(existingState.id.toString(), existingState.name, existingState.projectId.toString())
+    fun `should return false when state already exists`() = runTest {
+        //given
+        val newState = DummyTaskState.readyForReview
+        val stateDto = DummyTaskState.readyForReviewDto
+        coEvery { mockCSVDataSource.getTaskStates() } returns listOf(stateDto)
+        coEvery { mockCSVDataSource.createTaskState(stateDto) } returns true
 
-        coEvery { mockCSVDataSource.createTaskState(stateRow) } returns false
+        //when && then
+        assertThrows<TaskStateNameException> {
+            stateRepository.createTaskState(newState)
+        }
+    }
 
-        val result = stateRepository.createTaskState(existingState)
+    @Test
+    fun `should create when existing states but none match projectId and name`() = runTest {
+        val otherDto = DummyTaskState.todoDto.copy(projectId = UUID.randomUUID().toString())
+        coEvery { mockCSVDataSource.getTaskStates() } returns listOf(otherDto)
+        coEvery { mockCSVDataSource.createTaskState(any()) } returns true
 
-        assertThat(result).isFalse()
+        val result = stateRepository.createTaskState(DummyTaskState.readyForReview)
+
+        assertThat(result).isTrue()
     }
 
     @Test
     fun `should edit state successfully when this state is existing`() = runTest {
         val todoState = DummyTaskState.todoDto
         val updatedToDoState = TaskState(UUID.randomUUID(), "In Progress", UUID.randomUUID())
-        val updatedStateRow = TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.name, updatedToDoState.projectId.toString())
+        val updatedStateRow =
+            TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.name, updatedToDoState.projectId.toString())
 
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf<TaskStateDto>(todoState)
         coEvery { mockCSVDataSource.editTaskState(updatedStateRow) } returns true
@@ -116,7 +132,7 @@ class TaskStateRepositoryImplTest {
     }
 
     @Test
-    fun `should return all states when they exist`() = runTest{
+    fun `should return all states when they exist`() = runTest {
         coEvery { mockCSVDataSource.getTaskStates() } returns
                 listOf(DummyTaskState.readyForReviewDto, DummyTaskState.blockedDto)
 
@@ -126,7 +142,7 @@ class TaskStateRepositoryImplTest {
     }
 
     @Test
-    fun `should return an empty list when no states exist`()= runTest {
+    fun `should return an empty list when no states exist`() = runTest {
         coEvery { mockCSVDataSource.getTaskStates() } returns emptyList()
 
         val result = stateRepository.getAllTaskStates()
@@ -134,28 +150,6 @@ class TaskStateRepositoryImplTest {
         assertThat(result).isEmpty()
     }
 
-    @Test
-    fun `should return true when the state exists`()= runTest {
-        coEvery {
-            mockCSVDataSource.existsTaskState(
-                DummyTaskState.todo.name,
-                DummyTaskState.todo.projectId.toString()
-            )
-        } returns true
-
-        val result = stateRepository.existsTaskState(DummyTaskState.todo.name, DummyTaskState.todo.projectId)
-
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should return false when the state does not exist`() = runTest{
-        coEvery { mockCSVDataSource.existsTaskState(any(), any()) } returns false
-
-        val result = stateRepository.existsTaskState("NonExists", UUID.randomUUID())
-
-        assertThat(result).isFalse()
-    }
 
 
 }

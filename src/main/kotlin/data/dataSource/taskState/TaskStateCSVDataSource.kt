@@ -2,6 +2,7 @@ package data.dataSource.taskState
 
 import data.dataSource.util.CsvHandler
 import data.dto.TaskStateDto
+import data.exceptions.TaskStateNameException
 import java.io.File
 import java.util.*
 
@@ -38,7 +39,7 @@ class TaskStateCSVDataSource(
 
     override suspend fun deleteTaskState(stateId: String): Boolean {
         val states = getTaskStates().toMutableList()
-        val removed = states.removeIf { it.id == stateId.toString() }
+        val removed = states.removeIf { it.id == stateId }
 
         if (removed) {
             writeTaskStates(states)
@@ -49,19 +50,14 @@ class TaskStateCSVDataSource(
 
     override suspend fun getTaskStates(): List<TaskStateDto> {
         return csvHandler.read(file)
-            .mapNotNull { parts -> taskStateDtoParser.toDto(parts) }
-    }
-
-    override suspend fun existsTaskState(name: String, projectId: String): Boolean {
-        val allStates = getTaskStates()
-        return allStates.any { it.name.equals(name, ignoreCase = true) && it.projectId == projectId}
+            .map { parts -> taskStateDtoParser.toDto(parts) }
     }
 
     private fun writeTaskStates(states: List<TaskStateDto>) {
         file.writeText("")
         states.forEach { state ->
             csvHandler.write(
-                listOf(state.id, state.name, state.projectId),
+                taskStateDtoParser.fromDto(state),
                 file,
             )
         }

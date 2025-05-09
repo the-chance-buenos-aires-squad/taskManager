@@ -9,5 +9,4 @@ interface TaskStateDataSource {
     suspend fun editTaskState(editState: TaskStateDto): Boolean
     suspend fun deleteTaskState(stateId: String): Boolean
     suspend fun getTaskStates(): List<TaskStateDto>
-    suspend fun existsTaskState(name: String, projectId: String): Boolean
 }
