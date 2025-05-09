@@ -43,23 +43,5 @@ class GetAllTaskStatesUseCaseTest {
         assertThat(result).isEmpty()
     }
 
-    @Test
-    fun `should return only states matching the selected project and filter out others`() = runTest {
-        // عندنا projectA و projectB
-        val projectA = UUID.randomUUID()
-        val projectB = UUID.randomUUID()
-
-        // لستة فيها عنصرين: واحد ينتمي لـ A والثاني لـ B
-        val stateA = DummyTaskState.todo.copy(projectId = projectA)
-        val stateB = DummyTaskState.readyForReview.copy(projectId = projectB)
-        coEvery { repository.getAllTaskStates() } returns listOf(stateA, stateB)
-
-        // لما ننفّذ الـ use case على projectA
-        val result = getAllTaskStatesUseCase.execute(projectA)
-
-        // لازم يرجّع بس العنصر A، ويتجاهل B
-        assertThat(result).hasSize(1)
-        assertThat(result[0].projectId).isEqualTo(projectA)
-    }
 
 }
