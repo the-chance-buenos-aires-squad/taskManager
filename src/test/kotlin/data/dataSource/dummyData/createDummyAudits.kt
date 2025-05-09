@@ -1,15 +1,16 @@
 package data.dataSource.dummyData
 
-import data.repositories.mappers.AuditMapper
+import data.repositories.mappers.AuditDtoMapper
 import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
+import java.util.*
 
 
 object createDummyAudits {
     val dummyTaskCreateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.TASK,
         action = ActionType.CREATE,
@@ -19,12 +20,12 @@ object createDummyAudits {
         userId = "admin123",
         timestamp = LocalDateTime.now()
     )
-    val auditMapper = AuditMapper()
-    val dummyTaskCreateActionRow = auditMapper.mapEntityToRow(dummyTaskCreateAction)
+    val auditDtoMapper = AuditDtoMapper()
+    val dummyTaskCreateActionRow = auditDtoMapper.fromEntity(dummyTaskCreateAction)
 
 
     val dummyProjectCreateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.PROJECT,
         action = ActionType.CREATE,
@@ -34,11 +35,11 @@ object createDummyAudits {
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
-    val dummyProjectCreateActionRow = auditMapper.mapEntityToRow(dummyProjectCreateAction)
+    val dummyProjectCreateActionRow = auditDtoMapper.fromEntity(dummyProjectCreateAction)
 
 
     val dummyUserUpdateAction = Audit(
-        id = "121",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.USER,
         action = ActionType.UPDATE,

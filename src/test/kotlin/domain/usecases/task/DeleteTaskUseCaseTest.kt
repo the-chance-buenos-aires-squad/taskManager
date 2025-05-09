@@ -7,6 +7,7 @@ import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
@@ -73,6 +74,6 @@ class DeleteTaskUseCaseTest {
         deleteTaskUseCase.deleteTask(UUID.randomUUID())
 
         //then
-        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

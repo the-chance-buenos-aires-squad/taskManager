@@ -1,5 +1,6 @@
 package presentation
 
+import di.*
 import di.dataUtilModule
 import di.dataSourceModule
 import di.domainUtilModule

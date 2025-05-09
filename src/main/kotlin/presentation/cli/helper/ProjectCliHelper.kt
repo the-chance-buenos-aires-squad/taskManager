@@ -9,7 +9,7 @@ class ProjectCliHelper(
     private val uiController: UiController
 
 ) {
-    fun getProjects(): List<Project> {
+    suspend fun getProjects(): List<Project> {
         return try {
             getProjectsUseCase.execute()
         } catch (ex: Exception) {

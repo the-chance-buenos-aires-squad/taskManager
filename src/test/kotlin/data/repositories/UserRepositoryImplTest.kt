@@ -2,6 +2,7 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.user.CsvUserDataSource
+import data.repositories.mappers.UserDtoMapper
 import data.dto.UserDto
 import data.repositories.mappers.UserDtoMapper
 import dummyData.DummyUser.dummyUserOne
