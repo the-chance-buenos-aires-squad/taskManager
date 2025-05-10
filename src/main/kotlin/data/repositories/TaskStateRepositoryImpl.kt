@@ -12,7 +12,7 @@ class TaskStateRepositoryImpl(
     private val taskStateDtoMapper: TaskStateDtoMapper,
 ) : TaskStateRepository {
     override suspend fun createTaskState(state: TaskState): Boolean {
-        val taskStates = getAllTaskStates().filter { it.projectId == state.projectId && it.name == state.name }
+        val taskStates = getAllTaskStates().filter { it.projectId == state.projectId && it.name.lowercase() == state.name.lowercase() }
         if (!taskStates.isEmpty()) throw TaskStateNameException()
         return taskStateCSVDataSource.createTaskState(taskStateDtoMapper.fromEntity(state))
     }

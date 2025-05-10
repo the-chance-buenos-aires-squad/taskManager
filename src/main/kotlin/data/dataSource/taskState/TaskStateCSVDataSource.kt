@@ -2,9 +2,7 @@ package data.dataSource.taskState
 
 import data.dataSource.util.CsvHandler
 import data.dto.TaskStateDto
-import data.exceptions.TaskStateNameException
 import java.io.File
-import java.util.*
 
 class TaskStateCSVDataSource(
     private val file: File,
@@ -19,11 +17,11 @@ class TaskStateCSVDataSource(
 
     override suspend fun editTaskState(editState: TaskStateDto): Boolean {
         val allStates = getTaskStates().toMutableList()
-        val index = allStates.indexOfFirst { it.id == editState.id }
+        val index = allStates.indexOfFirst { it._id == editState._id }
 
         return if (index != -1) {
             val editTaskState = TaskStateDto(
-                id = editState.id,
+                _id = editState._id,
                 name = editState.name,
                 projectId = editState.projectId
             )
@@ -39,7 +37,7 @@ class TaskStateCSVDataSource(
 
     override suspend fun deleteTaskState(stateId: String): Boolean {
         val states = getTaskStates().toMutableList()
-        val removed = states.removeIf { it.id == stateId }
+        val removed = states.removeIf { it._id == stateId }
 
         if (removed) {
             writeTaskStates(states)

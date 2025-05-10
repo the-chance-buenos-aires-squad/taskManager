@@ -9,7 +9,6 @@ import com.mongodb.client.result.UpdateResult
 import com.mongodb.kotlin.client.coroutine.FindFlow
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.TaskStateDto
-import data.exceptions.TaskStateNameException
 import dummyData.dummyStateData.DummyTaskState.todoDto
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -18,7 +17,6 @@ import io.mockk.spyk
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.test.runTest
 import org.bson.conversions.Bson
-import org.junit.jupiter.api.assertThrows
 import java.util.*
 import kotlin.test.Test
 
@@ -41,7 +39,7 @@ class MongoTaskStateDataSourceTest {
 
         assertThat(result).isTrue()
     }
-    
+
     @Test
     fun `should return false when state is not created successfully`() = runTest {
         val insertResult = mockk<InsertOneResult>()
@@ -75,7 +73,7 @@ class MongoTaskStateDataSourceTest {
         coEvery { deleteResult.wasAcknowledged() } returns true
         coEvery { taskStateCollection.deleteOne(any<Bson>(), any<DeleteOptions>()) } returns deleteResult
 
-        val result = mongoTaskStateDataSource.deleteTaskState(testDto.id)
+        val result = mongoTaskStateDataSource.deleteTaskState(testDto._id)
 
         assertThat(result).isTrue()
     }
@@ -86,7 +84,7 @@ class MongoTaskStateDataSourceTest {
         coEvery { deleteResult.wasAcknowledged() } returns false
         coEvery { taskStateCollection.deleteOne(any<Bson>(), any<DeleteOptions>()) } returns deleteResult
 
-        val result = mongoTaskStateDataSource.deleteTaskState(testDto.id)
+        val result = mongoTaskStateDataSource.deleteTaskState(testDto._id)
 
         assertThat(result).isFalse()
     }
@@ -96,7 +94,7 @@ class MongoTaskStateDataSourceTest {
         // given
         val states = listOf(
             testDto,
-            testDto.copy(id = UUID.randomUUID().toString())
+            testDto.copy(_id = UUID.randomUUID().toString())
         )
         val findFlow = mockk<FindFlow<TaskStateDto>>(relaxed = true)
         coEvery { taskStateCollection.find() } returns findFlow

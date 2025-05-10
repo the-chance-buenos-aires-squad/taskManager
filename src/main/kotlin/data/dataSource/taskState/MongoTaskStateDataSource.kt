@@ -4,10 +4,7 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.TaskStateDto
-import data.exceptions.TaskStateNameException
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
-import javax.naming.InvalidNameException
 
 class MongoTaskStateDataSource(
     private val taskStateCollection: MongoCollection<TaskStateDto>
@@ -20,7 +17,7 @@ class MongoTaskStateDataSource(
 
     override suspend fun editTaskState(editState: TaskStateDto): Boolean {
         return taskStateCollection.updateOne(
-            Filters.eq(TaskStateDto::id.name, editState.id),
+            Filters.eq(TaskStateDto::_id.name, editState._id),
             Updates.combine(
                 Updates.set(TaskStateDto::name.name, editState.name)
             )
@@ -29,7 +26,7 @@ class MongoTaskStateDataSource(
 
     override suspend fun deleteTaskState(stateId: String): Boolean {
         return taskStateCollection.deleteOne(
-            Filters.eq(TaskStateDto::id.name, stateId)
+            Filters.eq(TaskStateDto::_id.name, stateId)
         ).wasAcknowledged()
     }
 

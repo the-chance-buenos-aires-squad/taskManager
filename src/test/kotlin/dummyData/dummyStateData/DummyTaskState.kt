@@ -7,7 +7,7 @@ import java.util.*
 
 object DummyTaskState {
     val todoDto = TaskStateDto(
-        id = UUID.fromString("00000000-1000-0000-0000-000000000000").toString(),
+        _id = UUID.fromString("00000000-1000-0000-0000-000000000000").toString(),
         name = "To Do",
         projectId = UUID.fromString("10000000-1000-0000-0000-000000000000").toString()
     )
@@ -37,7 +37,7 @@ object DummyTaskState {
     )
 
     val blockedDto = TaskStateDto(
-        id = UUID.fromString("00000000-4000-0000-0000-000000000000").toString(),
+        _id = UUID.fromString("00000000-4000-0000-0000-000000000000").toString(),
         name = "Blocked",
         projectId = UUID.fromString("40000000-1000-0000-0000-000000000000").toString()
     )
@@ -49,7 +49,7 @@ object DummyTaskState {
     )
 
     val readyForReviewDto = TaskStateDto(
-        id = UUID.fromString("50000000-1000-0000-0000-000000000000").toString(),
+        _id = UUID.fromString("50000000-1000-0000-0000-000000000000").toString(),
         name = "Ready For Review",
         projectId = UUID.fromString("50000000-1000-0000-0000-000000000000").toString()
     )
