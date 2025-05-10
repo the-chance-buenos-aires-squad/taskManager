@@ -13,7 +13,11 @@ class MongoUserDataSource(
 ) : UserDataSource {
 
     override suspend fun addUser(userDto: UserDto): Boolean {
-        return userCollection.insertOne(userDto).wasAcknowledged()
+        if (userCollection.insertOne(userDto).wasAcknowledged()) {
+            return true
+        } else {
+            return false
+        }
     }
 
     override suspend fun getUserById(id: UUID): UserDto? {
@@ -31,10 +35,14 @@ class MongoUserDataSource(
     }
 
     override suspend fun deleteUser(id: UUID): Boolean {
-        return userCollection
-            .deleteOne(
-                Filters.eq(UserDto::id.name, id)
-            ).wasAcknowledged()
+        val acknowledged = userCollection
+            .deleteOne(Filters.eq(UserDto::id.name, id))
+            .wasAcknowledged()
+        if (acknowledged) {
+            return true
+        } else {
+            return false
+        }
     }
 
     override suspend fun getUsers(): List<UserDto> {
@@ -42,7 +50,7 @@ class MongoUserDataSource(
     }
 
     override suspend fun updateUser(userDto: UserDto): Boolean {
-        return userCollection
+        val acknowledged = userCollection
             .updateOne(
                 Filters.eq(UserDto::id.name, userDto.id),
                 Updates.combine(
@@ -52,6 +60,11 @@ class MongoUserDataSource(
                     Updates.set(UserDto::createdAt.name, userDto.createdAt),
                 )
             ).wasAcknowledged()
+        if (acknowledged) {
+            return true
+        } else {
+            return false
+        }
     }
 
 }
