@@ -7,7 +7,7 @@ import data.dataSource.project.ProjectDataSource
 import data.dataSource.task.MongoTaskDataSource
 import data.dataSource.task.TaskDataSource
 import data.dataSource.task.TaskDtoParser
-import data.dataSource.taskState.TaskStateCSVDataSource
+import data.dataSource.taskState.MongoTaskStateDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
@@ -43,7 +43,6 @@ val dataSourceModule = module {
 
 //    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
     single<ProjectDataSource> { MongoProjectDataSource(get(projectCollectionQualifier)) }
-    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(),file = get(Paths.AuditFileQualifier)) }
     single { TaskDtoParser() }
 
     //single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
@@ -53,12 +52,9 @@ val dataSourceModule = module {
     single<TaskStateDataSource> { MongoTaskStateDataSource(get(taskStateCollectionQualifier)) }
 
 
-
-    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
+//    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single<UserDataSource> { MongoUserDataSource(get()) }
-    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier),csvHandler = get()) }
-    single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier),csvHandler = get()) }
 //    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
     single<TaskDataSource> { MongoTaskDataSource(get()) }
 
