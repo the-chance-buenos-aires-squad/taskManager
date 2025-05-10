@@ -3,8 +3,9 @@ package domain.usecases
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskRepository
 import dummyData.createDummyTask
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -26,9 +27,9 @@ class GetTasksUseCaseTest {
     }
 
     @Test
-    fun `should return list of tasks success`() {
+    fun `should return list of tasks success`() = runTest {
         //given
-        every { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
+        coEvery { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
 
         //when
         val result = getTasksUseCase.getTasks()
@@ -38,9 +39,9 @@ class GetTasksUseCaseTest {
     }
 
     @Test
-    fun `should return empty when no task created`() {
+    fun `should return empty when no task created`() = runTest {
         //given
-        every { taskRepository.getAllTasks() } returns emptyList()
+        coEvery { taskRepository.getAllTasks() } returns emptyList()
 
         //when
         val result = getTasksUseCase.getTasks()
