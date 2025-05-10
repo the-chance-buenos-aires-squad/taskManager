@@ -1,8 +1,8 @@
 package di
 
 import data.dataSource.audit.AuditDataSource
-import data.dataSource.audit.CsvAuditDataSource
-import data.dataSource.project.CsvProjectDataSource
+import data.dataSource.audit.MongoAuditDataSource
+import data.dataSource.project.MongoProjectDataSource
 import data.dataSource.project.ProjectDataSource
 import data.dataSource.task.MongoTaskDataSource
 import data.dataSource.task.TaskDataSource
@@ -11,6 +11,9 @@ import data.dataSource.taskState.TaskStateCSVDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.MongoUserDataSource
 import data.dataSource.user.UserDataSource
+import di.MongoCollections.auditCollectionQualifier
+import di.MongoCollections.projectCollectionQualifier
+import di.MongoCollections.taskStateCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -35,9 +38,23 @@ val dataSourceModule = module {
         File(Paths.TASK_FILE_PATH)
     }
 
+//    single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(), auditDtoParser = get(), file = get(Paths.AuditFileQualifier)) }
+    single<AuditDataSource> { MongoAuditDataSource(auditCollection = get(auditCollectionQualifier)) }
+
+//    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
+    single<ProjectDataSource> { MongoProjectDataSource(get(projectCollectionQualifier)) }
     single<AuditDataSource> { CsvAuditDataSource(csvHandler = get(),file = get(Paths.AuditFileQualifier)) }
     single { TaskDtoParser() }
 
+    //single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
+    single<UserDataSource> { MongoUserDataSource(get()) }
+
+//    single<TaskStateDataSource> { TaskStateCSVDataSource(file = get(Paths.TaskStateFileQualifier), taskStateDtoParser = get(), csvHandler = get()) }
+    single<TaskStateDataSource> { MongoTaskStateDataSource(get(taskStateCollectionQualifier)) }
+
+
+
+    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
 //    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single<UserDataSource> { MongoUserDataSource(get()) }
     single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier),csvHandler = get()) }

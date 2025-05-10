@@ -4,9 +4,8 @@ import domain.entities.TaskState
 import java.util.*
 
 interface TaskStateRepository {
-    fun createTaskState(state: TaskState): Boolean
-    fun editTaskState(state: TaskState): Boolean
-    fun deleteTaskState(stateId: UUID): Boolean
-    fun getAllTaskStates(): List<TaskState>
-    fun existsTaskState(name: String, projectId: UUID): Boolean
+    suspend fun createTaskState(state: TaskState): Boolean
+    suspend fun editTaskState(state: TaskState): Boolean
+    suspend fun deleteTaskState(stateId: UUID): Boolean
+    suspend fun getAllTaskStates(): List<TaskState>
 }

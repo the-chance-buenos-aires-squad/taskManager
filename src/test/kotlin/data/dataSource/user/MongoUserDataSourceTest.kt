@@ -2,22 +2,16 @@ package data.dataSource.user
 
 import com.google.common.truth.Truth.assertThat
 import data.dto.UserDto
-import dummyData.DummyUser
+import dummyData.DummyUser.dummyUserOneDto
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
 class MongoUserDataSourceTest {
 
-    private lateinit var dataSource: FakeMongoUserDataSource
-    private lateinit var testUser: UserDto
+    private  var dataSource: FakeMongoUserDataSource = FakeMongoUserDataSource()
+    private  var testUser: UserDto = dummyUserOneDto
 
-    @BeforeEach
-    fun setUp() {
-        dataSource = FakeMongoUserDataSource()
-        testUser = DummyUser.dummyUserOneDto
-    }
 
     @Test
     fun `addUser should return true and allow retrieval by id`() = runTest {

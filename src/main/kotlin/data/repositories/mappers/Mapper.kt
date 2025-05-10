@@ -4,5 +4,5 @@ interface Mapper<T,R> {
 
     fun fromEntity(entity: T): R
 
-    fun toEntity(type: R): T
+    fun toEntity(row: R): T
 }

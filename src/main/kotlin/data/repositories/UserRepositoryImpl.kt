@@ -1,7 +1,7 @@
 package data.repositories
 
 import data.dataSource.user.UserDataSource
-import data.repositories.mappers.userMappers.UserDtoMapper
+import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.repositories.UserRepository
 import java.util.*
@@ -35,10 +35,10 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getUsers(): List<User> {
-        val usersRows = userDataSource.getUsers()
-        return usersRows.map { userRow ->
-            userMapper.toEntity(userRow)
-        }
+            val usersRows = userDataSource.getUsers()
+            return usersRows.map { userRow ->
+                userMapper.toEntity(userRow)
+            }
     }
 
 

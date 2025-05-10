@@ -11,7 +11,7 @@ class CreateProjectCli(
     private val createProjectUseCase: CreateProjectUseCase,
     private val uiController: UiController
 ) {
-    fun create() {
+    suspend fun create() {
         val id = UUID.randomUUID()
 
         uiController.printMessage("Enter project name:")

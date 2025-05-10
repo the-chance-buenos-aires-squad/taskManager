@@ -9,7 +9,7 @@ class GetAllTaskStatesCli(
     private val uiController: UiController,
 ) {
 
-    fun getAllTaskStates(selectedProjectId: UUID) {
+    suspend fun getAllTaskStates(selectedProjectId: UUID) {
 
         uiController.printMessage(
             """

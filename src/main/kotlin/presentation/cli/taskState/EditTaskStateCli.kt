@@ -12,7 +12,7 @@ class EditTaskStateCli(
 ) {
     private val inputHandler = TaskStateInputHandler(uiController)
 
-    fun editTaskState(selectedProjectId: UUID) {
+    suspend fun editTaskState(selectedProjectId: UUID) {
         uiController.printMessage(
             """
 

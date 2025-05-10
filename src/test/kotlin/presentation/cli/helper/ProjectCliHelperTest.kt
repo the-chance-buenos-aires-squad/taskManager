@@ -4,9 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -29,8 +31,8 @@ class ProjectCliHelperTest {
     }
 
     @Test
-    fun `getProjects should returns list when use case succeeds`() {
-        every { getAllProjectsUseCase.execute() } returns sampleProjects
+    fun `getProjects should returns list when use case succeeds`() = runTest{
+        coEvery { getAllProjectsUseCase.execute() } returns sampleProjects
 
         val result = projectCliHelper.getProjects()
 
@@ -39,9 +41,9 @@ class ProjectCliHelperTest {
     }
 
     @Test
-    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() {
+    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() = runTest{
         val exceptionMessage = "No projects found"
-        every { getAllProjectsUseCase.execute() } throws NoProjectsFoundException(exceptionMessage)
+        coEvery { getAllProjectsUseCase.execute() } throws NoProjectsFoundException(exceptionMessage)
 
         val result = projectCliHelper.getProjects()
 

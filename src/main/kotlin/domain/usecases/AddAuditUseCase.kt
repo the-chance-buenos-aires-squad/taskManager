@@ -11,10 +11,10 @@ class AddAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
 
-    fun addAudit(
+    suspend fun addAudit(
         entityId: String,
-        entityType: EntityType,
-        action: ActionType,
+        entityType: EntityType?,
+        action: ActionType?,
         field: String?,
         oldValue: String?,
         newValue: String?,
@@ -23,7 +23,7 @@ class AddAuditUseCase(
         val id = UUID.randomUUID()
         val timeStamp = LocalDateTime.now()
         val newAudit = Audit(
-            id = id.toString(),
+            id = id,
             entityId = entityId,
             entityType = entityType,
             action = action,
