@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-class CsvTaskMapperTest {
+class CsvTaskDtoMapperTest {
 
     private lateinit var taskMapper: CsvTaskMapper
     private lateinit var sampleTask: Task
