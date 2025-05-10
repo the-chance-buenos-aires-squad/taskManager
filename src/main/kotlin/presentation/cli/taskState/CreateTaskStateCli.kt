@@ -20,7 +20,7 @@ class CreateTaskStateCli(
         val taskState = inputHandler.readAndValidateUserInputs(projectId = projectId)
 
         try {
-            val newState = createTaskStateUseCase.CreateTask(taskState.copy(projectId =projectId))
+            val newState = createTaskStateUseCase.CreateTask(taskState.copy(projectId = projectId))
             if (newState) {
                 uiController.printMessage("Task state created successfully.")
                 uiController.printMessage(
@@ -28,7 +28,7 @@ class CreateTaskStateCli(
                 Name State: ${taskState.name}
                 """.trimIndent()
                 )
-            } else{
+            } else {
                 uiController.printMessage("Failed to create task state.")
             }
         } catch (e: Exception) {

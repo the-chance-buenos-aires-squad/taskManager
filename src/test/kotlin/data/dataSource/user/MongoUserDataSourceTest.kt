@@ -9,7 +9,10 @@ import com.mongodb.kotlin.client.coroutine.FindFlow
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.UserDto
 import dummyData.DummyUser.dummyUserOneDto
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.test.runTest
 import org.bson.conversions.Bson
@@ -46,8 +49,8 @@ class MongoUserDataSourceTest {
 
         val result = dataSource.addUser(testUser)
 
-        coVerify { userCollection.insertOne(testUser,any()) }
-        coEvery { userCollection.insertOne(testUser,any()).wasAcknowledged() }
+        coVerify { userCollection.insertOne(testUser, any()) }
+        coEvery { userCollection.insertOne(testUser, any()).wasAcknowledged() }
         assertThat(result).isTrue()
     }
 
@@ -80,16 +83,17 @@ class MongoUserDataSourceTest {
     }
 
     @Test
-    fun `user should be removed when we use deleteUser`()= runTest {
+    fun `user should be removed when we use deleteUser`() = runTest {
         dataSource.addUser(testUser)
         val deleted = mockk<DeleteResult>()
         coEvery { deleted.wasAcknowledged() } returns true
-        coEvery { userCollection.deleteOne(any(),any<DeleteOptions>()) } returns deleted
+        coEvery { userCollection.deleteOne(any(), any<DeleteOptions>()) } returns deleted
 
         val result = dataSource.deleteUser(testUser.id)
 
         assertThat(result).isTrue()
     }
+
     @Test
     fun `deleteUser should return false when delete is not acknowledged`() = runTest {
         val deleted = mockk<DeleteResult>()
@@ -101,7 +105,7 @@ class MongoUserDataSourceTest {
     }
 
     @Test
-    fun `should return all users when we use getUsers`()= runTest {
+    fun `should return all users when we use getUsers`() = runTest {
         val findFlow = mockk<FindFlow<UserDto>>()
         val user = testUser.copy(id = UUID.randomUUID().toString(), username = "second")
 
@@ -118,7 +122,7 @@ class MongoUserDataSourceTest {
     }
 
     @Test
-    fun `user should be updated using updateUser`()= runTest {
+    fun `user should be updated using updateUser`() = runTest {
         val updateResult = mockk<UpdateResult>()
         coEvery { updateResult.wasAcknowledged() } returns true
 
@@ -140,6 +144,7 @@ class MongoUserDataSourceTest {
         val result = dataSource.getUserById(testUser.id)
         assertThat(result).isEqualTo(updatedUser)
     }
+
     @Test
     fun `updateUser should return false when update is not acknowledged`() = runTest {
         val updateResult = mockk<UpdateResult>()

@@ -3,17 +3,12 @@ package data.dataSource.taskState
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
 import data.dto.TaskStateDto
-import data.exceptions.TaskStateNameException
-import dummyData.dummyStateData.DummyTaskState.todoDto
 import io.mockk.Runs
-import io.mockk.coEvery
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import java.io.File
 import java.util.*
 import kotlin.test.Test
@@ -21,7 +16,7 @@ import kotlin.test.Test
 class TaskStateCSVDataSourceTest {
 
     private lateinit var testStateFile: File
-    private var csvHandler: CsvHandler= mockk(relaxed = true)
+    private var csvHandler: CsvHandler = mockk(relaxed = true)
     private var taskStateDtoParser: TaskStateDtoParser = TaskStateDtoParser()
     private lateinit var taskStateCSVDataSource: TaskStateCSVDataSource
 

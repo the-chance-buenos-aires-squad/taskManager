@@ -8,12 +8,14 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
 
 class UpdateTaskUseCaseTest {
     private val taskRepository: TaskRepository = mockk()

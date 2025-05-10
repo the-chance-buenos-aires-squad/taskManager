@@ -1,8 +1,6 @@
 package data.repositories
 
 import data.dataSource.project.ProjectDataSource
-import data.dto.ProjectDto
-import data.repositories.mappers.Mapper
 import data.repositories.mappers.ProjectDtoMapper
 import domain.entities.Project
 import domain.repositories.ProjectRepository
@@ -25,7 +23,7 @@ class ProjectRepositoryImpl(
         return projectDataSource.deleteProject(projectId.toString())
     }
 
-    override  suspend fun getProjectById(projectId: UUID): Project? {
+    override suspend fun getProjectById(projectId: UUID): Project? {
         val projectRow = projectDataSource.getProjectById(projectId.toString())
         return projectRow?.let { projectMapper.toEntity(it) }
     }

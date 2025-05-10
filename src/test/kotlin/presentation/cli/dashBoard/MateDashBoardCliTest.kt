@@ -3,12 +3,12 @@ package presentation.cli.dashBoard
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.task.ViewSwimlanesCLI
-import kotlinx.coroutines.test.runTest
 
 class MateDashBoardCliTest {
     private val uiController: UiController = mockk(relaxed = true)

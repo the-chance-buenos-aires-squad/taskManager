@@ -20,9 +20,9 @@ class CsvTaskDataSourceTest {
 
     @BeforeEach
     fun setup() {
-        file = File.createTempFile("task_test",".csv")
+        file = File.createTempFile("task_test", ".csv")
         file.writeText("")
-        dataSource = CsvTaskDataSource(csvHandler = csvHandler,taskDtoParser = parser,file = file)
+        dataSource = CsvTaskDataSource(csvHandler = csvHandler, taskDtoParser = parser, file = file)
 
 
     }

@@ -35,7 +35,7 @@ class CreateTaskUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        createTaskUseCase = CreateTaskUseCase(taskRepository,addAuditUseCase,authRepository)
+        createTaskUseCase = CreateTaskUseCase(taskRepository, addAuditUseCase, authRepository)
 
         // Default mock behavior
         coEvery { taskRepository.addTask(any()) } returns true
@@ -95,7 +95,7 @@ class CreateTaskUseCaseTest {
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
-                UUID(0,0),
+                UUID(0, 0),
                 validStateId,
                 validAssignedToId,
             )
@@ -299,6 +299,6 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-        coVerify { addAuditUseCase.addAudit(any(),any(),any(),any(),any(),any(),any()) }
+        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

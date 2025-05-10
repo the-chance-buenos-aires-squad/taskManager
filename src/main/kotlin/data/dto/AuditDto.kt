@@ -4,7 +4,6 @@ import domain.entities.ActionType
 import domain.entities.EntityType
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import java.time.LocalDateTime
 
 @Serializable
 data class AuditDto(

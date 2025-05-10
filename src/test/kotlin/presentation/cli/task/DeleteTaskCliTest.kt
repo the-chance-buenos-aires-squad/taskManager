@@ -7,7 +7,6 @@ import domain.usecases.task.GetAllTasksUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import presentation.UiController
 import java.util.*

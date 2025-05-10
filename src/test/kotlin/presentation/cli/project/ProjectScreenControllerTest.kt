@@ -36,7 +36,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call create project function when user input number one`() =runTest{
+    fun `should call create project function when user input number one`() = runTest {
         every { uiController.readInput() } returns "1" andThen "5"
 
         projectScreenController.show()
@@ -45,7 +45,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle createProjectCli with UserEnterInvalidValueException`() = runTest{
+    fun `should handle createProjectCli with UserEnterInvalidValueException`() = runTest {
         every { uiController.readInput() } returns "1" andThen "5"
         coEvery { createProjectCli.create() } throws UserEnterInvalidValueException("Invalid Input")
 
@@ -55,7 +55,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call edit project function when user input number tow`() = runTest{
+    fun `should call edit project function when user input number tow`() = runTest {
         every { uiController.readInput() } returns "2" andThen "5"
 
         projectScreenController.show()
@@ -64,7 +64,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle updateProjectCli with UserEnterInvalidValueException`() =runTest{
+    fun `should handle updateProjectCli with UserEnterInvalidValueException`() = runTest {
         every { uiController.readInput() } returns "2" andThen "5"
         coEvery { updateProjectCli.update() } throws UserEnterInvalidValueException("Invalid update")
 
@@ -74,7 +74,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle updateProjectCli with NoProjectsFoundException`() =runTest{
+    fun `should handle updateProjectCli with NoProjectsFoundException`() = runTest {
         every { uiController.readInput() } returns "2" andThen "5"
         coEvery { updateProjectCli.update() } throws NoProjectsFoundException("No projects")
 
@@ -84,7 +84,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should call delete project function when user input number three`() = runTest{
+    fun `should call delete project function when user input number three`() = runTest {
         every { uiController.readInput() } returns "3" andThen "5"
 
         projectScreenController.show()
@@ -93,7 +93,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() =runTest{
+    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() = runTest {
         every { uiController.readInput() } returns "3" andThen "5"
         coEvery { deleteProjectCli.delete() } throws UserEnterInvalidValueException("Can't delete")
 
@@ -103,7 +103,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle deleteProjectCli with NoProjectsFoundException`() = runTest{
+    fun `should handle deleteProjectCli with NoProjectsFoundException`() = runTest {
         every { uiController.readInput() } returns "3" andThen "5"
         coEvery { deleteProjectCli.delete() } throws NoProjectsFoundException("Empty list")
 
@@ -113,7 +113,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handle getAllProjectsCli with NoProjectsFoundException`() = runTest{
+    fun `should handle getAllProjectsCli with NoProjectsFoundException`() = runTest {
         every { uiController.readInput() } returns "4" andThen "5"
         coEvery { getAllProjectsCli.getAll() } throws NoProjectsFoundException("Empty list")
 
@@ -123,7 +123,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should getAllProjectsCli when projects found`() = runTest{
+    fun `should getAllProjectsCli when projects found`() = runTest {
         every { uiController.readInput() } returns "4" andThen "5"
 
         projectScreenController.show()
@@ -132,7 +132,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handel Invalid Input when user input empty value`() = runTest{
+    fun `should handel Invalid Input when user input empty value`() = runTest {
         every { uiController.readInput() } returns "" andThen "5"
 
         projectScreenController.show()
@@ -141,7 +141,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handel Invalid Input when user input invalid value`() = runTest{
+    fun `should handel Invalid Input when user input invalid value`() = runTest {
         every { uiController.readInput() } returns "7" andThen "5"
 
         projectScreenController.show()
@@ -150,7 +150,7 @@ class ProjectScreenControllerTest {
     }
 
     @Test
-    fun `should handel Invalid Input when user input is return null`() = runTest{
+    fun `should handel Invalid Input when user input is return null`() = runTest {
         every { uiController.readInput() } returns "j" andThen "5"
 
         projectScreenController.show()

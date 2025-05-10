@@ -53,7 +53,6 @@ class MongoTaskStateDataSourceTest {
     }
 
 
-
     @Test
     fun `should return false when task state didn't updated successfull`() = runTest {
         val updateResult = mockk<UpdateResult>()

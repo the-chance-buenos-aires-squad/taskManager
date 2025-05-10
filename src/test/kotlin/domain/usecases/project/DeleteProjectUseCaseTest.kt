@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +20,7 @@ class DeleteProjectUseCaseTest {
     }
 
     @Test
-    fun `should return true if project deleted success`() = runTest{
+    fun `should return true if project deleted success`() = runTest {
         coEvery { projectRepository.deleteProject(any()) } returns true
 
         val result = deleteProjectUseCase.execute(createDummyProject().id)
@@ -30,7 +29,7 @@ class DeleteProjectUseCaseTest {
     }
 
     @Test
-    fun `should return false if project don't deleted`() = runTest{
+    fun `should return false if project don't deleted`() = runTest {
         coEvery { projectRepository.deleteProject(any()) } returns false
 
         val result = deleteProjectUseCase.execute(createDummyProject().id)

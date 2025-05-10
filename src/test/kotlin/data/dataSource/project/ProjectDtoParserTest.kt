@@ -1,11 +1,8 @@
 package data.dataSource.project
 
 import com.google.common.truth.Truth.assertThat
-import data.dto.ProjectDto
 import dummyData.DummyProjects
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import java.util.*
 
 class ProjectDtoParserTest {
     private val parser = ProjectDtoParser()

@@ -1,7 +1,5 @@
 package presentation.cli.taskState
 
-import data.exceptions.TaskStateNameException
-import domain.entities.TaskState
 import domain.usecases.taskState.CreateTaskStateUseCase
 import dummyData.createDummyProject
 import dummyData.dummyStateData.DummyTaskState
@@ -9,12 +7,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
-import java.util.UUID
+import java.util.*
 import javax.naming.InvalidNameException
 import kotlin.test.Test
 

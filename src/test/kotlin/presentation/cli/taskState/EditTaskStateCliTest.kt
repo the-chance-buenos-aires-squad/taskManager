@@ -4,11 +4,7 @@ import domain.usecases.taskState.EditTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.createDummyProject
 import dummyData.dummyStateData.DummyTaskState
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
@@ -32,7 +28,7 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should call execute when editing task state succeeds`() = runTest{
+    fun `should call execute when editing task state succeeds`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
         every { uiController.readInput() } returnsMany listOf("1", taskState.name)
         coEvery { editTaskStateUseCase.execute(any()) } returns true
@@ -55,7 +51,7 @@ class EditTaskStateCliTest {
 
 
     @Test
-    fun `should print message when no task states available`() = runTest{
+    fun `should print message when no task states available`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns emptyList()
 
         editTaskStateCli.editTaskState(dummyProject.id)
@@ -64,7 +60,7 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should print invalid selection message when input is not a valid index`()  = runTest {
+    fun `should print invalid selection message when input is not a valid index`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns taskStates
         every { uiController.readInput() } returns "99"
 
@@ -74,7 +70,7 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should print invalid selection when input is not a number`()  = runTest {
+    fun `should print invalid selection when input is not a number`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns taskStates
         every { uiController.readInput() } returns "ab"
 
@@ -84,7 +80,7 @@ class EditTaskStateCliTest {
     }
 
     @Test
-    fun `should show invalid selection when index is less than 1`()  = runTest {
+    fun `should show invalid selection when index is less than 1`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns taskStates
         every { uiController.readInput() } returns "0"
 

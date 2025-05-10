@@ -6,12 +6,12 @@ import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
-import kotlinx.coroutines.test.runTest
 
 class LoginCliTest {
     private lateinit var loginCli: LoginCli

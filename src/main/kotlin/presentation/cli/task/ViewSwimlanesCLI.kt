@@ -18,7 +18,7 @@ class ViewSwimlanesCLI(
 ) {
 
     suspend fun start() {
-        while (true){
+        while (true) {
             try {
                 uiController.printMessage(HEADER_MESSAGE)
 

@@ -10,10 +10,7 @@ import com.mongodb.client.result.InsertOneResult
 import com.mongodb.client.result.UpdateResult
 import com.mongodb.kotlin.client.coroutine.FindFlow
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import data.dataSource.dummyData.DummyTasks.validTask
 import data.dataSource.dummyData.DummyTasks.validTaskDto
-import data.dataSource.taskState.MongoTaskStateDataSource
-import data.dto.ProjectDto
 import data.dto.TaskDto
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,14 +18,12 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.test.runTest
 import org.bson.conversions.Bson
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
 import java.util.*
 
 class MongoTaskDataSourceTest {
 
-    private val taskCollection : MongoCollection<TaskDto> = mockk(relaxed = true)
+    private val taskCollection: MongoCollection<TaskDto> = mockk(relaxed = true)
     private var mongoTaskDataSource = MongoTaskDataSource(taskCollection)
     private val sampleTaskDto: TaskDto = validTaskDto
 
@@ -155,14 +150,14 @@ class MongoTaskDataSourceTest {
         val result = mongoTaskDataSource.updateTask(sampleTaskDto)
         val expectedFilter = Filters.eq(TaskDto::id.name, sampleTaskDto.id)
         val expectedUpdates = Updates.combine(
-            Updates.set(TaskDto::title.name,sampleTaskDto.title),
-            Updates.set(TaskDto::description.name,sampleTaskDto.description),
-            Updates.set(TaskDto::projectId.name,sampleTaskDto.projectId),
-            Updates.set(TaskDto::stateId.name,sampleTaskDto.stateId),
-            Updates.set(TaskDto::assignedTo.name,sampleTaskDto.assignedTo),
-            Updates.set(TaskDto::createdBy.name,sampleTaskDto.createdBy),
-            Updates.set(TaskDto::createdAt.name,sampleTaskDto.createdAt),
-            Updates.set(TaskDto::updatedAt.name,sampleTaskDto.updatedAt),
+            Updates.set(TaskDto::title.name, sampleTaskDto.title),
+            Updates.set(TaskDto::description.name, sampleTaskDto.description),
+            Updates.set(TaskDto::projectId.name, sampleTaskDto.projectId),
+            Updates.set(TaskDto::stateId.name, sampleTaskDto.stateId),
+            Updates.set(TaskDto::assignedTo.name, sampleTaskDto.assignedTo),
+            Updates.set(TaskDto::createdBy.name, sampleTaskDto.createdBy),
+            Updates.set(TaskDto::createdAt.name, sampleTaskDto.createdAt),
+            Updates.set(TaskDto::updatedAt.name, sampleTaskDto.updatedAt),
         )
         // then
         coVerify {
@@ -193,14 +188,14 @@ class MongoTaskDataSourceTest {
         val result = mongoTaskDataSource.updateTask(sampleTaskDto)
         val expectedFilter = Filters.eq(TaskDto::id.name, sampleTaskDto.id)
         val expectedUpdates = Updates.combine(
-            Updates.set(TaskDto::title.name,sampleTaskDto.title),
-            Updates.set(TaskDto::description.name,sampleTaskDto.description),
-            Updates.set(TaskDto::projectId.name,sampleTaskDto.projectId),
-            Updates.set(TaskDto::stateId.name,sampleTaskDto.stateId),
-            Updates.set(TaskDto::assignedTo.name,sampleTaskDto.assignedTo),
-            Updates.set(TaskDto::createdBy.name,sampleTaskDto.createdBy),
-            Updates.set(TaskDto::createdAt.name,sampleTaskDto.createdAt),
-            Updates.set(TaskDto::updatedAt.name,sampleTaskDto.updatedAt),
+            Updates.set(TaskDto::title.name, sampleTaskDto.title),
+            Updates.set(TaskDto::description.name, sampleTaskDto.description),
+            Updates.set(TaskDto::projectId.name, sampleTaskDto.projectId),
+            Updates.set(TaskDto::stateId.name, sampleTaskDto.stateId),
+            Updates.set(TaskDto::assignedTo.name, sampleTaskDto.assignedTo),
+            Updates.set(TaskDto::createdBy.name, sampleTaskDto.createdBy),
+            Updates.set(TaskDto::createdAt.name, sampleTaskDto.createdAt),
+            Updates.set(TaskDto::updatedAt.name, sampleTaskDto.updatedAt),
         )
         // then
         coVerify {

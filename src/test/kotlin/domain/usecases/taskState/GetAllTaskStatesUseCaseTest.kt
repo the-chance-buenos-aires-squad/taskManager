@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +20,7 @@ class GetAllTaskStatesUseCaseTest {
     }
 
     @Test
-    fun `should return all task states from repository when they exist`() = runTest{
+    fun `should return all task states from repository when they exist`() = runTest {
         val projectId = UUID.randomUUID()
         val allTaskStates = listOf(
             DummyTaskState.inProgress.copy(projectId = projectId),

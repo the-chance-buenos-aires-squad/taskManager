@@ -63,7 +63,7 @@ class CsvUserDataSource(
 
     override suspend fun getUsers(): List<UserDto> {
         if (!file.exists()) return emptyList()
-        return csvHandler.read(file).map { row-> userDtoParser.toDto(row) }
+        return csvHandler.read(file).map { row -> userDtoParser.toDto(row) }
     }
 
 

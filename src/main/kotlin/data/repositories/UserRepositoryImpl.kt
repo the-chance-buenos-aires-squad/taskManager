@@ -35,10 +35,10 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getUsers(): List<User> {
-            val usersRows = userDataSource.getUsers()
-            return usersRows.map { userRow ->
-                userMapper.toEntity(userRow)
-            }
+        val usersRows = userDataSource.getUsers()
+        return usersRows.map { userRow ->
+            userMapper.toEntity(userRow)
+        }
     }
 
 

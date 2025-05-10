@@ -1,8 +1,6 @@
 package data.dataSource.taskState
 
 import data.dto.TaskStateDto
-import domain.entities.TaskState
-import java.util.*
 
 interface TaskStateDataSource {
     suspend fun createTaskState(state: TaskStateDto): Boolean
