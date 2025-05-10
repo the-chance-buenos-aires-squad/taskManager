@@ -1,4 +1,4 @@
-package data.dataSource.audit
+package data.repositories.dataSource
 
 import data.dto.AuditDto
 

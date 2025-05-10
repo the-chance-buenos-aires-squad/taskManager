@@ -1,4 +1,4 @@
-package data.dataSource.user
+package data.repositories.dataSource
 
 import data.dto.UserDto
 

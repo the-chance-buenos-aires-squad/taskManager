@@ -1,4 +1,4 @@
-package data.dataSource.project
+package data.repositories.dataSource
 
 import data.dto.ProjectDto
 

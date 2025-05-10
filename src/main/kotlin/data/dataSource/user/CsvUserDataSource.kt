@@ -38,12 +38,11 @@ class CsvUserDataSource(
         val updatedUsers = allUsers.filterNot { it.id == id }
 
         if (allUsers.size == updatedUsers.size) {
-            return false // No user with the given ID was found
+            return false
         }
 
         return try {
-            // Clear the file before rewriting
-            file.writeText("") // truncate file contents
+            file.writeText("")
 
             // Write each remaining user back to the file
             updatedUsers.forEach { user ->
@@ -79,8 +78,7 @@ class CsvUserDataSource(
             .apply { add(userDto) }
 
         return try {
-            // Clear the file before rewriting all users
-            file.writeText("") // truncate file
+            file.writeText("")
 
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(
