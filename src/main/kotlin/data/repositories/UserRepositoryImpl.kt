@@ -1,6 +1,6 @@
 package data.repositories
 
-import data.dataSource.user.UserDataSource
+import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.repositories.UserRepository

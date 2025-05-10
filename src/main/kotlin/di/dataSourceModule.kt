@@ -1,15 +1,11 @@
 package di
 
-import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.MongoAuditDataSource
 import data.dataSource.project.MongoProjectDataSource
-import data.dataSource.project.ProjectDataSource
 import data.dataSource.task.MongoTaskDataSource
-import data.dataSource.task.TaskDataSource
 import data.dataSource.taskState.MongoTaskStateDataSource
-import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.MongoUserDataSource
-import data.dataSource.user.UserDataSource
+import data.repositories.dataSource.*
 import di.MongoCollections.auditCollectionQualifier
 import di.MongoCollections.projectCollectionQualifier
 import di.MongoCollections.taskStateCollectionQualifier

@@ -1,6 +1,7 @@
 package data.dataSource.audit
 
 import data.dto.AuditDto
+import data.repositories.dataSource.AuditDataSource
 
 class FakeMongoAuditDataSource : AuditDataSource {
     private val audits = mutableListOf<AuditDto>()

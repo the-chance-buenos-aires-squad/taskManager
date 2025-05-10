@@ -1,7 +1,7 @@
 package data.repositories
 
-import data.dataSource.taskState.TaskStateDataSource
 import data.exceptions.TaskStateNameException
+import data.repositories.dataSource.TaskStateDataSource
 import data.repositories.mappers.TaskStateDtoMapper
 import domain.entities.TaskState
 import domain.repositories.TaskStateRepository

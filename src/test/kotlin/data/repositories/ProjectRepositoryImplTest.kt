@@ -1,8 +1,8 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.project.ProjectDataSource
 import data.dto.ProjectDto
+import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectDtoMapper
 import dummyData.createDummyProject
 import io.mockk.coEvery

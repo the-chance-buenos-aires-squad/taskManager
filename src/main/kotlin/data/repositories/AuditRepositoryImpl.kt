@@ -1,7 +1,8 @@
 package data.repositories
 
 
-import data.dataSource.audit.AuditDataSource
+import data.repositories.dataSource.AuditDataSource
+import data.repositories.mappers.AuditDtoMapper
 import domain.entities.Audit
 import domain.repositories.AuditRepository
 

@@ -2,6 +2,7 @@ package data.dataSource.audit
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.AuditDto
+import data.repositories.dataSource.AuditDataSource
 import kotlinx.coroutines.flow.toList
 
 class MongoAuditDataSource(
