@@ -1,3 +1,3 @@
 package data.exceptions
 
-class TaskStateNameException () : Exception("Task Name Already exist!")
+class TaskStateNameException() : Exception("Task Name Already exist!")

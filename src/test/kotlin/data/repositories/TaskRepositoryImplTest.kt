@@ -21,7 +21,7 @@ class TaskRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        taskRepository = TaskRepositoryImpl(mockTaskDataSource,mockTaskMapper)
+        taskRepository = TaskRepositoryImpl(mockTaskDataSource, mockTaskMapper)
 
         // Mock mapper and data source to return expected values
         coEvery { mockTaskDataSource.addTask(any()) } returns true
@@ -83,7 +83,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `should preserve task properties when creating a task`() = runTest {
         // Given
-        val initialTask = DummyTasks.validTask.copy(title = "Specific Title",description = "Specific Description")
+        val initialTask = DummyTasks.validTask.copy(title = "Specific Title", description = "Specific Description")
         coEvery { mockTaskDataSource.addTask(any()) } returns true
 
         // When

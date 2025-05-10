@@ -31,7 +31,7 @@ class ProjectCliHelperTest {
     }
 
     @Test
-    fun `getProjects should returns list when use case succeeds`() = runTest{
+    fun `getProjects should returns list when use case succeeds`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns sampleProjects
 
         val result = projectCliHelper.getProjects()
@@ -41,7 +41,7 @@ class ProjectCliHelperTest {
     }
 
     @Test
-    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() = runTest{
+    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() = runTest {
         val exceptionMessage = "No projects found"
         coEvery { getAllProjectsUseCase.execute() } throws NoProjectsFoundException(exceptionMessage)
 

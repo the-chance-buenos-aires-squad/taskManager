@@ -3,7 +3,6 @@ package data.repositories.mappers
 import com.google.common.truth.Truth.assertThat
 import data.dummyData.DummyAudits
 import data.dummyData.DummyAudits.DummyTaskAuditDto
-import data.dummyData.DummyAudits.DummyTaskAuditRow
 import data.dummyData.DummyAudits.dummyTaskAudit_CreateAction
 import org.junit.jupiter.api.Test
 

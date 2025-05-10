@@ -8,13 +8,8 @@ import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.DummyUser
-import dummyData.dummyStateData.DummyTaskState
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -82,7 +77,10 @@ class CreateTaskCliTest {
             mockUiController.printMessage("Title cannot be empty. Please try again.")
             mockUiController.printMessage("Title: ", false)
             mockUiController.readInput()
-            mockUiController.printMessage("It seams that you do not want to enter a Title let us go to past screen", false)
+            mockUiController.printMessage(
+                "It seams that you do not want to enter a Title let us go to past screen",
+                false
+            )
         }
 
         coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
@@ -119,7 +117,10 @@ class CreateTaskCliTest {
             mockUiController.printMessage("Description cannot be empty. Please try again.", false)
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
-            mockUiController.printMessage("It seams that you do not want to enter a Description let us go to past screen", false)
+            mockUiController.printMessage(
+                "It seams that you do not want to enter a Description let us go to past screen",
+                false
+            )
         }
 
         coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
@@ -137,7 +138,16 @@ class CreateTaskCliTest {
         )
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
-        coEvery { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws UserNotLoggedInException()
+        coEvery {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws UserNotLoggedInException()
 
         createTaskCli.create(dummyProjectID)
 
@@ -150,10 +160,25 @@ class CreateTaskCliTest {
         val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
-        every { uiController.readInput() } returnsMany listOf("", "Valid Title", "Valid Description", "1", dummyUser.username)
+        every { uiController.readInput() } returnsMany listOf(
+            "",
+            "Valid Title",
+            "Valid Description",
+            "1",
+            dummyUser.username
+        )
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
-        coEvery { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws TaskTitleEmptyException()
+        coEvery {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws TaskTitleEmptyException()
 
         createTaskCli.create(dummyProjectID)
 
@@ -166,10 +191,24 @@ class CreateTaskCliTest {
         val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
-        every { uiController.readInput() } returnsMany listOf("Valid Title", "Valid Description", "1", dummyUser.username)
+        every { uiController.readInput() } returnsMany listOf(
+            "Valid Title",
+            "Valid Description",
+            "1",
+            dummyUser.username
+        )
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
-        coEvery { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } throws InvalidProjectIdException()
+        coEvery {
+            createTaskUseCase.createTask(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws InvalidProjectIdException()
 
         createTaskCli.create(dummyProjectID)
 

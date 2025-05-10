@@ -3,7 +3,6 @@ package data.dataSource.user
 import data.dataSource.util.CsvHandler
 import data.dto.UserDto
 import java.io.File
-import java.util.*
 
 class CsvUserDataSource(
     private val csvHandler: CsvHandler,
@@ -26,17 +25,17 @@ class CsvUserDataSource(
         }
     }
 
-    override suspend fun getUserById(id: UUID): UserDto? {
-        return getUsers().find { it.id == id.toString() }
+    override suspend fun getUserById(id: String): UserDto? {
+        return getUsers().find { it.id == id }
     }
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
         return getUsers().find { it.username == userName }
     }
 
-    override suspend fun deleteUser(id: UUID): Boolean {
+    override suspend fun deleteUser(id: String): Boolean {
         val allUsers = this.getUsers()
-        val updatedUsers = allUsers.filterNot { it.id == id.toString() }
+        val updatedUsers = allUsers.filterNot { it.id == id }
 
         if (allUsers.size == updatedUsers.size) {
             return false // No user with the given ID was found
@@ -64,7 +63,7 @@ class CsvUserDataSource(
 
     override suspend fun getUsers(): List<UserDto> {
         if (!file.exists()) return emptyList()
-        return csvHandler.read(file).map { row-> userDtoParser.toDto(row) }
+        return csvHandler.read(file).map { row -> userDtoParser.toDto(row) }
     }
 
 
@@ -96,17 +95,6 @@ class CsvUserDataSource(
             println("Error updating user: ${e.message}")
             false
         }
-    }
-
-
-
-
-    companion object {
-        private const val ID_ROW = 0
-        private const val USER_NAME_ROW = 1
-        private const val PASSWORD_ROW = 2
-        private const val USER_ROLE_ROW = 3
-        private const val USER_CREATED_AT_ROW = 4
     }
 }
 

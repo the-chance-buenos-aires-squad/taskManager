@@ -1,6 +1,6 @@
 package data.repositories.mappers
 
-interface Mapper<T,R> {
+interface Mapper<T, R> {
 
     fun fromEntity(entity: T): R
 

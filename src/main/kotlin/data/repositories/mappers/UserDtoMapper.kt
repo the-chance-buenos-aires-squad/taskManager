@@ -4,7 +4,7 @@ import data.dto.UserDto
 import domain.entities.User
 import domain.entities.UserRole
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 class UserDtoMapper : Mapper<User, UserDto> {
     override fun fromEntity(entity: User): UserDto {
@@ -18,13 +18,13 @@ class UserDtoMapper : Mapper<User, UserDto> {
     }
 
     override fun toEntity(type: UserDto): User {
-       return User(
-           id = UUID.fromString(type.id),
-           username = type.username,
-           password = type.password,
-           role = type.role ?: UserRole.MATE,
-           createdAt = LocalDateTime.parse(type.createdAt)
-       )
+        return User(
+            id = UUID.fromString(type.id),
+            username = type.username,
+            password = type.password,
+            role = type.role ?: UserRole.MATE,
+            createdAt = LocalDateTime.parse(type.createdAt)
+        )
     }
 
 }

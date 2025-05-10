@@ -6,7 +6,10 @@ import domain.customeExceptions.UserEnterInvalidValueException
 import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
 import dummyData.createDummyProject
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,7 +33,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if no projects`() = runTest{
+    fun `should throw exception if no projects`() = runTest {
         val exception = assertThrows<NoProjectsFoundException> {
             updateProjectCli.update()
         }
@@ -38,7 +41,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input is null`() = runTest{
+    fun `should throw exception if user input is null`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
         every { uiController.readInput() } returns ""
 
@@ -49,7 +52,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input Invalid value`() = runTest{
+    fun `should throw exception if user input Invalid value`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
         every { uiController.readInput() } returns "a"
 
@@ -60,7 +63,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input name is empty`() = runTest{
+    fun `should throw exception if user input name is empty`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
         every { uiController.readInput() } returnsMany listOf("1", "")
 
@@ -71,7 +74,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input description is empty`() = runTest{
+    fun `should throw exception if user input description is empty`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
         every { uiController.readInput() } returnsMany listOf("1", "ahmed", "")
 
@@ -82,7 +85,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input is zero`() = runTest{
+    fun `should throw exception if user input is zero`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
         every { uiController.readInput() } returns "0"
 
@@ -93,7 +96,7 @@ class UpdateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception if user input greater than number of projects`() = runTest{
+    fun `should throw exception if user input greater than number of projects`() = runTest {
         coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
         every { uiController.readInput() } returns "3"
 
@@ -105,26 +108,26 @@ class UpdateProjectCliTest {
 
     @Test
     fun `should call execute function in update project use case when I call update function and success to create project`() =
-        runTest{
-        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-        every { uiController.readInput() } returns "1"
-        coEvery { updateProjectUseCase.execute(any()) } returns true
+        runTest {
+            coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
+            every { uiController.readInput() } returns "1"
+            coEvery { updateProjectUseCase.execute(any()) } returns true
 
-        updateProjectCli.update()
+            updateProjectCli.update()
 
-        coVerify { updateProjectUseCase.execute(any()) }
-    }
+            coVerify { updateProjectUseCase.execute(any()) }
+        }
 
     @Test
     fun `should call execute function in update project use case when I call update function and failed to create project`() =
-        runTest{
-        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-        every { uiController.readInput() } returns "1"
-        coEvery { updateProjectUseCase.execute(any()) } returns false
+        runTest {
+            coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
+            every { uiController.readInput() } returns "1"
+            coEvery { updateProjectUseCase.execute(any()) } returns false
 
-        updateProjectCli.update()
+            updateProjectCli.update()
 
-        coVerify { updateProjectUseCase.execute(any()) }
-    }
+            coVerify { updateProjectUseCase.execute(any()) }
+        }
 
 }

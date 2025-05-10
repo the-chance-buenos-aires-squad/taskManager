@@ -5,10 +5,11 @@ import domain.entities.Task
 import java.time.LocalDateTime
 import java.util.*
 
-class TaskDtoMapper : Mapper<Task,TaskDto> {
+class TaskDtoMapper : Mapper<Task, TaskDto> {
 
     override fun fromEntity(entity: Task): TaskDto {
-        return TaskDto(id = entity.id.toString(),
+        return TaskDto(
+            id = entity.id.toString(),
             title = entity.title,
             description = entity.description,
             projectId = entity.projectId.toString(),

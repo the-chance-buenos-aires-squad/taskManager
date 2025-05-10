@@ -2,8 +2,6 @@ package data.dataSource.task
 
 import data.dataSource.DtoParser
 import data.dto.TaskDto
-import java.time.LocalDateTime
-import java.util.*
 
 class TaskDtoParser : DtoParser<List<String>, TaskDto> {
 

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
-import java.util.UUID
+import java.util.*
 
 class ViewSwimlanesCLITest {
 

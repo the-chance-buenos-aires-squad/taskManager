@@ -21,11 +21,11 @@ class CsvAuditDataSourceTest {
     fun setUp() {
         file = File.createTempFile("audit_test", ".csv")
         file.writeText("")
-        dataSource = CsvAuditDataSource(csvHandler,auditDtoParser, file)
+        dataSource = CsvAuditDataSource(csvHandler, auditDtoParser, file)
     }
 
     @Test
-    fun `getAllAudit should return empty list when no audits exist`() = runTest{
+    fun `getAllAudit should return empty list when no audits exist`() = runTest {
         //when
         val result = dataSource.getAllAudit()
         //then
@@ -34,7 +34,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `should return true when add audit`() = runTest{
+    fun `should return true when add audit`() = runTest {
         //when
         val result = dataSource.addAudit(DummyTaskAuditDto)
         //then
@@ -42,7 +42,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `first line in the file is exactly equal to the first added audit`() = runTest{
+    fun `first line in the file is exactly equal to the first added audit`() = runTest {
         //given
         val expectedRow = DummyTaskAuditRow
 
@@ -56,7 +56,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `add audit should return false when changing file writing permission`() = runTest{
+    fun `add audit should return false when changing file writing permission`() = runTest {
         //given
         file.setReadOnly()
         //when
@@ -67,7 +67,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `should return all audits from file`() = runTest{
+    fun `should return all audits from file`() = runTest {
 
         //when
         dataSource.addAudit(DummyTaskAuditDto)

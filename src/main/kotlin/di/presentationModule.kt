@@ -92,7 +92,7 @@ val presentationModule = module {
         CreateTaskStateCli(
             createTaskStateUseCase = get(),
             uiController = get(),
-            inputHandler=get()
+            inputHandler = get()
         )
     }
 

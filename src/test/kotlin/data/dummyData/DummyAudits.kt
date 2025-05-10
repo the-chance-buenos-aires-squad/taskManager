@@ -45,7 +45,6 @@ object DummyAudits {
     )
 
 
-
     val dummyProjectAudit_CreateAction = Audit(
         id = UUID.randomUUID(),
         entityId = "entity_id",

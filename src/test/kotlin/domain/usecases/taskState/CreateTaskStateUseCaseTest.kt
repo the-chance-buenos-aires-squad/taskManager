@@ -20,7 +20,7 @@ class CreateTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should create state successfully when repository returns true`() = runTest{
+    fun `should create state successfully when repository returns true`() = runTest {
         val newState = DummyTaskState.inProgress
 
         coEvery { repository.createTaskState(newState) } returns true
@@ -31,7 +31,7 @@ class CreateTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should fail to create state when repository returns false`() = runTest{
+    fun `should fail to create state when repository returns false`() = runTest {
         val newState = DummyTaskState.inProgress
 
 

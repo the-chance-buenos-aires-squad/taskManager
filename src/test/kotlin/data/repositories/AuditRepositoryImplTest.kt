@@ -27,7 +27,7 @@ class AuditRepositoryImplTest {
 
 
     @Test
-    fun `should return empty list when no audits exist in data source`() = runTest{
+    fun `should return empty list when no audits exist in data source`() = runTest {
         coEvery { mockedDataSource.getAllAudit() } returns emptyList()
 
         val result = auditRepository.getAllAudit()
@@ -36,7 +36,7 @@ class AuditRepositoryImplTest {
     }
 
     @Test
-    fun `should return true when add audit successful in the data source`() = runTest{
+    fun `should return true when add audit successful in the data source`() = runTest {
         //given
         coEvery { mockedDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns true
 
@@ -48,7 +48,7 @@ class AuditRepositoryImplTest {
     }
 
     @Test
-    fun `should return all audits from data source`() = runTest{
+    fun `should return all audits from data source`() = runTest {
         val expectedAudits = listOf(
             createDummyAudits.dummyTaskCreateActionRow,
             createDummyAudits.dummyProjectCreateActionRow,
@@ -60,7 +60,7 @@ class AuditRepositoryImplTest {
     }
 
     @Test
-    fun `should return false when add audit unSuccessful in the data source`() = runTest{
+    fun `should return false when add audit unSuccessful in the data source`() = runTest {
         //given
         coEvery { mockedDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns false
 

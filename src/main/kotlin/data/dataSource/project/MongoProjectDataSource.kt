@@ -3,15 +3,12 @@ package data.dataSource.project
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import data.dto.ProjectDto
-import di.MongoCollections
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
-import java.util.*
 
 class MongoProjectDataSource(
-     private val projectCollection : MongoCollection<ProjectDto>
+    private val projectCollection: MongoCollection<ProjectDto>
 ) : ProjectDataSource {
 
     override suspend fun addProject(projectDto: ProjectDto): Boolean {
@@ -28,11 +25,11 @@ class MongoProjectDataSource(
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         return projectCollection.updateOne(
-            filter = Filters.eq(ProjectDto::_id.name,projectDto._id),
+            filter = Filters.eq(ProjectDto::_id.name, projectDto._id),
             update = Updates.combine(
-                Updates.set(ProjectDto::name.name,projectDto.name),
-                Updates.set(ProjectDto::description.name,projectDto.description),
-                Updates.set(ProjectDto::createdAt.name,projectDto.createdAt)
+                Updates.set(ProjectDto::name.name, projectDto.name),
+                Updates.set(ProjectDto::description.name, projectDto.description),
+                Updates.set(ProjectDto::createdAt.name, projectDto.createdAt)
             )
         ).wasAcknowledged()
     }

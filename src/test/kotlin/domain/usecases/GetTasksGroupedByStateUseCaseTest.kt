@@ -19,7 +19,7 @@ class GetTasksGroupedByStateUseCaseTest {
     private val getTaskStatesUseCase: GetAllTaskStatesUseCase = mockk(relaxed = true)
 
     private val projectId = UUID.randomUUID()
-    private val dummyProject = createDummyProject(id = projectId,name = "Test Project")
+    private val dummyProject = createDummyProject(id = projectId, name = "Test Project")
 
     val todoState = createDummyTaskState(
         id = UUID.fromString("00000000-1000-0000-0000-000000000000"),
@@ -80,14 +80,14 @@ class GetTasksGroupedByStateUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        getTasksGroupedByStateUseCase = GetTasksGroupedByStateUseCase(getTasksUseCase,getTaskStatesUseCase)
+        getTasksGroupedByStateUseCase = GetTasksGroupedByStateUseCase(getTasksUseCase, getTaskStatesUseCase)
     }
 
     @Test
     fun `getTasksGroupedByState should return list of states when state have task in specific project`() = runTest {
         // Given
-        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState,inProgressState,otherState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1,task2,task3,taskOtherProject,taskOtherState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
+        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
         val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
@@ -100,15 +100,15 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState should group tasks by their state correctly`() = runTest {
         // Given
-        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState,inProgressState,otherState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1,task2,task3,taskOtherProject,taskOtherState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
+        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
         val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
 
         // Then
         val stateWithTasks1 = result.find { it.state.id == UUID.fromString("00000000-1000-0000-0000-000000000000") }
-        assertThat(stateWithTasks1?.tasks).containsExactly(task1,task2)
+        assertThat(stateWithTasks1?.tasks).containsExactly(task1, task2)
 
         val stateWithTasks2 = result.find { it.state.id == UUID.fromString("00000000-2000-0000-0000-000000000000") }
         assertThat(stateWithTasks2?.tasks).containsExactly(task3)
@@ -117,7 +117,7 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState returns states with empty tasks when no tasks exist`() = runTest {
         // Given
-        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState,inProgressState)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState)
         coEvery { getTasksUseCase.getTasks() } returns emptyList()
 
         // When
@@ -149,8 +149,8 @@ class GetTasksGroupedByStateUseCaseTest {
     @Test
     fun `getTasksGroupedByState filters out tasks and states from other projects`() = runTest {
         // Given
-        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(projectState,otherProjectState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1,task4)
+        coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(projectState, otherProjectState)
+        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task4)
 
         // When
         val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)

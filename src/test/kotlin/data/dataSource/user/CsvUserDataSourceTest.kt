@@ -10,7 +10,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
-import java.util.*
 
 class CsvUserDataSourceTest {
 
@@ -33,15 +32,15 @@ class CsvUserDataSourceTest {
     }
 
     @Test
-    fun `get user by id for an existing user will return same user object`()= runTest {
+    fun `get user by id for an existing user will return same user object`() = runTest {
         dataSource.addUser(dummyUserOneDto)
-        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto.id))
+        val resultUser = dataSource.getUserById(dummyUserOneDto.id)
         assertThat(resultUser).isEqualTo(dummyUserOneDto)
     }
 
     @Test
     fun `get user by id for not existed user will return null`() = runTest {
-        val resultUser = dataSource.getUserById(UUID.fromString(dummyUserOneDto.id))
+        val resultUser = dataSource.getUserById(dummyUserOneDto.id)
         assertThat(resultUser).isNull()
     }
 
@@ -55,7 +54,7 @@ class CsvUserDataSourceTest {
     }
 
     @Test
-    fun `get user by userName for not existed user will return null`() = runTest{
+    fun `get user by userName for not existed user will return null`() = runTest {
         val resultUser = dataSource.getUserByUserName(dummyUserOneDto.username)
         assertThat(resultUser).isNull()
     }
@@ -63,13 +62,13 @@ class CsvUserDataSourceTest {
     @Test
     fun `delete user will return true if successful`() = runTest {
         dataSource.addUser(dummyUserOneDto)
-        val result = dataSource.deleteUser(dummyUserOne.id)
+        val result = dataSource.deleteUser(dummyUserOne.id.toString())
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `delete user will return false if unsuccessful`() = runTest{
-        val result = dataSource.deleteUser(UUID.fromString(dummyUserOneDto.id))
+    fun `delete user will return false if unsuccessful`() = runTest {
+        val result = dataSource.deleteUser(dummyUserOneDto.id)
         assertThat(result).isFalse()
     }
 
@@ -92,13 +91,13 @@ class CsvUserDataSourceTest {
     }
 
     @Test
-    fun `get users from empty dataSource will return empty List`() = runTest{
+    fun `get users from empty dataSource will return empty List`() = runTest {
         val users: List<UserDto> = dataSource.getUsers()
         assertThat(users).isEmpty()
     }
 
     @Test
-    fun `update user will return true when successful`() = runTest{
+    fun `update user will return true when successful`() = runTest {
         dataSource.addUser(dummyUserOneDto)
         val result = dataSource.updateUser(dummyUserOneDto.copy(username = "updated"))
         assertThat(result).isTrue()

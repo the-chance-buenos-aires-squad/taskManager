@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits
 import data.repositories.AuditRepositoryImpl
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +19,7 @@ class GetAllAuditUseCaseTest {
     }
 
     @Test
-    fun `should return empty list when no audits exist in data source`() = runTest{
+    fun `should return empty list when no audits exist in data source`() = runTest {
         //given
         coEvery { getAllAuditUseCase.getAllAudit() } returns emptyList()
         //when
@@ -30,7 +29,7 @@ class GetAllAuditUseCaseTest {
     }
 
     @Test
-    fun `should return all audits from data source`() = runTest{
+    fun `should return all audits from data source`() = runTest {
         //given
         val expectedAudits = listOf(
             createDummyAudits.dummyTaskCreateAction,

@@ -7,7 +7,6 @@ import domain.repositories.AuthRepository
 import domain.util.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
@@ -21,7 +20,7 @@ class AuthenticationUseCaseTest {
     val firstUser = DummyUser.dummyUserOne
 
     @Test
-    fun `should return user when valid credentials`() = runTest{
+    fun `should return user when valid credentials`() = runTest {
         //given
         coEvery { authRepository.login(firstUser.username, firstUser.password) } returns firstUser
 
@@ -54,7 +53,7 @@ class AuthenticationUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidCredentialsException for wrong password`() = runTest{
+    fun `should throw InvalidCredentialsException for wrong password`() = runTest {
 
         //given
         coEvery { authRepository.login(firstUser.username, "wrongpass") } returns null
@@ -77,7 +76,7 @@ class AuthenticationUseCaseTest {
     }
 
     @Test
-    fun `should return user when username has leading or trailing spaces`() = runTest{
+    fun `should return user when username has leading or trailing spaces`() = runTest {
         // Given
         val usernameWithSpaces = " ${firstUser.username}  "
         coEvery { authRepository.login(usernameWithSpaces, "adminPassword") } returns firstUser

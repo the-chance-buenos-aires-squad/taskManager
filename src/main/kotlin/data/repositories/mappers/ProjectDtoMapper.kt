@@ -5,7 +5,7 @@ import domain.entities.Project
 import java.time.LocalDateTime
 import java.util.*
 
-class ProjectDtoMapper:Mapper<Project,ProjectDto> {
+class ProjectDtoMapper : Mapper<Project, ProjectDto> {
     override fun fromEntity(entity: Project): ProjectDto {
         return ProjectDto(
             entity.id.toString(),

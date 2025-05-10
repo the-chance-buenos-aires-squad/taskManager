@@ -4,25 +4,25 @@ import com.google.common.truth.Truth.assertThat
 import com.mongodb.client.result.InsertOneResult
 import com.mongodb.kotlin.client.coroutine.FindFlow
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import com.mongodb.reactivestreams.client.FindPublisher
 import data.dto.AuditDto
 import data.dummyData.DummyAudits.DummyTaskAuditDto
-import di.MongoCollections
-import io.mockk.*
-import kotlinx.coroutines.flow.flowOf
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class MongoAuditDataSourceTest{
+class MongoAuditDataSourceTest {
 
-    private lateinit var  dataSource : MongoAuditDataSource
-    private  var  auditCollection: MongoCollection<AuditDto> = mockk(relaxed = true)
-    private  var testAudit: AuditDto = DummyTaskAuditDto
+    private lateinit var dataSource: MongoAuditDataSource
+    private var auditCollection: MongoCollection<AuditDto> = mockk(relaxed = true)
+    private var testAudit: AuditDto = DummyTaskAuditDto
 
     @BeforeEach
-    fun setUp(){
+    fun setUp() {
         dataSource = MongoAuditDataSource(auditCollection)
     }
 
@@ -39,8 +39,8 @@ class MongoAuditDataSourceTest{
         val result = dataSource.addAudit(testAudit)
 
         // Assert
-        coVerify { auditCollection.insertOne(testAudit,any()) }
-        coEvery { auditCollection.insertOne(testAudit,any()).wasAcknowledged() }
+        coVerify { auditCollection.insertOne(testAudit, any()) }
+        coEvery { auditCollection.insertOne(testAudit, any()).wasAcknowledged() }
         assertThat(result).isTrue()
     }
 

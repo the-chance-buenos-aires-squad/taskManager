@@ -24,11 +24,11 @@ class AuditDtoParser : DtoParser<List<String>, AuditDto> {
         return listOf(
             dto.id,
             dto.entityId,
-            dto.entityType?.name?:"",
-            dto.action?.name?:"",
-            dto.field?:"",
-            dto.oldValue?:"",
-            dto.newValue?:"",
+            dto.entityType?.name ?: "",
+            dto.action?.name ?: "",
+            dto.field ?: "",
+            dto.oldValue ?: "",
+            dto.newValue ?: "",
             dto.userId,
             dto.timestamp
         )

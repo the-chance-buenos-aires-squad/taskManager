@@ -4,10 +4,11 @@ import domain.entities.Task
 import java.time.LocalDateTime
 import java.util.*
 
-class CsvTaskMapper : Mapper<Task,List<String>> {
+class CsvTaskMapper : Mapper<Task, List<String>> {
 
     override fun fromEntity(entity: Task): List<String> {
-        return listOf(entity.id.toString(),
+        return listOf(
+            entity.id.toString(),
             entity.title,
             entity.description,
             entity.projectId.toString(),

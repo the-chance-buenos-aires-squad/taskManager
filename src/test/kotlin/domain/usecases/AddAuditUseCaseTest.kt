@@ -5,7 +5,6 @@ import data.dummyData.DummyAudits
 import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
 import data.repositories.AuditRepositoryImpl
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +22,7 @@ class AddAuditUseCaseTest {
     }
 
     @Test
-    fun `should return audit object with given info when adding is successful`() = runTest{
+    fun `should return audit object with given info when adding is successful`() = runTest {
         //given
         coEvery { auditRepository.addAudit(any()) } returns true
 
@@ -42,7 +41,7 @@ class AddAuditUseCaseTest {
     }
 
     @Test
-    fun `should return null  when adding is unSuccessful`()= runTest{
+    fun `should return null  when adding is unSuccessful`() = runTest {
         //given
         coEvery { auditRepository.addAudit(any()) } returns false
 

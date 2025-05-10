@@ -6,9 +6,9 @@ import data.dummyData.DummyAudits.DummyTaskAuditDto
 import data.dummyData.DummyAudits.DummyTaskAuditRow
 import org.junit.jupiter.api.Test
 
-class AuditDtoParserTest{
+class AuditDtoParserTest {
     private val dto = DummyTaskAuditDto
-    private val row:List<String> = DummyTaskAuditRow
+    private val row: List<String> = DummyTaskAuditRow
     private val rowWithUnknownValues = row.toMutableList().also {
         it[ENTITY_TYPE_ROW] = "unknown type"
         it[ACTION_ROW] = "unknown action"
@@ -16,7 +16,7 @@ class AuditDtoParserTest{
     private val auditDtoParser = AuditDtoParser()
 
     @Test
-    fun `parsing to dto should return dto object with the same properties values`(){
+    fun `parsing to dto should return dto object with the same properties values`() {
         //when
         val result: AuditDto = auditDtoParser.toDto(row)
 
@@ -24,7 +24,7 @@ class AuditDtoParserTest{
     }
 
     @Test
-    fun `parsing from dto should return row  with the same values`(){
+    fun `parsing from dto should return row  with the same values`() {
         //when
         val result: List<String> = auditDtoParser.fromDto(dto)
 
@@ -33,8 +33,8 @@ class AuditDtoParserTest{
 
 
     @Test
-    fun `parsing to dto with unKnown entityType and action should should take default null value`(){
-       //when
+    fun `parsing to dto with unKnown entityType and action should should take default null value`() {
+        //when
         val resultDto: AuditDto = auditDtoParser.toDto(rowWithUnknownValues)
 
         assertThat(resultDto.entityType).isNull()
@@ -42,8 +42,9 @@ class AuditDtoParserTest{
     }
 
     @Test
-    fun `parsing from dto with null properties should be empty value in row`(){
-        val dtoWithNullValues = dto.copy(entityType = null, action = null, field = null, oldValue = null, newValue = null)
+    fun `parsing from dto with null properties should be empty value in row`() {
+        val dtoWithNullValues =
+            dto.copy(entityType = null, action = null, field = null, oldValue = null, newValue = null)
         val resultRow = auditDtoParser.fromDto(dtoWithNullValues)
 
         assertThat(resultRow[ENTITY_TYPE_ROW]).isEmpty()

@@ -18,7 +18,7 @@ class UserDtoParser : DtoParser<List<String>, UserDto> {
     }
 
     override fun fromDto(dto: UserDto): List<String> {
-        return listOf(dto.id, dto.username, dto.password, dto.role?.name?:UserRole.MATE.name, dto.createdAt)
+        return listOf(dto.id, dto.username, dto.password, dto.role?.name ?: UserRole.MATE.name, dto.createdAt)
     }
 
     companion object {

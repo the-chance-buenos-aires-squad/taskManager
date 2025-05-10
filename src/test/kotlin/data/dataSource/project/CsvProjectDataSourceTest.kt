@@ -2,7 +2,6 @@ package data.dataSource.project
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import data.dto.ProjectDto
 import dummyData.DummyProjects
 import io.mockk.every
 import io.mockk.mockk
@@ -10,14 +9,13 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
 
 class CsvProjectDataSourceTest {
     private lateinit var testFile: File
-    private val csvHandler: CsvHandler= mockk(relaxed = true)
+    private val csvHandler: CsvHandler = mockk(relaxed = true)
     private lateinit var csvProjectDataSource: CsvProjectDataSource
-    private val projectDtoParser: ProjectDtoParser= mockk(relaxed = true)
+    private val projectDtoParser: ProjectDtoParser = mockk(relaxed = true)
     private lateinit var fileMock: File
 
 
