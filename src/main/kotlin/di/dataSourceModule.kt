@@ -43,7 +43,6 @@ val dataSourceModule = module {
 
 //    single<ProjectDataSource> { CsvProjectDataSource(file = get(Paths.ProjectFileQualifier), projectDtoParser = get() ,csvHandler = get()) }
     single<ProjectDataSource> { MongoProjectDataSource(get(projectCollectionQualifier)) }
-    single { TaskDtoParser() }
 
     //single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
     single<UserDataSource> { MongoUserDataSource(get()) }
