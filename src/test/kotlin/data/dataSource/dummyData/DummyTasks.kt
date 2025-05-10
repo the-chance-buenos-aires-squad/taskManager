@@ -1,23 +1,33 @@
 package data.dataSource.dummyData
 
+import data.dto.TaskDto
 import domain.entities.Task
+import java.time.LocalDateTime
 import java.util.*
 
 object DummyTasks {
-    private val validTitle = "Valid Task Title"
-    private val validDescription = "Valid Task Description"
-    private val validProjectId = UUID.randomUUID()
-    private val validStateId = UUID.randomUUID()
-    private val validAssignedToId = UUID.randomUUID()
-    private val validCreatedById = UUID.randomUUID()
 
     val validTask = Task(
         id = UUID.randomUUID(),
-        validTitle,
-        validDescription,
-        validProjectId,
-        validStateId,
-        validAssignedToId,
-        validCreatedById
+        title = "Valid Task Title",
+        description = "Valid Task Description",
+        projectId = UUID.randomUUID(),
+        stateId = UUID.randomUUID(),
+        assignedTo = UUID.randomUUID(),
+        createdBy = UUID.randomUUID(),
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now()
+    )
+    val validTaskDto = TaskDto(
+        id = validTask.id.toString(),
+        title = validTask.title,
+        description = validTask.description,
+        projectId = validTask.projectId.toString(),
+        stateId = validTask.stateId.toString(),
+        assignedTo = validTask.assignedTo.toString(),
+        createdBy = validTask.createdBy.toString(),
+        createdAt = validTask.createdAt.toString(),
+        updatedAt = validTask.updatedAt.toString()
+
     )
 }

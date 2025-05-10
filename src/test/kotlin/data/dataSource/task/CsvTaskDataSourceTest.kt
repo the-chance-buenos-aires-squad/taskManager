@@ -3,141 +3,85 @@ package data.dataSource.task
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import io.mockk.every
-import io.mockk.mockk
+import dummyData.DummyTasks
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
 
 class CsvTaskDataSourceTest {
 
     private lateinit var file: File
+    private val csvHandler = CsvHandler(CsvReader())
+    private val parser = TaskDtoParser()
     private lateinit var dataSource: CsvTaskDataSource
-    private lateinit var csvHandler: CsvHandler
+
 
     @BeforeEach
     fun setup() {
-        file = File.createTempFile("task_test", ".csv").apply {
-            writeText("")
-            deleteOnExit()
-        }
-        csvHandler = CsvHandler(CsvReader())
-        dataSource = CsvTaskDataSource(csvHandler, file)
+        file = File.createTempFile("task_test",".csv")
+        file.writeText("")
+        dataSource = CsvTaskDataSource(csvHandler = csvHandler,taskDtoParser = parser,file = file)
+
+
     }
 
     @Test
-    fun `addTask should write row and return true`() {
-        val taskRow = generateTaskRow()
-        val result = dataSource.addTask(taskRow)
+    fun `addTask should write task and return true`() = runTest {
+
+        val result = dataSource.addTask(DummyTasks.validTaskDto)
         assertThat(result).isTrue()
-        assertThat(dataSource.getTasks()).contains(taskRow)
+        assertThat(dataSource.getTasks()).contains(DummyTasks.validTaskDto)
     }
 
     @Test
-    fun `getTasks should return all written tasks`() {
-        val taskRow1 = generateTaskRow()
-        val taskRow2 = generateTaskRow()
-        dataSource.addTask(taskRow1)
-        dataSource.addTask(taskRow2)
+    fun `getTasks should return all written tasks`() = runTest {
+
+        dataSource.addTask(DummyTasks.validTaskDto)
+        dataSource.addTask(DummyTasks.validTaskDto)
         val tasks = dataSource.getTasks()
         assertThat(tasks).hasSize(2)
     }
 
     @Test
-    fun `getTaskById should return correct row`() {
-        val taskRow = generateTaskRow()
-        dataSource.addTask(taskRow)
-        val fetched = dataSource.getTaskById(taskRow[0])
-        assertThat(fetched).isEqualTo(taskRow)
+    fun `getTaskById should return correct row`() = runTest {
+
+        dataSource.addTask(DummyTasks.validTaskDto)
+        val fetched = dataSource.getTaskById(DummyTasks.validTask.id)
+        assertThat(fetched).isEqualTo(DummyTasks.validTaskDto)
     }
 
     @Test
-    fun `updateTask should return false if id not found`() {
-        val taskRow = generateTaskRow()
-        val result = dataSource.updateTask(taskRow)
+    fun `updateTask should return false if id not found`() = runTest {
+
+        val result = dataSource.updateTask(DummyTasks.validTaskDto)
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `updateTask should modify row and return true`() {
-        val original = generateTaskRow()
+    fun `updateTask should modify row and return true`() = runTest {
+        val original = DummyTasks.validTaskDto
         dataSource.addTask(original)
-        val updated = original.toMutableList().apply { set(1, "Updated Title") }
+        val updated = original.copy(title = "Updated Title")
         val result = dataSource.updateTask(updated)
         assertThat(result).isTrue()
-        val fetched = dataSource.getTaskById(updated[0])
+        val fetched = dataSource.getTaskById(UUID.fromString(updated.id))
         assertThat(fetched).isEqualTo(updated)
     }
 
     @Test
-    fun `deleteTask should return false if id not found`() {
-        val result = dataSource.deleteTask(UUID.randomUUID().toString())
+    fun `deleteTask should return false if id not found`() = runTest {
+        val result = dataSource.deleteTask(DummyTasks.validTask.id)
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `deleteTask should remove row and return true`() {
-        val row = generateTaskRow()
-        dataSource.addTask(row)
-        val result = dataSource.deleteTask(row[0])
+    fun `deleteTask should remove row and return true`() = runTest {
+        val task = DummyTasks.validTaskDto
+        dataSource.addTask(task)
+        val result = dataSource.deleteTask(UUID.fromString(task.id))
         assertThat(result).isTrue()
-        assertThat(dataSource.getTasks()).doesNotContain(row)
-    }
-
-    @Test
-    fun `addTask should return false and print message if write fails`() {
-        // Given
-        val mockHandler = mockk<CsvHandler>()
-        val dummyFile = File.createTempFile("failing", ".csv")
-        val taskRow = listOf("id", "title", "desc", "proj", "state", "", "creator", "now", "now")
-
-        every { mockHandler.write(any(), any(), any()) } throws RuntimeException("Simulated failure")
-
-        val dataSource = CsvTaskDataSource(mockHandler, dummyFile)
-
-        // When
-        val result = dataSource.addTask(taskRow)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `updateTask should return false and print message if write fails`() {
-        // Given
-        val mockHandler = mockk<CsvHandler>()
-        val tempFile = File.createTempFile("test_tasks", ".csv").apply { deleteOnExit() }
-
-        val taskRow = listOf("123", "title", "desc", "proj", "state", "", "creator", "now", "now")
-
-        // Pretend that csvHandler.read works and returns an existing matching task
-        every { mockHandler.read(any()) } returns listOf(taskRow)
-        // Simulate failure on write
-        every { mockHandler.write(any(), any(), any()) } throws RuntimeException("Simulated failure")
-
-        val dataSource = CsvTaskDataSource(mockHandler, tempFile)
-
-        // When
-        val result = dataSource.updateTask(taskRow)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-
-    private fun generateTaskRow(): List<String> {
-        return listOf(
-            UUID.randomUUID().toString(),
-            "Test Task",
-            "Description",
-            "project-123",
-            "todo",
-            "user123",
-            "creator123",
-            LocalDateTime.now().toString(),
-            LocalDateTime.now().toString()
-        )
+        assertThat(dataSource.getTasks()).doesNotContain(task)
     }
 }

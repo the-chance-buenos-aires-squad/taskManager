@@ -1,40 +1,41 @@
 package data.repositories
 
 import data.dataSource.task.TaskDataSource
-import data.repositories.mappers.CsvTaskMapper
+import data.repositories.mappers.TaskDtoMapper
 import domain.entities.Task
 import domain.repositories.TaskRepository
 import java.util.*
 
 class TaskRepositoryImpl(
-    private val csvTaskDataSource: TaskDataSource,
-    private val taskMapper: CsvTaskMapper
+    private val taskDataSource: TaskDataSource,
+    private val taskMapper: TaskDtoMapper
 ) : TaskRepository {
 
-    override fun addTask(task: Task): Boolean {
-        val mappedTask = taskMapper.fromEntity(task)
-        return csvTaskDataSource.addTask(mappedTask)
+    override suspend fun addTask(task: Task): Boolean {
+        return taskDataSource.addTask(taskMapper.fromEntity(task))
     }
 
-    override fun getAllTasks(): List<Task> {
-        val allTasks: List<List<String>> = csvTaskDataSource.getTasks()
-        return allTasks.map { row ->
-            taskMapper.toEntity(row)
+    override suspend fun getAllTasks(): List<Task> {
+        val taskRow = taskDataSource.getTasks()
+        return taskRow.map { task ->
+            taskMapper.toEntity(task)
         }
     }
 
-    override fun deleteTask(id: UUID): Boolean {
-        return csvTaskDataSource.deleteTask(id.toString())
-    }
-
-    override fun updateTask(task: Task): Boolean {
-        return csvTaskDataSource.updateTask(taskMapper.fromEntity(task))
-    }
-
-    override fun getTaskById(id: UUID): Task? {
-        return csvTaskDataSource.getTaskById(id.toString())?.let {
+    override suspend fun getTaskById(id: UUID): Task? {
+        return taskDataSource.getTaskById(id)?.let {
             taskMapper.toEntity(it)
+
         }
     }
 
+    override suspend fun updateTask(task: Task): Boolean {
+        return taskDataSource.updateTask(taskMapper.fromEntity(task))
+
+    }
+
+    override suspend fun deleteTask(id: UUID): Boolean {
+        return taskDataSource.deleteTask(id)
+    }
+    
 }
