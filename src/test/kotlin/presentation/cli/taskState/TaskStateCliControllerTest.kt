@@ -2,6 +2,7 @@ package presentation.cli.taskState
 
 import dummyData.createDummyProject
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -55,7 +56,7 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should return to admin dashboard when projects is not found`() = runTest{
+    fun `should return to admin dashboard when projects is not found`() = runTest {
         // given
         coEvery { projectCliHelper.getProjects() } returns emptyList()
         every { projectCliHelper.selectProject(any()) } returns null
@@ -71,7 +72,7 @@ class TaskStateCliControllerTest {
     }
 
     @Test
-    fun `should return to admin dashboard when project is not found`() = runTest{
+    fun `should return to admin dashboard when project is not found`() = runTest {
         // given
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         every { projectCliHelper.selectProject(any()) } returns null
@@ -122,7 +123,7 @@ class TaskStateCliControllerTest {
         taskStateCliController.start()
 
         // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             createTaskStateCli.createTaskState(sampleProject.id)
         }
     }
@@ -138,7 +139,7 @@ class TaskStateCliControllerTest {
         taskStateCliController.start()
 
         // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             editTaskStateCli.editTaskState(sampleProject.id)
         }
     }
@@ -154,7 +155,7 @@ class TaskStateCliControllerTest {
         taskStateCliController.start()
 
         // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             deleteTaskStateCli.deleteTaskState(any())
         }
     }
@@ -170,7 +171,7 @@ class TaskStateCliControllerTest {
         taskStateCliController.start()
 
         // then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             getAllTaskStatesCli.getAllTaskStates(any())
         }
     }

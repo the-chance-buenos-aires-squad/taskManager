@@ -10,7 +10,7 @@ class DeleteTaskStateCli(
     private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase,
     private val uiController: UiController
 ) {
-    fun deleteTaskState(selectedProjectId: UUID) {
+    suspend fun deleteTaskState(selectedProjectId: UUID) {
 
         uiController.printMessage(
             """

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.toList
 import java.util.*
 
 class MongoUserDataSource(
-    private val mongoDb: MongoDatabase
+    mongoDb: MongoDatabase
 ) : UserDataSource {
 
     private val userCollection = mongoDb.getCollection<UserDto>(MongoCollections.USERS_COLLECTION)
