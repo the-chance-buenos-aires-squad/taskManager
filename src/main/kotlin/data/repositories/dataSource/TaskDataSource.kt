@@ -9,9 +9,9 @@ interface TaskDataSource {
 
     suspend fun getTasks(): List<TaskDto>
 
-    suspend fun getTaskById(taskId: UUID): TaskDto?
+    suspend fun getTaskById(taskId: String): TaskDto?
 
-    suspend fun deleteTask(taskId: UUID): Boolean
+    suspend fun deleteTask(taskId: String): Boolean
 
     suspend fun updateTask(taskDto: TaskDto): Boolean
 }

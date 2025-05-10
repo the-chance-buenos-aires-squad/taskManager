@@ -23,7 +23,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun getTaskById(id: UUID): Task? {
-        return taskDataSource.getTaskById(id)?.let {
+        return taskDataSource.getTaskById(id.toString())?.let {
             taskMapper.toEntity(it)
 
         }
@@ -35,7 +35,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun deleteTask(id: UUID): Boolean {
-        return taskDataSource.deleteTask(id)
+        return taskDataSource.deleteTask(id.toString())
     }
 
 }

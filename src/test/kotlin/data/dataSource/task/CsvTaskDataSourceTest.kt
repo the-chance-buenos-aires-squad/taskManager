@@ -48,7 +48,7 @@ class CsvTaskDataSourceTest {
     fun `getTaskById should return correct row`() = runTest {
 
         dataSource.addTask(DummyTasks.validTaskDto)
-        val fetched = dataSource.getTaskById(DummyTasks.validTask.id)
+        val fetched = dataSource.getTaskById(DummyTasks.validTask.id.toString())
         assertThat(fetched).isEqualTo(DummyTasks.validTaskDto)
     }
 
@@ -66,13 +66,13 @@ class CsvTaskDataSourceTest {
         val updated = original.copy(title = "Updated Title")
         val result = dataSource.updateTask(updated)
         assertThat(result).isTrue()
-        val fetched = dataSource.getTaskById(UUID.fromString(updated.id))
+        val fetched = dataSource.getTaskById(updated.id)
         assertThat(fetched).isEqualTo(updated)
     }
 
     @Test
     fun `deleteTask should return false if id not found`() = runTest {
-        val result = dataSource.deleteTask(DummyTasks.validTask.id)
+        val result = dataSource.deleteTask(DummyTasks.validTask.id.toString())
         assertThat(result).isFalse()
     }
 
@@ -80,7 +80,7 @@ class CsvTaskDataSourceTest {
     fun `deleteTask should remove row and return true`() = runTest {
         val task = DummyTasks.validTaskDto
         dataSource.addTask(task)
-        val result = dataSource.deleteTask(UUID.fromString(task.id))
+        val result = dataSource.deleteTask(task.id)
         assertThat(result).isTrue()
         assertThat(dataSource.getTasks()).doesNotContain(task)
     }

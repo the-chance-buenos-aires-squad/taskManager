@@ -26,14 +26,14 @@ class MongoTaskDataSource(
 
     }
 
-    override suspend fun getTaskById(taskId: UUID): TaskDto? {
+    override suspend fun getTaskById(taskId: String): TaskDto? {
         return tasksCollection
             .find(
                 Filters.eq(TaskDto::id.name, taskId)
             ).firstOrNull()
     }
 
-    override suspend fun deleteTask(taskId: UUID): Boolean {
+    override suspend fun deleteTask(taskId: String): Boolean {
         return tasksCollection
             .deleteOne(
                 Filters.eq(TaskDto::id.name, taskId)

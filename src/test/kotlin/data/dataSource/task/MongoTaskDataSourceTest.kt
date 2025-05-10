@@ -84,7 +84,7 @@ class MongoTaskDataSourceTest {
         }
 
         // When
-        val result = mongoTaskDataSource.getTaskById(UUID.fromString(sampleTaskDto.id))
+        val result = mongoTaskDataSource.getTaskById(sampleTaskDto.id)
 
         // Then
         assertThat(result).isEqualTo(sampleTaskDto)
@@ -98,7 +98,7 @@ class MongoTaskDataSourceTest {
 
 
         // When
-        val result = mongoTaskDataSource.getTaskById(UUID.fromString(sampleTaskDto.id))
+        val result = mongoTaskDataSource.getTaskById(sampleTaskDto.id)
 
         // Then
         assertThat(result).isNull()
@@ -112,7 +112,7 @@ class MongoTaskDataSourceTest {
         coEvery { taskCollection.deleteOne(any<Bson>(), any<DeleteOptions>()) } returns deleteResult
 
         // When
-        val result = mongoTaskDataSource.deleteTask(UUID.fromString(sampleTaskDto.id))
+        val result = mongoTaskDataSource.deleteTask(sampleTaskDto.id)
 
         // Then
         assertThat(result).isTrue()
@@ -126,7 +126,7 @@ class MongoTaskDataSourceTest {
         coEvery { taskCollection.deleteOne(any<Bson>(), any<DeleteOptions>()) } returns deleteResult
 
         // When
-        val result = mongoTaskDataSource.deleteTask(UUID.fromString(sampleTaskDto.id))
+        val result = mongoTaskDataSource.deleteTask(sampleTaskDto.id)
 
         // Then
         assertThat(result).isFalse()

@@ -31,8 +31,8 @@ class CsvTaskDataSource(
         return csvHandler.read(file).map { row -> taskDtoParser.toDto(row) }
     }
 
-    override suspend fun getTaskById(taskId: UUID): TaskDto? {
-        return getTasks().find { it.id == taskId.toString() }
+    override suspend fun getTaskById(taskId: String): TaskDto? {
+        return getTasks().find { it.id == taskId}
     }
 
     override suspend fun updateTask(taskDto: TaskDto): Boolean {
@@ -62,9 +62,9 @@ class CsvTaskDataSource(
         }
     }
 
-    override suspend fun deleteTask(taskId: UUID): Boolean {
+    override suspend fun deleteTask(taskId: String): Boolean {
         val allTasks = this.getTasks()
-        val updatedTasks = allTasks.filterNot { it.id == taskId.toString() }
+        val updatedTasks = allTasks.filterNot { it.id == taskId }
 
         if (allTasks.size == updatedTasks.size) return false
 

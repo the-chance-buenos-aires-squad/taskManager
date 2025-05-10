@@ -210,7 +210,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = DummyTasks.validTask
         val taskDto = DummyTasks.validTaskDto
-        coEvery { mockTaskDataSource.getTaskById(task.id) } returns taskDto
+        coEvery { mockTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
         coEvery { mockTaskMapper.toEntity(taskDto) } returns task
 
         // When
@@ -225,7 +225,7 @@ class TaskRepositoryImplTest {
     fun `should return null when getting task by id unsuccessfully`() = runTest {
         // Given
         val task = DummyTasks.validTask
-        coEvery { mockTaskDataSource.getTaskById(task.id) } returns null
+        coEvery { mockTaskDataSource.getTaskById(task.id.toString()) } returns null
 
         // When
         val result = taskRepository.getTaskById(task.id)
