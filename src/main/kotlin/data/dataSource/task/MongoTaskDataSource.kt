@@ -2,6 +2,7 @@ package data.dataSource.task
 
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import data.dto.TaskDto
 import di.MongoCollections
@@ -11,38 +12,37 @@ import java.util.*
 
 
 class MongoTaskDataSource(
-    private val mongoDb: MongoDatabase,
+    private val tasksCollection:MongoCollection<TaskDto>
 ) : TaskDataSource {
 
-    private val taskCollection = mongoDb.getCollection<TaskDto>(MongoCollections.TASKS_COLLECTION)
 
     override suspend fun addTask(taskDto: TaskDto): Boolean {
-        return taskCollection.insertOne(taskDto).wasAcknowledged()
+        return tasksCollection.insertOne(taskDto).wasAcknowledged()
     }
 
     override suspend fun getTasks(): List<TaskDto> {
-        return taskCollection
+        return tasksCollection
             .find()
             .toList()
 
     }
 
     override suspend fun getTaskById(taskId: UUID): TaskDto? {
-        return taskCollection
+        return tasksCollection
             .find(
                 Filters.eq(TaskDto::id.name,taskId)
             ).firstOrNull()
     }
 
     override suspend fun deleteTask(taskId: UUID): Boolean {
-        return taskCollection
+        return tasksCollection
             .deleteOne(
                 Filters.eq(TaskDto::id.name,taskId)
             ).wasAcknowledged()
     }
 
     override suspend fun updateTask(taskDto: TaskDto): Boolean {
-        return taskCollection
+        return tasksCollection
             .updateOne(
                 Filters.eq(TaskDto::id.name,taskDto.id),
                 Updates.combine(

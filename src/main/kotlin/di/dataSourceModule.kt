@@ -14,6 +14,7 @@ import data.dataSource.user.UserDataSource
 import di.MongoCollections.auditCollectionQualifier
 import di.MongoCollections.projectCollectionQualifier
 import di.MongoCollections.taskStateCollectionQualifier
+import di.MongoCollections.tasksCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -52,10 +53,7 @@ val dataSourceModule = module {
 
 
 //    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
-//    single<UserDataSource> { CsvUserDataSource(csvHandler = get(), file = get(Paths.UserFileQualifier), userDtoParser = get()) }
-    single<UserDataSource> { MongoUserDataSource(get()) }
-//    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
-    single<TaskDataSource> { MongoTaskDataSource(get()) }
+    single<TaskDataSource> { MongoTaskDataSource(get(tasksCollectionQualifier)) }
 
 }
 
