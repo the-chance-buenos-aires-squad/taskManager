@@ -29,7 +29,6 @@ val mongoModule = module {
         mongoDb.getCollection<AuditDto>(MongoCollections.AUDITS_COLLECTION)
     }
 
-
     single(qualifier = projectCollectionQualifier) {
         val mongoDb: MongoDatabase = get()
         mongoDb.getCollection<ProjectDto>(MongoCollections.PROJECTS_COLLECTION)

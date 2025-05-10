@@ -53,7 +53,7 @@ class MongoTaskDataSource(
                     Updates.set(TaskDto::assignedTo.name,taskDto.assignedTo),
                     Updates.set(TaskDto::createdBy.name,taskDto.createdBy),
                     Updates.set(TaskDto::createdAt.name,taskDto.createdAt),
-                    Updates.set(TaskDto::updatedAt.name,taskDto.updatedAt),
+                    Updates.set(TaskDto::updatedAt.name,taskDto.updatedAt)
                 )
             ).wasAcknowledged()
     }
