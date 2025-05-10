@@ -20,17 +20,20 @@ val mongoModule = module {
     single<MongoDatabase> {
         get<MongoClient>().getDatabase("planmate")
     }
-
-
+    
     single(qualifier = auditQualifier) {
         val mongoDb: MongoDatabase = get()
         mongoDb.getCollection<AuditDto>(MongoCollections.AUDITS_COLLECTION)
     }
 
-
     single(qualifier = projectCollectionQualifier) {
-        val mangoDb: MongoDatabase = get()
-        mangoDb.getCollection<ProjectDto>(MongoCollections.PROJECTS_COLLECTION)
+        val mongoDb: MongoDatabase = get()
+        mongoDb.getCollection<ProjectDto>(MongoCollections.PROJECTS_COLLECTION)
+    }
+
+    single (qualifier = taskStateCollectionQualifier){
+        val mongoDb: MongoDatabase = get()
+        mongoDb.getCollection<TaskStateDto>(MongoCollections.TASK_STATES_COLLECTION)
     }
 
     single(qualifier = userQualifier) {
@@ -46,6 +49,7 @@ object MongoCollections {
     const val AUDITS_COLLECTION = "audits"
     val auditQualifier: Qualifier = named(AUDITS_COLLECTION)
     const val TASK_STATES_COLLECTION = "task_states"
+    val taskStateCollectionQualifier : Qualifier = named(TASK_STATES_COLLECTION)
     const val PROJECTS_COLLECTION = "projects"
     val projectCollectionQualifier: Qualifier = named(PROJECTS_COLLECTION)
     val userQualifier: Qualifier = named(USERS_COLLECTION)

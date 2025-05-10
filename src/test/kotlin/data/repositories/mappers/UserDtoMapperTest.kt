@@ -1,5 +1,6 @@
 package data.repositories.mappers
 
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import data.dto.UserDto
 import domain.entities.User
@@ -18,7 +19,7 @@ class UserDtoMapperTest {
         val result = userDtoMapper.fromEntity(entityUser)
 
         //then
-        assertThat(result).isInstanceOf(UserDto::class.java)
+        Truth.assertThat(result).isInstanceOf(UserDto::class.java)
     }
 
     @Test
