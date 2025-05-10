@@ -19,6 +19,5 @@ class GetTasksGroupedByStateUseCase(
                 tasks = allTasks.filter { it.stateId == state.id }
             )
         }
-
     }
 }

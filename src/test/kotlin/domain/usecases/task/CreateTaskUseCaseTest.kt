@@ -11,13 +11,18 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
+
 class CreateTaskUseCaseTest {
+
     private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
@@ -30,7 +35,7 @@ class CreateTaskUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        createTaskUseCase = CreateTaskUseCase(taskRepository, addAuditUseCase, authRepository)
+        createTaskUseCase = CreateTaskUseCase(taskRepository,addAuditUseCase,authRepository)
 
         // Default mock behavior
         coEvery { taskRepository.addTask(any()) } returns true
@@ -52,7 +57,7 @@ class CreateTaskUseCaseTest {
             )
 
         assertThat(result).isTrue()
-        verify(exactly = 1) { taskRepository.addTask(any()) }
+        coVerify(exactly = 1) { taskRepository.addTask(any()) }
     }
 
     @Test
@@ -90,7 +95,7 @@ class CreateTaskUseCaseTest {
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
-                UUID(0, 0),
+                UUID(0,0),
                 validStateId,
                 validAssignedToId,
             )
@@ -179,7 +184,7 @@ class CreateTaskUseCaseTest {
             validAssignedToId,
         )
 
-        verify { taskRepository.addTask(any()) }
+        coVerify { taskRepository.addTask(any()) }
         assertThat(taskSlot.captured.title).isEqualTo(trimmedTitle)
         assertThat(taskSlot.captured.description).isEqualTo(trimmedDescription)
     }
@@ -294,6 +299,6 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.addAudit(any(),any(),any(),any(),any(),any(),any()) }
     }
 }

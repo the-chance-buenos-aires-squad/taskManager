@@ -4,8 +4,9 @@ import data.dataSource.audit.AuditDataSource
 import data.dataSource.audit.MongoAuditDataSource
 import data.dataSource.project.MongoProjectDataSource
 import data.dataSource.project.ProjectDataSource
-import data.dataSource.task.CsvTaskDataSource
+import data.dataSource.task.MongoTaskDataSource
 import data.dataSource.task.TaskDataSource
+import data.dataSource.task.TaskDtoParser
 import data.dataSource.taskState.MongoTaskStateDataSource
 import data.dataSource.taskState.TaskStateDataSource
 import data.dataSource.user.MongoUserDataSource
@@ -13,6 +14,7 @@ import data.dataSource.user.UserDataSource
 import di.MongoCollections.auditCollectionQualifier
 import di.MongoCollections.projectCollectionQualifier
 import di.MongoCollections.taskStateCollectionQualifier
+import di.MongoCollections.tasksCollectionQualifier
 import di.MongoCollections.userCollectionQualifier
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
@@ -51,16 +53,18 @@ val dataSourceModule = module {
     single<TaskStateDataSource> { MongoTaskStateDataSource(get(taskStateCollectionQualifier)) }
 
 
-
-    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), file = get(Paths.TaskFileQualifier)) }
+//    single<TaskDataSource> { CsvTaskDataSource(csvHandler = get(), taskDtoParser = get(), file = get(Paths.TaskFileQualifier)) }
+    single<TaskDataSource> { MongoTaskDataSource(get(tasksCollectionQualifier)) }
 
 }
 
 object Paths {
+
     /*
     when injecting the file to data source use qualifier before injecting
     @Named("UserFilePath") private val userFile: File
      */
+
     const val USER_FILE_PATH = "src/main/kotlin/data/resource/users_file.csv"
     val UserFileQualifier: Qualifier = named("UserFilePath")
 
