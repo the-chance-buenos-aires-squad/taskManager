@@ -4,8 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import data.dummyData.DummyAudits
 import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
 import data.repositories.AuditRepositoryImpl
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -21,18 +22,18 @@ class AddAuditUseCaseTest {
     }
 
     @Test
-    fun `should return audit object with given info when adding is successful`() {
+    fun `should return audit object with given info when adding is successful`() = runTest {
         //given
-        every { auditRepository.addAudit(any()) } returns true
+        coEvery { auditRepository.addAudit(any()) } returns true
 
         val resultAudit = addAuditUseCase.addAudit(
-            DummyAudits.dummyProjectAudit_CreateAction.entityId,
-            DummyAudits.dummyProjectAudit_CreateAction.entityType,
-            DummyAudits.dummyProjectAudit_CreateAction.action,
-            DummyAudits.dummyProjectAudit_CreateAction.field,
-            DummyAudits.dummyProjectAudit_CreateAction.oldValue,
-            DummyAudits.dummyProjectAudit_CreateAction.newValue,
-            DummyAudits.dummyProjectAudit_CreateAction.userId
+            dummyProjectAudit_CreateAction.entityId,
+            dummyProjectAudit_CreateAction.entityType,
+            dummyProjectAudit_CreateAction.action,
+            dummyProjectAudit_CreateAction.field,
+            dummyProjectAudit_CreateAction.oldValue,
+            dummyProjectAudit_CreateAction.newValue,
+            dummyProjectAudit_CreateAction.userId
         )
         //then
         assertThat(resultAudit).isNotNull()
@@ -40,9 +41,9 @@ class AddAuditUseCaseTest {
     }
 
     @Test
-    fun `should return null  when adding is unSuccessful`() {
+    fun `should return null  when adding is unSuccessful`() = runTest {
         //given
-        every { auditRepository.addAudit(any()) } returns false
+        coEvery { auditRepository.addAudit(any()) } returns false
 
         val resultAudit = addAuditUseCase.addAudit(
             DummyAudits.dummyProjectAudit_CreateAction.entityId,

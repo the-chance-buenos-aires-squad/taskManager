@@ -1,7 +1,8 @@
 package data.repositories.mappers
 
-interface Mapper<entity> {
-    fun mapEntityToRow(entity: entity): List<String>
+interface Mapper<T, R> {
 
-    fun mapRowToEntity(row: List<String>): entity
+    fun fromEntity(entity: T): R
+
+    fun toEntity(row: R): T
 }

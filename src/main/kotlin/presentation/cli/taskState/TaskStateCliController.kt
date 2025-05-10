@@ -13,7 +13,7 @@ class TaskStateCliController(
     private val getAllTaskStatesCli: GetAllTaskStatesCli,
     private val uiController: UiController
 ) {
-    fun start() {
+    suspend fun start() {
         while (true) {
             uiController.printMessage(HEADER_MESSAGE_TASK_STATE)
 

@@ -8,10 +8,8 @@ import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.DummyUser
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -23,7 +21,6 @@ class CreateTaskCliTest {
     private val getAllStatesUseCase = mockk<GetAllTaskStatesUseCase>()
     private val userRepository = mockk<UserRepository>()
     private val uiController = mockk<UiController>(relaxed = true)
-
 
     private val dummyProjectID = UUID.randomUUID()
 
@@ -38,27 +35,22 @@ class CreateTaskCliTest {
     }
 
     @Test
-    fun `should create task successfully with valid inputs`() {
-        // Given
-        val dummyProjectID = UUID.randomUUID()
+    fun `should create task successfully with valid inputs`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
         val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
 
         every { uiController.readInput() } returnsMany listOf("title", "description", "1", "username")
-        every { getAllStatesUseCase.execute(any()) } returns listOf(dummyTaskState)
-        every { userRepository.getUserByUserName("username") } returns dummyUser
-        every { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } returns true
+        coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns listOf(dummyTaskState)
+        coEvery { userRepository.getUserByUserName("username") } returns dummyUser
+        coEvery { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } returns true
 
-        // When
         createTaskCli.create(dummyProjectID)
 
-        // Then
         verify { uiController.printMessage("Task created successfully!") }
     }
 
     @Test
-    fun `should return early when both title inputs are empty`() {
-        // Arrange
+    fun `should return early when both title inputs are empty`() = runTest {
         val mockCreateTaskUseCase = mockk<CreateTaskUseCase>(relaxed = true)
         val mockGetAllStatesUseCase = mockk<GetAllTaskStatesUseCase>()
         val mockUserRepository = mockk<UserRepository>()
@@ -71,17 +63,12 @@ class CreateTaskCliTest {
             uiController = mockUiController
         )
 
-        every { mockUiController.readInput() } returnsMany listOf(
-            "",  // first title input (empty)
-            ""   // second title input (still empty)
-        )
+        every { mockUiController.readInput() } returnsMany listOf("", "")
 
         val projectId = UUID.randomUUID()
 
-        // Act
         createTaskCli.create(projectId)
 
-        // Assert
         verifySequence {
             mockUiController.printMessage("------ Create Task ------")
             mockUiController.printMessage("-------------------------")
@@ -91,19 +78,17 @@ class CreateTaskCliTest {
             mockUiController.printMessage("Title: ", false)
             mockUiController.readInput()
             mockUiController.printMessage(
-                "It seams that you do not want to enter a Title" +
-                        " let us go to past screen", false
+                "It seams that you do not want to enter a Title let us go to past screen",
+                false
             )
         }
 
-        // Make sure task creation logic was never reached
-        verify(exactly = 0) { mockGetAllStatesUseCase.execute(any()) }
-        verify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
+        coVerify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
-    fun `should return early when both description inputs are empty`() {
-        // Arrange
+    fun `should return early when both description inputs are empty`() = runTest {
         val mockCreateTaskUseCase = mockk<CreateTaskUseCase>(relaxed = true)
         val mockGetAllStatesUseCase = mockk<GetAllTaskStatesUseCase>(relaxed = true)
         val mockUserRepository = mockk<UserRepository>(relaxed = true)
@@ -116,18 +101,12 @@ class CreateTaskCliTest {
             uiController = mockUiController
         )
 
-        every { mockUiController.readInput() } returnsMany listOf(
-            "Valid Title",  // Title input
-            "",             // First description input (empty)
-            ""              // Second description input (still empty)
-        )
+        every { mockUiController.readInput() } returnsMany listOf("Valid Title", "", "")
 
         val projectId = UUID.randomUUID()
 
-        // Act
         createTaskCli.create(projectId)
 
-        // Assert
         verifySequence {
             mockUiController.printMessage("------ Create Task ------")
             mockUiController.printMessage("-------------------------")
@@ -139,36 +118,27 @@ class CreateTaskCliTest {
             mockUiController.printMessage("Description: ", false)
             mockUiController.readInput()
             mockUiController.printMessage(
-                "It seams that you do not want to enter a Description" +
-                        " let us go to past screen", false
+                "It seams that you do not want to enter a Description let us go to past screen",
+                false
             )
         }
 
-        // Ensure it exited before going to task state selection
-        verify(exactly = 0) { mockGetAllStatesUseCase.execute(any()) }
-        verify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
+        coVerify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
-    fun `should catch UserNotLoggedInException and print error`() {
-        // Arrange
+    fun `should catch UserNotLoggedInException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(
-            id = UUID.randomUUID(),
-            name = "To Do",
-            projectId = dummyProjectID // Ensure it matches the project ID
-        )
-        val dummyStateList = listOf(dummyTaskState) // List with the valid state
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
+        val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(
-            "Valid Title",           // title
-            "Valid Description",     // description
-            "1",                     // task state number
-            DummyUser.dummyUserOne.username // assigned user
+            "Valid Title", "Valid Description", "1", dummyUser.username
         )
-        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
-        every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every {
+        coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
+        coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
+        coEvery {
             createTaskUseCase.createTask(
                 any(),
                 any(),
@@ -179,34 +149,27 @@ class CreateTaskCliTest {
             )
         } throws UserNotLoggedInException()
 
-        // Act
         createTaskCli.create(dummyProjectID)
 
-        // Assert
         verify { uiController.printMessage(" user not longed in", false) }
     }
 
     @Test
-    fun `should catch TaskTitleEmptyException and print error`() {
-        // Arrange
+    fun `should catch TaskTitleEmptyException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(
-            id = UUID.randomUUID(),
-            name = "To Do",
-            projectId = dummyProjectID
-        )
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(
-            "",  // Empty Title to trigger exception
+            "",
             "Valid Title",
             "Valid Description",
             "1",
-            DummyUser.dummyUserOne.username
+            dummyUser.username
         )
-        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
-        every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every {
+        coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
+        coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
+        coEvery {
             createTaskUseCase.createTask(
                 any(),
                 any(),
@@ -217,34 +180,26 @@ class CreateTaskCliTest {
             )
         } throws TaskTitleEmptyException()
 
-        // Act
         createTaskCli.create(dummyProjectID)
 
-        // Assert
         verify { uiController.printMessage("Not valid task Title", false) }
     }
 
-
     @Test
-    fun `should catch InvalidProjectIdException and print error`() {
-        // Arrange
+    fun `should catch InvalidProjectIdException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(
-            id = UUID.randomUUID(),
-            name = "To Do",
-            projectId = dummyProjectID
-        )
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(
             "Valid Title",
             "Valid Description",
             "1",
-            DummyUser.dummyUserOne.username
+            dummyUser.username
         )
-        every { getAllStatesUseCase.execute(any()) } returns dummyStateList
-        every { userRepository.getUserByUserName(DummyUser.dummyUserOne.username) } returns dummyUser
-        every {
+        coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
+        coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
+        coEvery {
             createTaskUseCase.createTask(
                 any(),
                 any(),
@@ -255,11 +210,8 @@ class CreateTaskCliTest {
             )
         } throws InvalidProjectIdException()
 
-        // Act
         createTaskCli.create(dummyProjectID)
 
-        // Assert
         verify { uiController.printMessage("Not valid Project", false) }
     }
-
 }

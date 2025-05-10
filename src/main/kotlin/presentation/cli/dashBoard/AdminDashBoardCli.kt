@@ -13,7 +13,7 @@ class AdminDashBoardCli(
     private val taskStateCliController: TaskStateCliController,
     private val auditsCli: GetAllAuditsCli
 ) {
-    fun start() {
+    suspend fun start() {
         while (true) {
             uiController.printMessage(HEADER_ADMIN_DASHBOARD_MESSAGE)
 

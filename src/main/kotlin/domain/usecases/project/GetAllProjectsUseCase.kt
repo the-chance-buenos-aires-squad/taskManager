@@ -7,7 +7,7 @@ import domain.repositories.ProjectRepository
 class GetAllProjectsUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    fun execute(): List<Project> {
+    suspend fun execute(): List<Project> {
         val projects = projectRepository.getAllProjects()
 
         if (projects.isEmpty()) throw NoProjectsFoundException()

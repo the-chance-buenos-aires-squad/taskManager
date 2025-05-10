@@ -1,13 +1,15 @@
 package data.dummyData
 
+import data.dto.AuditDto
 import domain.entities.ActionType
 import domain.entities.Audit
 import domain.entities.EntityType
 import java.time.LocalDateTime
+import java.util.*
 
 object DummyAudits {
     val dummyTaskAudit_CreateAction = Audit(
-        id = "1234",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.TASK,
         action = ActionType.CREATE,
@@ -18,22 +20,33 @@ object DummyAudits {
         timestamp = LocalDateTime.now()
     )
 
+    val DummyTaskAuditDto = AuditDto(
+        id = dummyTaskAudit_CreateAction.id.toString(),
+        entityId = "entity_id",
+        entityType = EntityType.TASK,
+        action = ActionType.CREATE,
+        field = "fields",
+        oldValue = "old",
+        newValue = "new",
+        userId = "user_id",
+        timestamp = dummyTaskAudit_CreateAction.timestamp.toString()
+    )
 
     val DummyTaskAuditRow = listOf(
-        DummyAudits.dummyTaskAudit_CreateAction.id,
-        DummyAudits.dummyTaskAudit_CreateAction.entityId,
-        DummyAudits.dummyTaskAudit_CreateAction.entityType.name,
-        DummyAudits.dummyTaskAudit_CreateAction.action.name,
-        DummyAudits.dummyTaskAudit_CreateAction.field ?: "",
-        DummyAudits.dummyTaskAudit_CreateAction.oldValue ?: "",
-        DummyAudits.dummyTaskAudit_CreateAction.newValue ?: "",
-        DummyAudits.dummyTaskAudit_CreateAction.userId,
-        DummyAudits.dummyTaskAudit_CreateAction.timestamp.toString()
+        dummyTaskAudit_CreateAction.id.toString(),
+        dummyTaskAudit_CreateAction.entityId,
+        dummyTaskAudit_CreateAction.entityType!!.name,
+        dummyTaskAudit_CreateAction.action!!.name,
+        dummyTaskAudit_CreateAction.field ?: "",
+        dummyTaskAudit_CreateAction.oldValue ?: "",
+        dummyTaskAudit_CreateAction.newValue ?: "",
+        dummyTaskAudit_CreateAction.userId,
+        dummyTaskAudit_CreateAction.timestamp.toString()
     )
 
 
     val dummyProjectAudit_CreateAction = Audit(
-        id = "1234",
+        id = UUID.randomUUID(),
         entityId = "entity_id",
         entityType = EntityType.PROJECT,
         action = ActionType.CREATE,

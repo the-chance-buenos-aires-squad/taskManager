@@ -3,9 +3,11 @@ package presentation.cli.project
 import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.UserEnterInvalidValueException
 import domain.usecases.project.CreateProjectUseCase
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,27 +33,29 @@ class CreateProjectCliTest {
     }
 
     @Test
-    fun `should call execute function in create use case when I call create function and success to create project`() {
-        every { createProjectUseCase.execute(any()) } returns true
-        every { uiController.readInput() } returnsMany project
+    fun `should call execute function in create use case when I call create function and success to create project`() =
+        runTest {
+            coEvery { createProjectUseCase.execute(any()) } returns true
+            every { uiController.readInput() } returnsMany project
 
-        createProjectCli.create()
+            createProjectCli.create()
 
-        verify { createProjectUseCase.execute(any()) }
-    }
-
-    @Test
-    fun `should call execute function in create use case when I call create function and failed to create project`() {
-        every { createProjectUseCase.execute(any()) } returns false
-        every { uiController.readInput() } returnsMany project
-
-        createProjectCli.create()
-
-        verify { createProjectUseCase.execute(any()) }
-    }
+            coVerify { createProjectUseCase.execute(any()) }
+        }
 
     @Test
-    fun `should throw exception when enter empty name and failed to create project`() {
+    fun `should call execute function in create use case when I call create function and failed to create project`() =
+        runTest {
+            coEvery { createProjectUseCase.execute(any()) } returns false
+            every { uiController.readInput() } returnsMany project
+
+            createProjectCli.create()
+
+            coVerify { createProjectUseCase.execute(any()) }
+        }
+
+    @Test
+    fun `should throw exception when enter empty name and failed to create project`() = runTest {
         every { uiController.readInput() } returnsMany project2
 
         val exception = assertThrows<UserEnterInvalidValueException> {
@@ -61,7 +65,7 @@ class CreateProjectCliTest {
     }
 
     @Test
-    fun `should throw exception when enter empty description and failed to create project`() {
+    fun `should throw exception when enter empty description and failed to create project`() = runTest {
         every { uiController.readInput() } returnsMany project3
 
         val exception = assertThrows<UserEnterInvalidValueException> {

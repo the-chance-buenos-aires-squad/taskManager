@@ -91,8 +91,8 @@ val presentationModule = module {
     single {
         CreateTaskStateCli(
             createTaskStateUseCase = get(),
-            existsTaskStateUseCase = get(),
             uiController = get(),
+            inputHandler = get()
         )
     }
 

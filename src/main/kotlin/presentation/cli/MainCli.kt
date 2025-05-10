@@ -8,7 +8,8 @@ class MainCli(
     private val loginCli: LoginCli,
 ) {
 
-    fun startCli() {
+
+    suspend fun startCli() {
         while (true) {
             uiController.printMessage(
                 "========================================\n" +

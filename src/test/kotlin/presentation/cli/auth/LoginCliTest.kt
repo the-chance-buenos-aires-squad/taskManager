@@ -3,9 +3,10 @@ package presentation.cli.auth
 import domain.customeExceptions.InvalidCredentialsException
 import domain.usecases.AuthenticationUseCase
 import dummyData.DummyUser
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
@@ -27,80 +28,79 @@ class LoginCliTest {
     }
 
     @Test
-    fun `should login successfully as admin and redirect to admin dashboard`() {
+    fun `should login successfully as admin and redirect to admin dashboard`() = runTest {
         // Given
-        every { uiController.readInput() } returnsMany listOf(adminTestUser.username, adminTestUser.password)
-        every { authenticationUseCase.login(adminTestUser.username, adminTestUser.password) } returns adminTestUser
+        coEvery { uiController.readInput() } returnsMany listOf(adminTestUser.username, adminTestUser.password)
+        coEvery { authenticationUseCase.login(adminTestUser.username, adminTestUser.password) } returns adminTestUser
 
         // When
         loginCli.start()
 
         // Then
-        verify {
+        coVerify {
             adminDashBoardCli.start()
         }
     }
 
     @Test
-    fun `should login successfully as mate and redirect to mate dashboard`() {
+    fun `should login successfully as mate and redirect to mate dashboard`() = runTest {
         // Given
-
-        every { uiController.readInput() } returnsMany listOf(mateTestUser.username, mateTestUser.password)
-        every { authenticationUseCase.login(mateTestUser.username, mateTestUser.password) } returns mateTestUser
+        coEvery { uiController.readInput() } returnsMany listOf(mateTestUser.username, mateTestUser.password)
+        coEvery { authenticationUseCase.login(mateTestUser.username, mateTestUser.password) } returns mateTestUser
 
         // When
         loginCli.start()
 
         // Then
-        verify {
+        coVerify {
             mateDashBoardCli.start()
         }
     }
 
     @Test
-    fun `should show error message on invalid credentials`() {
+    fun `should show error message on invalid credentials`() = runTest {
         // Given
         val exception = InvalidCredentialsException()
 
-        every { uiController.readInput() } returnsMany listOf("wrongUser", "wrongPass")
-        every { authenticationUseCase.login("wrongUser", "wrongPass") } throws exception
+        coEvery { uiController.readInput() } returnsMany listOf("wrongUser", "wrongPass")
+        coEvery { authenticationUseCase.login("wrongUser", "wrongPass") } throws exception
 
         // When
         loginCli.start()
 
         // Then
-        verify {
+        coVerify {
             uiController.printMessage("Error: Invalid username or password")
         }
     }
 
     @Test
-    fun `should handle unexpected errors during login`() {
+    fun `should handle unexpected errors during login`() = runTest {
         // Given
         val exception = Exception("unexpected errors")
 
-        every { uiController.readInput() } returnsMany listOf("user", "pass")
-        every { authenticationUseCase.login("user", "pass") } throws exception
+        coEvery { uiController.readInput() } returnsMany listOf("user", "pass")
+        coEvery { authenticationUseCase.login("user", "pass") } throws exception
 
         // When
         loginCli.start()
 
         // Then
-        verify {
+        coVerify {
             uiController.printMessage("Error: unexpected errors")
         }
     }
 
     @Test
-    fun `should return after 2 failed attempts`() {
-        // given
-        every { authenticationUseCase.login(any(), any()) } throws Exception("Invalid credentials")
-        every { uiController.readInput() } returnsMany listOf("user1", "pass1", "user2", "pass2")
+    fun `should return after 2 failed attempts`() = runTest {
+        // Given
+        coEvery { authenticationUseCase.login(any(), any()) } throws Exception("Invalid credentials")
+        coEvery { uiController.readInput() } returnsMany listOf("user1", "pass1", "user2", "pass2")
 
         // When
         loginCli.start()
 
         // Then
-        verify(exactly = 1) { uiController.printMessage("Too many failed attempts. Returning to main menu.") }
+        coVerify(exactly = 1) { uiController.printMessage("Too many failed attempts. Returning to main menu.") }
     }
 }

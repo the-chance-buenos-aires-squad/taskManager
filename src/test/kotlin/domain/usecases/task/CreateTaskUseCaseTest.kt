@@ -11,16 +11,18 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class CreateTaskUseCaseTest {
+
     private val taskRepository: TaskRepository = mockk(relaxed = true)
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
@@ -36,16 +38,14 @@ class CreateTaskUseCaseTest {
         createTaskUseCase = CreateTaskUseCase(taskRepository, addAuditUseCase, authRepository)
 
         // Default mock behavior
-        every { taskRepository.addTask(any()) } returns true
+        coEvery { taskRepository.addTask(any()) } returns true
     }
 
     @Test
-    fun `should create task successfully when all parameters are valid`() {
-        // Given
+    fun `should create task successfully when all parameters are valid`() = runTest {
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        // When
         val result = createTaskUseCase
             .createTask(
                 UUID.randomUUID(),
@@ -56,60 +56,56 @@ class CreateTaskUseCaseTest {
                 validAssignedToId,
             )
 
-        // Then
-        assertThat(result).isTrue()  // Ensure the result is true (task creation succeeded)
-        verify(exactly = 1) { taskRepository.addTask(any()) }
+        assertThat(result).isTrue()
+        coVerify(exactly = 1) { taskRepository.addTask(any()) }
     }
 
     @Test
-    fun `should throw TaskTitleEmptyException when title is empty`() {
+    fun `should throw TaskTitleEmptyException when title is empty`() = runTest {
         assertThrows<TaskTitleEmptyException> {
             createTaskUseCase.createTask(
                 UUID.randomUUID(),
-                " ", // Empty title
+                " ",
                 validDescription,
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-
-                )
+            )
         }
     }
 
     @Test
-    fun `should throw TaskDescriptionEmptyException when description is empty`() {
+    fun `should throw TaskDescriptionEmptyException when description is empty`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
             createTaskUseCase.createTask(
                 UUID.randomUUID(),
                 validTitle,
-                "", // Empty description
+                "",
                 validProjectId,
                 validStateId,
                 validAssignedToId,
-
-                )
+            )
         }
     }
 
     @Test
-    fun `should throw InvalidProjectIdException when projectId is zero`() {
+    fun `should throw InvalidProjectIdException when projectId is zero`() = runTest {
         assertThrows<InvalidProjectIdException> {
             createTaskUseCase.createTask(
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
-                UUID(0, 0), // Zero UUID
+                UUID(0, 0),
                 validStateId,
                 validAssignedToId,
-
-                )
+            )
         }
     }
 
     @Test
-    fun `should use provided stateId when stateId is given`() {
+    fun `should use provided stateId when stateId is given`() = runTest {
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
             UUID.randomUUID(),
@@ -118,16 +114,15 @@ class CreateTaskUseCaseTest {
             validProjectId,
             validStateId,
             validAssignedToId,
-
-            )
+        )
 
         assertThat(taskSlot.captured.stateId).isEqualTo(validStateId)
     }
 
     @Test
-    fun `should use provided assignedTo when assignedTo is given`() {
+    fun `should use provided assignedTo when assignedTo is given`() = runTest {
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
             UUID.randomUUID(),
@@ -142,9 +137,9 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should set assignedTo to null when assignedTo is not provided`() {
+    fun `should set assignedTo to null when assignedTo is not provided`() = runTest {
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
             id = UUID.randomUUID(),
@@ -157,27 +152,9 @@ class CreateTaskUseCaseTest {
         assertThat(taskSlot.captured.assignedTo).isNull()
     }
 
-//    @Test
-//    fun `should set createdBy correctly when creating task`() {
-//        val taskSlot = slot<Task>()
-//        every { taskRepository.addTask(capture(taskSlot)) } returns true
-//
-//        createTaskUseCase.createTask(
-//            UUID.randomUUID(),
-//            validTitle,
-//            validDescription,
-//            validProjectId,
-//            validStateId,
-//            validAssignedToId,
-//
-//        )
-//
-//        assertThat(taskSlot.captured.createdBy).isEqualTo()
-//    }
-
     @Test
-    fun `should return true when task is successfully created`() {
-        every { taskRepository.addTask(any()) } returns true  // Mocking the successful creation response as true
+    fun `should return true when task is successfully created`() = runTest {
+        coEvery { taskRepository.addTask(any()) } returns true
 
         val result = createTaskUseCase.createTask(
             UUID.randomUUID(),
@@ -188,15 +165,15 @@ class CreateTaskUseCaseTest {
             validAssignedToId,
         )
 
-        assertThat(result).isTrue()  // Checking that the result is true, indicating success
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `should allow title and description with leading or trailing spaces`() {
+    fun `should allow title and description with leading or trailing spaces`() = runTest {
         val trimmedTitle = "  Valid Title  "
         val trimmedDescription = "  Valid Description  "
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
             UUID.randomUUID(),
@@ -207,17 +184,17 @@ class CreateTaskUseCaseTest {
             validAssignedToId,
         )
 
-        verify { taskRepository.addTask(any()) }
+        coVerify { taskRepository.addTask(any()) }
         assertThat(taskSlot.captured.title).isEqualTo(trimmedTitle)
         assertThat(taskSlot.captured.description).isEqualTo(trimmedDescription)
     }
 
     @Test
-    fun `should throw TaskTitleEmptyException when title is only whitespace characters`() {
+    fun `should throw TaskTitleEmptyException when title is only whitespace characters`() = runTest {
         assertThrows<TaskTitleEmptyException> {
             createTaskUseCase.createTask(
                 UUID.randomUUID(),
-                "\n\t", // whitespace-only
+                "\n\t",
                 validDescription,
                 validProjectId,
                 validStateId,
@@ -227,12 +204,12 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should throw TaskDescriptionEmptyException when description is only whitespace characters`() {
+    fun `should throw TaskDescriptionEmptyException when description is only whitespace characters`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
             createTaskUseCase.createTask(
                 UUID.randomUUID(),
                 validTitle,
-                "\t\t  ", // whitespace-only
+                "\t\t  ",
                 validProjectId,
                 validStateId,
                 validAssignedToId,
@@ -241,10 +218,10 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should accept valid manually created UUID for projectId`() {
+    fun `should accept valid manually created UUID for projectId`() = runTest {
         val manualUUID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
         val taskSlot = slot<Task>()
-        every { taskRepository.addTask(capture(taskSlot)) } returns true
+        coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         createTaskUseCase.createTask(
             UUID.randomUUID(),
@@ -253,20 +230,16 @@ class CreateTaskUseCaseTest {
             manualUUID,
             validStateId,
             validAssignedToId,
-
-            )
+        )
 
         assertThat(taskSlot.captured.projectId).isEqualTo(manualUUID)
     }
 
-
     @Test
-    fun `should return true when user is logged in and creation successful`() {
-        //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        every { taskRepository.addTask(any()) } returns true
+    fun `should return true when user is logged in and creation successful`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        coEvery { taskRepository.addTask(any()) } returns true
 
-        //when
         val result = createTaskUseCase.createTask(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
@@ -276,19 +249,14 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-
-        //then
         assertThat(result).isTrue()
     }
 
-
     @Test
-    fun `should return false when user is logged in and creation unSuccessful`() {
-        //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        every { taskRepository.addTask(any()) } returns false
+    fun `should return false when user is logged in and creation unSuccessful`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        coEvery { taskRepository.addTask(any()) } returns false
 
-        //when
         val result = createTaskUseCase.createTask(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
@@ -298,16 +266,13 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-
-        //then
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `should through UserNotLoggedInException when user not logged in`() {
-        //given
-        every { authRepository.getCurrentUser() } returns null
-        //when & then
+    fun `should through UserNotLoggedInException when user not logged in`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns null
+
         assertThrows<UserNotLoggedInException> {
             createTaskUseCase.createTask(
                 id = DummyTasks.validTask.id,
@@ -321,12 +286,10 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should add audit when user is logged in and creation is successful`() {
-        //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        every { taskRepository.addTask(any()) } returns true
+    fun `should add audit when user is logged in and creation is successful`() = runTest {
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        coEvery { taskRepository.addTask(any()) } returns true
 
-        //when
         createTaskUseCase.createTask(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
@@ -336,8 +299,6 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-        //then
-        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
-
 }

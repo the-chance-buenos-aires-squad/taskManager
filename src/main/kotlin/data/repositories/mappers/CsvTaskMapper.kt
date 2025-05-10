@@ -4,9 +4,9 @@ import domain.entities.Task
 import java.time.LocalDateTime
 import java.util.*
 
-class TaskMapper : Mapper<Task> {
+class CsvTaskMapper : Mapper<Task, List<String>> {
 
-    override fun mapEntityToRow(entity: Task): List<String> {
+    override fun fromEntity(entity: Task): List<String> {
         return listOf(
             entity.id.toString(),
             entity.title,
@@ -20,7 +20,7 @@ class TaskMapper : Mapper<Task> {
         )
     }
 
-    override fun mapRowToEntity(row: List<String>): Task {
+    override fun toEntity(row: List<String>): Task {
         return Task(
             id = UUID.fromString(row[0]),
             title = row[1],

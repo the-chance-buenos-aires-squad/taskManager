@@ -17,7 +17,7 @@ class ViewSwimlanesCLI(
     private val deleteTaskCli: DeleteTaskCli
 ) {
 
-    fun start() {
+    suspend fun start() {
         while (true) {
             try {
                 uiController.printMessage(HEADER_MESSAGE)

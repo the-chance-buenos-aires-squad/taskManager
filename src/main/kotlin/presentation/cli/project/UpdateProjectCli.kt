@@ -12,7 +12,7 @@ class UpdateProjectCli(
     private val updateProjectUseCase: UpdateProjectUseCase,
     private val uiController: UiController
 ) {
-    fun update() {
+    suspend fun update() {
         val projects = getAllProjectsUseCase.execute()
         uiController.printMessage("Select a project to update:")
         projects.forEachIndexed { index, project ->

@@ -1,13 +1,26 @@
 package di
 
+import data.dataSource.audit.AuditDtoParser
+import data.dataSource.project.ProjectDtoParser
+import data.dataSource.task.TaskDtoParser
+import data.dataSource.taskState.TaskStateDtoParser
+import data.dataSource.user.UserDtoParser
 import data.repositories.mappers.*
-import domain.entities.Project
 import org.koin.dsl.module
 
 val mapperModule = module {
-    single { UserMapper() }
-    single { AuditMapper() }
-    single<Mapper<Project>> { ProjectMapper() }
-    single { TaskStateMapper() }
-    single { TaskMapper() }
+    single { AuditDtoMapper() }
+    single { AuditDtoParser() }
+
+    single { ProjectDtoMapper() }
+    single { ProjectDtoParser() }
+
+    single { TaskStateDtoMapper() }
+    single { TaskStateDtoParser() }
+
+    single { TaskDtoMapper() }
+    single { TaskDtoParser() }
+
+    single { UserDtoMapper() }
+    single { UserDtoParser() }
 }

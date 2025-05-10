@@ -3,8 +3,9 @@ package domain.usecases.taskState
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
@@ -18,10 +19,10 @@ class DeleteTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should edit state successfully when repository returns true`() {
+    fun `should edit state successfully when repository returns true`() = runTest {
         val deletedTaskState = DummyTaskState.todo.id
 
-        every { repository.deleteTaskState(deletedTaskState) } returns true
+        coEvery { repository.deleteTaskState(deletedTaskState) } returns true
 
         val result = deleteTaskStateUseCase.execute(deletedTaskState)
 
@@ -29,10 +30,10 @@ class DeleteTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should fail to edit state when repository returns false`() {
+    fun `should fail to edit state when repository returns false`() = runTest {
         val deletedTaskState = DummyTaskState.blocked.id
 
-        every { repository.deleteTaskState(deletedTaskState) } returns false
+        coEvery { repository.deleteTaskState(deletedTaskState) } returns false
 
         val result = deleteTaskStateUseCase.execute(deletedTaskState)
 

@@ -13,7 +13,7 @@ class CreateUserUseCase(
     private val addAuditUseCase: AddAuditUseCase
 ) {
 
-    fun addUser(
+    suspend fun addUser(
         username: String,
         password: String,
         confirmPassword: String,

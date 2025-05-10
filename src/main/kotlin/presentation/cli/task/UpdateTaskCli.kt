@@ -17,7 +17,7 @@ class UpdateTaskCli(
     private val uiController: UiController
 ) {
 
-    fun update(projectID: UUID) {
+    suspend fun update(projectID: UUID) {
         val allTasks = getAllTasksUseCase.execute()
         val tasks = TaskCliUtils.fetchProjectTasks(allTasks, projectID, uiController)
         if (tasks.isEmpty()) return
@@ -38,7 +38,7 @@ class UpdateTaskCli(
         handleTaskUpdating(updatedTask)
     }
 
-    private fun handleTaskUpdating(updatedTask: Task) {
+    private suspend fun handleTaskUpdating(updatedTask: Task) {
         try {
             updateTaskUseCase.updateTask(
                 updatedTask.id,

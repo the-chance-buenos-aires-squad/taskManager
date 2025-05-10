@@ -4,8 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.PasswordHash
 import domain.repositories.UserRepository
 import dummyData.DummyUser
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
@@ -24,11 +26,11 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return user success when logging in with valid credentials`() {
+    fun `should return user success when logging in with valid credentials`() = runTest {
         // given
         val username = testAdminUser.username
         val password = testAdminUser.password
-        every { userRepository.getUserByUserName(username) } returns testAdminUser
+        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
         every { mD5Hasher.hash(password) } returns testAdminUser.password
 
         // when
@@ -39,11 +41,11 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when user name not found`() {
+    fun `should return null when user name not found`() = runTest {
         // given
         val username = testAdminUser.username
         val password = testAdminUser.password
-        every { userRepository.getUserByUserName(username) } returns null
+        coEvery { userRepository.getUserByUserName(username) } returns null
         every { mD5Hasher.hash(password) } returns testAdminUser.password
 
         // when
@@ -54,11 +56,11 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when password not match`() {
+    fun `should return null when password not match`() = runTest {
         // given
         val username = testAdminUser.username
         val password = testAdminUser.password
-        every { userRepository.getUserByUserName(username) } returns testAdminUser
+        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
         every { mD5Hasher.hash(password) } returns "wrong password"
 
         // when
@@ -69,11 +71,11 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should set current user when logging in with valid credentials`() {
+    fun `should set current user when logging in with valid credentials`() = runTest {
         // given
         val username = testAdminUser.username
         val password = testAdminUser.password
-        every { userRepository.getUserByUserName(username) } returns testAdminUser
+        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
         every { mD5Hasher.hash(password) } returns testAdminUser.password
 
         // when
@@ -84,15 +86,15 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return new user when adding user with admin logged in`() {
+    fun `should return new user when adding user with admin logged in`() = runTest {
         // given
-        every { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
+        coEvery { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
         every { mD5Hasher.hash(testAdminUser.password) } returns testAdminUser.password
         authRepository.login(testAdminUser.username, testAdminUser.password)
 
-        every { userRepository.getUserByUserName(testMateUser.username) } returns null
+        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns null
         every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-        every { userRepository.addUser(testMateUser) } returns true
+        coEvery { userRepository.addUser(testMateUser) } returns true
 
         // when
         val result = authRepository.addUser(testMateUser.username, testMateUser.password)
@@ -102,7 +104,7 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when adding user without login`() {
+    fun `should return null when adding user without login`() = runTest {
         // given
         authRepository.logout()
 
@@ -114,9 +116,9 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when mate user tries to add user`() {
+    fun `should return null when mate user tries to add user`() = runTest {
         // given
-        every { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
+        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
         every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
         authRepository.login(testMateUser.username, testMateUser.password)
 
@@ -128,14 +130,14 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when username already exists`() {
+    fun `should return null when username already exists`() = runTest {
         // given
 
-        every { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
+        coEvery { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
         every { mD5Hasher.hash(testAdminUser.password) } returns testAdminUser.password
         authRepository.login(testAdminUser.username, testAdminUser.password)
 
-        every { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
+        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
         every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
 
         // when
@@ -147,17 +149,17 @@ class AuthRepositoryImplTest {
 
 
     @Test
-    fun `should update current user when logging in with new user`() {
+    fun `should update current user when logging in with new user`() = runTest {
         // given
         val firstUserLoggedIn = testAdminUser
         val newUserLoggedIn = testMateUser
 
-        every { userRepository.getUserByUserName(firstUserLoggedIn.username) } returns firstUserLoggedIn
+        coEvery { userRepository.getUserByUserName(firstUserLoggedIn.username) } returns firstUserLoggedIn
         every { mD5Hasher.hash(firstUserLoggedIn.password) } returns firstUserLoggedIn.password
         authRepository.login(firstUserLoggedIn.username, firstUserLoggedIn.password)
         authRepository.logout()
 
-        every { userRepository.getUserByUserName(newUserLoggedIn.username) } returns newUserLoggedIn
+        coEvery { userRepository.getUserByUserName(newUserLoggedIn.username) } returns newUserLoggedIn
         every { mD5Hasher.hash(newUserLoggedIn.password) } returns newUserLoggedIn.password
 
         //when
@@ -168,9 +170,9 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should clear current user when logging out`() {
+    fun `should clear current user when logging out`() = runTest {
         // given
-        every { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
+        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
         every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
         authRepository.login(testMateUser.username, testMateUser.password)
 
@@ -183,9 +185,9 @@ class AuthRepositoryImplTest {
 
 
     @Test
-    fun `should return current user when logged in`() {
+    fun `should return current user when logged in`() = runTest {
         // given
-        every { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
+        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
         every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
         authRepository.login(testMateUser.username, testMateUser.password)
 
@@ -197,7 +199,7 @@ class AuthRepositoryImplTest {
     }
 
     @Test
-    fun `should return null when no user is logged in`() {
+    fun `should return null when no user is logged in`() = runTest {
         // when & then
         assertThat(authRepository.getCurrentUser()).isNull()
     }

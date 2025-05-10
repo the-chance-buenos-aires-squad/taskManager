@@ -3,8 +3,8 @@ package domain.repositories
 import domain.entities.User
 
 interface AuthRepository {
-    fun login(username: String, password: String): User?
-    fun addUser(userName: String, password: String): User?
-    fun logout()
-    fun getCurrentUser(): User?
+    suspend fun login(username: String, password: String): User?
+    suspend fun addUser(userName: String, password: String): User?
+    suspend fun logout()
+    suspend fun getCurrentUser(): User?
 }

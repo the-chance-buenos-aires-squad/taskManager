@@ -20,7 +20,7 @@ class GetAllAuditsCli(
         )
     }
 
-    fun displayAllAudits() {
+    suspend fun displayAllAudits() {
         displayAuditHeader()
         val audits = getAllAuditUseCase.getAllAudit()
         audits.forEach { it.displayRow() }

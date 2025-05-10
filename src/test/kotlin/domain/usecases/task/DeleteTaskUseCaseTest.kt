@@ -6,9 +6,10 @@ import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase
 import dummyData.DummyUser
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,18 +21,16 @@ class DeleteTaskUseCaseTest {
     private val addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
     private lateinit var deleteTaskUseCase: DeleteTaskUseCase
 
-
     @BeforeEach
     fun setUp() {
         deleteTaskUseCase = DeleteTaskUseCase(taskRepository, addAuditUseCase, authRepository)
     }
 
-
     @Test
-    fun `should return true when current user is logged in and deletion Successful`() {
+    fun `should return true when current user is logged in and deletion Successful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        every { taskRepository.deleteTask(any()) } returns true
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        coEvery { taskRepository.deleteTask(any()) } returns true
 
         //.when
         val result = deleteTaskUseCase.deleteTask(UUID.randomUUID())
@@ -40,12 +39,11 @@ class DeleteTaskUseCaseTest {
         assertThat(result).isTrue()
     }
 
-
     @Test
-    fun `should return false when current user is logged in and deletion unSuccessful`() {
+    fun `should return false when current user is logged in and deletion unSuccessful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        every { taskRepository.deleteTask(any()) } returns false
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
+        coEvery { taskRepository.deleteTask(any()) } returns false
 
         //.when
         val result = deleteTaskUseCase.deleteTask(UUID.randomUUID())
@@ -54,31 +52,27 @@ class DeleteTaskUseCaseTest {
         assertThat(result).isFalse()
     }
 
-
     @Test
-    fun `should through UserNotLoggedInException when user not logged in`() {
+    fun `should through UserNotLoggedInException when user not logged in`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns null
+        coEvery { authRepository.getCurrentUser() } returns null
 
         //when & then
         assertThrows<UserNotLoggedInException> {
             deleteTaskUseCase.deleteTask(UUID.randomUUID())
         }
-
     }
 
-
     @Test
-    fun `should add audit when user is logged in and deletion is successful`() {
+    fun `should add audit when user is logged in and deletion is successful`() = runTest {
         //given
-        every { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        every { taskRepository.deleteTask(any()) } returns true
+        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
+        coEvery { taskRepository.deleteTask(any()) } returns true
 
         //when
         deleteTaskUseCase.deleteTask(UUID.randomUUID())
 
         //then
-        verify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
     }
-
 }

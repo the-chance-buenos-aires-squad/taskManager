@@ -12,7 +12,7 @@ class DeleteTaskCli(
     private val uiController: UiController,
 ) {
 
-    fun delete(projectID: UUID) {
+    suspend fun delete(projectID: UUID) {
         val allTasks = getAllTasksUseCase.execute()
         val tasks = TaskCliUtils.fetchProjectTasks(allTasks, projectID, uiController)
         if (tasks.isEmpty()) return
@@ -39,7 +39,7 @@ class DeleteTaskCli(
         return false
     }
 
-    private fun handleDeletion(taskId: UUID) {
+    private suspend fun handleDeletion(taskId: UUID) {
         try {
             val success = deleteTaskUseCase.deleteTask(taskId)
             val message = if (success) {

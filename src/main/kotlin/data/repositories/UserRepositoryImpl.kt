@@ -1,43 +1,43 @@
 package data.repositories
 
 import data.repositories.dataSource.UserDataSource
-import data.repositories.mappers.UserMapper
+import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.repositories.UserRepository
 import java.util.*
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
-    private val userMapper: UserMapper
+    private val userMapper: UserDtoMapper
 ) : UserRepository {
 
 
-    override fun addUser(user: User): Boolean {
-        return userDataSource.addUser(userMapper.mapEntityToRow(user))
+    override suspend fun addUser(user: User): Boolean {
+        return userDataSource.addUser(userMapper.fromEntity(user))
     }
 
-    override fun updateUser(user: User): Boolean {
-        return userDataSource.updateUser(userMapper.mapEntityToRow(user))
+    override suspend fun updateUser(user: User): Boolean {
+        return userDataSource.updateUser(userMapper.fromEntity(user))
     }
 
-    override fun deleteUser(user: User): Boolean {
-        return userDataSource.deleteUser(user.id)
+    override suspend fun deleteUser(user: User): Boolean {
+        return userDataSource.deleteUser(user.id.toString())
     }
 
-    override fun getUserById(id: UUID): User? {
-        return userDataSource.getUserById(id)?.let {
-            userMapper.mapRowToEntity(it)
+    override suspend fun getUserById(id: UUID): User? {
+        return userDataSource.getUserById(id.toString())?.let {
+            userMapper.toEntity(it)
         }
     }
 
-    override fun getUserByUserName(userName: String): User? {
-        return userDataSource.getUserByUserName(userName)?.let { userMapper.mapRowToEntity(it) }
+    override suspend fun getUserByUserName(userName: String): User? {
+        return userDataSource.getUserByUserName(userName)?.let { userMapper.toEntity(it) }
     }
 
-    override fun getUsers(): List<User> {
+    override suspend fun getUsers(): List<User> {
         val usersRows = userDataSource.getUsers()
         return usersRows.map { userRow ->
-            userMapper.mapRowToEntity(userRow)
+            userMapper.toEntity(userRow)
         }
     }
 

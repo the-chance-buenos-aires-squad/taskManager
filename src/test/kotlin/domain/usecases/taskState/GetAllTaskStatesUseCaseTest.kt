@@ -3,8 +3,9 @@ package domain.usecases.taskState
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskStateRepository
 import dummyData.dummyStateData.DummyTaskState
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import java.util.*
 import kotlin.test.Test
@@ -19,13 +20,13 @@ class GetAllTaskStatesUseCaseTest {
     }
 
     @Test
-    fun `should return all task states from repository when they exist`() {
+    fun `should return all task states from repository when they exist`() = runTest {
         val projectId = UUID.randomUUID()
         val allTaskStates = listOf(
             DummyTaskState.inProgress.copy(projectId = projectId),
             DummyTaskState.readyForReview.copy(projectId = projectId)
         )
-        every { repository.getAllTaskStates() } returns allTaskStates
+        coEvery { repository.getAllTaskStates() } returns allTaskStates
 
         val result = getAllTaskStatesUseCase.execute(projectId)
 
@@ -33,11 +34,13 @@ class GetAllTaskStatesUseCaseTest {
     }
 
     @Test
-    fun `should return an empty list when no task states exist`() {
-        every { repository.getAllTaskStates() } returns emptyList()
+    fun `should return an empty list when no task states exist`() = runTest {
+        coEvery { repository.getAllTaskStates() } returns emptyList()
 
         val result = getAllTaskStatesUseCase.execute(UUID.randomUUID())
 
         assertThat(result).isEmpty()
     }
+
+
 }

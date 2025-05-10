@@ -9,7 +9,10 @@ import domain.usecases.task.CreateTaskUseCase
 import domain.usecases.task.DeleteTaskUseCase
 import domain.usecases.task.GetAllTasksUseCase
 import domain.usecases.task.UpdateTaskUseCase
-import domain.usecases.taskState.*
+import domain.usecases.taskState.CreateTaskStateUseCase
+import domain.usecases.taskState.DeleteTaskStateUseCase
+import domain.usecases.taskState.EditTaskStateUseCase
+import domain.usecases.taskState.GetAllTaskStatesUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -23,7 +26,6 @@ val useCaseModule = module {
     single { GetAllAuditUseCase(get()) }
     single { DeleteTaskStateUseCase(get()) }
     single { GetAllTaskStatesUseCase(get()) }
-    single { ExistsTaskStateUseCase(get()) }
     single { GetTasksUseCase(get()) }
     single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
     single { GetTasksGroupedByStateUseCase(getTasksUseCase = get(), getTaskStatesUseCase = get()) }

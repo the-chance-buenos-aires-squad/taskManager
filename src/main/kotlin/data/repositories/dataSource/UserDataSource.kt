@@ -1,14 +1,13 @@
 package data.repositories.dataSource
 
-import java.util.*
+import data.dto.UserDto
 
 interface UserDataSource {
 
-    fun addUser(userRow: List<String>): Boolean
-    fun getUserById(id: UUID): List<String>?
-    fun getUserByUserName(userName: String): List<String>?
-    fun deleteUser(id: UUID): Boolean
-    fun getUsers(): List<List<String>>
-    fun updateUser(userRow: List<String>): Boolean
-
+    suspend fun addUser(userDto: UserDto): Boolean
+    suspend fun getUserById(id: String): UserDto?
+    suspend fun getUserByUserName(userName: String): UserDto?
+    suspend fun deleteUser(id: String): Boolean
+    suspend fun getUsers(): List<UserDto>
+    suspend fun updateUser(userDto: UserDto): Boolean
 }

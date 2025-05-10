@@ -4,8 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.NoProjectsFoundException
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -21,8 +22,8 @@ class GetAllProjectsUseCaseTest {
     }
 
     @Test
-    fun `should return list of all projects success`() {
-        every { projectRepository.getAllProjects() } returns listOf(createDummyProject())
+    fun `should return list of all projects success`() = runTest {
+        coEvery { projectRepository.getAllProjects() } returns listOf(createDummyProject())
 
         val result = getAllProjectsUseCase.execute()
 
@@ -30,8 +31,8 @@ class GetAllProjectsUseCaseTest {
     }
 
     @Test
-    fun `should return false if project don't created`() {
-        every { projectRepository.getAllProjects() } returns emptyList()
+    fun `should return false if project don't created`() = runTest {
+        coEvery { projectRepository.getAllProjects() } returns emptyList()
 
 
         assertThrows<NoProjectsFoundException> {

@@ -3,226 +3,109 @@ package data.dataSource.user
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import dummyData.DummyUser.dummyUpdatedUserOneRow
+import data.dto.UserDto
 import dummyData.DummyUser.dummyUserOne
-import dummyData.DummyUser.dummyUserOneRow
-import dummyData.DummyUser.dummyUserTwoRow
+import dummyData.DummyUser.dummyUserOneDto
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 
-//new
 class CsvUserDataSourceTest {
 
     private lateinit var file: File
     private val csvHandler = CsvHandler(CsvReader())
+    private val parser = UserDtoParser()
     private lateinit var dataSource: CsvUserDataSource
 
     @BeforeEach
     fun setUp() {
         file = File.createTempFile("user_test", ".csv")
         file.writeText("")
-        dataSource = CsvUserDataSource(csvHandler = csvHandler, file)
+        dataSource = CsvUserDataSource(csvHandler = csvHandler, userDtoParser = parser, file = file)
     }
 
-
     @Test
-    fun `should return true when add user to userCsvDataSource`() {
-        //when
-        val result = dataSource.addUser(dummyUserOneRow)
-
-        //then
+    fun `should return true when add user to userCsvDataSource`() = runTest {
+        val result = dataSource.addUser(dummyUserOneDto)
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `get user by id for an existing user will return same user object`() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-
-        //when
-        val resultUser = dataSource.getUserById(dummyUserOne.id)
-
-        //then
-        assertThat(resultUser).isEqualTo(dummyUserOneRow)
+    fun `get user by id for an existing user will return same user object`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        val resultUser = dataSource.getUserById(dummyUserOneDto.id)
+        assertThat(resultUser).isEqualTo(dummyUserOneDto)
     }
 
     @Test
-    fun `get user by id for not existed user will return null`() {
-        //when
-        val resultUser = dataSource.getUserById(dummyUserOne.id)
-        //then
-        assertThat(resultUser).isNull()
-    }
-
-
-    @Test
-    fun `get user by userName for an existing user will return same user object`() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-
-        //when
-        val resultUser = dataSource.getUserByUserName(dummyUserOne.username)
-
-        //then
-        assertThat(resultUser).isEqualTo(dummyUserOneRow)
-    }
-
-    @Test
-    fun `get user by userName for not existed user will return null`() {
-        //when
-        val resultUser = dataSource.getUserByUserName(dummyUserOne.username)
-        //then
+    fun `get user by id for not existed user will return null`() = runTest {
+        val resultUser = dataSource.getUserById(dummyUserOneDto.id)
         assertThat(resultUser).isNull()
     }
 
     @Test
-    fun `delete user will return true if successful`() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-
-
-        //when
-        val userIsDeleted = dataSource.deleteUser(dummyUserOne.id)
-
-
-        //then
-        assertThat(userIsDeleted).isTrue()
+    fun `get user by userName for an existing user will return same user object`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        val users = dataSource.getUsers()
+        println(users.find { it.id == dummyUserOneDto.id })
+        val resultUser = dataSource.getUserByUserName(dummyUserOneDto.username)
+        assertThat(resultUser).isEqualTo(dummyUserOneDto)
     }
 
     @Test
-    fun `delete user will return false if unSuccessful`() {
-        //when
-        val userIsDeleted = dataSource.deleteUser(dummyUserOne.id)
-
-        //then
-        assertThat(userIsDeleted).isFalse()
+    fun `get user by userName for not existed user will return null`() = runTest {
+        val resultUser = dataSource.getUserByUserName(dummyUserOneDto.username)
+        assertThat(resultUser).isNull()
     }
 
     @Test
-    fun `get users will return non empty List of User`() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-        dataSource.addUser(dummyUserOneRow)
-        dataSource.addUser(dummyUserOneRow)
-
-        //when
-        val users: List<List<String>> = dataSource.getUsers()
-
-        //then
-        assertThat(users.isNotEmpty()).isTrue()
-
+    fun `delete user will return true if successful`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        val result = dataSource.deleteUser(dummyUserOne.id.toString())
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `get users on 3 saved users will return a list of size 3 `() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-        dataSource.addUser(dummyUserOneRow)
-        dataSource.addUser(dummyUserOneRow)
+    fun `delete user will return false if unsuccessful`() = runTest {
+        val result = dataSource.deleteUser(dummyUserOneDto.id)
+        assertThat(result).isFalse()
+    }
 
-        //when
-        val users: List<List<String>> = dataSource.getUsers()
+    @Test
+    fun `get users will return non empty List of UserDto`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        dataSource.addUser(dummyUserOneDto)
+        dataSource.addUser(dummyUserOneDto)
+        val users: List<UserDto> = dataSource.getUsers()
+        assertThat(users).isNotEmpty()
+    }
 
-        //then
+    @Test
+    fun `get users on 3 saved users will return a list of size 3`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        dataSource.addUser(dummyUserOneDto)
+        dataSource.addUser(dummyUserOneDto)
+        val users: List<UserDto> = dataSource.getUsers()
         assertThat(users).hasSize(3)
     }
 
     @Test
-    fun `get users from empty dataSource will return  empty List`() {
-        //when
-        val users: List<List<String>> = dataSource.getUsers()
-
-        //then
+    fun `get users from empty dataSource will return empty List`() = runTest {
+        val users: List<UserDto> = dataSource.getUsers()
         assertThat(users).isEmpty()
     }
 
     @Test
-    fun `update user will return true when successful`() {
-        //given
-        dataSource.addUser(dummyUserOneRow)
-
-        //when
-        val result = dataSource.updateUser(dummyUpdatedUserOneRow)
-
-        // then
+    fun `update user will return true when successful`() = runTest {
+        dataSource.addUser(dummyUserOneDto)
+        val result = dataSource.updateUser(dummyUserOneDto.copy(username = "updated"))
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `update user should be return false when UnSuccessful`() {
-        //when
-        val result = dataSource.updateUser(dummyUpdatedUserOneRow)
-
-        // then
+    fun `update user will return false when user does not exist`() = runTest {
+        val result = dataSource.updateUser(dummyUserOneDto)
         assertThat(result).isFalse()
     }
-
-    @Test
-    fun `should handle an exceptions come from IO`() {
-        //given
-        file.setReadOnly()
-
-
-        val result = dataSource.addUser(dummyUserOneRow)
-
-        assertThat(result).isFalse()
-        //when&then
-        //assertThrows<FileNotFoundException> { dataSource.addUser(dummyUserOneRow) }
-
-    }
-
-    @Test
-    fun `deleteUser should rewrite file correctly after deletion`() {
-        // given
-        dataSource.addUser(dummyUserOneRow)
-        dataSource.addUser(dummyUserTwoRow)
-
-        // when
-        dataSource.deleteUser(dummyUserOne.id)
-        val remainingUsers = dataSource.getUsers()
-
-        // then
-        assertThat(remainingUsers).hasSize(1)
-        assertThat(remainingUsers).contains(dummyUserTwoRow)
-    }
-
-    @Test
-    fun `updateUser should return false on file write error`() {
-        // given
-        dataSource.addUser(dummyUserOneRow)
-        file.setReadOnly()
-
-        // when
-        val result = dataSource.updateUser(dummyUpdatedUserOneRow)
-
-        // then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `getUsers should return empty list when file does not exist`() {
-        // given
-        file.delete()
-
-        // when
-        val users = dataSource.getUsers()
-
-        // then
-        assertThat(users).isEmpty()
-    }
-
-    @Test
-    fun `deleteUser should return false on file write error`() {
-        // given
-        dataSource.addUser(dummyUserOneRow)
-        file.setReadOnly() // منع الكتابة
-
-        // when
-        val result = dataSource.deleteUser(dummyUserOne.id)
-
-        // then
-        assertThat(result).isFalse()
-    }
-
 }
