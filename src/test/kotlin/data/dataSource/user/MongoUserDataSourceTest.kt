@@ -25,7 +25,6 @@ class MongoUserDataSourceTest {
     @BeforeEach
     fun setUp() {
         dataSource = MongoUserDataSource(userCollection)
-        clearAllMocks()
     }
 
     @Test
@@ -54,14 +53,14 @@ class MongoUserDataSourceTest {
 
     @Test
     fun `getUserById should return user when found by id`() = runTest {
-        val findFlow = mockk<FindFlow<UserDto>>(relaxed = true)
+        val findFlow = mockk<FindFlow<UserDto>>()
         coEvery { userCollection.find(any<Bson>()) } returns findFlow
         coEvery { findFlow.collect(any()) } coAnswers {
             val collector = firstArg<FlowCollector<UserDto>>()
             collector.emit(testUser)
         }
 
-        val result = dataSource.getUserById(UUID.fromString(dummyUserOneDto.id))
+        val result = dataSource.getUserById(dummyUserOneDto.id)
 
         assertThat(result).isEqualTo(testUser)
     }
@@ -87,47 +86,47 @@ class MongoUserDataSourceTest {
         coEvery { deleted.wasAcknowledged() } returns true
         coEvery { userCollection.deleteOne(any(),any<DeleteOptions>()) } returns deleted
 
-        val result = dataSource.deleteUser(UUID.fromString(testUser.id))
+        val result = dataSource.deleteUser(testUser.id)
 
         assertThat(result).isTrue()
     }
     @Test
     fun `deleteUser should return false when delete is not acknowledged`() = runTest {
-        val deleted = mockk<DeleteResult>(relaxed = true)
+        val deleted = mockk<DeleteResult>()
         coEvery { deleted.wasAcknowledged() } returns false
         coEvery { userCollection.deleteOne(any(), any<DeleteOptions>()) } returns deleted
 
-        val result = dataSource.deleteUser(UUID.fromString(testUser.id))
+        val result = dataSource.deleteUser(testUser.id)
         assertThat(result).isFalse()
     }
 
     @Test
     fun `should return all users when we use getUsers`()= runTest {
         val findFlow = mockk<FindFlow<UserDto>>()
-        val user2 = testUser.copy(id = UUID.randomUUID().toString(), username = "second")
+        val user = testUser.copy(id = UUID.randomUUID().toString(), username = "second")
 
         coEvery { userCollection.find() } returns findFlow
         coEvery { findFlow.collect(any()) } coAnswers {
             val collector = firstArg<FlowCollector<UserDto>>()
             collector.emit(testUser)
-            collector.emit(user2)
+            collector.emit(user)
         }
 
         val result = dataSource.getUsers()
 
-        assertThat(result).containsExactly(testUser, user2)
+        assertThat(result).containsExactly(testUser, user)
     }
 
     @Test
     fun `user should be updated using updateUser`()= runTest {
-        val updateResult = mockk<UpdateResult>(relaxed = true)
+        val updateResult = mockk<UpdateResult>()
         coEvery { updateResult.wasAcknowledged() } returns true
 
         coEvery { userCollection.updateOne(any<Bson>(), any<Bson>(), any()) } answers {
             updateResult
         }
 
-        val findFlow = mockk<FindFlow<UserDto>>(relaxed = true)
+        val findFlow = mockk<FindFlow<UserDto>>()
         val updatedUser = testUser.copy(username = "aziz updates")
         coEvery { userCollection.find(any<Bson>()) } returns findFlow
         coEvery { findFlow.collect(any()) } coAnswers {
@@ -138,12 +137,12 @@ class MongoUserDataSourceTest {
         val updated = dataSource.updateUser(updatedUser)
         assertThat(updated).isTrue()
 
-        val result = dataSource.getUserById(UUID.fromString(testUser.id))
+        val result = dataSource.getUserById(testUser.id)
         assertThat(result).isEqualTo(updatedUser)
     }
     @Test
     fun `updateUser should return false when update is not acknowledged`() = runTest {
-        val updateResult = mockk<UpdateResult>(relaxed = true)
+        val updateResult = mockk<UpdateResult>()
         coEvery { updateResult.wasAcknowledged() } returns false
         coEvery { userCollection.updateOne(any<Bson>(), any<Bson>(), any()) } returns updateResult
 

@@ -40,7 +40,7 @@ class UserRepositoryImplTest {
     fun `should return user when searching by valid user id`() = runTest {
         // given
         val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
-        coEvery { mockDataSource.getUserById(id) } returns dummyUserOneDto
+        coEvery { mockDataSource.getUserById(id.toString()) } returns dummyUserOneDto
 
         // when
         val result = userRepository.getUserById(id)
@@ -53,7 +53,7 @@ class UserRepositoryImplTest {
     fun `should return null when user id does not exist`() = runTest {
         // given
         val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223")
-        coEvery { mockDataSource.getUserById(id) } returns null
+        coEvery { mockDataSource.getUserById(id.toString()) } returns null
 
         // when
         val result = userRepository.getUserById(id)
@@ -115,12 +115,12 @@ class UserRepositoryImplTest {
     fun `should call deleteItem on data source when deleting a user`() = runTest {
         // given
         val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
-        coEvery { mockDataSource.deleteUser(id) } returns true
+        coEvery { mockDataSource.deleteUser(id.toString()) } returns true
 
         // when
         userRepository.deleteUser(dummyUserOne)
 
         // then
-        coVerify(exactly = 1) { mockDataSource.deleteUser(id) }
+        coVerify(exactly = 1) { mockDataSource.deleteUser(id.toString()) }
     }
 }

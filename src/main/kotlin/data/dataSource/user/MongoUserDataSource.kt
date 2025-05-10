@@ -6,7 +6,6 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.UserDto
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
-import java.util.*
 
 class MongoUserDataSource(
     private val userCollection: MongoCollection<UserDto>
@@ -20,7 +19,7 @@ class MongoUserDataSource(
         }
     }
 
-    override suspend fun getUserById(id: UUID): UserDto? {
+    override suspend fun getUserById(id: String): UserDto? {
         return userCollection
             .find(
                 Filters.eq(UserDto::id.name, id)
@@ -34,7 +33,7 @@ class MongoUserDataSource(
             ).firstOrNull()
     }
 
-    override suspend fun deleteUser(id: UUID): Boolean {
+    override suspend fun deleteUser(id: String): Boolean {
         val acknowledged = userCollection
             .deleteOne(Filters.eq(UserDto::id.name, id))
             .wasAcknowledged()

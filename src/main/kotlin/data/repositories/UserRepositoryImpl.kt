@@ -21,11 +21,11 @@ class UserRepositoryImpl(
     }
 
     override suspend fun deleteUser(user: User): Boolean {
-        return userDataSource.deleteUser(user.id)
+        return userDataSource.deleteUser(user.id.toString())
     }
 
     override suspend fun getUserById(id: UUID): User? {
-        return userDataSource.getUserById(id)?.let {
+        return userDataSource.getUserById(id.toString())?.let {
             userMapper.toEntity(it)
         }
     }
