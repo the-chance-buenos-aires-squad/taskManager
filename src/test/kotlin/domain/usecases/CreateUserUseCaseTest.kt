@@ -6,7 +6,7 @@ import domain.customeExceptions.InvalidLengthPasswordException
 import domain.customeExceptions.PasswordEmptyException
 import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -19,7 +19,7 @@ class CreateUserUseCaseTest {
 
     private lateinit var createUserUseCase: CreateUserUseCase
     private val authRepository: AuthRepository = mockk(relaxed = true)
-    private val userValidator = UserValidator()
+    private val userValidator: UserValidator = mockk(relaxed = true)
     private val dummyUser = DummyUser.dummyUserTwo
     private var addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
 
@@ -63,7 +63,8 @@ class CreateUserUseCaseTest {
 
     @Test
     fun `should return throw UserNameEmptyException if userName empty`() = runTest {
-        // when & then
+        coEvery { userValidator.validateUsername(any()) } throws UserNameEmptyException()
+
         assertThrows<UserNameEmptyException> {
             createUserUseCase.addUser("", dummyUser.password, dummyUser.password)
         }
@@ -71,17 +72,46 @@ class CreateUserUseCaseTest {
 
     @Test
     fun `should return throw PasswordEmptyException when password is empty`() = runTest {
-        // when & then
+        coEvery { userValidator.validatePassword(any(), any()) } throws PasswordEmptyException()
+
         assertThrows<PasswordEmptyException> {
             createUserUseCase.addUser(dummyUser.username, "", dummyUser.password)
         }
     }
 
     @Test
+    fun `should return throw PasswordEmptyException when confirm password is empty`() = runTest {
+        coEvery { userValidator.validatePassword(any(), any()) } throws PasswordEmptyException()
+
+        assertThrows<PasswordEmptyException> {
+            createUserUseCase.addUser(dummyUser.username, dummyUser.password, "")
+        }
+    }
+
+    @Test
     fun `should return throw if password length less than 6`() = runTest {
-        // when & then
+        coEvery { userValidator.validatePassword(any(), any()) } throws InvalidLengthPasswordException()
+
         assertThrows<InvalidLengthPasswordException> {
             createUserUseCase.addUser(dummyUser.username, "1234", dummyUser.password)
+        }
+    }
+
+    @Test
+    fun `should return pass if password match confirm password`() = runTest {
+        coEvery { userValidator.validatePassword(any(), any()) } throws InvalidLengthPasswordException()
+
+        assertThrows<InvalidLengthPasswordException> {
+            createUserUseCase.addUser(dummyUser.username, "1234", dummyUser.password)
+        }
+    }
+
+    @Test
+    fun `should return throw CreateUserException if user don't exist`() = runTest {
+        coEvery { authRepository.addUser(any(), any()) } throws CreateUserException()
+
+        assertThrows<CreateUserException> {
+            authRepository.addUser("", "")
         }
     }
 }

@@ -1,7 +1,8 @@
 package domain.usecases
 
 import domain.entities.Project
-import domain.entities.TaskStateWithTasks
+import domain.entities.Task
+import domain.entities.TaskState
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 
 class GetTasksGroupedByStateUseCase(
@@ -20,4 +21,8 @@ class GetTasksGroupedByStateUseCase(
             )
         }
     }
+    data class TaskStateWithTasks(
+        val state: TaskState,
+        val tasks: List<Task>
+    )
 }
