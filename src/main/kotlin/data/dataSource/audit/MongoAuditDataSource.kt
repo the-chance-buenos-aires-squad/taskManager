@@ -13,6 +13,11 @@ class MongoAuditDataSource(
     }
 
     override suspend fun getAllAudit(): List<AuditDto> {
-        return auditCollection.find().toList()
+        return try {
+            auditCollection.find().toList()
+        } catch (e: Exception) {
+            println(e.message)
+            emptyList()
+        }
     }
 }

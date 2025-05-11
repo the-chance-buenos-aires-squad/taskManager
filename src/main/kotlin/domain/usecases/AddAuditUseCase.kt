@@ -19,7 +19,7 @@ class AddAuditUseCase(
         oldValue: String?,
         newValue: String?,
         userId: String,
-    ): Audit? {
+    ){
         val id = UUID.randomUUID()
         val timeStamp = LocalDateTime.now()
         val newAudit = Audit(
@@ -33,13 +33,11 @@ class AddAuditUseCase(
             userId = userId,
             timestamp = timeStamp
         )
-        val result = auditRepository.addAudit(newAudit)
-
-        return when (result) {
-            true -> newAudit
-            false -> null
+        try {
+            auditRepository.addAudit(newAudit)
+        } catch (e: Exception) {
+            println("Failed to add audit: ${e.message}")
         }
-
     }
 
 }
