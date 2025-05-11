@@ -1,7 +1,6 @@
 package presentation.cli.task
 
 import domain.customeExceptions.NoProjectsFoundException
-import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
@@ -52,7 +51,7 @@ class ViewSwimlanesCLI(
         }
     }
 
-    private fun displaySwimlanes(swimlanes: List<TaskStateWithTasks>) {
+    private fun displaySwimlanes(swimlanes: List<GetTasksGroupedByStateUseCase.TaskStateWithTasks>) {
         uiController.printMessage(TASKS_BY_STATE_MESSAGE)
         swimlanes.forEach { taskState ->
             uiController.printMessage(TITLE_STATE_MESSAGE.format(taskState.state.name))

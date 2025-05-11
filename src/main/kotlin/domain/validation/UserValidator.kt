@@ -1,4 +1,4 @@
-package domain.util
+package domain.validation
 
 import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.InvalidLengthPasswordException

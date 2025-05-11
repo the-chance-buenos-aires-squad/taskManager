@@ -1,7 +1,6 @@
 package presentation.cli.task
 
 import createDummyTaskState
-import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
 import dummyData.createDummyTask
@@ -38,7 +37,7 @@ class ViewSwimlanesCLITest {
     )
     private val stateId = UUID.randomUUID()
     private val swimlanes = listOf(
-        TaskStateWithTasks(
+        GetTasksGroupedByStateUseCase.TaskStateWithTasks(
             state = createDummyTaskState(
                 id = stateId,
                 name = "in progress",
@@ -54,7 +53,7 @@ class ViewSwimlanesCLITest {
                 )
             )
         ),
-        TaskStateWithTasks(
+        GetTasksGroupedByStateUseCase.TaskStateWithTasks(
             state = createDummyTaskState(
                 id = UUID.randomUUID(),
                 name = "Done",

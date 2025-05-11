@@ -3,7 +3,7 @@ package domain.usecases
 import domain.customeExceptions.InvalidCredentialsException
 import domain.entities.User
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 
 class AuthenticationUseCase(
     private val authRepository: AuthRepository,
@@ -15,10 +15,7 @@ class AuthenticationUseCase(
         password: String
     ): User {
         userValidator.validateUsername(username)
-        val user = authRepository.login(username, password)
-        if (user == null) {
-            throw InvalidCredentialsException()
-        }
+        val user = authRepository.login(username, password) ?: throw InvalidCredentialsException()
         return user
     }
 }

@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import domain.customeExceptions.InvalidCredentialsException
 import domain.customeExceptions.UserNameEmptyException
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -14,7 +14,7 @@ import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
     private var authRepository: AuthRepository = mockk(relaxed = true)
-    private val userValidator = UserValidator()
+    private val userValidator:UserValidator = mockk(relaxed = true)
     private val authenticationUseCase = AuthenticationUseCase(authRepository, userValidator)
 
     val firstUser = DummyUser.dummyUserOne
@@ -45,7 +45,7 @@ class AuthenticationUseCaseTest {
 
     @Test
     fun `should throw UserNameEmptyException for empty username`() = runTest {
-
+        coEvery { userValidator.validateUsername(any()) } throws UserNameEmptyException()
         //when & then
         assertThrows<UserNameEmptyException> {
             authenticationUseCase.login(" ", "anypass")
@@ -99,5 +99,4 @@ class AuthenticationUseCaseTest {
             authenticationUseCase.login(caseDifferentUsername, firstUser.password)
         }
     }
-
 }

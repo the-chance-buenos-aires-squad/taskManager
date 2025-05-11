@@ -1,6 +1,6 @@
 package di
 
-import domain.util.UserValidator
+import domain.validation.UserValidator
 import org.koin.dsl.module
 
 
