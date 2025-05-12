@@ -1,9 +1,9 @@
 package domain.validation
 
+import data.exceptions.UserNameEmptyException
 import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.InvalidLengthPasswordException
 import domain.customeExceptions.PasswordEmptyException
-import domain.customeExceptions.UserNameEmptyException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
