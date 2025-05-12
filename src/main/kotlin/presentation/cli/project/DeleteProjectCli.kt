@@ -1,33 +1,31 @@
 package presentation.cli.project
 
-import domain.customeExceptions.NoProjectsFoundException
-import domain.customeExceptions.UserEnterInvalidValueException
 import domain.usecases.project.DeleteProjectUseCase
-import domain.usecases.project.GetAllProjectsUseCase
 import presentation.UiController
+import presentation.cli.helper.ProjectCliHelper
 
 class DeleteProjectCli(
-    private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val deleteProjectUseCase: DeleteProjectUseCase,
+    private val projectCliHelper: ProjectCliHelper,
     private val uiController: UiController
 ) {
     suspend fun delete() {
-        val projects = getAllProjectsUseCase.execute()
-
-        uiController.printMessage(" Select a project to delete:")
-        projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1}. ${project.name} - ${project.description}")
+        val projects = projectCliHelper.getProjects().also {
+            if (it.isEmpty()) uiController.printMessage("no projects found")
+        }
+        val selectedProject = projectCliHelper.selectProject(projects).also {
+            if (it == null) {
+                uiController.printMessage("no project was selected")
+                return
+            }
+        }
+        try {
+            deleteProjectUseCase.execute(selectedProject!!.id).also {
+                if (it)uiController.printMessage("Project deleted.")
+            }
+        }catch (e:Exception){
+            uiController.printMessage("error deleting project from:${e.message}")
         }
 
-        if (projects.isEmpty()) throw NoProjectsFoundException()
-
-        uiController.printMessage("Enter project ID To Delete:")
-        val indexInput = uiController.readInput().trim()
-        val index = indexInput.toIntOrNull() ?: throw UserEnterInvalidValueException("Should enter valid value")
-        if (index > projects.size || index <= 0) throw UserEnterInvalidValueException("should enter found id")
-        val selectedProject = projects[index - 1]
-
-        val deleted = deleteProjectUseCase.execute(selectedProject.id)
-        uiController.printMessage(if (deleted) "Project deleted." else "project ID isn't exist.")
     }
 }

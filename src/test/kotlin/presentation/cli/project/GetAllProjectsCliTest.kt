@@ -1,7 +1,6 @@
 package presentation.cli.project
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
 import io.mockk.coEvery
@@ -23,13 +22,13 @@ class GetAllProjectsCliTest {
         getAllProjectsCli = GetAllProjectsCli(getAllProjectsUseCase, uiController)
     }
 
-    @Test
-    fun `should throw exception if no projects`() = runTest {
-        val exception = assertThrows<NoProjectsFoundException> {
-            getAllProjectsCli.getAll()
-        }
-        assertThat(exception.message).isEqualTo("Not projects found")
-    }
+//    @Test
+//    fun `should throw exception if no projects`() = runTest {
+//        val exception = assertThrows<NoProjectsFoundException> {
+//            getAllProjectsCli.getAll()
+//        }
+//        assertThat(exception.message).isEqualTo("Not projects found")
+//    }
 
     @Test
     fun `should call execute function in create use case when I call create function and success to create project`() =

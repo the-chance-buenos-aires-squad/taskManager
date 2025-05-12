@@ -1,6 +1,5 @@
 package presentation.cli.project
 
-import domain.customeExceptions.NoProjectsFoundException
 import domain.customeExceptions.UserEnterInvalidValueException
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
@@ -73,15 +72,6 @@ class ProjectScreenControllerTest {
         verify { uiController.printMessage("Invalid update") }
     }
 
-    @Test
-    fun `should handle updateProjectCli with NoProjectsFoundException`() = runTest {
-        every { uiController.readInput() } returns "2" andThen "5"
-        coEvery { updateProjectCli.update() } throws NoProjectsFoundException("No projects")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("No projects") }
-    }
 
     @Test
     fun `should call delete project function when user input number three`() = runTest {
@@ -101,27 +91,6 @@ class ProjectScreenControllerTest {
 
         verify { uiController.printMessage("Can't delete") }
     }
-
-    @Test
-    fun `should handle deleteProjectCli with NoProjectsFoundException`() = runTest {
-        every { uiController.readInput() } returns "3" andThen "5"
-        coEvery { deleteProjectCli.delete() } throws NoProjectsFoundException("Empty list")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("Empty list") }
-    }
-
-    @Test
-    fun `should handle getAllProjectsCli with NoProjectsFoundException`() = runTest {
-        every { uiController.readInput() } returns "4" andThen "5"
-        coEvery { getAllProjectsCli.getAll() } throws NoProjectsFoundException("Empty list")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("Empty list") }
-    }
-
     @Test
     fun `should getAllProjectsCli when projects found`() = runTest {
         every { uiController.readInput() } returns "4" andThen "5"

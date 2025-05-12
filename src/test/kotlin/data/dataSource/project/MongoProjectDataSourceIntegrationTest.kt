@@ -74,23 +74,6 @@ class MongoProjectDataSourceIntegrationTest {
     }
 
     @Test
-    fun `should get project by id`() = runTest {
-        // given
-        val findFlow = mockk<FindFlow<ProjectDto>>(relaxed = true)
-        coEvery { projectCollection.find(any<Bson>()) } returns findFlow
-        coEvery { findFlow.collect(any()) } coAnswers {
-            val collector = firstArg<FlowCollector<ProjectDto>>()
-            collector.emit(projectDto)
-        }
-
-        // when
-        val result = mongoDataSource.getProjectById(projectDto._id)
-
-        // then
-        assertThat(result).isEqualTo(projectDto)
-    }
-
-    @Test
     fun `should update project when cal`() = runTest {
         // given
         val updateResult = mockk<UpdateResult>()

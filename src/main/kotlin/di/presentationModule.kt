@@ -30,8 +30,8 @@ val presentationModule = module {
     single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
     single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
     single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
-    single { UpdateProjectCli(getAllProjectsUseCase = get(), updateProjectUseCase = get(), uiController = get()) }
-    single { DeleteProjectCli(getAllProjectsUseCase = get(), deleteProjectUseCase = get(), uiController = get()) }
+    single { UpdateProjectCli( updateProjectUseCase = get(), projectCliHelper = get(), uiController = get()) }
+    single { DeleteProjectCli( deleteProjectUseCase = get(), projectCliHelper = get(), uiController = get()) }
     single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
     single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), get(), get()) }
     single { TaskStateInputHandler(uiController = get()) }

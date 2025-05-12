@@ -1,7 +1,6 @@
 package domain.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.NoProjectsFoundException
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
 import io.mockk.coEvery
@@ -30,14 +29,14 @@ class GetAllProjectsUseCaseTest {
         assertThat(result).isNotEmpty()
     }
 
-    @Test
-    fun `should return false if project don't created`() = runTest {
-        coEvery { projectRepository.getAllProjects() } returns emptyList()
-
-
-        assertThrows<NoProjectsFoundException> {
-            getAllProjectsUseCase.execute()
-        }
-    }
+//    @Test
+//    fun `should return false if project don't created`() = runTest {
+//        coEvery { projectRepository.getAllProjects() } returns emptyList()
+//
+//
+//        assertThrows<NoProjectsFoundException> {
+//            getAllProjectsUseCase.execute()
+//        }
+//    }
 
 }

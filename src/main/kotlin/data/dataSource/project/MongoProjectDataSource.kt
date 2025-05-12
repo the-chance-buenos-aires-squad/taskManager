@@ -20,9 +20,7 @@ class MongoProjectDataSource(
         return projectCollection.deleteOne(Filters.eq(ProjectDto::_id.name, projectId)).wasAcknowledged()
     }
 
-    override suspend fun getProjectById(projectId: String): ProjectDto? {
-        return projectCollection.find(Filters.eq(ProjectDto::_id.name, projectId)).firstOrNull()
-    }
+
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         return projectCollection.updateOne(
