@@ -33,7 +33,7 @@ class UserValidatorTest {
 
     @Test
     fun `should pass when userName is valid`() {
-            validator.validateUsername("ahmed")
+        validator.validateUsername("ahmed")
     }
 
     @Test

@@ -1,6 +1,5 @@
 package presentation.cli
 
-import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits
 import domain.usecases.GetAllAuditUseCase
 import io.mockk.coEvery
@@ -38,15 +37,18 @@ class GetAllAuditsCliTest {
         coVerify { getAllAuditUseCase.getAllAudit() }
     }
 
-
     @Test
-    fun `should display single audit correctly`() {
-        //given
-        val audit = createDummyAudits.dummyTaskCreateAction
-        //when
-        val result = getAllAuditCli.displaySingleAudit(audit)
-        //then
-        assertThat(result)
+    fun `should handle exception and print error message`() = runTest {
+        // Given
+        val errorMessage = "Database error"
+        coEvery { getAllAuditUseCase.getAllAudit() } throws RuntimeException(errorMessage)
+
+        // When
+        getAllAuditCli.displayAllAudits()
+
+        // Then
+        coVerify { uiController.printMessage("error from data source:$errorMessage") }
     }
+
 }
 
