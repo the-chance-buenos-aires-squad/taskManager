@@ -40,7 +40,7 @@ class UpdateProjectCli(
         }
 
         val updatedProject = selectedProject!!.copy(
-            name = name,
+            title = name,
             description = description,
             createdAt = LocalDateTime.now()
         )

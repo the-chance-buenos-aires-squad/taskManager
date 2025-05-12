@@ -72,7 +72,7 @@ class TaskStateRepositoryImplTest {
         val todoState = DummyTaskState.todoDto
         val updatedToDoState = TaskState(UUID.randomUUID(), "In Progress", UUID.randomUUID())
         val updatedStateRow =
-            TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.name, updatedToDoState.projectId.toString())
+            TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.title, updatedToDoState.projectId.toString())
 
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf<TaskStateDto>(todoState)
         coEvery { mockCSVDataSource.editTaskState(updatedStateRow) } returns true

@@ -29,7 +29,7 @@ class MongoProjectDataSourceIntegrationTest {
 
     private val projectDto = ProjectDto(
         _id = UUID.randomUUID().toString(),
-        name = "Test Project",
+        title = "Test Project",
         description = "Integration test project",
         createdAt = LocalDateTime.now().toString()
     )
@@ -90,7 +90,7 @@ class MongoProjectDataSourceIntegrationTest {
         val result = mongoDataSource.updateProject(projectDto)
         val expectedFilter = Filters.eq(ProjectDto::_id.name, projectDto._id)
         val expectedUpdates = Updates.combine(
-            Updates.set(ProjectDto::name.name, projectDto.name),
+            Updates.set(ProjectDto::title.name, projectDto.title),
             Updates.set(ProjectDto::description.name, projectDto.description),
             Updates.set(ProjectDto::createdAt.name, projectDto.createdAt)
         )

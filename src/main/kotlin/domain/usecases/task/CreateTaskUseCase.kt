@@ -19,7 +19,7 @@ class CreateTaskUseCase(
     private val authRepository: AuthRepository
 ) {
 
-    suspend fun createTask(
+    suspend fun execute(
         id: UUID,
         title: String,
         description: String,
@@ -49,7 +49,7 @@ class CreateTaskUseCase(
 
         return taskRepository.addTask(newTask).also { result ->
             if (result) {
-                addAuditUseCase.addAudit(
+                addAuditUseCase.execute(
                     entityId = newTask.id.toString(),
                     entityType = EntityType.TASK,
                     action = ActionType.CREATE,

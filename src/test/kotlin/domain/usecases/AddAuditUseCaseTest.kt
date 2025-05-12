@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
-class AddAuditUseCaseTest {
+class executeUseCaseTest {
 
     private lateinit var addAuditUseCase: AddAuditUseCase
     private val auditDataSource: AuditDataSource = mockk(relaxed = true)
@@ -29,7 +29,7 @@ class AddAuditUseCaseTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         //when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             dummyProjectAudit_CreateAction.entityId,
             dummyProjectAudit_CreateAction.entityType,
             dummyProjectAudit_CreateAction.action,
@@ -58,7 +58,7 @@ class AddAuditUseCaseTest {
         val addAuditUseCase = AddAuditUseCase(auditRepository)
 
         // when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             DummyTaskAuditDto.entityId,
             DummyTaskAuditDto.entityType,
             DummyTaskAuditDto.action,

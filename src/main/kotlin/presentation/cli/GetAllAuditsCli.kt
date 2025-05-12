@@ -23,7 +23,7 @@ class GetAllAuditsCli(
     suspend fun displayAllAudits() {
         displayAuditHeader()
         try {
-            getAllAuditUseCase.getAllAudit().let { audits->
+            getAllAuditUseCase.execute().let { audits->
                 audits.forEach { it.displayRow() }
             }
         }catch (e:Exception){

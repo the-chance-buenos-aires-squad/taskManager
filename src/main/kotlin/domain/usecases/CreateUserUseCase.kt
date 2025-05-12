@@ -22,7 +22,7 @@ class CreateUserUseCase(
         userValidator.validatePassword(password, confirmPassword)
 
         val userAdded = authRepository.addUser(username, password) ?: throw CreateUserException()
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             entityId = userAdded.id.toString(),
             entityType = EntityType.USER,
             action = ActionType.CREATE,

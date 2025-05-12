@@ -20,7 +20,7 @@ class MongoTaskStateDataSource(
         return taskStateCollection.updateOne(
             Filters.eq(TaskStateDto::_id.name, editState._id),
             Updates.combine(
-                Updates.set(TaskStateDto::name.name, editState.name)
+                Updates.set(TaskStateDto::title.name, editState.title)
             )
         ).wasAcknowledged()
     }

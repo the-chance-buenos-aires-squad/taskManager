@@ -12,7 +12,7 @@ fun createDummyProject(
     description: String = "desc",
 ) = Project(
     id = id,
-    name = name,
+    title = name,
     description = description,
     createdAt = LocalDateTime.now()
 )
@@ -24,28 +24,28 @@ object DummyProjects {
 
     val projectDto1 = ProjectDto(
         _id = UUID.randomUUID().toString(),
-        name = "Project Alpha",
+        title = "Project Alpha",
         description = "Test project for Alpha",
         createdAt = now
     )
 
     val projectDto2 = ProjectDto(
         _id = UUID.randomUUID().toString(),
-        name = "Project Beta",
+        title = "Project Beta",
         description = "Test project for Beta",
         createdAt = now
     )
 
     val rawProject1 = listOf(
         projectDto1._id,
-        projectDto1.name,
+        projectDto1.title,
         projectDto1.description,
         projectDto1.createdAt
     )
 
     val rawProject2 = listOf(
         projectDto2._id,
-        projectDto2.name,
+        projectDto2.title,
         projectDto2.description,
         projectDto2.createdAt
     )
@@ -62,7 +62,7 @@ object DummyProjects {
 
     val list = listOf(
         expectedRow._id,
-        expectedRow.name,
+        expectedRow.title,
         expectedRow.description,
         expectedRow.createdAt
     )

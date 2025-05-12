@@ -24,7 +24,7 @@ class MongoProjectDataSource(
         return projectCollection.updateOne(
             filter = Filters.eq(ProjectDto::_id.name, projectDto._id),
             update = Updates.combine(
-                Updates.set(ProjectDto::name.name, projectDto.name),
+                Updates.set(ProjectDto::title.name, projectDto.title),
                 Updates.set(ProjectDto::description.name, projectDto.description),
                 Updates.set(ProjectDto::createdAt.name, projectDto.createdAt)
             )

@@ -9,7 +9,7 @@ class TaskStateDtoMapper : Mapper<TaskState, TaskStateDto> {
     override fun fromEntity(entity: TaskState): TaskStateDto {
         return TaskStateDto(
             _id = entity.id.toString(),
-            name = entity.name,
+            title = entity.title,
             projectId = entity.projectId.toString()
         )
     }
@@ -17,7 +17,7 @@ class TaskStateDtoMapper : Mapper<TaskState, TaskStateDto> {
     override fun toEntity(type: TaskStateDto): TaskState {
         return TaskState(
             id = UUID.fromString(type._id),
-            name = type.name,
+            title = type.title,
             projectId = UUID.fromString(type.projectId)
         )
     }

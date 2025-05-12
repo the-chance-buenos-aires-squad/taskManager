@@ -23,7 +23,7 @@ class TaskStateCSVDataSource(
         return if (index != -1) {
             val editTaskState = TaskStateDto(
                 _id = editState._id,
-                name = editState.name,
+                title = editState.title,
                 projectId = editState.projectId
             )
 

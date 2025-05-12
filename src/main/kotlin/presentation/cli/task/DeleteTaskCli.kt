@@ -41,7 +41,7 @@ class DeleteTaskCli(
 
     private suspend fun handleDeletion(taskId: UUID) {
         try {
-            val success = deleteTaskUseCase.deleteTask(taskId)
+            val success = deleteTaskUseCase.execute(taskId)
             val message = if (success) {
                 "Task deleted successfully."
             } else {

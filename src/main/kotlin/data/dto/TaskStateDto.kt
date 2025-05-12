@@ -8,7 +8,7 @@ data class TaskStateDto(
     @SerialName("_id")
     val _id: String,
 
-    val name: String,
+    val title: String,
 
     @SerialName("project_id")
     val projectId: String,

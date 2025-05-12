@@ -54,7 +54,7 @@ class UpdateProjectCliTest {
         // Assert
         coVerify {
             updateProjectUseCase.execute(withArg { updated ->
-                assertThat(updated.name).isEqualTo("Updated Project")
+                assertThat(updated.title).isEqualTo("Updated Project")
                 assertThat(updated.description).isEqualTo("Updated Description")
             })
         }

@@ -9,18 +9,18 @@ class ProjectDtoMapper : Mapper<Project, ProjectDto> {
     override fun fromEntity(entity: Project): ProjectDto {
         return ProjectDto(
             entity.id.toString(),
-            entity.name,
+            entity.title,
             entity.description,
             entity.createdAt.toString()
         )
     }
 
-    override fun toEntity(row: ProjectDto): Project {
+    override fun toEntity(type: ProjectDto): Project {
         return Project(
-            UUID.fromString(row._id),
-            row.name,
-            row.description,
-            LocalDateTime.parse(row.createdAt)
+            UUID.fromString(type._id),
+            type.title,
+            type.description,
+            LocalDateTime.parse(type.createdAt)
         )
     }
 }

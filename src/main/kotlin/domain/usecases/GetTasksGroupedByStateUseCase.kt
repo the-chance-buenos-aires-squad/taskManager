@@ -3,6 +3,7 @@ package domain.usecases
 import domain.entities.Project
 import domain.entities.Task
 import domain.entities.TaskState
+import domain.usecases.task.GetTasksUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 
 class GetTasksGroupedByStateUseCase(
@@ -10,9 +11,9 @@ class GetTasksGroupedByStateUseCase(
     private val getTaskStatesUseCase: GetAllTaskStatesUseCase
 ) {
 
-    suspend fun getTasksGroupedByState(project: Project): List<TaskStateWithTasks> {
+    suspend fun execute(project: Project): List<TaskStateWithTasks> {
         val allStates = getTaskStatesUseCase.execute(project.id)
-        val allTasks = getTasksUseCase.getTasks().filter { it.projectId == project.id }
+        val allTasks = getTasksUseCase.execute().filter { it.projectId == project.id }
 
         return allStates.map { state ->
             TaskStateWithTasks(

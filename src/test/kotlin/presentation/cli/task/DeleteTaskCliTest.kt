@@ -36,12 +36,12 @@ class DeleteTaskCliTest {
     fun `should delete task when valid input and confirmation given`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1, task2)
         coEvery { uiController.readInput() } returns "2" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task2.id) } returns true
+        coEvery { deleteTaskUseCase.execute(task2.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
         coVerify { uiController.printMessage("Task deleted successfully.") }
-        coVerify { deleteTaskUseCase.deleteTask(task2.id) }
+        coVerify { deleteTaskUseCase.execute(task2.id) }
     }
 
     @Test
@@ -51,7 +51,7 @@ class DeleteTaskCliTest {
 
         deleteTaskCli.delete(projectId)
 
-        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify(exactly = 0) { deleteTaskUseCase.execute(any()) }
         coVerify { uiController.printMessage("Deletion canceled. Returning to dashboard.") }
     }
 
@@ -59,11 +59,11 @@ class DeleteTaskCliTest {
     fun `should handle invalid index and retry once`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
         coEvery { uiController.readInput() } returns "999" andThen "1" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
+        coEvery { deleteTaskUseCase.execute(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { deleteTaskUseCase.execute(task1.id) }
         coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
@@ -75,18 +75,18 @@ class DeleteTaskCliTest {
 
         coVerify { uiController.printMessage("No tasks found for this project.") }
         coVerify(exactly = 0) { uiController.readInput() }
-        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify(exactly = 0) { deleteTaskUseCase.execute(any()) }
     }
 
     @Test
     fun `should handle confirmation with invalid then valid response`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
         coEvery { uiController.readInput() } returns "1" andThen "maybe" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
+        coEvery { deleteTaskUseCase.execute(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { deleteTaskUseCase.execute(task1.id) }
         coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
@@ -94,7 +94,7 @@ class DeleteTaskCliTest {
     fun `should handle UserNotLoggedInException`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
         coEvery { uiController.readInput() } returns "1" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task1.id) } throws UserNotLoggedInException("Operation not allowed: User is not logged in.")
+        coEvery { deleteTaskUseCase.execute(task1.id) } throws UserNotLoggedInException("Operation not allowed: User is not logged in.")
 
         deleteTaskCli.delete(projectId)
 
@@ -109,7 +109,7 @@ class DeleteTaskCliTest {
         deleteTaskCli.delete(projectId)
 
         coVerify { uiController.printMessage("Invalid input. Returning to dashboard.") }
-        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify(exactly = 0) { deleteTaskUseCase.execute(any()) }
     }
 
     @Test
@@ -119,11 +119,11 @@ class DeleteTaskCliTest {
 
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1, taskInOtherProject)
         coEvery { uiController.readInput() } returns "1" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns true
+        coEvery { deleteTaskUseCase.execute(task1.id) } returns true
 
         deleteTaskCli.delete(projectId)
 
-        coVerify { deleteTaskUseCase.deleteTask(task1.id) }
+        coVerify { deleteTaskUseCase.execute(task1.id) }
         coVerify { uiController.printMessage("Task deleted successfully.") }
     }
 
@@ -135,14 +135,14 @@ class DeleteTaskCliTest {
         deleteTaskCli.delete(projectId)
 
         coVerify { uiController.printMessage("Invalid confirmation. Returning to dashboard.") }
-        coVerify(exactly = 0) { deleteTaskUseCase.deleteTask(any()) }
+        coVerify(exactly = 0) { deleteTaskUseCase.execute(any()) }
     }
 
     @Test
     fun `should show error message when task deletion fails`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task1)
         coEvery { uiController.readInput() } returns "1" andThen "yes"
-        coEvery { deleteTaskUseCase.deleteTask(task1.id) } returns false
+        coEvery { deleteTaskUseCase.execute(task1.id) } returns false
 
         deleteTaskCli.delete(projectId)
 

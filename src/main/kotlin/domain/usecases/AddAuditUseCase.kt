@@ -11,7 +11,7 @@ class AddAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
 
-    suspend fun addAudit(
+    suspend fun execute(
         entityId: String,
         entityType: EntityType?,
         action: ActionType?,

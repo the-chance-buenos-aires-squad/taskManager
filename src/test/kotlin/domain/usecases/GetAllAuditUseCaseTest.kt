@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class GetAllAuditUseCaseTest {
+class executeUseCaseTest {
     private lateinit var getAllAuditUseCase: GetAllAuditUseCase
     private val mockedAuditRepositoryImpl: AuditRepositoryImpl = mockk(relaxed = true)
 
@@ -21,9 +21,9 @@ class GetAllAuditUseCaseTest {
     @Test
     fun `should return empty list when no audits exist in data source`() = runTest {
         //given
-        coEvery { getAllAuditUseCase.getAllAudit() } returns emptyList()
+        coEvery { getAllAuditUseCase.execute() } returns emptyList()
         //when
-        val result = getAllAuditUseCase.getAllAudit()
+        val result = getAllAuditUseCase.execute()
         //then
         assertThat(result).isEmpty()
     }
@@ -38,7 +38,7 @@ class GetAllAuditUseCaseTest {
         )
         coEvery { mockedAuditRepositoryImpl.getAllAudit() } returns expectedAudits
         //when
-        val result = getAllAuditUseCase.getAllAudit()
+        val result = getAllAuditUseCase.execute()
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }

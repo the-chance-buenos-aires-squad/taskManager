@@ -30,7 +30,7 @@ class EditTaskStateCliTest {
     @Test
     fun `should call execute when editing task state succeeds`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
-        every { uiController.readInput() } returnsMany listOf("1", taskState.name)
+        every { uiController.readInput() } returnsMany listOf("1", taskState.title)
         coEvery { editTaskStateUseCase.execute(any()) } returns true
 
         editTaskStateCli.editTaskState(dummyProject.id)
@@ -41,7 +41,7 @@ class EditTaskStateCliTest {
     @Test
     fun `should call execute when editing task state fails`() = runTest {
         coEvery { getAllTaskStatesUseCase.execute(any()) } returns listOf(taskState)
-        every { uiController.readInput() } returnsMany listOf("1", taskState.name)
+        every { uiController.readInput() } returnsMany listOf("1", taskState.title)
         coEvery { editTaskStateUseCase.execute(any()) } returns false
 
         editTaskStateCli.editTaskState(dummyProject.id)

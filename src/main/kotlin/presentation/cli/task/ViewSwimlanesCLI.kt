@@ -27,7 +27,7 @@ class ViewSwimlanesCLI(
                     uiController.printMessage("invalid project")
                     return
                 }
-                val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
+                val swimlanes = getTasksGroupedByStateUseCase.execute(selectedProject)
 
                 displaySwimlanes(swimlanes)
 
@@ -51,7 +51,7 @@ class ViewSwimlanesCLI(
     private fun displaySwimlanes(swimlanes: List<GetTasksGroupedByStateUseCase.TaskStateWithTasks>) {
         uiController.printMessage(TASKS_BY_STATE_MESSAGE)
         swimlanes.forEach { taskState ->
-            uiController.printMessage(TITLE_STATE_MESSAGE.format(taskState.state.name))
+            uiController.printMessage(TITLE_STATE_MESSAGE.format(taskState.state.title))
             if (taskState.tasks.isEmpty()) {
                 uiController.printMessage(NO_TASKS_IN_STATE_MESSAGE)
             } else {

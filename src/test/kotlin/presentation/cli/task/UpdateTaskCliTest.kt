@@ -61,7 +61,7 @@ class UpdateTaskCliTest {
             TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
         } returns task
         coEvery {
-            updateTaskUseCase.updateTask(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
         } returns true
 
         updateTaskCli.update(projectId)
@@ -79,7 +79,7 @@ class UpdateTaskCliTest {
             TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
         } returns task
         coEvery {
-            updateTaskUseCase.updateTask(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
         } returns false
 
         updateTaskCli.update(projectId)
@@ -97,7 +97,7 @@ class UpdateTaskCliTest {
             TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
         } returns task
         coEvery {
-            updateTaskUseCase.updateTask(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
         } throws UserNotLoggedInException("User not logged in")
 
         updateTaskCli.update(projectId)
@@ -113,7 +113,7 @@ class UpdateTaskCliTest {
         updateTaskCli.update(projectId)
 
         coVerify(exactly = 0) { TaskCliUtils.selectTask(any(), any()) }
-        coVerify(exactly = 0) { updateTaskUseCase.updateTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -124,6 +124,6 @@ class UpdateTaskCliTest {
 
         updateTaskCli.update(projectId)
 
-        coVerify(exactly = 0) { updateTaskUseCase.updateTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
     }
 }

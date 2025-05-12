@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskRepository
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class GetTasksUseCaseTest {
+class executeUseCaseTest {
 
     private lateinit var getTasksUseCase: GetTasksUseCase
     private var taskRepository: TaskRepository = mockk()
@@ -32,7 +32,7 @@ class GetTasksUseCaseTest {
         coEvery { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
 
         //when
-        val result = getTasksUseCase.getTasks()
+        val result = getTasksUseCase.execute()
 
         //then
         assertThat(result).isNotEmpty()
@@ -44,7 +44,7 @@ class GetTasksUseCaseTest {
         coEvery { taskRepository.getAllTasks() } returns emptyList()
 
         //when
-        val result = getTasksUseCase.getTasks()
+        val result = getTasksUseCase.execute()
 
         //then
         assertThat(result).isEmpty()

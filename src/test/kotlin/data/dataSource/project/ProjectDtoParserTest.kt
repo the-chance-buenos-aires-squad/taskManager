@@ -20,7 +20,7 @@ class ProjectDtoParserTest {
 
         val actualList = parser.fromDto(DummyProjects.expectedRow)
 
-        assertThat(DummyProjects.expectedRow.name).isEqualTo(actualList[1])
+        assertThat(DummyProjects.expectedRow.title).isEqualTo(actualList[1])
 
     }
 }

@@ -8,13 +8,13 @@ class TaskStateDtoParser : DtoParser<List<String>, TaskStateDto> {
     override fun toDto(type: List<String>): TaskStateDto {
         return TaskStateDto(
             _id = type[ID_ROW],
-            name = type[TASK_STATE_NAME_ROW],
+            title = type[TASK_STATE_NAME_ROW],
             projectId = type[PROJECT_ID_ROW]
         )
     }
 
     override fun fromDto(dto: TaskStateDto): List<String> {
-        return listOf(dto._id, dto.name, dto.projectId)
+        return listOf(dto._id, dto.title, dto.projectId)
     }
 
     companion object {
