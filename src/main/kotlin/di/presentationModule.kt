@@ -1,5 +1,6 @@
 package di
 
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import presentation.UiController
@@ -20,104 +21,43 @@ import java.util.*
 
 
 val presentationModule = module {
+    // I/O
     single { UiController(System.out, Scanner(System.`in`)) }
 
-    single { ProjectShowMenu(uiController = get()) }
-    single { ProjectCliHelper(getProjectsUseCase = get(), uiController = get()) }
-    single { MateDashBoardCli(uiController = get(), viewSwimlanesCLI = get()) }
-    single { GetAllAuditsCli(getAllAuditUseCase = get(), uiController = get()) }
-    single { EditTaskStateCli(editTaskStateUseCase = get(), uiController = get(), getAllTaskStatesUseCase = get()) }
-    single { GetAllTaskStatesCli(getAllTaskStatesUseCase = get(), uiController = get()) }
-    single { CreateUserCli(uiController = get(), createUserUseCase = get()) }
-    single { CreateProjectCli(createProjectUseCase = get(), uiController = get()) }
-    single { UpdateProjectCli(updateProjectUseCase = get(), projectCliHelper = get(), uiController = get()) }
-    single { DeleteProjectCli(deleteProjectUseCase = get(), projectCliHelper = get(), uiController = get()) }
-    single { GetAllProjectsCli(getAllProjectsUseCase = get(), uiController = get()) }
-    single { DeleteTaskStateCli(deleteTaskStateUseCase = get(), get(), get()) }
-    single { TaskStateInputHandler(uiController = get()) }
-    single {
-        ViewSwimlanesCLI(
-            uiController = get(),
-            projectCliHelper = get(),
-            getTasksGroupedByStateUseCase = get(),
-            createTaskCli = get(),
-            updateTaskCli = get(),
-            deleteTaskCli = get()
-        )
-    }
-    single {
-        AdminDashBoardCli(
-            uiController = get(),
-            createUserCli = get(),
-            projectScreenController = get(),
-            taskStateCliController = get(),
-            auditsCli = get()
-        )
-    }
-    single {
-        CreateTaskCli(
-            createTaskUseCase = get(),
-            getAllStatesUseCase = get(),
-            userRepository = get(),
-            uiController = get(),
-        )
-    }
-    single {
-        DeleteTaskCli(
-            getAllTasksUseCase = get(),
-            deleteTaskUseCase = get(),
-            uiController = get()
-        )
-    }
-    single {
-        UpdateTaskCli(
-            getAllTasksUseCase = get(),
-            updateTaskUseCase = get(),
-            getAllTaskStatesUseCase = get(),
-            userRepository = get(),
-            uiController = get(),
-        )
-    }
+    // Auth
+    singleOf(::LoginCli)
+    factoryOf(::CreateUserCli)
 
+    // Dashboard
+    factoryOf(::AdminDashBoardCli)
+    factoryOf(::MateDashBoardCli)
 
-    single {
-        LoginCli(
-            uiController = get(),
-            authenticationUseCase = get(),
-            adminDashBoardCli = get(),
-            mateDashBoardCli = get()
-        )
-    }
-    single {
-        CreateTaskStateCli(
-            createTaskStateUseCase = get(),
-            uiController = get(),
-            inputHandler = get()
-        )
-    }
+    // Project
+    factoryOf(::ProjectShowMenu)
+    factoryOf(::ProjectCliHelper)
+    factoryOf(::CreateProjectCli)
+    factoryOf(::UpdateProjectCli)
+    factoryOf(::DeleteProjectCli)
+    factoryOf(::GetAllProjectsCli)
+    factoryOf(::ProjectScreenController)
 
-    single {
-        ProjectScreenController(
-            projectShowMenu = get(),
-            createProjectCli = get(),
-            updateProjectCli = get(),
-            deleteProjectCli = get(),
-            getAllProjectsCli = get(),
-            uiController = get()
-        )
-    }
-    single {
-        TaskStateCliController(
-            projectCliHelper = get(),
-            createTaskStateCli = get(),
-            editTaskStateCli = get(),
-            deleteTaskStateCli = get(),
-            getAllTaskStatesCli = get(),
-            uiController = get()
-        )
-    }
+    // Task
+    factoryOf(::CreateTaskCli)
+    factoryOf(::UpdateTaskCli)
+    factoryOf(::DeleteTaskCli)
+    factoryOf(::ViewSwimlanesCLI)
 
+    // Task State
+    factoryOf(::CreateTaskStateCli)
+    factoryOf(::EditTaskStateCli)
+    factoryOf(::DeleteTaskStateCli)
+    factoryOf(::GetAllTaskStatesCli)
+    factoryOf(::TaskStateInputHandler)
+    factoryOf(::TaskStateCliController)
 
+    // Audit
+    factoryOf(::GetAllAuditsCli)
 
-    singleOf(::MainCli)
+    // Entry point
+    factoryOf(::MainCli)
 }

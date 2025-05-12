@@ -5,5 +5,5 @@ import org.koin.dsl.module
 
 
 val domainUtilModule = module {
-    single { UserValidator() }
+    factory { UserValidator() }
 }

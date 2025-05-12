@@ -9,18 +9,18 @@ import data.repositories.mappers.*
 import org.koin.dsl.module
 
 val mapperModule = module {
-    single { AuditDtoMapper() }
-    single { AuditDtoParser() }
+    factory { AuditDtoMapper() }
+    factory { AuditDtoParser() }
 
-    single { ProjectDtoMapper() }
-    single { ProjectDtoParser() }
+    factory { ProjectDtoMapper() }
+    factory { ProjectDtoParser() }
 
-    single { TaskStateDtoMapper() }
-    single { TaskStateDtoParser() }
+    factory { TaskStateDtoMapper() }
+    factory { TaskStateDtoParser() }
 
-    single { TaskDtoMapper() }
-    single { TaskDtoParser() }
+    factory { TaskDtoMapper() }
+    factory { TaskDtoParser() }
 
-    single { UserDtoMapper() }
-    single { UserDtoParser() }
+    factory { UserDtoMapper() }
+    factory { UserDtoParser() }
 }
