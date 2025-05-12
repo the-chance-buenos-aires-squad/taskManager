@@ -1,14 +1,18 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
+import data.dataSource.dummyData.createDummyAudits.dummyTaskCreateAction
+import data.dummyData.DummyAudits
 import domain.customeExceptions.CreateUserException
 import domain.customeExceptions.InvalidLengthPasswordException
 import domain.customeExceptions.PasswordEmptyException
-import domain.customeExceptions.UserNameEmptyException
+import domain.entities.ActionType
+import domain.entities.EntityType
 import domain.repositories.AuthRepository
 import domain.util.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -17,71 +21,62 @@ import kotlin.test.Test
 
 class CreateUserUseCaseTest {
 
-    private lateinit var createUserUseCase: CreateUserUseCase
-    private val authRepository: AuthRepository = mockk(relaxed = true)
-    private val userValidator = UserValidator()
+
+    private lateinit var useCase: CreateUserUseCase
+    private val authRepo: AuthRepository = mockk()
+    private val userValidator: UserValidator = mockk()
+    private val addAuditUseCase: AddAuditUseCase = mockk()
+
     private val dummyUser = DummyUser.dummyUserTwo
-    private var addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
+    private val currentUser = DummyUser.dummyUserOne
 
     @BeforeEach
     fun setup() {
-        createUserUseCase = CreateUserUseCase(authRepository, userValidator, addAuditUseCase)
+        useCase = CreateUserUseCase(authRepo, userValidator, addAuditUseCase)
+        coEvery { authRepo.getCurrentUser() } returns currentUser
+        coEvery { authRepo.addUser(any(), any()) } returns dummyUser
+        coEvery { addAuditUseCase.addAudit(any(),any(),
+            any(),any(),any(),any(),any()) } returns dummyTaskCreateAction
+    }
+
+
+    @Test
+    fun `should save user when data is valid`() = runTest {
+        // When
+        useCase.addUser("mateUserName", "password", "password")
+
+        // Then
+        coVerify(exactly = 1) {
+            authRepo.addUser(dummyUser.username, "password")
+        }
     }
 
     @Test
-    fun `should create user successfully with valid data`() = runTest {
-        // given
-        coEvery {
-            authRepository.addUser(dummyUser.username, dummyUser.password)
-        } returns dummyUser
+    fun `addUser should returns user when added successfully`() = runTest {
+        // When
+        val result = useCase.addUser(dummyUser.username, "password", "password")
 
-        // when
-        val result = createUserUseCase.addUser(
-            dummyUser.username,
-            dummyUser.password,
-            dummyUser.password
-        )
-
-        // then
+        // Then
         assertThat(result).isEqualTo(dummyUser)
     }
 
-    @Test
-    fun `should return throw CreateUserException when Failed to create user`() = runTest {
-        // given
-        coEvery { authRepository.addUser(any(), any()) } returns null
 
-        // when & then
-        assertThrows<CreateUserException> {
-            createUserUseCase.addUser(
-                dummyUser.username,
-                dummyUser.password,
-                dummyUser.password
+    @Test
+    fun `should create audit when user is created successfully`() = runTest {
+        // When
+        useCase.addUser(dummyUser.username, "password", "password")
+
+        // Then
+        coVerify(exactly = 1) {
+            addAuditUseCase.addAudit(
+                entityId = dummyUser.id.toString(),
+                entityType = EntityType.USER,
+                action = ActionType.CREATE,
+                field = "create new user",
+                oldValue = null,
+                newValue = "creating user:${dummyUser.username}",
+                userId = currentUser.id.toString()
             )
-        }
-    }
-
-    @Test
-    fun `should return throw UserNameEmptyException if userName empty`() = runTest {
-        // when & then
-        assertThrows<UserNameEmptyException> {
-            createUserUseCase.addUser("", dummyUser.password, dummyUser.password)
-        }
-    }
-
-    @Test
-    fun `should return throw PasswordEmptyException when password is empty`() = runTest {
-        // when & then
-        assertThrows<PasswordEmptyException> {
-            createUserUseCase.addUser(dummyUser.username, "", dummyUser.password)
-        }
-    }
-
-    @Test
-    fun `should return throw if password length less than 6`() = runTest {
-        // when & then
-        assertThrows<InvalidLengthPasswordException> {
-            createUserUseCase.addUser(dummyUser.username, "1234", dummyUser.password)
         }
     }
 }

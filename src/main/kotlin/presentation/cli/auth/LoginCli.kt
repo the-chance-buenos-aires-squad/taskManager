@@ -23,10 +23,11 @@ class LoginCli(
 
         uiController.printMessage("Username: ")
         val username = uiController.readInput().trim()
-
+        //todo handel if Username is empty
         uiController.printMessage("Password: ")
         val password = uiController.readInput().trim()
-
+        //todo handel if password is empty
+        //we can use validator class
         try {
             val validUser = authenticationUseCase.login(username, password)
             uiController.printMessage("\nWelcome ${validUser.username}!")

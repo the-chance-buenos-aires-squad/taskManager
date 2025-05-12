@@ -1,6 +1,5 @@
 package domain.usecases
 
-import domain.customeExceptions.InvalidCredentialsException
 import domain.entities.User
 import domain.repositories.AuthRepository
 import domain.util.UserValidator
@@ -14,11 +13,9 @@ class AuthenticationUseCase(
         username: String,
         password: String
     ): User {
-        userValidator.validateUsername(username)
+        //userValidator.validateUsername(username)
+        //todo handle uer input form cli
         val user = authRepository.login(username, password)
-        if (user == null) {
-            throw InvalidCredentialsException()
-        }
         return user
     }
 }

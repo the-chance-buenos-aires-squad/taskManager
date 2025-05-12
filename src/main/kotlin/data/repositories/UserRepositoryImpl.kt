@@ -1,19 +1,44 @@
 package data.repositories
 
+import data.dataSource.util.PasswordHash
+import data.dto.UserDto
+import data.exceptions.FailedUserSaveException
+import data.exceptions.InvalidCredentialsException
+import data.exceptions.UserNameAlreadyExistException
 import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.UserRepository
+import java.time.LocalDateTime
 import java.util.*
+
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
-    private val userMapper: UserDtoMapper
+    private val userMapper: UserDtoMapper,
+    private val md5Hash : PasswordHash
 ) : UserRepository {
 
 
-    override suspend fun addUser(user: User): Boolean {
-        return userDataSource.addUser(userMapper.fromEntity(user))
+    override suspend fun addUser(userName: String, password: String): User {
+        val userDto = this.getUserByUserName(userName)
+        if (userDto != null) throw UserNameAlreadyExistException()
+
+        val newUser = UserDto(
+            id = UUID.randomUUID().toString(),
+            username = userName.trim(),
+            password = md5Hash.hash(password),
+            role = UserRole.MATE,
+            createdAt = LocalDateTime.now().toString()
+        )
+
+        if (!userDataSource.addUser(newUser)) {
+            throw FailedUserSaveException()
+        }
+
+        return userMapper.toEntity(newUser)
+
     }
 
     override suspend fun updateUser(user: User): Boolean {
@@ -39,6 +64,16 @@ class UserRepositoryImpl(
         return usersRows.map { userRow ->
             userMapper.toEntity(userRow)
         }
+    }
+
+    override suspend fun loginUser(userName: String, password: String) : User {
+        val userDto = userDataSource.getUserByUserName(userName)
+        if (userDto == null) throw InvalidCredentialsException()
+
+        val hashInput =  md5Hash.hash(password)
+        if (userDto.password != hashInput) throw InvalidCredentialsException()
+
+        return userMapper.toEntity(userDto)
     }
 
 

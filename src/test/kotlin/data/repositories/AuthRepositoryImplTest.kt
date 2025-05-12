@@ -2,179 +2,85 @@ package data.repositories
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.PasswordHash
+import domain.entities.User
+import domain.entities.UserRole
 import domain.repositories.UserRepository
 import dummyData.DummyUser
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.UUID
 import kotlin.test.Test
 
 class AuthRepositoryImplTest {
 
-    private lateinit var authRepository: AuthRepositoryImpl
-    private var userRepository: UserRepository = mockk(relaxed = true)
-    private var mD5Hasher: PasswordHash = mockk()
 
-    private val testAdminUser = DummyUser.dummyUserOne
-    private val testMateUser = DummyUser.dummyUserTwo
+    private lateinit var authRepository: AuthRepositoryImpl
+    private val userRepository: UserRepository = mockk()
 
     @BeforeEach
     fun setup() {
-        authRepository = AuthRepositoryImpl(userRepository, mD5Hasher)
+        authRepository = AuthRepositoryImpl(userRepository)
     }
 
     @Test
-    fun `should return user success when logging in with valid credentials`() = runTest {
+    fun `should return user when login succeeds`() = runTest {
         // given
-        val username = testAdminUser.username
-        val password = testAdminUser.password
-        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
-        every { mD5Hasher.hash(password) } returns testAdminUser.password
+        coEvery { userRepository.loginUser(adminUser.username, any()) } returns adminUser
 
         // when
-        val result = authRepository.login(username, password)
+        val result = authRepository.login(adminUser.username, "any")
 
         // then
-        assertThat(result).isEqualTo(testAdminUser)
+        assertThat(result).isEqualTo(adminUser)
     }
 
     @Test
-    fun `should return null when user name not found`() = runTest {
+    fun `should set current user after successful login`() = runTest {
         // given
-        val username = testAdminUser.username
-        val password = testAdminUser.password
-        coEvery { userRepository.getUserByUserName(username) } returns null
-        every { mD5Hasher.hash(password) } returns testAdminUser.password
+        coEvery { userRepository.loginUser(any(), any()) } returns adminUser
 
         // when
-        val result = authRepository.login(username, password)
+        authRepository.login(adminUser.username, "any")
 
         // then
-        assertThat(result).isNull()
+        assertThat(authRepository.getCurrentUser()).isEqualTo(adminUser)
     }
 
     @Test
-    fun `should return null when password not match`() = runTest {
+    fun `should return new user when adding user`() = runTest {
         // given
-        val username = testAdminUser.username
-        val password = testAdminUser.password
-        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
-        every { mD5Hasher.hash(password) } returns "wrong password"
+        coEvery { userRepository.addUser(any(), any()) } returns normalUser
 
         // when
-        val result = authRepository.login(username, password)
+        val result = authRepository.addUser("new", "pass")
 
         // then
-        assertThat(result).isNull()
+        assertThat(result).isEqualTo(normalUser)
     }
 
     @Test
-    fun `should set current user when logging in with valid credentials`() = runTest {
+    fun `should not change current user when adding new user`() = runTest {
         // given
-        val username = testAdminUser.username
-        val password = testAdminUser.password
-        coEvery { userRepository.getUserByUserName(username) } returns testAdminUser
-        every { mD5Hasher.hash(password) } returns testAdminUser.password
+        coEvery { userRepository.addUser(any(), any()) } returns normalUser
 
         // when
-        authRepository.login(username, password)
+        authRepository.addUser("new", "pass")
 
         // then
-        assertThat(authRepository.getCurrentUser()).isEqualTo(testAdminUser)
+        assertThat(authRepository.getCurrentUser()).isNull()
     }
 
     @Test
-    fun `should return new user when adding user with admin logged in`() = runTest {
+    fun `should clear current user after logout`() = runTest {
         // given
-        coEvery { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
-        every { mD5Hasher.hash(testAdminUser.password) } returns testAdminUser.password
-        authRepository.login(testAdminUser.username, testAdminUser.password)
-
-        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns null
-        every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-        coEvery { userRepository.addUser(testMateUser) } returns true
-
-        // when
-        val result = authRepository.addUser(testMateUser.username, testMateUser.password)
-
-        // then
-        assertThat(result?.username).isEqualTo(testMateUser.username)
-    }
-
-    @Test
-    fun `should return null when adding user without login`() = runTest {
-        // given
-        authRepository.logout()
-
-        // when
-        val result = authRepository.addUser("anyUser", "anyPass")
-
-        // then
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should return null when mate user tries to add user`() = runTest {
-        // given
-        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
-        every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-        authRepository.login(testMateUser.username, testMateUser.password)
-
-        // when
-        val result = authRepository.addUser(testMateUser.username, testMateUser.password)
-
-        // then
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should return null when username already exists`() = runTest {
-        // given
-
-        coEvery { userRepository.getUserByUserName(testAdminUser.username) } returns testAdminUser
-        every { mD5Hasher.hash(testAdminUser.password) } returns testAdminUser.password
-        authRepository.login(testAdminUser.username, testAdminUser.password)
-
-        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
-        every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-
-        // when
-        val result = authRepository.addUser(testMateUser.username, testMateUser.password)
-
-        // then
-        assertThat(result).isNull()
-    }
-
-
-    @Test
-    fun `should update current user when logging in with new user`() = runTest {
-        // given
-        val firstUserLoggedIn = testAdminUser
-        val newUserLoggedIn = testMateUser
-
-        coEvery { userRepository.getUserByUserName(firstUserLoggedIn.username) } returns firstUserLoggedIn
-        every { mD5Hasher.hash(firstUserLoggedIn.password) } returns firstUserLoggedIn.password
-        authRepository.login(firstUserLoggedIn.username, firstUserLoggedIn.password)
-        authRepository.logout()
-
-        coEvery { userRepository.getUserByUserName(newUserLoggedIn.username) } returns newUserLoggedIn
-        every { mD5Hasher.hash(newUserLoggedIn.password) } returns newUserLoggedIn.password
-
-        //when
-        authRepository.login(newUserLoggedIn.username, newUserLoggedIn.password)
-
-        // then
-        assertThat(authRepository.getCurrentUser()).isEqualTo(newUserLoggedIn)
-    }
-
-    @Test
-    fun `should clear current user when logging out`() = runTest {
-        // given
-        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
-        every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-        authRepository.login(testMateUser.username, testMateUser.password)
+        coEvery { userRepository.loginUser(any(), any()) } returns adminUser
+        authRepository.login("admin", "pass")
 
         // when
         authRepository.logout()
@@ -183,26 +89,48 @@ class AuthRepositoryImplTest {
         assertThat(authRepository.getCurrentUser()).isNull()
     }
 
-
     @Test
-    fun `should return current user when logged in`() = runTest {
-        // given
-        coEvery { userRepository.getUserByUserName(testMateUser.username) } returns testMateUser
-        every { mD5Hasher.hash(testMateUser.password) } returns testMateUser.password
-        authRepository.login(testMateUser.username, testMateUser.password)
-
+    fun `should return null when no user logged in`() = runTest {
         // when
         val result = authRepository.getCurrentUser()
 
         // then
-        assertThat(result).isEqualTo(testMateUser)
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `should return null when no user is logged in`() = runTest {
-        // when & then
+    fun `should update current user on subsequent logins`() = runTest {
+        // given
+        coEvery { userRepository.loginUser("admin", any()) } returns adminUser
+        coEvery { userRepository.loginUser("mate", any()) } returns normalUser
+
+        // when & then 1
+        authRepository.login("admin", "admin1")
+        assertThat(authRepository.getCurrentUser()).isEqualTo(adminUser)
+
+        // when & then 2
+        authRepository.logout()
         assertThat(authRepository.getCurrentUser()).isNull()
+
+        // when & then 3
+        authRepository.login("mate", "mateEe1")
+        assertThat(authRepository.getCurrentUser()).isEqualTo(normalUser)
     }
 
+
+
+    private val adminUser = User(
+        id = UUID.fromString("00000000-0000-0000-0000-000000000001"),
+        username = "admin",
+        role = UserRole.ADMIN,
+        createdAt = LocalDateTime.now()
+    )
+
+    private val normalUser = User(
+        id = UUID.fromString("00000000-0000-0000-0000-000000000002"),
+        username = "mate",
+        role = UserRole.MATE,
+        createdAt = LocalDateTime.now()
+    )
 
 }

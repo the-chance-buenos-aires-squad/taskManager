@@ -18,10 +18,10 @@ class CreateUserUseCase(
         password: String,
         confirmPassword: String,
     ): User {
-        userValidator.validateUsername(username)
-        userValidator.validatePassword(password, confirmPassword)
+        /*userValidator.validateUsername(username)
+        userValidator.validatePassword(password, confirmPassword)*/
 
-        val userAdded = authRepository.addUser(username, password) ?: throw CreateUserException()
+        val userAdded = authRepository.addUser(username, password)
         addAuditUseCase.addAudit(
             entityId = userAdded.id.toString(),
             entityType = EntityType.USER,

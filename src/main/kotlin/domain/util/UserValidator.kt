@@ -1,21 +1,23 @@
 package domain.util
 
+import data.exceptions.UserNameEmptyException
 import domain.customeExceptions.InvalidConfirmPasswordException
 import domain.customeExceptions.InvalidLengthPasswordException
 import domain.customeExceptions.PasswordEmptyException
-import domain.customeExceptions.UserNameEmptyException
 
 class UserValidator {
 
-    fun validateUsername(username: String) {
+    //todo move it to Cli and use UIcontroller  to print user input error message
+
+/*    fun validateUsername(username: String) {
         if (username.isBlank()) throw UserNameEmptyException()
-    }
+    }*/
 
-    private fun isPasswordEmpty(password: String) {
+   /* private fun isPasswordEmpty(password: String) {
         if (password.isBlank()) throw PasswordEmptyException()
-    }
+    }*/
 
-    fun validatePassword(password: String, confirmPassword: String) {
+   /* fun validatePassword(password: String, confirmPassword: String) {
 
         isPasswordEmpty(password)
         isPasswordEmpty(confirmPassword)
@@ -24,6 +26,6 @@ class UserValidator {
 
         if (password != confirmPassword) throw InvalidConfirmPasswordException()
 
-    }
+    }*/
 
 }
