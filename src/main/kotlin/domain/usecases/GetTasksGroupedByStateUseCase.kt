@@ -21,6 +21,7 @@ class GetTasksGroupedByStateUseCase(
             )
         }
     }
+
     data class TaskStateWithTasks(
         val state: TaskState,
         val tasks: List<Task>

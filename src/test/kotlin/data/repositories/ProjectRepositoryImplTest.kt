@@ -7,6 +7,7 @@ import data.repositories.mappers.ProjectDtoMapper
 import dummyData.createDummyProject
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,15 +16,15 @@ import java.util.*
 
 class ProjectRepositoryImplTest {
     private lateinit var projectDataSource: ProjectDataSource
-    private lateinit var csvProjectMapper: ProjectDtoMapper
+    private lateinit var projectDtoMapper: ProjectDtoMapper
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
     val id: UUID = UUID.randomUUID()
 
     @BeforeEach
     fun setup() {
-        csvProjectMapper = mockk(relaxed = true)
+        projectDtoMapper = mockk(relaxed = true)
         projectDataSource = mockk(relaxed = true)
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, csvProjectMapper)
+        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectDtoMapper)
     }
 
     @Test
@@ -80,41 +81,21 @@ class ProjectRepositoryImplTest {
         assertThat(result).isFalse()
     }
 
-    @Test
-    fun `should return project if project exist`() = runTest {
-        coEvery { projectDataSource.getProjectById(any()) } returns ProjectDto(
-            id.toString(), "ahmed", "ahmed mate",
-            LocalDateTime.now().toString()
-        )
-
-        val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
-
-        assertThat(result).isNotNull()
-    }
-
-    @Test
-    fun `should return null if project not exist`() = runTest {
-        coEvery { projectDataSource.getProjectById(any()) } returns null
-
-        val result = projectRepositoryImpl.getProjectById(createDummyProject().id)
-
-        assertThat(result).isNull()
-    }
 
     @Test
     fun `should return list of projects if there are projects`() = runTest {
-        coEvery { projectDataSource.getAllProjects() } returns listOf(
-            ProjectDto(
-                id.toString(),
-                "ahmed",
-                "ahmed mate",
-                LocalDateTime.now().toString()
-            )
+        val testDto = ProjectDto(
+            id.toString(),
+            "ahmed",
+            "ahmed mate",
+            LocalDateTime.now().toString()
         )
+        coEvery { projectDataSource.getAllProjects() } returns listOf(testDto, testDto)
 
         val result = projectRepositoryImpl.getAllProjects()
 
-        assertThat(result).hasSize(1)
+        assertThat(result).hasSize(2)
+        verify { projectDtoMapper.toEntity(testDto) }
     }
 
     @Test

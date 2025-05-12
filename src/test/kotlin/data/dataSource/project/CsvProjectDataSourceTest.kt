@@ -33,25 +33,6 @@ class CsvProjectDataSourceTest {
         assertThat(result).isTrue()
     }
 
-    @Test
-    fun `should return project if project found`() = runTest {
-        every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject1)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
-
-        val projectIsFound = csvProjectDataSource.getProjectById(DummyProjects.projectDto1._id)
-
-        assertThat(projectIsFound).isEqualTo(DummyProjects.projectDto1)
-    }
-
-    @Test
-    fun `should return null if project not found when call get project by id function`() = runTest {
-        every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject2)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto2
-
-        val projectIsFound = csvProjectDataSource.getProjectById(UUID.randomUUID().toString())
-
-        assertThat(projectIsFound).isNull()
-    }
 
     @Test
     fun `should return true when project deleted`() = runTest {

@@ -14,7 +14,7 @@ import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
     private var authRepository: AuthRepository = mockk(relaxed = true)
-    private val userValidator:UserValidator = mockk(relaxed = true)
+    private val userValidator: UserValidator = mockk(relaxed = true)
     private val authenticationUseCase = AuthenticationUseCase(authRepository, userValidator)
 
     val firstUser = DummyUser.dummyUserOne
