@@ -15,7 +15,7 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-src/main/kotlin/data/resource/application.conf
+src/main/resources/application.conf
 
 ### Eclipse ###
 .apt_generated
