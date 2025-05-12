@@ -11,7 +11,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
-import presentation.cli.helper.ProjectCliHelper.Companion.EXCEPTION_MESSAGE
 import java.util.*
 
 class ProjectCliHelperTest {

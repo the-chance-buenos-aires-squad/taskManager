@@ -84,13 +84,13 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `should return list of projects if there are projects`() = runTest {
-        val testDto =  ProjectDto(
+        val testDto = ProjectDto(
             id.toString(),
             "ahmed",
             "ahmed mate",
             LocalDateTime.now().toString()
         )
-        coEvery { projectDataSource.getAllProjects() } returns listOf(testDto,testDto)
+        coEvery { projectDataSource.getAllProjects() } returns listOf(testDto, testDto)
 
         val result = projectRepositoryImpl.getAllProjects()
 

@@ -21,9 +21,9 @@ class DeleteProjectCli(
         }
         try {
             deleteProjectUseCase.execute(selectedProject!!.id).also {
-                if (it)uiController.printMessage("Project deleted.")
+                if (it) uiController.printMessage("Project deleted.")
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             uiController.printMessage("error deleting project from:${e.message}")
         }
 

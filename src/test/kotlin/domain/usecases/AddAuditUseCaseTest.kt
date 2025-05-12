@@ -52,7 +52,7 @@ class AddAuditUseCaseTest {
         val fakeAuditDataSource = mockk<AuditDataSource>()
         coEvery { fakeAuditDataSource.addAudit(any()) } throws Exception(exceptionMessage)
 
-        val mockedMapper:AuditDtoMapper = mockk()
+        val mockedMapper: AuditDtoMapper = mockk()
         every { mockedMapper.fromEntity(any()) } returns DummyTaskAuditDto
         val auditRepository = AuditRepositoryImpl(fakeAuditDataSource, mockedMapper)
         val addAuditUseCase = AddAuditUseCase(auditRepository)

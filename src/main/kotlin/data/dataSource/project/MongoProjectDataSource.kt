@@ -5,7 +5,6 @@ import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.dto.ProjectDto
 import data.repositories.dataSource.ProjectDataSource
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 
 class MongoProjectDataSource(
@@ -19,7 +18,6 @@ class MongoProjectDataSource(
     override suspend fun deleteProject(projectId: String): Boolean {
         return projectCollection.deleteOne(Filters.eq(ProjectDto::_id.name, projectId)).wasAcknowledged()
     }
-
 
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {

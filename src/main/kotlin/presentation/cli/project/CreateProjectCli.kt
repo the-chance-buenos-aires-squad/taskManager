@@ -29,10 +29,9 @@ class CreateProjectCli(
             createProjectUseCase.execute(project).let {
                 if (it) uiController.printMessage("Project created.")
             }
-        }catch (e:UserEnterInvalidValueException){
+        } catch (e: UserEnterInvalidValueException) {
             uiController.printMessage(e.message.toString())
-        }
-        catch (e:Exception){
+        } catch (e: Exception) {
             uiController.printMessage("Failed to create project.${e.message}")
         }
     }

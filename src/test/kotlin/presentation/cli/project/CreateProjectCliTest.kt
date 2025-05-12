@@ -53,15 +53,14 @@ class CreateProjectCliTest {
         }
 
     @Test
-    fun `should catch UserEnterInvalidValueException from repo and print it message`() = runTest{
+    fun `should catch UserEnterInvalidValueException from repo and print it message`() = runTest {
         //given
-        val mockedRepo:ProjectRepository= mockk()
+        val mockedRepo: ProjectRepository = mockk()
         val mockedUseCase = CreateProjectUseCase(mockedRepo)
-        val mockedCreateProjectCli = CreateProjectCli(mockedUseCase,uiController)
+        val mockedCreateProjectCli = CreateProjectCli(mockedUseCase, uiController)
         val exceptionMessage = "title or description can't be empty"
         coEvery { mockedRepo.createProject(any()) } throws UserEnterInvalidValueException(exceptionMessage)
         every { uiController.readInput() } returns ""
-
 
 
         //when
@@ -74,17 +73,15 @@ class CreateProjectCliTest {
     }
 
     @Test
-    fun `should catch any data source specific exception and print it message`() = runTest{
+    fun `should catch any data source specific exception and print it message`() = runTest {
         //given
         val exceptionMessage = "fail from data source dou to ......."
-        val mockedDataSource:ProjectDataSource = mockk(relaxed = true)
+        val mockedDataSource: ProjectDataSource = mockk(relaxed = true)
         coEvery { mockedDataSource.addProject(any()) } throws Exception(exceptionMessage)
-        every { uiController .readInput()} returnsMany listOf("title","description")
-        val mockedRepo:ProjectRepository= ProjectRepositoryImpl(mockedDataSource, mockk(relaxed = true))
+        every { uiController.readInput() } returnsMany listOf("title", "description")
+        val mockedRepo: ProjectRepository = ProjectRepositoryImpl(mockedDataSource, mockk(relaxed = true))
         val mockedUseCase = CreateProjectUseCase(mockedRepo)
-        val createProjectCli = CreateProjectCli(mockedUseCase,uiController)
-
-
+        val createProjectCli = CreateProjectCli(mockedUseCase, uiController)
 
 
         //when

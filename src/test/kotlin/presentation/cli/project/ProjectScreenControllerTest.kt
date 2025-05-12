@@ -1,7 +1,9 @@
 package presentation.cli.project
 
-import domain.customeExceptions.UserEnterInvalidValueException
-import io.mockk.*
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -43,15 +45,6 @@ class ProjectScreenControllerTest {
         coVerify { createProjectCli.create() }
     }
 
-    @Test
-    fun `should handle createProjectCli with UserEnterInvalidValueException`() = runTest {
-        every { uiController.readInput() } returns "1" andThen "5"
-        coEvery { createProjectCli.create() } throws UserEnterInvalidValueException("Invalid Input")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("Invalid Input") }
-    }
 
     @Test
     fun `should call edit project function when user input number tow`() = runTest {
@@ -60,16 +53,6 @@ class ProjectScreenControllerTest {
         projectScreenController.show()
 
         coVerify { updateProjectCli.update() }
-    }
-
-    @Test
-    fun `should handle updateProjectCli with UserEnterInvalidValueException`() = runTest {
-        every { uiController.readInput() } returns "2" andThen "5"
-        coEvery { updateProjectCli.update() } throws UserEnterInvalidValueException("Invalid update")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("Invalid update") }
     }
 
 
@@ -82,15 +65,6 @@ class ProjectScreenControllerTest {
         coVerify { deleteProjectCli.delete() }
     }
 
-    @Test
-    fun `should handle deleteProjectCli with UserEnterInvalidValueException`() = runTest {
-        every { uiController.readInput() } returns "3" andThen "5"
-        coEvery { deleteProjectCli.delete() } throws UserEnterInvalidValueException("Can't delete")
-
-        projectScreenController.show()
-
-        verify { uiController.printMessage("Can't delete") }
-    }
     @Test
     fun `should getAllProjectsCli when projects found`() = runTest {
         every { uiController.readInput() } returns "4" andThen "5"

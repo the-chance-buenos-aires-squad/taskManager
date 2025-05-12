@@ -19,7 +19,7 @@ class AddAuditUseCase(
         oldValue: String?,
         newValue: String?,
         userId: String,
-    ){
+    ) {
         val id = UUID.randomUUID()
         val timeStamp = LocalDateTime.now()
         val newAudit = Audit(

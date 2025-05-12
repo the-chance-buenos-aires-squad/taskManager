@@ -52,10 +52,12 @@ class UpdateProjectCliTest {
         updateProjectCli.update()
 
         // Assert
-        coVerify { updateProjectUseCase.execute(withArg { updated ->
-            assertThat(updated.name).isEqualTo("Updated Project")
-            assertThat(updated.description).isEqualTo("Updated Description")
-        }) }
+        coVerify {
+            updateProjectUseCase.execute(withArg { updated ->
+                assertThat(updated.name).isEqualTo("Updated Project")
+                assertThat(updated.description).isEqualTo("Updated Description")
+            })
+        }
     }
 
     @Test
@@ -71,7 +73,8 @@ class UpdateProjectCliTest {
 
         // Assert
         coVerify {
-            uiController.printMessage("Error updating project: DB error") }
+            uiController.printMessage("Error updating project: DB error")
+        }
     }
 
 

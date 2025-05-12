@@ -2,7 +2,9 @@ package presentation.cli.project
 
 import domain.usecases.project.DeleteProjectUseCase
 import dummyData.createDummyProject
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +30,7 @@ class DeleteProjectCliTest {
 
     @Test
     fun `should print message if no project is selected`() = runTest {
-        coEvery { projectCliHelper.getProjects() } returns listOf(dummyProject,dummyProject)
+        coEvery { projectCliHelper.getProjects() } returns listOf(dummyProject, dummyProject)
         coEvery { projectCliHelper.selectProject(any()) } returns null
 
         deleteProjectCli.delete()
