@@ -9,7 +9,7 @@ import domain.customeExceptions.PasswordEmptyException
 import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -62,6 +62,15 @@ class CreateUserUseCaseTest {
 
 
     @Test
+    fun `should return throw PasswordEmptyException when confirm password is empty`() = runTest {
+        coEvery { userValidator.validatePassword(any(), any()) } throws PasswordEmptyException()
+
+        assertThrows<PasswordEmptyException> {
+            createUserUseCase.addUser(dummyUser.username, dummyUser.password, "")
+        }
+    }
+
+    @Test
     fun `should create audit when user is created successfully`() = runTest {
         // When
         useCase.addUser(dummyUser.username, "password", "password")
@@ -77,6 +86,24 @@ class CreateUserUseCaseTest {
                 newValue = "creating user:${dummyUser.username}",
                 userId = currentUser.id.toString()
             )
+        }
+    }
+
+    @Test
+    fun `should return pass if password match confirm password`() = runTest {
+        coEvery { userValidator.validatePassword(any(), any()) } throws InvalidLengthPasswordException()
+
+        assertThrows<InvalidLengthPasswordException> {
+            createUserUseCase.addUser(dummyUser.username, "1234", dummyUser.password)
+        }
+    }
+
+    @Test
+    fun `should return throw CreateUserException if user don't exist`() = runTest {
+        coEvery { authRepository.addUser(any(), any()) } throws CreateUserException()
+
+        assertThrows<CreateUserException> {
+            authRepository.addUser("", "")
         }
     }
 }

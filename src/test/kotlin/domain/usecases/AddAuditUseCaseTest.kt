@@ -1,32 +1,35 @@
 package domain.usecases
 
 import com.google.common.truth.Truth.assertThat
-import data.dummyData.DummyAudits
+import data.dummyData.DummyAudits.DummyTaskAuditDto
 import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
 import data.repositories.AuditRepositoryImpl
+import data.repositories.dataSource.AuditDataSource
+import data.repositories.mappers.AuditDtoMapper
 import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 class AddAuditUseCaseTest {
 
     private lateinit var addAuditUseCase: AddAuditUseCase
-    private val auditRepository: AuditRepositoryImpl = mockk(relaxed = true)
-
-
-    @BeforeEach
-    fun setUp() {
-        addAuditUseCase = AddAuditUseCase(auditRepository)
-    }
+    private val auditDataSource: AuditDataSource = mockk(relaxed = true)
+    private lateinit var auditRepository: AuditRepositoryImpl
 
     @Test
-    fun `should return audit object with given info when adding is successful`() = runTest {
+    fun `should call addAudit from repository with given info`() = runTest {
         //given
+        auditRepository = mockk(relaxed = true)
+        addAuditUseCase = AddAuditUseCase(auditRepository)
         coEvery { auditRepository.addAudit(any()) } returns true
 
-        val resultAudit = addAuditUseCase.addAudit(
+        //when
+        addAuditUseCase.addAudit(
             dummyProjectAudit_CreateAction.entityId,
             dummyProjectAudit_CreateAction.entityType,
             dummyProjectAudit_CreateAction.action,
@@ -36,27 +39,38 @@ class AddAuditUseCaseTest {
             dummyProjectAudit_CreateAction.userId
         )
         //then
-        assertThat(resultAudit).isNotNull()
-        assertThat(resultAudit?.entityId).isEqualTo(dummyProjectAudit_CreateAction.entityId)
+        coVerify { auditRepository.addAudit(any()) }
     }
 
     @Test
-    fun `should return null  when adding is unSuccessful`() = runTest {
-        //given
-        coEvery { auditRepository.addAudit(any()) } returns false
+    fun `should  catch exceptions thrown from the dataSource when adding unSuccessful and print it`() = runTest {
+        // given
+        val outputStream = ByteArrayOutputStream()
+        System.setOut(PrintStream(outputStream))
 
-        val resultAudit = addAuditUseCase.addAudit(
-            DummyAudits.dummyProjectAudit_CreateAction.entityId,
-            DummyAudits.dummyProjectAudit_CreateAction.entityType,
-            DummyAudits.dummyProjectAudit_CreateAction.action,
-            DummyAudits.dummyProjectAudit_CreateAction.field,
-            DummyAudits.dummyProjectAudit_CreateAction.oldValue,
-            DummyAudits.dummyProjectAudit_CreateAction.newValue,
-            DummyAudits.dummyProjectAudit_CreateAction.userId
+        val exceptionMessage = "data source specific exception"
+        val fakeAuditDataSource = mockk<AuditDataSource>()
+        coEvery { fakeAuditDataSource.addAudit(any()) } throws Exception(exceptionMessage)
+
+        val mockedMapper: AuditDtoMapper = mockk()
+        every { mockedMapper.fromEntity(any()) } returns DummyTaskAuditDto
+        val auditRepository = AuditRepositoryImpl(fakeAuditDataSource, mockedMapper)
+        val addAuditUseCase = AddAuditUseCase(auditRepository)
+
+        // when
+        addAuditUseCase.addAudit(
+            DummyTaskAuditDto.entityId,
+            DummyTaskAuditDto.entityType,
+            DummyTaskAuditDto.action,
+            DummyTaskAuditDto.field,
+            DummyTaskAuditDto.oldValue,
+            DummyTaskAuditDto.newValue,
+            DummyTaskAuditDto.userId
         )
 
-        //then
-        assertThat(resultAudit).isEqualTo(null)
+        // then
+        val output = outputStream.toString().trim()
+        assertThat(output).contains("Failed to add audit:$exceptionMessage")
     }
 
 

@@ -1,4 +1,4 @@
-package domain.util
+package domain.validation
 
 import data.exceptions.UserNameEmptyException
 import domain.customeExceptions.InvalidConfirmPasswordException

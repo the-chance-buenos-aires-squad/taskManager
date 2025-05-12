@@ -3,7 +3,7 @@ package domain.usecases
 import com.google.common.truth.Truth.assertThat
 import domain.entities.User
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -50,5 +50,30 @@ class AuthenticationUseCaseTest {
 
         // then
         assertThat(result).isEqualTo(testUser)
+    }
+
+    @Test
+    fun `should return user when username has leading or trailing spaces`() = runTest {
+        // Given
+        val usernameWithSpaces = " ${firstUser.username}  "
+        coEvery { authRepository.login(usernameWithSpaces, "adminPassword") } returns firstUser
+
+        // When
+        val result = authenticationUseCase.login(usernameWithSpaces, "adminPassword")
+
+        // Then
+        assertThat(result).isEqualTo(firstUser)
+    }
+
+    @Test
+    fun `should throw InvalidCredentialsException when username case mismatch`() = runTest {
+        // Given
+        val caseDifferentUsername = firstUser.username.lowercase()
+        coEvery { authRepository.login(caseDifferentUsername, firstUser.password) } returns null
+
+        // When & Then
+        assertThrows<InvalidCredentialsException> {
+            authenticationUseCase.login(caseDifferentUsername, firstUser.password)
+        }
     }
 }

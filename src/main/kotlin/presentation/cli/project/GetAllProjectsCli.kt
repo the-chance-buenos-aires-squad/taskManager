@@ -1,6 +1,5 @@
 package presentation.cli.project
 
-import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import presentation.UiController
 
@@ -11,7 +10,6 @@ class GetAllProjectsCli(
     suspend fun getAll() {
         val projects = getAllProjectsUseCase.execute()
 
-        if (projects.isEmpty()) throw NoProjectsFoundException()
 
         uiController.printMessage(" all projects found:")
         projects.forEachIndexed { index, project ->

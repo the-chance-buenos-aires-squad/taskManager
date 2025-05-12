@@ -1,7 +1,6 @@
 package presentation.cli.helper
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
 import io.mockk.coEvery
@@ -12,7 +11,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
-import presentation.cli.helper.ProjectCliHelper.Companion.EXCEPTION_MESSAGE
 import java.util.*
 
 class ProjectCliHelperTest {
@@ -40,16 +38,16 @@ class ProjectCliHelperTest {
         verify(exactly = 0) { uiController.printMessage(any()) }
     }
 
-    @Test
-    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() = runTest {
-        val exceptionMessage = "No projects found"
-        coEvery { getAllProjectsUseCase.execute() } throws NoProjectsFoundException(exceptionMessage)
-
-        val result = projectCliHelper.getProjects()
-
-        assertThat(result).isEmpty()
-        verify { uiController.printMessage(EXCEPTION_MESSAGE.format(exceptionMessage)) }
-    }
+//    @Test
+//    fun `getProjects should returns empty list and prints message on NoProjectsFoundException`() = runTest {
+//        val exceptionMessage = "No projects found"
+//        coEvery { getAllProjectsUseCase.execute() } throws NoProjectsFoundException(exceptionMessage)
+//
+//        val result = projectCliHelper.getProjects()
+//
+//        assertThat(result).isEmpty()
+//        verify { uiController.printMessage(EXCEPTION_MESSAGE.format(exceptionMessage)) }
+//    }
 
     @Test
     fun `selectProject should returns null when project list is empty`() {
@@ -85,9 +83,9 @@ class ProjectCliHelperTest {
             uiController.printMessage("1. Project1 - Desc1")
             uiController.printMessage("2. Project2 - Desc2")
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.EMPTY_INPUT_MESSAGE)
+            uiController.printMessage(ProjectCliHelper.INAVLID_INPUT_MESSAGE)
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.EMPTY_INPUT_MESSAGE)
+            uiController.printMessage(ProjectCliHelper.INAVLID_INPUT_MESSAGE)
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
         }
     }

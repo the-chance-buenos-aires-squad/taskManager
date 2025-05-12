@@ -1,11 +1,9 @@
 package presentation.cli.task
 
-import domain.customeExceptions.NoProjectsFoundException
-import domain.entities.TaskStateWithTasks
 import domain.usecases.GetTasksGroupedByStateUseCase
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
+import presentation.cli.helper.ProjectCliHelper.Companion.INAVLID_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 
 class ViewSwimlanesCLI(
@@ -40,19 +38,17 @@ class ViewSwimlanesCLI(
                     2 -> updateTaskCli.update(selectedProject.id)
                     3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return
-                    null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
+                    null -> uiController.printMessage(INAVLID_INPUT_MESSAGE)
                     else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
                 }
 
-            } catch (ex: NoProjectsFoundException) {
-                uiController.printMessage(NO_PROJECT_ERROR_MESSAGE.format(ex.message))
             } catch (ex: Exception) {
                 uiController.printMessage(EXCEPTION_ERROR_MESSAGE.format(ex.message))
             }
         }
     }
 
-    private fun displaySwimlanes(swimlanes: List<TaskStateWithTasks>) {
+    private fun displaySwimlanes(swimlanes: List<GetTasksGroupedByStateUseCase.TaskStateWithTasks>) {
         uiController.printMessage(TASKS_BY_STATE_MESSAGE)
         swimlanes.forEach { taskState ->
             uiController.printMessage(TITLE_STATE_MESSAGE.format(taskState.state.name))

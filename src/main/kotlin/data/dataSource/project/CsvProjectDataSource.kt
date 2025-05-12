@@ -26,9 +26,6 @@ class CsvProjectDataSource(
         return true
     }
 
-    override suspend fun getProjectById(projectId: String): ProjectDto? {
-        return getAllProjects().find { it._id == projectId }
-    }
 
     override suspend fun updateProject(projectDto: ProjectDto): Boolean {
         val all = getAllProjects()

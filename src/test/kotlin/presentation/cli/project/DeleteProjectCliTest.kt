@@ -1,101 +1,72 @@
 package presentation.cli.project
 
-import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.NoProjectsFoundException
-import domain.customeExceptions.UserEnterInvalidValueException
 import domain.usecases.project.DeleteProjectUseCase
-import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
 import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
-import java.time.LocalDateTime
-import java.util.*
+import presentation.cli.helper.ProjectCliHelper
 
 class DeleteProjectCliTest {
-    private val deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
-    private val uiController: UiController = mockk(relaxed = true)
-    private lateinit var deleteProjectCli: DeleteProjectCli
-    private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
 
-    val id: UUID = UUID.randomUUID()
-    val project = listOf(id.toString(), "ahmed", "ahmed mohamed egypt", LocalDateTime.now().toString())
-    private val project2 =
-        listOf("", "ahmed mohamed egypt", LocalDateTime.now().toString())
+    private lateinit var deleteProjectUseCase: DeleteProjectUseCase
+    private lateinit var projectCliHelper: ProjectCliHelper
+    private lateinit var uiController: UiController
+    private lateinit var deleteProjectCli: DeleteProjectCli
+    private val dummyProject = createDummyProject(name = "Test Project", description = "Test Description")
+
 
     @BeforeEach
     fun setup() {
-        deleteProjectCli = DeleteProjectCli(getAllProjectsUseCase, deleteProjectUseCase, uiController)
+        deleteProjectUseCase = mockk()
+        projectCliHelper = mockk()
+        uiController = mockk(relaxed = true)
+        deleteProjectCli = DeleteProjectCli(deleteProjectUseCase, projectCliHelper, uiController)
     }
 
     @Test
-    fun `should throw exception if no projects`() = runTest {
-        val exception = assertThrows<NoProjectsFoundException> {
-            deleteProjectCli.delete()
-        }
-        assertThat(exception.message).isEqualTo("Not projects found")
+    fun `should print message if no project is selected`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(dummyProject, dummyProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns null
+
+        deleteProjectCli.delete()
+
+        verify { uiController.printMessage("no project was selected") }
     }
 
     @Test
-    fun `should throw exception if user input is null`() = runTest {
-        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-        every { uiController.readInput() } returnsMany project2
+    fun `should print success message if project deleted`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(dummyProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns dummyProject
+        coEvery { deleteProjectUseCase.execute(dummyProject.id) } returns true
 
-        val exception = assertThrows<UserEnterInvalidValueException> {
-            deleteProjectCli.delete()
-        }
-        assertThat(exception.message).isEqualTo("Should enter valid value")
+        deleteProjectCli.delete()
+
+        verify { uiController.printMessage("Project deleted.") }
     }
 
     @Test
-    fun `should throw exception if user input is zero`() = runTest {
-        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
-        every { uiController.readInput() } returns "0"
+    fun `should print error message if exception is thrown`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns listOf(dummyProject)
+        coEvery { projectCliHelper.selectProject(any()) } returns dummyProject
+        coEvery { deleteProjectUseCase.execute(dummyProject.id) } throws RuntimeException("DB error")
 
-        val exception = assertThrows<UserEnterInvalidValueException> {
-            deleteProjectCli.delete()
-        }
-        assertThat(exception.message).isEqualTo("should enter found id")
+        deleteProjectCli.delete()
+
+        verify { uiController.printMessage(match { it.contains("error deleting project from:DB error") }) }
     }
 
     @Test
-    fun `should throw exception if user input greater than number of projects`() = runTest {
-        coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject(), createDummyProject())
-        every { uiController.readInput() } returns "3"
+    fun `should print message if no projects found`() = runTest {
+        coEvery { projectCliHelper.getProjects() } returns emptyList()
+        coEvery { projectCliHelper.selectProject(emptyList()) } returns null
 
-        val exception = assertThrows<UserEnterInvalidValueException> {
-            deleteProjectCli.delete()
-        }
-        assertThat(exception.message).isEqualTo("should enter found id")
+        deleteProjectCli.delete()
+
+        verify { uiController.printMessage("no projects found") }
     }
-
-    @Test
-    fun `should call execute function in create use case when I call create function and success to create project`() =
-        runTest {
-            coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-            every { uiController.readInput() } returns "1"
-            coEvery { deleteProjectUseCase.execute(any()) } returns true
-
-            deleteProjectCli.delete()
-
-            coVerify { deleteProjectUseCase.execute(any()) }
-        }
-
-    @Test
-    fun `should call execute function in create use case when I call create function but failed to create project`() =
-        runTest {
-            coEvery { getAllProjectsUseCase.execute() } returns listOf(createDummyProject())
-            every { uiController.readInput() } returns "1"
-            coEvery { deleteProjectUseCase.execute(any()) } returns false
-
-            deleteProjectCli.delete()
-
-            coVerify { deleteProjectUseCase.execute(any()) }
-        }
 }

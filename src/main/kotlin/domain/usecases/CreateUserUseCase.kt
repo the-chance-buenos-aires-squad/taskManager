@@ -5,7 +5,7 @@ import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.entities.User
 import domain.repositories.AuthRepository
-import domain.util.UserValidator
+import domain.validation.UserValidator
 
 class CreateUserUseCase(
     private val authRepository: AuthRepository,
