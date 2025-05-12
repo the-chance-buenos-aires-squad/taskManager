@@ -6,7 +6,7 @@ import data.dataSource.util.PasswordHash
 import org.koin.dsl.module
 
 val dataUtilModule = module {
-    single { CsvReader() }
-    single { CsvHandler(get()) }
-    single { PasswordHash() }
+    factory { CsvReader() }
+    factory { CsvHandler(get()) }
+    factory { PasswordHash() }
 }
