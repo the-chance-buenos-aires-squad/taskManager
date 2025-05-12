@@ -35,7 +35,7 @@ class ProjectCliHelper(
             val input = uiController.readInput().trim()
 
             when (val selectedIndex = input.toIntOrNull()?.minus(1)) {
-                null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
+                null -> uiController.printMessage(INAVLID_INPUT_MESSAGE)
                 else -> {
                     if (selectedIndex in projects.indices) {
                         return projects[selectedIndex]
@@ -51,7 +51,7 @@ class ProjectCliHelper(
         const val EXCEPTION_MESSAGE = "An unexpected error occurred: %S"
         const val ENTER_PROJECT_MESSAGE = "Enter project number: "
         const val SELECT_PROJECT_MESSAGE = "Select project number: "
-        const val EMPTY_INPUT_MESSAGE = "Invalid input: please enter a valid number."
+        const val INAVLID_INPUT_MESSAGE = "Invalid input: please enter a valid number."
         const val INVALID_INPUT_MESSAGE = "Invalid Input: please enter a valid number from the menu."
     }
 

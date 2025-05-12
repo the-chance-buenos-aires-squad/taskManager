@@ -2,7 +2,7 @@ package presentation.cli.taskState
 
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.EMPTY_INPUT_MESSAGE
+import presentation.cli.helper.ProjectCliHelper.Companion.INAVLID_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 
 class TaskStateCliController(
@@ -45,7 +45,7 @@ class TaskStateCliController(
                 3 -> deleteTaskStateCli.deleteTaskState(selectedProject.id)
                 4 -> getAllTaskStatesCli.getAllTaskStates(selectedProject.id)
                 5 -> return
-                null -> uiController.printMessage(EMPTY_INPUT_MESSAGE)
+                null -> uiController.printMessage(INAVLID_INPUT_MESSAGE)
                 else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
             }
         }

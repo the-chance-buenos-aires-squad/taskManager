@@ -1,16 +1,14 @@
 package presentation.cli.project
 
-import com.google.common.truth.Truth.assertThat
+import data.repositories.ProjectRepositoryImpl
+import data.repositories.dataSource.ProjectDataSource
 import domain.customeExceptions.UserEnterInvalidValueException
+import domain.repositories.ProjectRepository
 import domain.usecases.project.CreateProjectUseCase
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import java.time.LocalDateTime
 import java.util.*
@@ -55,22 +53,44 @@ class CreateProjectCliTest {
         }
 
     @Test
-    fun `should throw exception when enter empty name and failed to create project`() = runTest {
-        every { uiController.readInput() } returnsMany project2
+    fun `should catch UserEnterInvalidValueException from repo and print it message`() = runTest {
+        //given
+        val mockedRepo: ProjectRepository = mockk()
+        val mockedUseCase = CreateProjectUseCase(mockedRepo)
+        val mockedCreateProjectCli = CreateProjectCli(mockedUseCase, uiController)
+        val exceptionMessage = "title or description can't be empty"
+        coEvery { mockedRepo.createProject(any()) } throws UserEnterInvalidValueException(exceptionMessage)
+        every { uiController.readInput() } returns ""
 
-        val exception = assertThrows<UserEnterInvalidValueException> {
-            createProjectCli.create()
+
+        //when
+        mockedCreateProjectCli.create()
+
+        verify {
+            uiController.printMessage(exceptionMessage)
         }
-        assertThat(exception.message).isEqualTo("name can't be empty")
+
     }
 
     @Test
-    fun `should throw exception when enter empty description and failed to create project`() = runTest {
-        every { uiController.readInput() } returnsMany project3
+    fun `should catch any data source specific exception and print it message`() = runTest {
+        //given
+        val exceptionMessage = "fail from data source dou to ......."
+        val mockedDataSource: ProjectDataSource = mockk(relaxed = true)
+        coEvery { mockedDataSource.addProject(any()) } throws Exception(exceptionMessage)
+        every { uiController.readInput() } returnsMany listOf("title", "description")
+        val mockedRepo: ProjectRepository = ProjectRepositoryImpl(mockedDataSource, mockk(relaxed = true))
+        val mockedUseCase = CreateProjectUseCase(mockedRepo)
+        val createProjectCli = CreateProjectCli(mockedUseCase, uiController)
 
-        val exception = assertThrows<UserEnterInvalidValueException> {
-            createProjectCli.create()
+
+        //when
+        createProjectCli.create()
+
+        verify {
+            uiController.printMessage("Failed to create project.${exceptionMessage}")
         }
-        assertThat(exception.message).isEqualTo("description can't be empty")
+
     }
+
 }

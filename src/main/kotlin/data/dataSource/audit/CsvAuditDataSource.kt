@@ -13,17 +13,12 @@ class CsvAuditDataSource(
 ) : AuditDataSource {
 
     override suspend fun addAudit(auditDto: AuditDto): Boolean {
-        return try {
-            csvHandler.write(
-                row = auditDtoParser.fromDto(auditDto),
-                file = file,
-                append = true
-            )
-            true
-        } catch (e: Exception) {
-            println(e.message)
-            false
-        }
+        csvHandler.write(
+            row = auditDtoParser.fromDto(auditDto),
+            file = file,
+            append = true
+        )
+        return true // if no exception thrown.....
     }
 
     override suspend fun getAllAudit(): List<AuditDto> {

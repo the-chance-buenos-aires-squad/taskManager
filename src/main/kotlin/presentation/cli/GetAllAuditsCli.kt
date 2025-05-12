@@ -22,13 +22,13 @@ class GetAllAuditsCli(
 
     suspend fun displayAllAudits() {
         displayAuditHeader()
-        val audits = getAllAuditUseCase.getAllAudit()
-        audits.forEach { it.displayRow() }
-    }
-
-    fun displaySingleAudit(audit: Audit) {
-        displayAuditHeader()
-        audit.displayRow()
+        try {
+            getAllAuditUseCase.getAllAudit().let { audits->
+                audits.forEach { it.displayRow() }
+            }
+        }catch (e:Exception){
+            uiController.printMessage("error from data source:${e.message}")
+        }
     }
 
     companion object {

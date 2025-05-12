@@ -16,19 +16,23 @@ class CreateProjectCli(
 
         uiController.printMessage("Enter project name:")
         val name = uiController.readInput()
-        if (name.isEmpty()) throw UserEnterInvalidValueException("name can't be empty")
 
         uiController.printMessage("Enter project description:")
         val description = uiController.readInput()
-        if (description.isEmpty()) throw UserEnterInvalidValueException("description can't be empty")
-
         val project = Project(
             id = id,
             name = name,
             description = description,
             createdAt = LocalDateTime.now()
         )
-        val result = createProjectUseCase.execute(project)
-        uiController.printMessage(if (result) "Project created." else "Failed to create project.")
+        try {
+            createProjectUseCase.execute(project).let {
+                if (it) uiController.printMessage("Project created.")
+            }
+        } catch (e: UserEnterInvalidValueException) {
+            uiController.printMessage(e.message.toString())
+        } catch (e: Exception) {
+            uiController.printMessage("Failed to create project.${e.message}")
+        }
     }
 }

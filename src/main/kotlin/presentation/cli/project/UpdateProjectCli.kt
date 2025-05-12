@@ -1,48 +1,55 @@
 package presentation.cli.project
 
-import domain.customeExceptions.NoProjectsFoundException
-import domain.customeExceptions.UserEnterInvalidValueException
-import domain.usecases.project.GetAllProjectsUseCase
 import domain.usecases.project.UpdateProjectUseCase
 import presentation.UiController
+import presentation.cli.helper.ProjectCliHelper
 import java.time.LocalDateTime
 
 class UpdateProjectCli(
-    private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val updateProjectUseCase: UpdateProjectUseCase,
+    private val projectCliHelper: ProjectCliHelper,
     private val uiController: UiController
 ) {
     suspend fun update() {
-        val projects = getAllProjectsUseCase.execute()
-        uiController.printMessage("Select a project to update:")
-        projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1}. ${project.name} - ${project.description}")
+        val projects = projectCliHelper.getProjects().also {
+            if (it.isEmpty()) {
+                uiController.printMessage("No projects found.")
+                return
+            }
         }
-        if (projects.isEmpty()) throw NoProjectsFoundException()
 
-        uiController.printMessage("Enter the number of the project to update:")
-        val indexInput = uiController.readInput().trim()
-
-        if (indexInput.isEmpty()) throw UserEnterInvalidValueException("ID can't be empty")
-        val index = indexInput.toIntOrNull() ?: throw UserEnterInvalidValueException("Should enter valid value")
-        if (index > projects.size || index <= 0) throw UserEnterInvalidValueException("should enter found id")
-        val selectedProject = projects[index - 1]
+        val selectedProject = projectCliHelper.selectProject(projects).also {
+            if (it == null) {
+                uiController.printMessage("No project was selected.")
+                return
+            }
+        }
 
         uiController.printMessage("Enter new name:")
         val name = uiController.readInput()
-        if (name.isEmpty()) throw UserEnterInvalidValueException("New name can't be empty")
+        if (name.isEmpty()) {
+            uiController.printMessage("New name can't be empty")
+            return
+        }
 
         uiController.printMessage("Enter project description:")
         val description = uiController.readInput()
-        if (description.isEmpty()) throw UserEnterInvalidValueException("description can't be empty")
+        if (description.isEmpty()) {
+            uiController.printMessage("Description can't be empty")
+            return
+        }
 
-        val updatedProject = selectedProject.copy(
+        val updatedProject = selectedProject!!.copy(
             name = name,
             description = description,
             createdAt = LocalDateTime.now()
         )
 
-        val result = updateProjectUseCase.execute(updatedProject)
-        uiController.printMessage(if (result) "Project updated." else "project not found.")
+        try {
+            updateProjectUseCase.execute(updatedProject)
+            uiController.printMessage("Project updated.")
+        } catch (e: Exception) {
+            uiController.printMessage("Error updating project: ${e.message}")
+        }
     }
 }
