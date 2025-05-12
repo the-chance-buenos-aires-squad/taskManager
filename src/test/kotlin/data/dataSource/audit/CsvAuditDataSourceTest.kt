@@ -55,17 +55,6 @@ class CsvAuditDataSourceTest {
     }
 
 
-//    @Test
-//    fun `add audit should return false when changing file writing permission`() = runTest {
-//        //given
-//        file.setReadOnly()
-//        //when
-//        val result = dataSource.addAudit(DummyTaskAuditDto)
-//
-//        //then
-//        assertThat(result).isFalse()
-//    }
-
     @Test
     fun `should return all audits from file`() = runTest {
 
