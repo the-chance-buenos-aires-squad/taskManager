@@ -36,7 +36,7 @@ class AddAuditUseCase(
         try {
             auditRepository.addAudit(newAudit)
         } catch (e: Exception) {
-            println("Failed to add audit: ${e.message}")
+            println("Failed to add audit:${e.message}")
         }
     }
 
