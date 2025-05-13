@@ -1,11 +1,11 @@
 package domain.validation
 
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.InvalidLengthPasswordException
-import domain.customeExceptions.PasswordEmptyException
-import domain.customeExceptions.UserNameEmptyException
+import presentation.exceptions.InvalidConfirmPasswordException
+import presentation.exceptions.InvalidLengthPasswordException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.PasswordEmptyException
+import presentation.exceptions.UserNameEmptyException
 
 class UserValidatorTest {
     private val validator = UserValidator()
@@ -13,14 +13,14 @@ class UserValidatorTest {
     @Test
     fun `should throw PasswordEmptyException when password is blank`() {
         assertThrows<PasswordEmptyException> {
-            validator.validatePassword(" ", "validPass123")
+            validator.validatePasswordConfirmation(" ", "validPass123")
         }
     }
 
     @Test
     fun `should throw PasswordEmptyException when confirm password is blank`() {
         assertThrows<PasswordEmptyException> {
-            validator.validatePassword("validPass123", " ")
+            validator.validatePasswordConfirmation("validPass123", " ")
         }
     }
 
@@ -33,25 +33,25 @@ class UserValidatorTest {
 
     @Test
     fun `should pass when userName is valid`() {
-            validator.validateUsername("ahmed")
+        validator.validateUsername("ahmed")
     }
 
     @Test
     fun `should throw InvalidLengthPasswordException when password is less than 6 chars`() {
         assertThrows<InvalidLengthPasswordException> {
-            validator.validatePassword("123", "123")
+            validator.validatePasswordConfirmation("123", "123")
         }
     }
 
     @Test
     fun `should throw InvalidConfirmPasswordException when passwords do not match`() {
         assertThrows<InvalidConfirmPasswordException> {
-            validator.validatePassword("validPass123", "differentPass")
+            validator.validatePasswordConfirmation("validPass123", "differentPass")
         }
     }
 
     @Test
     fun `should pass when password is valid and matches confirm password`() {
-        validator.validatePassword("validPass123", "validPass123")
+        validator.validatePasswordConfirmation("validPass123", "validPass123")
     }
 }

@@ -9,7 +9,7 @@ data class UserDto(
     @BsonId
     val id: String,
     val username: String,
-    val password: String,
+    val password: String = "",
     val role: UserRole?,
     val createdAt: String
 )

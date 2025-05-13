@@ -1,7 +1,7 @@
 package presentation.cli.task
 
 import data.dataSource.dummyData.DummyTasks
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.usecases.task.DeleteTaskUseCase
 import domain.usecases.task.GetAllTasksUseCase
 import io.mockk.coEvery

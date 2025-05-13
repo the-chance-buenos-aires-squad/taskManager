@@ -1,126 +1,185 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.user.CsvUserDataSource
+import data.dataSource.util.PasswordHash
+import data.dto.UserDto
+import data.exceptions.FailedUserSaveException
+import data.exceptions.InvalidCredentialsException
+import data.exceptions.UserNameAlreadyExistException
+import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
-import dummyData.DummyUser.dummyUserOne
-import dummyData.DummyUser.dummyUserOneDto
+import domain.entities.User
+import domain.entities.UserRole
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.time.LocalDateTime
 import java.util.*
 
 class UserRepositoryImplTest {
-
-    private val mockDataSource = mockk<CsvUserDataSource>(relaxed = true)
     private lateinit var userRepository: UserRepositoryImpl
-    private val userMapper = UserDtoMapper()
+    private val userDataSource: UserDataSource = mockk(relaxed = true)
+    private val mapper: UserDtoMapper = mockk(relaxed = true)
+    private val hasher: PasswordHash = mockk()
 
     @BeforeEach
-    fun setUp() {
-        userRepository = UserRepositoryImpl(mockDataSource, userMapper)
+    fun setup() {
+        userRepository = UserRepositoryImpl(userDataSource, mapper, hasher)
     }
 
     @Test
     fun `should return true when adding a new user`() = runTest {
         // given
-        coEvery { mockDataSource.addUser(any()) } returns true
+        val input = "test_user"
+        val expected = "test_user"
+
+        coEvery { userRepository.getUserByUserName(expected) } returns null
+        coEvery { hasher.hash(any()) } returns "hash"
+        coEvery { userDataSource.addUser(any()) } returns true
 
         // when
-        val result = userRepository.addUser(dummyUserOne)
+        userRepository.addUser(input, "pass")
 
         // then
-        assertThat(result).isTrue()
+        coVerify {
+            userDataSource.addUser(
+                match { dto -> dto.username == expected }
+            )
+        }
+    }
+
+    @Test
+    fun `addUser throws UserNameAlreadyExistException when username exists`() = runTest {
+        coEvery { userRepository.getUserByUserName("admin_user") } returns userAdmin
+
+        assertThrows<UserNameAlreadyExistException> {
+            userRepository.addUser("admin_user", "anyPass")
+        }
+    }
+
+    @Test
+    fun `addUser throws FailedUserSaveException when datasource fails to add`() = runTest {
+        coEvery { userRepository.getUserByUserName("new_user") } returns null
+        coEvery { hasher.hash("pass123") } returns "hash123"
+        coEvery { userDataSource.addUser(any()) } returns false
+
+        assertThrows<FailedUserSaveException> {
+            userRepository.addUser("new_user", "pass123")
+        }
     }
 
     @Test
     fun `should return user when searching by valid user id`() = runTest {
-        // given
-        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
-        coEvery { mockDataSource.getUserById(id.toString()) } returns dummyUserOneDto
+        coEvery { userDataSource.getUserByUserName("admin_user") } returns adminDto
+        coEvery { hasher.hash("adminPass") } returns adminDto.password
+        coEvery { mapper.toEntity(adminDto) } returns userAdmin
 
-        // when
-        val result = userRepository.getUserById(id)
+        val result = userRepository.loginUser("admin_user", "adminPass")
 
-        // then
-        assertThat(result).isEqualTo(dummyUserOne)
+        assertThat(result.role).isEqualTo(UserRole.ADMIN)
     }
 
     @Test
-    fun `should return null when user id does not exist`() = runTest {
-        // given
-        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b223")
-        coEvery { mockDataSource.getUserById(id.toString()) } returns null
+    fun `loginUser throws InvalidCredentialsException when user not found`() = runTest {
+        coEvery { userDataSource.getUserByUserName("ghost") } returns null
 
-        // when
-        val result = userRepository.getUserById(id)
-
-        // then
-        assertThat(result).isNull()
+        assertThrows<InvalidCredentialsException> {
+            userRepository.loginUser("ghost", "pass")
+        }
     }
 
     @Test
-    fun `should return user when searching by valid userName`() = runTest {
-        // given
-        coEvery { mockDataSource.getUserByUserName("adminUserName") } returns dummyUserOneDto
+    fun `loginUser throws InvalidCredentialsException when password does not match`() = runTest {
+        coEvery { userDataSource.getUserByUserName("admin_user") } returns adminDto
+        coEvery { hasher.hash("wrongPass") } returns "incorrectHash"
 
-        // when
-        val result = userRepository.getUserByUserName("adminUserName")
+       assertThrows<InvalidCredentialsException> {
+            userRepository.loginUser("admin_user", "wrongPass")
+        }
+    }
 
-        // then
-        assertThat(result).isEqualTo(dummyUserOne)
+    @Test
+    fun `getUserById returns mapped user when exists`() = runTest {
+        coEvery { userDataSource.getUserById(adminId.toString()) } returns adminDto
+        coEvery { mapper.toEntity(adminDto) } returns userAdmin
+
+        val result = userRepository.getUserById(adminId)
+
+        assertThat(result?.id).isEqualTo(adminId)
     }
 
     @Test
     fun `should return null when userName does not exist`() = runTest {
-        // given
-        coEvery { mockDataSource.getUserByUserName("testUser3") } returns null
+        coEvery { userDataSource.getUserById(regularId.toString()) } returns null
 
-        // when
-        val result = userRepository.getUserByUserName("testUser3")
+        val result = userRepository.getUserById(regularId)
 
-        // then
         assertThat(result).isNull()
     }
 
     @Test
     fun `should return all users when retrieving users`() = runTest {
-        // given
-        coEvery { mockDataSource.getUsers() } returns listOf(dummyUserOneDto, dummyUserOneDto)
+        coEvery { userDataSource.getUsers() } returns listOf(adminDto, mateDto)
+        coEvery { mapper.toEntity(adminDto) } returns userAdmin
+        coEvery { mapper.toEntity(mateDto) } returns userMate
 
-        // when
         val result = userRepository.getUsers()
 
-        // then
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result).containsExactly(dummyUserOne, dummyUserOne)
+        assertThat(result).containsExactly(userAdmin, userMate)
     }
 
     @Test
-    fun `should call updateItem on data source when updating a user`() = runTest {
-        // given
-        coEvery { mockDataSource.updateUser(dummyUserOneDto) } returns true
+    fun `updateUser should returns true when datasource update succeeds`() = runTest {
+        coEvery { mapper.fromEntity(userMate) } returns mateDto
+        coEvery { userDataSource.updateUser(mateDto) } returns true
 
-        // when
-        userRepository.updateUser(dummyUserOne)
+        val result = userRepository.updateUser(userMate)
 
-        // then
-        coVerify(exactly = 1) { mockDataSource.updateUser(dummyUserOneDto) }
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `should call deleteItem on data source when deleting a user`() = runTest {
-        // given
-        val id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221")
-        coEvery { mockDataSource.deleteUser(id.toString()) } returns true
+    fun `deleteUser should returns true when datasource delete succeeds`() = runTest {
+        coEvery { userDataSource.deleteUser(regularId.toString()) } returns true
 
-        // when
-        userRepository.deleteUser(dummyUserOne)
+        val result = userRepository.deleteUser(userMate)
 
-        // then
-        coVerify(exactly = 1) { mockDataSource.deleteUser(id.toString()) }
+        assertThat(result).isTrue()
     }
+
+    private val now = LocalDateTime.of(2025, 5, 1, 10, 0)
+    private val adminId = UUID.fromString("11111111-1111-1111-1111-111111111111")
+    private val regularId = UUID.fromString("22222222-2222-2222-2222-222222222222")
+
+    private val adminDto = UserDto(
+        id = adminId.toString(),
+        username = "admin_user",
+        password = "482c811da5d5b4bc6d497ffa98491e38", // md5("adminPass")
+        role = UserRole.ADMIN,
+        createdAt = now.toString()
+    )
+    private val mateDto = UserDto(
+        id = regularId.toString(),
+        username = "regular_user",
+        password = "5e884898da28047151d0e56f8dc62927", // md5("regularPass")
+        role = UserRole.MATE,
+        createdAt = now.toString()
+    )
+    private val userAdmin = User(
+        id = adminId,
+        username = "admin_user",
+        role = UserRole.ADMIN,
+        createdAt = now
+    )
+    private val userMate = User(
+        id = regularId,
+        username = "regular_user",
+        role = UserRole.MATE,
+        createdAt = now
+    )
+
 }

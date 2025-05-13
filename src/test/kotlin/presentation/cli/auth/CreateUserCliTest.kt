@@ -1,27 +1,30 @@
 package presentation.cli.auth
 
-import domain.customeExceptions.CreateUserException
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.UserNameEmptyException
+import data.exceptions.UserNameAlreadyExistException
 import domain.usecases.CreateUserUseCase
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.exceptions.*
 
 class CreateUserCliTest {
     private lateinit var createUserCli: CreateUserCli
     private val uiController: UiController = mockk(relaxed = true)
     private val createUserUseCase: CreateUserUseCase = mockk()
+    private val userValidator : UserValidator = mockk(relaxed = true)
     private val testUser = DummyUser.dummyUserTwo
 
     @BeforeEach
     fun setup() {
-        createUserCli = CreateUserCli(uiController, createUserUseCase)
+        createUserCli = CreateUserCli(uiController, createUserUseCase,userValidator)
     }
 
     @Test
@@ -29,10 +32,10 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf(
             testUser.username,
-            testUser.password,
-            testUser.password
+            "matePassword",
+            "matePassword"
         )
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } returns testUser
+        coEvery { createUserUseCase.addUser(any(), any()) } returns testUser
 
         // when
         createUserCli.start()
@@ -48,22 +51,23 @@ class CreateUserCliTest {
     }
 
     @Test
-    fun `should show error when password confirmation fails`() = runTest {
+    fun `should show error when password confirmation failed`() = runTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf(
             "testUser",
             "password1",
             "password2"
         )
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
-                InvalidConfirmPasswordException()
+        val expectedException = InvalidConfirmPasswordException()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws
+                expectedException
 
         // when
         createUserCli.start()
 
         // then
         verify {
-            uiController.printMessage("Error: Passwords do not match!")
+            uiController.printMessage("${expectedException.message}")
         }
     }
 
@@ -71,15 +75,47 @@ class CreateUserCliTest {
     fun `should handle empty username error`() = runTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("", "pass", "pass")
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
-                UserNameEmptyException()
+        val expectedException = UserNameEmptyException()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
 
         // then
         verify {
-            uiController.printMessage("Error: Username cannot be empty !")
+            uiController.printMessage("${expectedException.message}")
+        }
+    }
+
+    @Test
+    fun `should handle empty password error`() = runTest {
+        // given
+        coEvery { uiController.readInput() } returnsMany listOf("username", "", "pass")
+        val expectedException = PasswordEmptyException()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+
+        // when
+        createUserCli.start()
+
+        // then
+        verify {
+            uiController.printMessage("${expectedException.message}")
+        }
+    }
+
+    @Test
+    fun `should handle invalid length password error`() = runTest {
+        // given
+        coEvery { uiController.readInput() } returnsMany listOf("username", "", "pass")
+        val expectedException = InvalidLengthPasswordException()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+
+        // when
+        createUserCli.start()
+
+        // then
+        verify {
+            uiController.printMessage("${expectedException.message}")
         }
     }
 
@@ -87,15 +123,31 @@ class CreateUserCliTest {
     fun `should handle existing username error`() = runTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
-                CreateUserException()
+        val expectedException = UserNameAlreadyExistException()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
 
         // then
         verify {
-            uiController.printMessage("Error: Failed to create user")
+            uiController.printMessage("${expectedException.message}")
+        }
+    }
+
+    @Test
+    fun `should handle any repo exception error`() = runTest {
+        // given
+        coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
+        val expectedException = Exception()
+        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+
+        // when
+        createUserCli.start()
+
+        // then
+        verify {
+            uiController.printMessage("Error: ${expectedException.localizedMessage}")
         }
     }
 }

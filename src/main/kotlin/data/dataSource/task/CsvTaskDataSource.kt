@@ -4,7 +4,6 @@ import data.dataSource.util.CsvHandler
 import data.dto.TaskDto
 import data.repositories.dataSource.TaskDataSource
 import java.io.File
-import java.util.*
 
 class CsvTaskDataSource(
     private val csvHandler: CsvHandler,
@@ -32,7 +31,7 @@ class CsvTaskDataSource(
     }
 
     override suspend fun getTaskById(taskId: String): TaskDto? {
-        return getTasks().find { it.id == taskId}
+        return getTasks().find { it.id == taskId }
     }
 
     override suspend fun updateTask(taskDto: TaskDto): Boolean {

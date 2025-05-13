@@ -4,7 +4,7 @@ package domain.usecases.task
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.entities.Task

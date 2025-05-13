@@ -18,7 +18,6 @@ object DummyTaskData {
     val currentUser = User(
         id = UUID.randomUUID(),
         username = "testUser",
-        password = "password",
         role = UserRole.ADMIN,
         createdAt = LocalDateTime.now()
     )
@@ -26,7 +25,6 @@ object DummyTaskData {
     val assignedUser = User(
         id = UUID.randomUUID(),
         username = "assignedUser",
-        password = "password",
         role = UserRole.MATE,
         createdAt = LocalDateTime.now()
     )

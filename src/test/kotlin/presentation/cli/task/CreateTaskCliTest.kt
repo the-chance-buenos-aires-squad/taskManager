@@ -2,7 +2,7 @@ package presentation.cli.task
 
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskTitleEmptyException
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.TaskState
 import domain.repositories.UserRepository
 import domain.usecases.task.CreateTaskUseCase

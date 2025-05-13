@@ -13,26 +13,36 @@ import domain.usecases.taskState.CreateTaskStateUseCase
 import domain.usecases.taskState.DeleteTaskStateUseCase
 import domain.usecases.taskState.EditTaskStateUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val useCaseModule = module {
-    single { CreateProjectUseCase(get()) }
-    single { UpdateProjectUseCase(get()) }
-    single { DeleteProjectUseCase(get()) }
-    single { GetAllProjectsUseCase(get()) }
-    single { CreateTaskStateUseCase(get()) }
-    single { EditTaskStateUseCase(get()) }
-    single { AddAuditUseCase(get()) }
-    single { GetAllAuditUseCase(get()) }
-    single { DeleteTaskStateUseCase(get()) }
-    single { GetAllTaskStatesUseCase(get()) }
-    single { GetTasksUseCase(get()) }
-    single { AuthenticationUseCase(authRepository = get(), userValidator = get()) }
-    single { GetTasksGroupedByStateUseCase(getTasksUseCase = get(), getTaskStatesUseCase = get()) }
-    single { CreateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
-    single { DeleteTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
-    single { GetAllTasksUseCase(taskRepository = get()) }
-    single { UpdateTaskUseCase(taskRepository = get(), authRepository = get(), addAuditUseCase = get()) }
-    single { CreateTaskUseCase(taskRepository = get(), addAuditUseCase = get(), authRepository = get()) }
-    single { CreateUserUseCase(authRepository = get(), userValidator = get(), addAuditUseCase = get()) }
+
+        // Auth & User Use Cases
+        singleOf(::AuthenticationUseCase)
+        singleOf(::CreateUserUseCase)
+
+        // Project Use Cases
+        singleOf(::CreateProjectUseCase)
+        singleOf(::UpdateProjectUseCase)
+        singleOf(::DeleteProjectUseCase)
+        singleOf(::GetAllProjectsUseCase)
+
+        // Task State Use Cases
+        singleOf(::CreateTaskStateUseCase)
+        singleOf(::EditTaskStateUseCase)
+        singleOf(::DeleteTaskStateUseCase)
+        singleOf(::GetAllTaskStatesUseCase)
+
+        // Audit Use Cases
+        singleOf(::AddAuditUseCase)
+        singleOf(::GetAllAuditUseCase)
+
+        // Task Use Cases
+        singleOf(::GetTasksUseCase)
+        singleOf(::GetAllTasksUseCase)
+        singleOf(::GetTasksGroupedByStateUseCase)
+        singleOf(::CreateTaskUseCase)
+        singleOf(::DeleteTaskUseCase)
+        singleOf(::UpdateTaskUseCase)
 }

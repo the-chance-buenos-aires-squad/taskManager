@@ -1,6 +1,5 @@
 package domain.usecases
 
-import domain.customeExceptions.CreateUserException
 import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.entities.User
@@ -9,19 +8,15 @@ import domain.validation.UserValidator
 
 class CreateUserUseCase(
     private val authRepository: AuthRepository,
-    private val userValidator: UserValidator,
     private val addAuditUseCase: AddAuditUseCase
 ) {
 
     suspend fun addUser(
         username: String,
         password: String,
-        confirmPassword: String,
     ): User {
-        userValidator.validateUsername(username)
-        userValidator.validatePassword(password, confirmPassword)
 
-        val userAdded = authRepository.addUser(username, password) ?: throw CreateUserException()
+        val userAdded = authRepository.addUser(username, password)
         addAuditUseCase.addAudit(
             entityId = userAdded.id.toString(),
             entityType = EntityType.USER,
