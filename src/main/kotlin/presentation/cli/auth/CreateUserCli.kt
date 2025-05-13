@@ -25,11 +25,11 @@ class CreateUserCli(
             uiController.printMessage(PASSWORD_PROMPT_MESSAGE)
             val password = uiController.readInput().trim()
 
-            userValidator.isPasswordEmpty(password)
+            userValidator.validatePassword(password)
 
             uiController.printMessage(CONFIRM_PASSWORD_PROMPT_MESSAGE)
             val confirmPassword = uiController.readInput().trim()
-            userValidator.validatePassword(password, confirmPassword)
+            userValidator.validatePasswordConfirmation(password, confirmPassword)
 
             val newUserMate = createUserUseCase.addUser(username, password)
             uiController.printMessage(SUCCESS_MESSAGE.format(newUserMate.username))

@@ -18,12 +18,11 @@ class LoginCliTest {
     private lateinit var loginCli: LoginCli
     private val uiController: UiController = mockk(relaxed = true)
     private val authenticationUseCase: AuthenticationUseCase = mockk()
-    private val userValidator : UserValidator = mockk(relaxed = true)
     private val adminDashBoardCli: AdminDashBoardCli = mockk(relaxed = true)
     private val mateDashBoardCli: MateDashBoardCli = mockk(relaxed = true)
     private val userValidator:UserValidator = mockk(relaxed = true)
-    val adminTestUser = DummyUser.dummyUserOne
-    val mateTestUser = DummyUser.dummyUserTwo
+    private val adminTestUser = DummyUser.dummyUserOne
+    private val mateTestUser = DummyUser.dummyUserTwo
 
     @BeforeEach
     fun setup() {
