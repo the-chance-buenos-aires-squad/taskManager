@@ -2,6 +2,7 @@ package presentation.cli.auth
 
 import data.exceptions.InvalidCredentialsException
 import domain.usecases.AuthenticationUseCase
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,6 +18,7 @@ class LoginCliTest {
     private lateinit var loginCli: LoginCli
     private val uiController: UiController = mockk(relaxed = true)
     private val authenticationUseCase: AuthenticationUseCase = mockk()
+    private val userValidator : UserValidator = mockk(relaxed = true)
     private val adminDashBoardCli: AdminDashBoardCli = mockk(relaxed = true)
     private val mateDashBoardCli: MateDashBoardCli = mockk(relaxed = true)
     val adminTestUser = DummyUser.dummyUserOne
@@ -24,7 +26,7 @@ class LoginCliTest {
 
     @BeforeEach
     fun setup() {
-        loginCli = LoginCli(uiController, authenticationUseCase, adminDashBoardCli, mateDashBoardCli)
+        loginCli = LoginCli(uiController, authenticationUseCase, adminDashBoardCli, mateDashBoardCli,userValidator)
     }
 
     @Test

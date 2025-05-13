@@ -1,7 +1,7 @@
 package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
 import domain.usecases.AddAuditUseCase

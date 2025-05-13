@@ -2,6 +2,7 @@ package presentation.cli.auth
 
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
+import domain.validation.UserValidator
 import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
@@ -10,7 +11,8 @@ class LoginCli(
     private val uiController: UiController,
     private val authenticationUseCase: AuthenticationUseCase,
     private val adminDashBoardCli: AdminDashBoardCli,
-    private val mateDashBoardCli: MateDashBoardCli
+    private val mateDashBoardCli: MateDashBoardCli,
+    private val userValidator: UserValidator
 ) {
 
     suspend fun start(loginAttempts: Int = INITIAL_ATTEMPT_COUNT) {
@@ -21,14 +23,15 @@ class LoginCli(
 
         uiController.printMessage("\n=== Login ===")
 
-        uiController.printMessage("Username: ")
-        val username = uiController.readInput().trim()
-        //todo handel if Username is empty
-        uiController.printMessage("Password: ")
-        val password = uiController.readInput().trim()
-        //todo handel if password is empty
-        //we can use validator class
         try {
+            uiController.printMessage("Username: ")
+            val username = uiController.readInput().trim()
+            userValidator.validateUsername(username)
+
+            uiController.printMessage("Password: ")
+            val password = uiController.readInput().trim()
+           userValidator.isPasswordEmpty(password)
+
             val validUser = authenticationUseCase.login(username, password)
             uiController.printMessage("\nWelcome ${validUser.username}!")
             when (validUser.role) {

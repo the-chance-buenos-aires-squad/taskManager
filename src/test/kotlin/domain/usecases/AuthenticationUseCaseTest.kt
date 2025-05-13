@@ -15,7 +15,6 @@ import kotlin.test.Test
 
 class AuthenticationUseCaseTest {
     private val authRepository: AuthRepository = mockk()
-    private val userValidator: UserValidator = mockk()
     private lateinit var useCase: AuthenticationUseCase
 
     private val testUser = DummyUser.dummyUserOne
@@ -24,7 +23,7 @@ class AuthenticationUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        useCase = AuthenticationUseCase(authRepository, userValidator)
+        useCase = AuthenticationUseCase(authRepository)
 
         coEvery { authRepository.login(validUsername, validPassword) } returns testUser
     }

@@ -1,6 +1,6 @@
 package presentation.cli.task
 
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.Task
 import domain.repositories.UserRepository
 import domain.usecases.task.GetAllTasksUseCase

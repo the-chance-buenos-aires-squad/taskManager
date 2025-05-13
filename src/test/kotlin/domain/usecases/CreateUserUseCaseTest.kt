@@ -18,7 +18,6 @@ class CreateUserUseCaseTest {
 
     private lateinit var useCase: CreateUserUseCase
     private val authRepo: AuthRepository = mockk()
-    private val userValidator: UserValidator = mockk()
     private val addAuditUseCase: AddAuditUseCase = mockk()
 
     private val dummyUser = DummyUser.dummyUserTwo
@@ -26,7 +25,7 @@ class CreateUserUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        useCase = CreateUserUseCase(authRepo, userValidator, addAuditUseCase)
+        useCase = CreateUserUseCase(authRepo, addAuditUseCase)
         coEvery { authRepo.getCurrentUser() } returns currentUser
         coEvery { authRepo.addUser(any(), any()) } returns dummyUser
         coEvery { addAuditUseCase.addAudit(any(),any(),
@@ -37,7 +36,7 @@ class CreateUserUseCaseTest {
     @Test
     fun `should save user when data is valid`() = runTest {
         // When
-        useCase.addUser("mateUserName", "password", "password")
+        useCase.addUser("mateUserName", "password")
 
         // Then
         coVerify(exactly = 1) {
@@ -48,7 +47,7 @@ class CreateUserUseCaseTest {
     @Test
     fun `addUser should returns user when added successfully`() = runTest {
         // When
-        val result = useCase.addUser(dummyUser.username, "password", "password")
+        val result = useCase.addUser(dummyUser.username, "password")
 
         // Then
         assertThat(result).isEqualTo(dummyUser)
@@ -58,7 +57,7 @@ class CreateUserUseCaseTest {
     @Test
     fun `should create audit when user is created successfully`() = runTest {
         // When
-        useCase.addUser(dummyUser.username, "password", "password")
+        useCase.addUser(dummyUser.username, "password")
 
         // Then
         coVerify(exactly = 1) {

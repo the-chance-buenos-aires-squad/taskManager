@@ -1,11 +1,11 @@
 package domain.validation
 
-import data.exceptions.UserNameEmptyException
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.InvalidLengthPasswordException
-import domain.customeExceptions.PasswordEmptyException
+import presentation.exceptions.InvalidConfirmPasswordException
+import presentation.exceptions.InvalidLengthPasswordException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.PasswordEmptyException
+import presentation.exceptions.UserNameEmptyException
 
 class UserValidatorTest {
     private val validator = UserValidator()
