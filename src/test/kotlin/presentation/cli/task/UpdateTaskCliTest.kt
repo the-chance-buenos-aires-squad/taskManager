@@ -1,7 +1,7 @@
 package presentation.cli.task
 
 import data.dataSource.dummyData.DummyTasks
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.TaskState
 import domain.repositories.UserRepository
 import domain.usecases.task.GetAllTasksUseCase

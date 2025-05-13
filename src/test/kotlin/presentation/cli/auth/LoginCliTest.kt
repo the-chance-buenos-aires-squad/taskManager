@@ -1,7 +1,8 @@
 package presentation.cli.auth
 
-import domain.customeExceptions.InvalidCredentialsException
+import data.exceptions.InvalidCredentialsException
 import domain.usecases.AuthenticationUseCase
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,19 +20,20 @@ class LoginCliTest {
     private val authenticationUseCase: AuthenticationUseCase = mockk()
     private val adminDashBoardCli: AdminDashBoardCli = mockk(relaxed = true)
     private val mateDashBoardCli: MateDashBoardCli = mockk(relaxed = true)
-    val adminTestUser = DummyUser.dummyUserOne
-    val mateTestUser = DummyUser.dummyUserTwo
+    private val userValidator:UserValidator = mockk(relaxed = true)
+    private val adminTestUser = DummyUser.dummyUserOne
+    private val mateTestUser = DummyUser.dummyUserTwo
 
     @BeforeEach
     fun setup() {
-        loginCli = LoginCli(uiController, authenticationUseCase, adminDashBoardCli, mateDashBoardCli)
+        loginCli = LoginCli(uiController, authenticationUseCase, adminDashBoardCli, mateDashBoardCli,userValidator)
     }
 
     @Test
     fun `should login successfully as admin and redirect to admin dashboard`() = runTest {
         // Given
-        coEvery { uiController.readInput() } returnsMany listOf(adminTestUser.username, adminTestUser.password)
-        coEvery { authenticationUseCase.login(adminTestUser.username, adminTestUser.password) } returns adminTestUser
+        coEvery { uiController.readInput() } returnsMany listOf(adminTestUser.username, "adminPassword")
+        coEvery { authenticationUseCase.login(adminTestUser.username, "adminPassword") } returns adminTestUser
 
         // When
         loginCli.start()
@@ -45,8 +47,8 @@ class LoginCliTest {
     @Test
     fun `should login successfully as mate and redirect to mate dashboard`() = runTest {
         // Given
-        coEvery { uiController.readInput() } returnsMany listOf(mateTestUser.username, mateTestUser.password)
-        coEvery { authenticationUseCase.login(mateTestUser.username, mateTestUser.password) } returns mateTestUser
+        coEvery { uiController.readInput() } returnsMany listOf(mateTestUser.username, "adminPassword")
+        coEvery { authenticationUseCase.login(mateTestUser.username, "adminPassword") } returns mateTestUser
 
         // When
         loginCli.start()

@@ -2,7 +2,7 @@ package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.DummyTasks
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
