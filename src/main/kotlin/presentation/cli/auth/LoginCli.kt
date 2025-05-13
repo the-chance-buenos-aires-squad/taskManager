@@ -1,13 +1,13 @@
 package presentation.cli.auth
 
-import data.exceptions.UserNameEmptyException
-import domain.customeExceptions.PasswordEmptyException
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
 import domain.validation.UserValidator
 import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
+import presentation.exceptions.PasswordEmptyException
+import presentation.exceptions.UserNameEmptyException
 
 class LoginCli(
     private val uiController: UiController,
@@ -70,7 +70,7 @@ class LoginCli(
             try {
                 userValidator.validateUsername(username)
                 return username
-            }catch (e:UserNameEmptyException){
+            }catch (e: UserNameEmptyException){
                 if (times < 1){
                     uiController.printMessage("${e.message} try again")
                 }else{
