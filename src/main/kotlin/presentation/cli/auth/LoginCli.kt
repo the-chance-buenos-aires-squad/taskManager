@@ -1,7 +1,10 @@
 package presentation.cli.auth
 
+import data.exceptions.UserNameEmptyException
+import domain.customeExceptions.PasswordEmptyException
 import domain.entities.UserRole
 import domain.usecases.AuthenticationUseCase
+import domain.validation.UserValidator
 import presentation.UiController
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
@@ -10,7 +13,8 @@ class LoginCli(
     private val uiController: UiController,
     private val authenticationUseCase: AuthenticationUseCase,
     private val adminDashBoardCli: AdminDashBoardCli,
-    private val mateDashBoardCli: MateDashBoardCli
+    private val mateDashBoardCli: MateDashBoardCli,
+    private val userValidator: UserValidator
 ) {
 
     suspend fun start(loginAttempts: Int = INITIAL_ATTEMPT_COUNT) {
@@ -21,13 +25,8 @@ class LoginCli(
 
         uiController.printMessage("\n=== Login ===")
 
-        uiController.printMessage("Username: ")
-        val username = uiController.readInput().trim()
-        //todo handel if Username is empty
-        uiController.printMessage("Password: ")
-        val password = uiController.readInput().trim()
-        //todo handel if password is empty
-        //we can use validator class
+        val username = validateUserNameInput()?:return
+        val password = validatePasswordInput()?:return
         try {
             val validUser = authenticationUseCase.login(username, password)
             uiController.printMessage("\nWelcome ${validUser.username}!")
@@ -44,6 +43,42 @@ class LoginCli(
             uiController.printMessage("Error: ${e.message}")
             start(loginAttempts + ATTEMPT_INCREMENT)
         }
+    }
+
+    private fun validatePasswordInput(): String? {
+        repeat(2){times:Int->
+            uiController.printMessage("Password: ")
+            val password = uiController.readInput().trim()
+            try {
+                userValidator.validatePassword(password)
+                return password
+            }catch (e: PasswordEmptyException){
+                if (times < 1){
+                    uiController.printMessage("${e.message} try again")
+                }else{
+                    uiController.printMessage("${e.message}")
+                }
+            }
+        }
+        return null
+    }
+
+    private fun validateUserNameInput(): String? {
+        repeat(2){times:Int->
+            uiController.printMessage("Username: ")
+            val username = uiController.readInput().trim()
+            try {
+                userValidator.validateUsername(username)
+                return username
+            }catch (e:UserNameEmptyException){
+                if (times < 1){
+                    uiController.printMessage("${e.message} try again")
+                }else{
+                    uiController.printMessage("${e.message}")
+                }
+            }
+        }
+        return null
     }
 
     companion object {
