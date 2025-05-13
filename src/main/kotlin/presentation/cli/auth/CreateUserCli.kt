@@ -1,5 +1,6 @@
 package presentation.cli.auth
 
+import data.exceptions.UserNameAlreadyExistException
 import domain.usecases.CreateUserUseCase
 import domain.validation.UserValidator
 import presentation.UiController
@@ -45,7 +46,10 @@ class CreateUserCli(
         } catch (e: InvalidConfirmPasswordException) {
             uiController.printMessage(e.localizedMessage)
             return
-        } catch (e: Exception) {
+        } catch (e: UserNameAlreadyExistException){
+             uiController.printMessage(e.localizedMessage)
+        }
+        catch (e: Exception) {
             uiController.printMessage(ERROR_MESSAGE.format(e.message))
         }
     }
