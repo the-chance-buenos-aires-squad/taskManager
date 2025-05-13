@@ -2,6 +2,7 @@ package di
 
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import config.AppConfig
 import data.dto.*
 import di.MongoCollections.auditCollectionQualifier
 import di.MongoCollections.projectCollectionQualifier
@@ -14,11 +15,11 @@ import org.koin.dsl.module
 
 val mongoModule = module {
     single<MongoClient> {
-        MongoClient.create("mongodb+srv://hamadarayyan056:PZrnkQVEQ4awiwY9@cluster0.cgucsr8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        MongoClient.create(AppConfig.mongoUri)
     }
 
     single<MongoDatabase> {
-        get<MongoClient>().getDatabase("planmate")
+        get<MongoClient>().getDatabase(AppConfig.mongoDatabase)
     }
 
     single(qualifier = auditCollectionQualifier) {
