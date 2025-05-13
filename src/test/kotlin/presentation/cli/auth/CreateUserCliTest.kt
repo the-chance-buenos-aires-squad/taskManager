@@ -1,9 +1,9 @@
 package presentation.cli.auth
 
-import data.exceptions.UserNameEmptyException
-import domain.customeExceptions.CreateUserException
-import domain.customeExceptions.InvalidConfirmPasswordException
+import presentation.exceptions.CreateUserException
+import presentation.exceptions.InvalidConfirmPasswordException
 import domain.usecases.CreateUserUseCase
+import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -13,16 +13,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.exceptions.UserNameEmptyException
 
 class CreateUserCliTest {
     private lateinit var createUserCli: CreateUserCli
     private val uiController: UiController = mockk(relaxed = true)
     private val createUserUseCase: CreateUserUseCase = mockk()
+    private val userValidator : UserValidator = mockk()
     private val testUser = DummyUser.dummyUserTwo
 
     @BeforeEach
     fun setup() {
-        createUserCli = CreateUserCli(uiController, createUserUseCase)
+        createUserCli = CreateUserCli(uiController, createUserUseCase,userValidator)
     }
 
     @Test
@@ -33,7 +35,7 @@ class CreateUserCliTest {
             "matePassword",
             "matePassword"
         )
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } returns testUser
+        coEvery { createUserUseCase.addUser(any(), any()) } returns testUser
 
         // when
         createUserCli.start()
@@ -56,7 +58,7 @@ class CreateUserCliTest {
             "password1",
             "password2"
         )
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { createUserUseCase.addUser(any(), any()) } throws
                 InvalidConfirmPasswordException()
 
         // when
@@ -73,7 +75,7 @@ class CreateUserCliTest {
     fun `should handle empty username error`() = runTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("", "pass", "pass")
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { createUserUseCase.addUser(any(), any()) } throws
                 UserNameEmptyException()
 
         // when
@@ -89,7 +91,7 @@ class CreateUserCliTest {
     fun `should handle existing username error`() = runTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
-        coEvery { createUserUseCase.addUser(any(), any(), any()) } throws
+        coEvery { createUserUseCase.addUser(any(), any()) } throws
                 CreateUserException()
 
         // when

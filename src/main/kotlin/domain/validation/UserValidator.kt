@@ -1,9 +1,9 @@
 package domain.validation
 
-import data.exceptions.UserNameEmptyException
-import domain.customeExceptions.InvalidConfirmPasswordException
-import domain.customeExceptions.InvalidLengthPasswordException
-import domain.customeExceptions.PasswordEmptyException
+import presentation.exceptions.InvalidConfirmPasswordException
+import presentation.exceptions.InvalidLengthPasswordException
+import presentation.exceptions.PasswordEmptyException
+import presentation.exceptions.UserNameEmptyException
 
 class UserValidator {
 

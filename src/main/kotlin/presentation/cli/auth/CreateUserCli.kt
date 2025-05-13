@@ -1,35 +1,53 @@
 package presentation.cli.auth
 
 import domain.usecases.CreateUserUseCase
+import domain.validation.UserValidator
 import presentation.UiController
+import presentation.exceptions.InvalidConfirmPasswordException
+import presentation.exceptions.InvalidLengthPasswordException
+import presentation.exceptions.PasswordEmptyException
+import presentation.exceptions.UserNameEmptyException
 
 
 class CreateUserCli(
     private val uiController: UiController,
     private val createUserUseCase: CreateUserUseCase,
+    private val userValidator: UserValidator
 ) {
 
     suspend fun start() {
         uiController.printMessage(HEADER_MESSAGE)
-
-        uiController.printMessage(USERNAME_PROMPT_MESSAGE)
-        val username = uiController.readInput().trim()
-        //todo handel if username is empty
-        uiController.printMessage(PASSWORD_PROMPT_MESSAGE)
-        val password = uiController.readInput().trim()
-        //todo handel if password is empty
-        uiController.printMessage(CONFIRM_PASSWORD_PROMPT_MESSAGE)
-        val confirmPassword = uiController.readInput().trim()
-        //todo handel if  confirmPassword is empty and if not match password.
-        // we can use validator class better
-
         try {
-            val newUserMate = createUserUseCase.addUser(username, password, confirmPassword)
+            uiController.printMessage(USERNAME_PROMPT_MESSAGE)
+            val username = uiController.readInput().trim()
+            userValidator.validateUsername(username)
+
+            uiController.printMessage(PASSWORD_PROMPT_MESSAGE)
+            val password = uiController.readInput().trim()
+
+            userValidator.isPasswordEmpty(password)
+
+            uiController.printMessage(CONFIRM_PASSWORD_PROMPT_MESSAGE)
+            val confirmPassword = uiController.readInput().trim()
+            userValidator.validatePassword(password, confirmPassword)
+
+            val newUserMate = createUserUseCase.addUser(username, password)
             uiController.printMessage(SUCCESS_MESSAGE.format(newUserMate.username))
+        } catch (e: UserNameEmptyException) {
+            uiController.printMessage(e.localizedMessage)
+            return
+        } catch (e: PasswordEmptyException) {
+            uiController.printMessage(e.localizedMessage)
+            return
+        } catch (e: InvalidLengthPasswordException) {
+            uiController.printMessage(e.localizedMessage)
+            return
+        } catch (e: InvalidConfirmPasswordException) {
+            uiController.printMessage(e.localizedMessage)
+            return
         } catch (e: Exception) {
             uiController.printMessage(ERROR_MESSAGE.format(e.message))
         }
-
     }
 
     companion object {

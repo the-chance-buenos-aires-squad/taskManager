@@ -5,7 +5,7 @@ import data.dataSource.dummyData.DummyTasks
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
-import domain.customeExceptions.UserNotLoggedInException
+import presentation.exceptions.UserNotLoggedInException
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
