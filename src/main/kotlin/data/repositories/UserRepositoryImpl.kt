@@ -67,8 +67,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun loginUser(userName: String, password: String) : User {
-        val userDto = userDataSource.getUserByUserName(userName)
-        if (userDto == null) throw InvalidCredentialsException()
+        val userDto = userDataSource.getUserByUserName(userName) ?: throw InvalidCredentialsException()
 
         val hashInput =  md5Hash.hash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
