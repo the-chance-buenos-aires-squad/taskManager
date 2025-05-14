@@ -34,8 +34,8 @@ class AddAuditUseCaseTest {
             dummyProjectAudit_CreateAction.entityType,
             dummyProjectAudit_CreateAction.action,
             dummyProjectAudit_CreateAction.field,
-            dummyProjectAudit_CreateAction.oldValue,
-            dummyProjectAudit_CreateAction.newValue,
+            dummyProjectAudit_CreateAction.originalValue,
+            dummyProjectAudit_CreateAction.modifiedValue,
             dummyProjectAudit_CreateAction.userId
         )
         //then

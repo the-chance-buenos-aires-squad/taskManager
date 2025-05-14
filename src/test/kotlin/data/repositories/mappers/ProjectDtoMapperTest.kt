@@ -16,7 +16,7 @@ class ProjectDtoMapperTest {
         val id = UUID.randomUUID()
         val project = Project(
             id = id,
-            name = "Test Project",
+            title = "Test Project",
             description = "This is a test project",
             createdAt = now
         )
@@ -46,13 +46,13 @@ class ProjectDtoMapperTest {
 
         val expectedProject = Project(
             id = id,
-            name = "Test Project",
+            title = "Test Project",
             description = "This is a test project",
             createdAt = now
         )
 
         val actualProject = mapper.toEntity(row)
-        assertThat(expectedProject.name).isEqualTo(actualProject.name)
+        assertThat(expectedProject.title).isEqualTo(actualProject.title)
 
     }
 }

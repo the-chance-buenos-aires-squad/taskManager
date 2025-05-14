@@ -9,7 +9,7 @@ class ProjectDtoMapper : Mapper<Project, ProjectDto> {
     override fun fromEntity(entity: Project): ProjectDto {
         return ProjectDto(
             entity.id.toString(),
-            entity.name,
+            entity.title,
             entity.description,
             entity.createdAt.toString()
         )

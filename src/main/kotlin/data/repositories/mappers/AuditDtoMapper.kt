@@ -14,8 +14,8 @@ class AuditDtoMapper : Mapper<Audit, AuditDto> {
             entityType = entity.entityType,
             action = entity.action,
             field = entity.field,
-            oldValue = entity.oldValue,
-            newValue = entity.newValue,
+            oldValue = entity.originalValue,
+            newValue = entity.modifiedValue,
             userId = entity.userId,
             timestamp = entity.timestamp.toString()
         )
@@ -28,8 +28,8 @@ class AuditDtoMapper : Mapper<Audit, AuditDto> {
             entityType = type.entityType,
             action = type.action,
             field = type.field,
-            oldValue = type.oldValue,
-            newValue = type.newValue,
+            originalValue = type.oldValue,
+            modifiedValue = type.newValue,
             userId = type.userId,
             timestamp = LocalDateTime.parse(type.timestamp)
         )

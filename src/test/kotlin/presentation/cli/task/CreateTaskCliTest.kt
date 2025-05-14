@@ -37,7 +37,7 @@ class CreateTaskCliTest {
     @Test
     fun `should create task successfully with valid inputs`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), title = "To Do", projectId = dummyProjectID)
 
         every { uiController.readInput() } returnsMany listOf("title", "description", "1", "username")
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns listOf(dummyTaskState)
@@ -130,7 +130,7 @@ class CreateTaskCliTest {
     @Test
     fun `should catch UserNotLoggedInException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), title = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(
@@ -157,7 +157,7 @@ class CreateTaskCliTest {
     @Test
     fun `should catch TaskTitleEmptyException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), title = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(
@@ -188,7 +188,7 @@ class CreateTaskCliTest {
     @Test
     fun `should catch InvalidProjectIdException and print error`() = runTest {
         val dummyUser = DummyUser.dummyUserOne
-        val dummyTaskState = TaskState(id = UUID.randomUUID(), name = "To Do", projectId = dummyProjectID)
+        val dummyTaskState = TaskState(id = UUID.randomUUID(), title = "To Do", projectId = dummyProjectID)
         val dummyStateList = listOf(dummyTaskState)
 
         every { uiController.readInput() } returnsMany listOf(

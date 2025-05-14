@@ -28,8 +28,8 @@ class AddAuditUseCase(
             entityType = entityType,
             action = action,
             field = field,
-            oldValue = oldValue,
-            newValue = newValue,
+            originalValue = oldValue,
+            modifiedValue = newValue,
             userId = userId,
             timestamp = timeStamp
         )

@@ -25,6 +25,6 @@ class TaskStateInputHandler(
             }
         }
         val id = if (isEdit && existingId != null) existingId else UUID.randomUUID()
-        return TaskState(id = id, name = name, projectId = projectId)
+        return TaskState(id = id, title = name, projectId = projectId)
     }
 }
