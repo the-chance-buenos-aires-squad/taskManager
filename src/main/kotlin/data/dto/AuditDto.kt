@@ -1,7 +1,5 @@
 package data.dto
 
-import domain.entities.ActionType
-import domain.entities.EntityType
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 
@@ -10,8 +8,8 @@ data class AuditDto(
     @BsonId
     val id: String,
     val entityId: String,
-    val entityType: EntityType?,
-    val action: ActionType?,
+    val entityType: String?,
+    val action: String?,
     val field: String?,
     val oldValue: String?,
     val newValue: String?,
