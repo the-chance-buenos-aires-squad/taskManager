@@ -1,6 +1,6 @@
 package data.repositories
 
-import data.dataSource.util.PasswordHash
+import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
 import data.exceptions.InvalidCredentialsException
@@ -28,7 +28,7 @@ class UserRepositoryImpl(
         val newUser = UserDto(
             id = UUID.randomUUID().toString(),
             username = userName.trim(),
-            password = md5Hash.hash(password),
+            password = md5Hash.generateHash(password),
             role = UserRole.MATE,
             createdAt = LocalDateTime.now().toString()
         )
@@ -69,7 +69,7 @@ class UserRepositoryImpl(
     override suspend fun loginUser(userName: String, password: String) : User {
         val userDto = userDataSource.getUserByUserName(userName) ?: throw InvalidCredentialsException()
 
-        val hashInput =  md5Hash.hash(password)
+        val hashInput =  md5Hash.generateHash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
 
         return userMapper.toEntity(userDto)

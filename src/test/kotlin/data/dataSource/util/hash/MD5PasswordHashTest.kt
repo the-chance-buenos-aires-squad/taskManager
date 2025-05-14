@@ -1,10 +1,13 @@
-package data.dataSource.util
+package data.dataSource.util.hash
 
 import com.google.common.truth.Truth.assertThat
+import java.security.MessageDigest
 import kotlin.test.Test
 
-class PasswordHashTest {
-    private val passwordHasher = PasswordHash()
+class MD5PasswordHashTest {
+
+    private val messageDigest = MessageDigest.getInstance("MD5")
+    private val passwordHasher = MD5PasswordHash(messageDigest)
 
     @Test
     fun `hash should return correct MD5 hash for normal string`() {
@@ -13,7 +16,7 @@ class PasswordHashTest {
         val expectedHash = "5f4dcc3b5aa765d61d8327deb882cf99"
 
         // when
-        val result = passwordHasher.hash(input)
+        val result = passwordHasher.generateHash(input)
 
         // then
         assertThat(expectedHash).isEqualTo(result)
@@ -26,7 +29,7 @@ class PasswordHashTest {
         val expectedHash = "d41d8cd98f00b204e9800998ecf8427e"
 
         // when
-        val result = passwordHasher.hash(input)
+        val result = passwordHasher.generateHash(input)
 
         // then
         assertThat(expectedHash).isEqualTo(result)
@@ -39,7 +42,7 @@ class PasswordHashTest {
         val expectedHash = "56bf377cae026633fe10d7401f40dbb4"
 
         // when
-        val result = passwordHasher.hash(input)
+        val result = passwordHasher.generateHash(input)
 
         // then
         assertThat(expectedHash).isEqualTo(result)
@@ -52,10 +55,12 @@ class PasswordHashTest {
         val inputUppercase = "PASSWORD"
 
         // when
-        val resultLowercase = passwordHasher.hash(inputLowercase)
-        val resultUppercase = passwordHasher.hash(inputUppercase)
+        val resultLowercase = passwordHasher.generateHash(inputLowercase)
+        val resultUppercase = passwordHasher.generateHash(inputUppercase)
 
         // then
         assertThat(resultLowercase).isNotEqualTo(resultUppercase)
     }
+
+
 }
