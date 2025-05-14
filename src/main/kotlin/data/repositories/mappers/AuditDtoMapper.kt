@@ -1,7 +1,9 @@
 package data.repositories.mappers
 
 import data.dto.AuditDto
+import domain.entities.ActionType
 import domain.entities.Audit
+import domain.entities.EntityType
 import java.time.LocalDateTime
 import java.util.*
 
@@ -11,8 +13,8 @@ class AuditDtoMapper : Mapper<Audit, AuditDto> {
         return AuditDto(
             id = entity.id.toString(),
             entityId = entity.entityId,
-            entityType = entity.entityType,
-            action = entity.action,
+            entityType = entity.entityType?.name,
+            action = entity.action?.name,
             field = entity.field,
             oldValue = entity.originalValue,
             newValue = entity.modifiedValue,
@@ -25,8 +27,12 @@ class AuditDtoMapper : Mapper<Audit, AuditDto> {
         return Audit(
             id = UUID.fromString(type.id),
             entityId = type.entityId,
-            entityType = type.entityType,
-            action = type.action,
+            entityType = type.entityType?.let {
+                runCatching { EntityType.valueOf(it) }.getOrNull()
+            },
+            action = type.action?.let {
+                runCatching { ActionType.valueOf(it) }.getOrNull()
+            },
             field = type.field,
             originalValue = type.oldValue,
             modifiedValue = type.newValue,

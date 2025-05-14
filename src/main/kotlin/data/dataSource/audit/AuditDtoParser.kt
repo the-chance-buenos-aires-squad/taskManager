@@ -2,16 +2,14 @@ package data.dataSource.audit
 
 import data.dataSource.DtoParser
 import data.dto.AuditDto
-import domain.entities.ActionType
-import domain.entities.EntityType
 
 class AuditDtoParser : DtoParser<List<String>, AuditDto> {
     override fun toDto(type: List<String>): AuditDto {
         return AuditDto(
             id = type[ID_ROW],
             entityId = type[ENTITY_ID_ROW],
-            entityType = EntityType.entries.find { it.name == type[ENTITY_TYPE_ROW] },
-            action = ActionType.entries.find { it.name == type[ACTION_ROW] },
+            entityType = type[ENTITY_TYPE_ROW],
+            action = type[ACTION_ROW],
             field = type[FIELD_ROW],
             oldValue = type[OLD_VALUE_ROW],
             newValue = type[NEW_VALUE_ROW],
@@ -24,8 +22,8 @@ class AuditDtoParser : DtoParser<List<String>, AuditDto> {
         return listOf(
             dto.id,
             dto.entityId,
-            dto.entityType?.name ?: "",
-            dto.action?.name ?: "",
+            dto.entityType ?: "",
+            dto.action ?: "",
             dto.field ?: "",
             dto.oldValue ?: "",
             dto.newValue ?: "",

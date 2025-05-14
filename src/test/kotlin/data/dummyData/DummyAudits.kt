@@ -23,8 +23,8 @@ object DummyAudits {
     val DummyTaskAuditDto = AuditDto(
         id = dummyTaskAudit_CreateAction.id.toString(),
         entityId = "entity_id",
-        entityType = EntityType.TASK,
-        action = ActionType.CREATE,
+        entityType = EntityType.TASK.name,
+        action = ActionType.CREATE.name,
         field = "fields",
         oldValue = "old",
         newValue = "new",

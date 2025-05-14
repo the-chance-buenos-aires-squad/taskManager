@@ -57,7 +57,7 @@ class MongoAuditDataSourceTest {
         coEvery { auditCollection.find().toList() } returns expectedAudits
 
 
-        val result = dataSource.getAllAudit()
+       dataSource.getAllAudit()
 
 
         coVerify { auditCollection.find() }
