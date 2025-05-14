@@ -20,7 +20,6 @@ import java.io.PrintStream
 class AddAuditUseCaseTest {
 
     private lateinit var addAuditUseCase: AddAuditUseCase
-    private val auditDataSource: AuditDataSource = mockk(relaxed = true)
     private lateinit var auditRepository: AuditRepositoryImpl
 
     @Test

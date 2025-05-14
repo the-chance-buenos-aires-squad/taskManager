@@ -28,10 +28,10 @@ class AuditDtoMapper : Mapper<Audit, AuditDto> {
             id = UUID.fromString(type.id),
             entityId = type.entityId,
             entityType = type.entityType?.let {
-                try { EntityType.valueOf(it) } catch (e: IllegalArgumentException) { null }
+                runCatching { EntityType.valueOf(it) }.getOrNull()
             },
             action = type.action?.let {
-                try { ActionType.valueOf(it) } catch (e: IllegalArgumentException) { null }
+                runCatching { ActionType.valueOf(it) }.getOrNull()
             },
             field = type.field,
             oldValue = type.oldValue,
