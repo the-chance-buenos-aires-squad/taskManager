@@ -12,7 +12,7 @@ fun createDummyProject(
     description: String = "desc",
 ) = Project(
     id = id,
-    name = name,
+    title = name,
     description = description,
     createdAt = LocalDateTime.now()
 )

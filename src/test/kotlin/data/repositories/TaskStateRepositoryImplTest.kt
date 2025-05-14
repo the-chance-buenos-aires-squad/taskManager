@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
-import kotlin.math.truncate
 
 class TaskStateRepositoryImplTest {
 
@@ -78,7 +77,7 @@ class TaskStateRepositoryImplTest {
         val todoState = DummyTaskState.todoDto
         val updatedToDoState = TaskState(UUID.randomUUID(), "In Progress", UUID.randomUUID())
         val updatedStateRow =
-            TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.name, updatedToDoState.projectId.toString())
+            TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.title, updatedToDoState.projectId.toString())
         every { taskStateDtoMapper.toEntity(updatedStateRow) } returns updatedToDoState
         every { taskStateDtoMapper.fromEntity(updatedToDoState) } returns updatedStateRow
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf<TaskStateDto>(todoState)

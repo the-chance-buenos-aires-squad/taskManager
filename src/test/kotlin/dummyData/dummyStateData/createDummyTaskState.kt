@@ -8,7 +8,7 @@ fun createDummyTaskState(
 ): TaskState {
     return TaskState(
         id = id,
-        name = name,
+        title = name,
         projectId = projectId
     )
 }

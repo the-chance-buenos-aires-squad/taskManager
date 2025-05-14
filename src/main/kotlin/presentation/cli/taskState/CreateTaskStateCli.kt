@@ -25,7 +25,7 @@ class CreateTaskStateCli(
                 uiController.printMessage("Task state created successfully.")
                 uiController.printMessage(
                     """
-                Name State: ${taskState.name}
+                Name State: ${taskState.title}
                 """.trimIndent()
                 )
             } else {

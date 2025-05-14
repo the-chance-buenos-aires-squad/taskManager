@@ -14,7 +14,7 @@ class ProjectRepositoryImpl(
 
     override suspend fun createProject(project: Project): Boolean {
         when {
-            project.name.isEmpty() -> throw UserEnterInvalidValueException("name can't be empty")
+            project.title.isEmpty() -> throw UserEnterInvalidValueException("name can't be empty")
             project.description.isEmpty() -> throw UserEnterInvalidValueException("description can't be empty")
         }
         return projectDataSource.addProject(projectMapper.fromEntity(project))

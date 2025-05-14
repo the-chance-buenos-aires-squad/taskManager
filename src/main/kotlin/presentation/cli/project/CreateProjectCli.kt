@@ -21,7 +21,7 @@ class CreateProjectCli(
         val description = uiController.readInput()
         val project = Project(
             id = id,
-            name = name,
+            title = name,
             description = description,
             createdAt = LocalDateTime.now()
         )

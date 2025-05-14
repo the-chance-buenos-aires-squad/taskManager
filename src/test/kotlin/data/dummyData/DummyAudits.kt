@@ -14,8 +14,8 @@ object DummyAudits {
         entityType = EntityType.TASK,
         action = ActionType.CREATE,
         field = "fields",
-        oldValue = "old",
-        newValue = "new",
+        originalValue = "old",
+        modifiedValue = "new",
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
@@ -38,8 +38,8 @@ object DummyAudits {
         dummyTaskAudit_CreateAction.entityType!!.name,
         dummyTaskAudit_CreateAction.action!!.name,
         dummyTaskAudit_CreateAction.field ?: "",
-        dummyTaskAudit_CreateAction.oldValue ?: "",
-        dummyTaskAudit_CreateAction.newValue ?: "",
+        dummyTaskAudit_CreateAction.originalValue ?: "",
+        dummyTaskAudit_CreateAction.modifiedValue ?: "",
         dummyTaskAudit_CreateAction.userId,
         dummyTaskAudit_CreateAction.timestamp.toString()
     )
@@ -51,8 +51,8 @@ object DummyAudits {
         entityType = EntityType.PROJECT,
         action = ActionType.CREATE,
         field = "fields",
-        oldValue = "old",
-        newValue = "new",
+        originalValue = "old",
+        modifiedValue = "new",
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
