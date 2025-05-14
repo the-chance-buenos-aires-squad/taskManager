@@ -1,21 +1,18 @@
-package domain.usecases
+package domain.usecases.auth
 
 import com.google.common.truth.Truth.assertThat
-import domain.entities.User
 import domain.repositories.AuthRepository
-import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
-class AuthenticationUseCaseTest {
+class LoginUseCaseTest {
     private val authRepository: AuthRepository = mockk()
-    private lateinit var useCase: AuthenticationUseCase
+    private lateinit var useCase: LoginUseCase
 
     private val testUser = DummyUser.dummyUserOne
     private val validUsername = testUser.username
@@ -23,7 +20,7 @@ class AuthenticationUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        useCase = AuthenticationUseCase(authRepository)
+        useCase = LoginUseCase(authRepository)
 
         coEvery { authRepository.login(validUsername, validPassword) } returns testUser
     }
@@ -31,7 +28,7 @@ class AuthenticationUseCaseTest {
     @Test
     fun `should call repository with correct credentials when login is called`() = runTest {
         // when
-        useCase.login(validUsername, validPassword)
+        useCase.execute(validUsername, validPassword)
 
         // then
         coVerify(exactly = 1) {
@@ -45,7 +42,7 @@ class AuthenticationUseCaseTest {
     @Test
     fun `should return user from repository when login is successful`() = runTest {
         // when
-        val result = useCase.login(validUsername, validPassword)
+        val result = useCase.execute(validUsername, validPassword)
 
         // then
         assertThat(result).isEqualTo(testUser)

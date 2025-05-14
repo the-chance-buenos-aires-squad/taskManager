@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import domain.repositories.TaskRepository
@@ -32,7 +32,7 @@ class GetTasksUseCaseTest {
         coEvery { taskRepository.getAllTasks() } returns listOf(dummyTodoTask)
 
         //when
-        val result = getTasksUseCase.getTasks()
+        val result = getTasksUseCase.execute()
 
         //then
         assertThat(result).isNotEmpty()
@@ -44,7 +44,7 @@ class GetTasksUseCaseTest {
         coEvery { taskRepository.getAllTasks() } returns emptyList()
 
         //when
-        val result = getTasksUseCase.getTasks()
+        val result = getTasksUseCase.execute()
 
         //then
         assertThat(result).isEmpty()

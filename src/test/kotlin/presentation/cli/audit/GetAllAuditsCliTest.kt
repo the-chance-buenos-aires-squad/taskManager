@@ -1,7 +1,7 @@
-package presentation.cli
+package presentation.cli.audit
 
 import data.dataSource.dummyData.createDummyAudits
-import domain.usecases.GetAllAuditUseCase
+import domain.usecases.audit.GetAllAuditUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -30,18 +30,18 @@ class GetAllAuditsCliTest {
             createDummyAudits.dummyTaskCreateAction,
             createDummyAudits.dummyUserUpdateAction
         )
-        coEvery { getAllAuditUseCase.getAllAudit() } returns expectedAudits
+        coEvery { getAllAuditUseCase.execute() } returns expectedAudits
         //when
         getAllAuditCli.displayAllAudits()
         //then
-        coVerify { getAllAuditUseCase.getAllAudit() }
+        coVerify { getAllAuditUseCase.execute() }
     }
 
     @Test
     fun `should handle exception and print error message`() = runTest {
         // Given
         val errorMessage = "Database error"
-        coEvery { getAllAuditUseCase.getAllAudit() } throws RuntimeException(errorMessage)
+        coEvery { getAllAuditUseCase.execute() } throws RuntimeException(errorMessage)
 
         // When
         getAllAuditCli.displayAllAudits()

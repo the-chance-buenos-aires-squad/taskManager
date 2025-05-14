@@ -1,6 +1,6 @@
 package presentation.cli.task
 
-import domain.usecases.GetTasksGroupedByStateUseCase
+import domain.usecases.groupingByState.GetTasksGroupedByStateUseCase
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.INAVLID_INPUT_MESSAGE
@@ -27,7 +27,7 @@ class ViewSwimlanesCLI(
                     uiController.printMessage("invalid project")
                     return
                 }
-                val swimlanes = getTasksGroupedByStateUseCase.getTasksGroupedByState(selectedProject)
+                val swimlanes = getTasksGroupedByStateUseCase.execute(selectedProject)
 
                 displaySwimlanes(swimlanes)
 

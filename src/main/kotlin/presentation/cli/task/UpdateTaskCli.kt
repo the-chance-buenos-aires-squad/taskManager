@@ -40,7 +40,7 @@ class UpdateTaskCli(
 
     private suspend fun handleTaskUpdating(updatedTask: Task) {
         try {
-            updateTaskUseCase.updateTask(
+            updateTaskUseCase.execute(
                 updatedTask.id,
                 updatedTask.title,
                 updatedTask.description,

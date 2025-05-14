@@ -1,6 +1,6 @@
 package data.dataSource.audit
 
-import data.dataSource.DtoParser
+import data.dto.DtoParser
 import data.dto.AuditDto
 
 class AuditDtoParser : DtoParser<List<String>, AuditDto> {

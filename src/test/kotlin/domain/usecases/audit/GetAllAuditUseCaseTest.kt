@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.audit
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.createDummyAudits
@@ -21,9 +21,9 @@ class GetAllAuditUseCaseTest {
     @Test
     fun `should return empty list when no audits exist in data source`() = runTest {
         //given
-        coEvery { getAllAuditUseCase.getAllAudit() } returns emptyList()
+        coEvery { getAllAuditUseCase.execute() } returns emptyList()
         //when
-        val result = getAllAuditUseCase.getAllAudit()
+        val result = getAllAuditUseCase.execute()
         //then
         assertThat(result).isEmpty()
     }
@@ -38,7 +38,7 @@ class GetAllAuditUseCaseTest {
         )
         coEvery { mockedAuditRepositoryImpl.getAllAudit() } returns expectedAudits
         //when
-        val result = getAllAuditUseCase.getAllAudit()
+        val result = getAllAuditUseCase.execute()
         //then
         assertThat(result).isEqualTo(expectedAudits)
     }

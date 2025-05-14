@@ -1,6 +1,6 @@
 package data.dataSource.project
 
-import data.dataSource.DtoParser
+import data.dto.DtoParser
 import data.dto.ProjectDto
 
 class ProjectDtoParser : DtoParser<List<String>, ProjectDto> {

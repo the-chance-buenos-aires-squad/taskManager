@@ -1,16 +1,14 @@
 package presentation.cli.auth
 
 import data.exceptions.UserNameAlreadyExistException
-import domain.usecases.CreateUserUseCase
+import domain.usecases.user.CreateUserUseCase
 import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.exceptions.*
@@ -35,7 +33,7 @@ class CreateUserCliTest {
             "matePassword",
             "matePassword"
         )
-        coEvery { createUserUseCase.addUser(any(), any()) } returns testUser
+        coEvery { createUserUseCase.execute(any(), any()) } returns testUser
 
         // when
         createUserCli.start()
@@ -59,7 +57,7 @@ class CreateUserCliTest {
             "password2"
         )
         val expectedException = InvalidConfirmPasswordException()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws
+        coEvery { createUserUseCase.execute(any(), any()) } throws
                 expectedException
 
         // when
@@ -76,7 +74,7 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("", "pass", "pass")
         val expectedException = UserNameEmptyException()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+        coEvery { createUserUseCase.execute(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
@@ -92,7 +90,7 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("username", "", "pass")
         val expectedException = PasswordEmptyException()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+        coEvery { createUserUseCase.execute(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
@@ -108,7 +106,7 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("username", "", "pass")
         val expectedException = InvalidLengthPasswordException()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+        coEvery { createUserUseCase.execute(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
@@ -124,7 +122,7 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
         val expectedException = UserNameAlreadyExistException()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+        coEvery { createUserUseCase.execute(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()
@@ -140,7 +138,7 @@ class CreateUserCliTest {
         // given
         coEvery { uiController.readInput() } returnsMany listOf("existingUser", "pass", "pass")
         val expectedException = Exception()
-        coEvery { createUserUseCase.addUser(any(), any()) } throws expectedException
+        coEvery { createUserUseCase.execute(any(), any()) } throws expectedException
 
         // when
         createUserCli.start()

@@ -1,7 +1,7 @@
-package presentation.cli
+package presentation.cli.audit
 
 import domain.entities.Audit
-import domain.usecases.GetAllAuditUseCase
+import domain.usecases.audit.GetAllAuditUseCase
 import presentation.UiController
 
 class GetAllAuditsCli(
@@ -23,7 +23,7 @@ class GetAllAuditsCli(
     suspend fun displayAllAudits() {
         displayAuditHeader()
         try {
-            getAllAuditUseCase.getAllAudit().let { audits->
+            getAllAuditUseCase.execute().let { audits->
                 audits.forEach { it.displayRow() }
             }
         }catch (e:Exception){

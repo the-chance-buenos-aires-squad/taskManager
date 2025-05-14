@@ -1,4 +1,4 @@
-package data.dataSource
+package data.dto
 
 
 interface DtoParser<type, dto> {

@@ -100,7 +100,7 @@ class CreateTaskCli(
         val newTaskId = UUID.randomUUID()
 
         try {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 id = newTaskId,
                 title = title,
                 description = description,

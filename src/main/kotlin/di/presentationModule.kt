@@ -4,7 +4,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import presentation.UiController
-import presentation.cli.GetAllAuditsCli
+import presentation.cli.audit.GetAllAuditsCli
 import presentation.cli.MainCli
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.auth.LoginCli

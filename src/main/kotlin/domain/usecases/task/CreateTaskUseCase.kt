@@ -10,7 +10,7 @@ import domain.entities.EntityType
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.AddAuditUseCase
+import domain.usecases.audit.AddAuditUseCase
 import java.util.*
 
 class CreateTaskUseCase(
@@ -19,7 +19,7 @@ class CreateTaskUseCase(
     private val authRepository: AuthRepository
 ) {
 
-    suspend fun createTask(
+    suspend fun execute(
         id: UUID,
         title: String,
         description: String,
@@ -49,7 +49,7 @@ class CreateTaskUseCase(
 
         return taskRepository.addTask(newTask).also { result ->
             if (result) {
-                addAuditUseCase.addAudit(
+                addAuditUseCase.execute(
                     entityId = newTask.id.toString(),
                     entityType = EntityType.TASK,
                     action = ActionType.CREATE,

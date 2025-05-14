@@ -1,7 +1,7 @@
 package presentation.cli.task
 
 import createDummyTaskState
-import domain.usecases.GetTasksGroupedByStateUseCase
+import domain.usecases.groupingByState.GetTasksGroupedByStateUseCase
 import dummyData.createDummyProject
 import dummyData.createDummyTask
 import io.mockk.coEvery
@@ -67,7 +67,7 @@ class ViewSwimlanesCLITest {
     fun `should display welcome message when start viewSwimLanceCli`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "4"
 
         viewSwimlanesCLI.start()
@@ -85,7 +85,7 @@ class ViewSwimlanesCLITest {
     fun `should return to mate dashboard when project is not found`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns null
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "4"
 
         viewSwimlanesCLI.start()
@@ -99,7 +99,7 @@ class ViewSwimlanesCLITest {
     fun `should start manage task when valid project`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "4"
 
         viewSwimlanesCLI.start()
@@ -113,7 +113,7 @@ class ViewSwimlanesCLITest {
     fun `should start create task when user select 1`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "1" andThen "4"
 
         viewSwimlanesCLI.start()
@@ -127,7 +127,7 @@ class ViewSwimlanesCLITest {
     fun `should start update task cli when user select 2`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "2" andThen "4"
 
         viewSwimlanesCLI.start()
@@ -142,7 +142,7 @@ class ViewSwimlanesCLITest {
     fun `should start delete task cli when user select 3`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "3" andThen "4"
 
         viewSwimlanesCLI.start()
@@ -157,7 +157,7 @@ class ViewSwimlanesCLITest {
     fun `should back to menu when user enter empty`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "" andThen "4"
 
         viewSwimlanesCLI.start()
@@ -171,7 +171,7 @@ class ViewSwimlanesCLITest {
     fun `should back to menu when user enter invalid choose`() = runTest {
         coEvery { projectCliHelper.getProjects() } returns listOf(sampleProject)
         coEvery { projectCliHelper.selectProject(any()) } returns sampleProject
-        coEvery { getTasksGroupedByStateUseCase.getTasksGroupedByState(sampleProject) } returns swimlanes
+        coEvery { getTasksGroupedByStateUseCase.execute(sampleProject) } returns swimlanes
         coEvery { uiController.readInput() } returns "8" andThen "4"
 
         viewSwimlanesCLI.start()
