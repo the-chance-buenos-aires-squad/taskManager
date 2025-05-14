@@ -37,8 +37,8 @@ class AuditDtoParserTest {
         //when
         val resultDto: AuditDto = auditDtoParser.toDto(rowWithUnknownValues)
 
-        assertThat(resultDto.entityType).isNull()
-        assertThat(resultDto.action).isNull()
+        assertThat(resultDto.entityType).isEqualTo("unknown type")
+        assertThat(resultDto.action).isEqualTo("unknown action")
     }
 
     @Test
