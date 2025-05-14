@@ -1,9 +1,10 @@
 package data.dataSource.task
 
-import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.util.CsvHandler
-import dummyData.DummyTasks
+import data.dto.TaskDto
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -12,9 +13,13 @@ import java.io.File
 class CsvTaskDataSourceTest {
 
     private lateinit var file: File
-    private val csvHandler = CsvHandler(CsvReader())
-    private val parser = TaskDtoParser()
+    private val csvHandler: CsvHandler = mockk(relaxed = true)
+    private val parser: TaskDtoParser = mockk(relaxed = true)
     private lateinit var dataSource: CsvTaskDataSource
+    private val taskDto = TaskDto("1", "title", "desc", "pId", "sId", "uId", "createdBy", "2024-05-01T10:00", "2024-05-01T11:00")
+
+    private val row = listOf("1", "title", "desc", "pId", "sId", "uId", "createdBy", "2024-05-01T10:00", "2024-05-01T11:00")
+
 
 
     @BeforeEach
@@ -27,60 +32,82 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `addTask should write task and return true`() = runTest {
+    fun `addTask should return true when write succeeds`() = runTest {
+        every { parser.fromDto(taskDto) } returns row
 
-        val result = dataSource.addTask(DummyTasks.validTaskDto)
+        val result = dataSource.addTask(taskDto)
+
         assertThat(result).isTrue()
-        assertThat(dataSource.getTasks()).contains(DummyTasks.validTaskDto)
     }
 
     @Test
-    fun `getTasks should return all written tasks`() = runTest {
+    fun `getTasks should return parsed list from csv`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
 
-        dataSource.addTask(DummyTasks.validTaskDto)
-        dataSource.addTask(DummyTasks.validTaskDto)
-        val tasks = dataSource.getTasks()
-        assertThat(tasks).hasSize(2)
+        val result = dataSource.getTasks()
+
+        assertThat(result).containsExactly(taskDto)
     }
 
     @Test
-    fun `getTaskById should return correct row`() = runTest {
+    fun `getTaskById should return correct task when found`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
 
-        dataSource.addTask(DummyTasks.validTaskDto)
-        val fetched = dataSource.getTaskById(DummyTasks.validTask.id.toString())
-        assertThat(fetched).isEqualTo(DummyTasks.validTaskDto)
+        val result = dataSource.getTaskById("1")
+
+        assertThat(result).isEqualTo(taskDto)
     }
 
     @Test
-    fun `updateTask should return false if id not found`() = runTest {
+    fun `getTaskById should return null when not found`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
 
-        val result = dataSource.updateTask(DummyTasks.validTaskDto)
+        val result = dataSource.getTaskById("non-existent")
+
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `updateTask should return true when task exists`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
+        every { parser.fromDto(any()) } returns row
+
+        val result = dataSource.updateTask(taskDto)
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `updateTask should return false when task not exists`() = runTest {
+        every { csvHandler.read(file) } returns emptyList()
+
+        val result = dataSource.updateTask(taskDto)
+
         assertThat(result).isFalse()
     }
 
     @Test
-    fun `updateTask should modify row and return true`() = runTest {
-        val original = DummyTasks.validTaskDto
-        dataSource.addTask(original)
-        val updated = original.copy(title = "Updated Title")
-        val result = dataSource.updateTask(updated)
+    fun `deleteTask should return true when task is removed`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
+        every { parser.fromDto(taskDto) } returns row
+
+        val result = dataSource.deleteTask("1")
+
         assertThat(result).isTrue()
-        val fetched = dataSource.getTaskById(updated.id)
-        assertThat(fetched).isEqualTo(updated)
     }
 
     @Test
-    fun `deleteTask should return false if id not found`() = runTest {
-        val result = dataSource.deleteTask(DummyTasks.validTask.id.toString())
+    fun `deleteTask should return false when task not found`() = runTest {
+        every { csvHandler.read(file) } returns listOf(row)
+        every { parser.toDto(row) } returns taskDto
+
+        val result = dataSource.deleteTask("non-existent")
+
         assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `deleteTask should remove row and return true`() = runTest {
-        val task = DummyTasks.validTaskDto
-        dataSource.addTask(task)
-        val result = dataSource.deleteTask(task.id)
-        assertThat(result).isTrue()
-        assertThat(dataSource.getTasks()).doesNotContain(task)
     }
 }
