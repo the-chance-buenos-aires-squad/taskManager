@@ -13,7 +13,7 @@ class GetAllProjectsCli(
 
         uiController.printMessage(" all projects found:")
         projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1}. ${project.name} - ${project.description}")
+            uiController.printMessage("${index + 1}. ${project.title} - ${project.description}")
         }
     }
 

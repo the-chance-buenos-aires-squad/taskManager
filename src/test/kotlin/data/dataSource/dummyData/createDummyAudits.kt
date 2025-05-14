@@ -15,8 +15,8 @@ object createDummyAudits {
         entityType = EntityType.TASK,
         action = ActionType.CREATE,
         field = "",
-        oldValue = "old",
-        newValue = "new",
+        originalValue = "old",
+        modifiedValue = "new",
         userId = "admin123",
         timestamp = LocalDateTime.now()
     )
@@ -30,8 +30,8 @@ object createDummyAudits {
         entityType = EntityType.PROJECT,
         action = ActionType.CREATE,
         field = "fields",
-        oldValue = "old",
-        newValue = "new",
+        originalValue = "old",
+        modifiedValue = "new",
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
@@ -44,8 +44,8 @@ object createDummyAudits {
         entityType = EntityType.USER,
         action = ActionType.UPDATE,
         field = "fields",
-        oldValue = "old",
-        newValue = "new",
+        originalValue = "old",
+        modifiedValue = "new",
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )

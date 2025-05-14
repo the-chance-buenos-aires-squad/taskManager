@@ -16,7 +16,7 @@ class GetAllAuditsCli(
     private fun Audit.displayRow() {
         uiController.printMessage(
             "${this.id}||${this.entityId}||${this.entityType}|| ${this.action}||${this.field}||" +
-                    "${this.oldValue}||${this.newValue}||${this.userId}||${this.timestamp}"
+                    "${this.originalValue}||${this.modifiedValue}||${this.userId}||${this.timestamp}"
         )
     }
 

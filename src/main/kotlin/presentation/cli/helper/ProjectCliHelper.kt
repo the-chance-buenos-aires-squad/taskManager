@@ -23,7 +23,7 @@ class ProjectCliHelper(
 
         uiController.printMessage(SELECT_PROJECT_MESSAGE)
         projects.forEachIndexed { index, project ->
-            uiController.printMessage("${index + 1}. ${project.name} - ${project.description}")
+            uiController.printMessage("${index + 1}. ${project.title} - ${project.description}")
         }
 
         return selectProjectFromList(projects)

@@ -36,7 +36,7 @@ class CreateTaskStateCliTest {
         coEvery { createTaskStateUseCase.execute(any()) } returns true
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
-            taskState.name,
+            taskState.title,
             taskState.projectId.toString()
         )
 
@@ -50,7 +50,7 @@ class CreateTaskStateCliTest {
         coEvery { createTaskStateUseCase.execute(any()) } returns false
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
-            taskState.name,
+            taskState.title,
             taskState.projectId.toString()
         )
         1
