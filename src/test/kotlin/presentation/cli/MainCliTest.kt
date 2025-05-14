@@ -15,8 +15,7 @@ class MainCliTest {
 
     private val uiController: UiController = mockk(relaxed = true)
     private val loginCli: LoginCli = mockk(relaxed = true)
-    private val mockExitManager = mockk<ExitManager>(relaxed = true)
-    private val mainCli: MainCli = MainCli(uiController, loginCli, mockExitManager)
+    private val mainCli: MainCli = MainCli(uiController, loginCli)
 
     @Test
     fun `should print welcome message`() = runTest {
