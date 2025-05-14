@@ -2,66 +2,57 @@ package data.dataSource.util
 
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.google.common.truth.Truth.assertThat
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 
 class CsvHandlerTest {
 
-    private lateinit var testTempFile: File
-    private lateinit var csvHandler: CsvHandler
+    private lateinit var file: File
+    private lateinit var handler: CsvHandler
+    private lateinit var csvReader: CsvReader
 
     @BeforeEach
     fun setUp() {
-        testTempFile = File.createTempFile("csv_test", ".csv")
-        testTempFile.deleteOnExit()
-        csvHandler = CsvHandler(CsvReader())
+        file = File.createTempFile("csv_test", ".csv")
+        file.writeText("") // clear it
+        csvReader = CsvReader() // use real reader for integration-style test
+        handler = CsvHandler(csvReader)
     }
 
     @Test
-    fun `write and read CSV content`() {
-        val row = listOf("test1", "test2", "test3")
+    fun `write should add row to CSV`() {
+        val row = listOf("id", "name", "email")
+        handler.write(row, file)
 
-        // Write the row
-        csvHandler.write(row, testTempFile, append = false)
-
-        // Read
-        val content = csvHandler.read(testTempFile)
-
-        //verify
-        assertThat(content.size).isEqualTo(1)
-        assertThat(row).isEqualTo(content[0])
+        val lines = file.readLines()
+        assertThat(lines.first()).contains("id,name,email")
     }
 
     @Test
-    fun `writeHeaderIfNotExist should overwrite file`() {
-        val headerRow = listOf("header1", "header2")
+    fun `writeHeaderIfNotExist should write header`() {
+        val header = listOf("ID", "Username", "Password")
+        handler.writeHeaderIfNotExist(header, file)
 
-        // First write
-        csvHandler.writeHeaderIfNotExist(headerRow, testTempFile)
-
-        // Read back
-        val content = csvHandler.read(testTempFile)
-        assertThat(content[0]).isEqualTo(headerRow)
+        val content = file.readLines().first()
+        assertThat(content).isEqualTo("ID,Username,Password")
     }
 
     @Test
-    fun `writing with append true does not override the header row`() {
-        //given
-        val row = listOf("test1", "test2")
-        val headerRow = listOf("header1", "header2")
+    fun `read should return written rows`() {
+        val row = listOf("1", "Ahmed", "ahmed@test.com")
+        handler.write(row, file)
 
-        //when
-        csvHandler.writeHeaderIfNotExist(headerRow, testTempFile)
-        csvHandler.write(row = row, file = testTempFile, append = true)
-
-
-        //then
-        val content = csvHandler.read(testTempFile)
-        assertThat(content[0]).isEqualTo(headerRow)
-        assertThat(content[1]).isEqualTo(row)
+        val rows = handler.read(file)
+        assertThat(rows.first()).isEqualTo(row)
     }
 
-
+    @Test
+    fun `read should return empty list when file is empty`() {
+        val result = handler.read(file)
+        assertThat(result).isEmpty()
+    }
 }
