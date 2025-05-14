@@ -3,6 +3,8 @@ package data.repositories
 import domain.entities.User
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
+import presentation.exceptions.UserNotLoggedInException
+import kotlin.jvm.Throws
 
 class AuthRepositoryImpl(
     private val userRepository: UserRepository,
@@ -26,5 +28,9 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun getCurrentUser(): User? = currentUser
+    override suspend fun <T> runIfLoggedIn(action: suspend () -> T): T {
+        getCurrentUser()?: throw UserNotLoggedInException()
+        return action()
+    }
 
 }

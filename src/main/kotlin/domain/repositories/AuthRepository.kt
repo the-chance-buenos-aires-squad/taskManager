@@ -7,4 +7,5 @@ interface AuthRepository {
     suspend fun addUser(userName: String, password: String): User
     suspend fun logout()
     suspend fun getCurrentUser(): User?
+    suspend fun <T>runIfLoggedIn(action: suspend () -> T):T
 }
