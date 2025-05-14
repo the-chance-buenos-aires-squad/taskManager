@@ -42,7 +42,7 @@ class CreateTaskCliTest {
         every { uiController.readInput() } returnsMany listOf("title", "description", "1", "username")
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns listOf(dummyTaskState)
         coEvery { userRepository.getUserByUserName("username") } returns dummyUser
-        coEvery { createTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) } returns true
+        coEvery { createTaskUseCase.execute(any(), any(), any(), any(), any(), any()) } returns true
 
         createTaskCli.create(dummyProjectID)
 
@@ -84,7 +84,7 @@ class CreateTaskCliTest {
         }
 
         coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
-        coVerify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { mockCreateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -124,7 +124,7 @@ class CreateTaskCliTest {
         }
 
         coVerify(exactly = 0) { mockGetAllStatesUseCase.execute(dummyProjectID) }
-        coVerify(exactly = 0) { mockCreateTaskUseCase.createTask(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { mockCreateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -139,7 +139,7 @@ class CreateTaskCliTest {
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
         coEvery {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 any(),
                 any(),
                 any(),
@@ -170,7 +170,7 @@ class CreateTaskCliTest {
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
         coEvery {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 any(),
                 any(),
                 any(),
@@ -200,7 +200,7 @@ class CreateTaskCliTest {
         coEvery { getAllStatesUseCase.execute(dummyProjectID) } returns dummyStateList
         coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUser
         coEvery {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 any(),
                 any(),
                 any(),

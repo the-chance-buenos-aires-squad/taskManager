@@ -33,7 +33,7 @@ class CreateTaskStateCliTest {
     @Test
     fun `should call execute when creating task state succeeds`() = runTest {
 
-        coEvery { createTaskStateUseCase.CreateTask(any()) } returns true
+        coEvery { createTaskStateUseCase.execute(any()) } returns true
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
@@ -42,12 +42,12 @@ class CreateTaskStateCliTest {
 
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        coVerify { createTaskStateUseCase.CreateTask(any()) }
+        coVerify { createTaskStateUseCase.execute(any()) }
     }
 
     @Test
     fun `should call execute when failed to create task state`() = runTest {
-        coEvery { createTaskStateUseCase.CreateTask(any()) } returns false
+        coEvery { createTaskStateUseCase.execute(any()) } returns false
         every { uiController.readInput() } returnsMany listOf(
             taskState.id.toString(),
             taskState.name,
@@ -56,7 +56,7 @@ class CreateTaskStateCliTest {
         1
         createTaskStateCli.createTaskState(dummyProject.id)
 
-        coVerify { createTaskStateUseCase.CreateTask(any()) }
+        coVerify { createTaskStateUseCase.execute(any()) }
     }
 
     @Test
@@ -67,7 +67,7 @@ class CreateTaskStateCliTest {
         coEvery { inputHandler.readAndValidateUserInputs(projectId = projectId) } returns dummyState
 
         val exception = InvalidNameException()
-        coEvery { createTaskStateUseCase.CreateTask(dummyState.copy(projectId = projectId)) } throws exception
+        coEvery { createTaskStateUseCase.execute(dummyState.copy(projectId = projectId)) } throws exception
 
         // when
         createTaskStateCli.createTaskState(projectId)

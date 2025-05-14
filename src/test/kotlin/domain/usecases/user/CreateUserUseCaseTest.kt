@@ -1,10 +1,10 @@
-package domain.usecases
+package domain.usecases.user
 
 import com.google.common.truth.Truth.assertThat
 import domain.entities.ActionType
 import domain.entities.EntityType
 import domain.repositories.AuthRepository
-import domain.validation.UserValidator
+import domain.usecases.audit.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,7 +28,7 @@ class CreateUserUseCaseTest {
         useCase = CreateUserUseCase(authRepo, addAuditUseCase)
         coEvery { authRepo.getCurrentUser() } returns currentUser
         coEvery { authRepo.addUser(any(), any()) } returns dummyUser
-        coEvery { addAuditUseCase.addAudit(any(),any(),
+        coEvery { addAuditUseCase.execute(any(),any(),
             any(),any(),any(),any(),any()) } returns Unit
     }
 
@@ -36,7 +36,7 @@ class CreateUserUseCaseTest {
     @Test
     fun `should save user when data is valid`() = runTest {
         // When
-        useCase.addUser("mateUserName", "password")
+        useCase.execute("mateUserName", "password")
 
         // Then
         coVerify(exactly = 1) {
@@ -47,7 +47,7 @@ class CreateUserUseCaseTest {
     @Test
     fun `addUser should returns user when added successfully`() = runTest {
         // When
-        val result = useCase.addUser(dummyUser.username, "password")
+        val result = useCase.execute(dummyUser.username, "password")
 
         // Then
         assertThat(result).isEqualTo(dummyUser)
@@ -57,11 +57,11 @@ class CreateUserUseCaseTest {
     @Test
     fun `should create audit when user is created successfully`() = runTest {
         // When
-        useCase.addUser(dummyUser.username, "password")
+        useCase.execute(dummyUser.username, "password")
 
         // Then
         coVerify(exactly = 1) {
-            addAuditUseCase.addAudit(
+            addAuditUseCase.execute(
                 entityId = dummyUser.id.toString(),
                 entityType = EntityType.USER,
                 action = ActionType.CREATE,

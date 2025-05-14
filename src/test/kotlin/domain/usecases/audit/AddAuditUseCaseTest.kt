@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.audit
 
 import com.google.common.truth.Truth.assertThat
 import data.dummyData.DummyAudits.DummyTaskAuditDto
@@ -29,7 +29,7 @@ class AddAuditUseCaseTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         //when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             dummyProjectAudit_CreateAction.entityId,
             dummyProjectAudit_CreateAction.entityType,
             dummyProjectAudit_CreateAction.action,
@@ -58,7 +58,7 @@ class AddAuditUseCaseTest {
         val addAuditUseCase = AddAuditUseCase(auditRepository)
 
         // when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             DummyTaskAuditDto.entityId,
             DummyTaskAuditDto.entityType,
             DummyTaskAuditDto.action,

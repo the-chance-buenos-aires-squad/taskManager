@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.audit
 
 import domain.entities.ActionType
 import domain.entities.Audit
@@ -11,7 +11,7 @@ class AddAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
 
-    suspend fun addAudit(
+    suspend fun execute(
         entityId: String,
         entityType: EntityType?,
         action: ActionType?,

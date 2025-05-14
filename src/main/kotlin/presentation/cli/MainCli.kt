@@ -2,6 +2,7 @@ package presentation.cli
 
 import presentation.UiController
 import presentation.cli.auth.LoginCli
+import kotlin.system.exitProcess
 
 class MainCli(
     private val uiController: UiController,
@@ -24,9 +25,8 @@ class MainCli(
                 "1" -> loginCli.start()
                 "2" -> {
                     uiController.printMessage("Exiting PlanMate... Goodbye!")
-                    break
+                    exitProcess(0)
                 }
-
                 else -> uiController.printMessage("Invalid option! Please try again.")
 
             }

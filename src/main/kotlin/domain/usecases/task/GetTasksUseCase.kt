@@ -1,10 +1,10 @@
-package domain.usecases
+package domain.usecases.task
 
 import domain.entities.Task
 import domain.repositories.TaskRepository
 
 class GetTasksUseCase(private val taskRepository: TaskRepository) {
-    suspend fun getTasks(): List<Task> {
+    suspend fun execute(): List<Task> {
         return taskRepository.getAllTasks()
     }
 }

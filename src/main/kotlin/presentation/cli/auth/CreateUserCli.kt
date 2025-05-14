@@ -1,7 +1,7 @@
 package presentation.cli.auth
 
 import data.exceptions.UserNameAlreadyExistException
-import domain.usecases.CreateUserUseCase
+import domain.usecases.user.CreateUserUseCase
 import domain.validation.UserValidator
 import presentation.UiController
 import presentation.exceptions.InvalidConfirmPasswordException
@@ -32,7 +32,7 @@ class CreateUserCli(
             val confirmPassword = uiController.readInput().trim()
             userValidator.validatePasswordConfirmation(password, confirmPassword)
 
-            val newUserMate = createUserUseCase.addUser(username, password)
+            val newUserMate = createUserUseCase.execute(username, password)
             uiController.printMessage(SUCCESS_MESSAGE.format(newUserMate.username))
         } catch (e: UserNameEmptyException) {
             uiController.printMessage(e.localizedMessage)

@@ -1,7 +1,7 @@
 package presentation.cli.dashBoard
 
 import presentation.UiController
-import presentation.cli.GetAllAuditsCli
+import presentation.cli.audit.GetAllAuditsCli
 import presentation.cli.auth.CreateUserCli
 import presentation.cli.project.ProjectScreenController
 import presentation.cli.taskState.TaskStateCliController
