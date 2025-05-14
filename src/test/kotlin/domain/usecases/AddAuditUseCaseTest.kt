@@ -6,6 +6,8 @@ import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
 import data.repositories.AuditRepositoryImpl
 import data.repositories.dataSource.AuditDataSource
 import data.repositories.mappers.AuditDtoMapper
+import domain.entities.ActionType
+import domain.entities.EntityType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -60,8 +62,8 @@ class AddAuditUseCaseTest {
         // when
         addAuditUseCase.addAudit(
             DummyTaskAuditDto.entityId,
-            DummyTaskAuditDto.entityType,
-            DummyTaskAuditDto.action,
+            DummyTaskAuditDto.entityType?.let { EntityType.entries.find { e -> e.name == it } },
+            DummyTaskAuditDto.action?.let { ActionType.entries.find { a -> a.name == it } },
             DummyTaskAuditDto.field,
             DummyTaskAuditDto.oldValue,
             DummyTaskAuditDto.newValue,
