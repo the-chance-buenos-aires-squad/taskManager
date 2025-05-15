@@ -10,6 +10,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import presentation.UiController
+import presentation.cli.taskState.CreateTaskStateCli.Messages.ERROR
 import java.util.*
 import javax.naming.InvalidNameException
 import kotlin.test.Test
@@ -74,7 +75,7 @@ class CreateTaskStateCliTest {
 
         // then
         coVerify {
-            uiController.printMessage("Error : ${exception.localizedMessage}")
+            uiController.printMessage("$ERROR${exception.localizedMessage}")
         }
     }
 }
