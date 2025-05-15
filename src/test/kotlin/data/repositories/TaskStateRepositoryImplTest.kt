@@ -5,8 +5,10 @@ import data.exceptions.TaskStateNameException
 import data.repositories.TaskStateRepositoryImpl
 import data.repositories.mappers.TaskStateDtoMapper
 import domain.entities.TaskState
+import domain.entities.User
 import domain.repositories.AuditRepository
 import domain.repositories.AuthRepository
+import dummyData.DummyUser.dummyUserOne
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
 import io.mockk.every
@@ -15,6 +17,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.UserNotLoggedInException
 import java.util.*
 
 class TaskStateRepositoryImplTest {
@@ -22,8 +25,18 @@ class TaskStateRepositoryImplTest {
     private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
     private lateinit var taskStateDtoMapper: TaskStateDtoMapper
     private lateinit var stateRepository: TaskStateRepositoryImpl
-    private val authRepository: AuthRepository = mockk()
     private val auditRepository: AuditRepository = mockk()
+
+    private val fakeAuthRepo = object : AuthRepository {
+        var currentUser: User? = dummyUserOne
+        override suspend fun login(username: String, password: String) = dummyUserOne
+        override suspend fun addUser(userName: String, password: String) = dummyUserOne
+        override suspend fun logout() {}
+        override suspend fun getCurrentUser() = currentUser
+        override suspend fun <T> runIfLoggedIn(action: suspend (User) -> T): T {
+            return action(getCurrentUser()?:throw UserNotLoggedInException())
+        }
+    }
 
     @BeforeEach
     fun setUp() {
@@ -31,7 +44,7 @@ class TaskStateRepositoryImplTest {
         stateRepository = TaskStateRepositoryImpl(
             taskStateCSVDataSource = mockCSVDataSource,
             taskStateDtoMapper = taskStateDtoMapper,
-            authRepository,
+            fakeAuthRepo,
             auditRepository
         )
     }
@@ -44,6 +57,7 @@ class TaskStateRepositoryImplTest {
         every { taskStateDtoMapper.fromEntity(newState) } returns stateRow
         coEvery { mockCSVDataSource.getTaskStates() } returns emptyList()
         coEvery { mockCSVDataSource.createTaskState(stateRow) } returns true
+        coEvery { auditRepository.addAudit(any()) } returns true
 
         val result = stateRepository.createTaskState(newState)
 
@@ -72,6 +86,7 @@ class TaskStateRepositoryImplTest {
         val otherDto = DummyTaskState.todoDto.copy(projectId = UUID.randomUUID().toString())
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf(otherDto)
         coEvery { mockCSVDataSource.createTaskState(any()) } returns true
+        coEvery { auditRepository.addAudit(any()) } returns true
 
         val result = stateRepository.createTaskState(DummyTaskState.readyForReview)
 

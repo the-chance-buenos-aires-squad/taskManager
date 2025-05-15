@@ -1,5 +1,6 @@
 package data.repositories
 
+import auth.UserSession
 import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
@@ -20,13 +21,13 @@ class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
     private val userMapper: UserDtoMapper,
     private val md5Hash: PasswordHash,
-    private val auditRepository: AuditRepository
+    private val auditRepository: AuditRepository,
+    private val session: UserSession
 ) : UserRepository {
 
-    private var adminUser:User? = null
 
     override suspend fun addUser(userName: String, password: String): User {
-        if (adminUser != null) {
+        if (session.getCurrentUser() != null && session.getCurrentUser()!!.role == UserRole.ADMIN) {
             val userDto = this.getUserByUserName(userName)
             if (userDto != null) throw UserNameAlreadyExistException()
 
@@ -51,7 +52,7 @@ class UserRepositoryImpl(
                     field = "",
                     originalValue = "new User:${newUser.username}",
                     modifiedValue = "",
-                    userId = adminUser!!.id.toString(),
+                    userId = session.getCurrentUser()!!.id.toString(),
                     timestamp = LocalDateTime.now()
                 )
             )
@@ -63,38 +64,38 @@ class UserRepositoryImpl(
     }
 
     //todo not used !!
-    override suspend fun updateUser(user: User): Boolean {
-        return userDataSource.updateUser(userMapper.fromEntity(user))
-    }
+//    override suspend fun updateUser(user: User): Boolean {
+//        return userDataSource.updateUser(userMapper.fromEntity(user))
+//    }
 
     //todo not used !!
-    override suspend fun deleteUser(user: User): Boolean {
-        return userDataSource.deleteUser(user.id.toString())
-    }
+//    override suspend fun deleteUser(user: User): Boolean {
+//        return userDataSource.deleteUser(user.id.toString())
+//    }
 
     //todo not used !!
-    override suspend fun getUserById(id: UUID): User? {
-        return userDataSource.getUserById(id.toString())?.let {
-            userMapper.toEntity(it)
-        }
-    }
+//    override suspend fun getUserById(id: UUID): User? {
+//        return userDataSource.getUserById(id.toString())?.let {
+//            userMapper.toEntity(it)
+//        }
+//    }
 
-    override suspend fun getUserByUserName(userName: String): User? {
-        return userDataSource.getUserByUserName(userName)?.let { userMapper.toEntity(it) }
+    override suspend fun getUserByUserName(userName: String): UserDto? {
+        return userDataSource.getUserByUserName(userName)
     }
 
     //todo : not used !!
-    override suspend fun getUsers(): List<User> {
-        val usersRows = userDataSource.getUsers()
-        return usersRows.map { userRow ->
-            userMapper.toEntity(userRow)
-        }
-    }
+//    override suspend fun getUsers(): List<User> {
+//        val usersRows = userDataSource.getUsers()
+//        return usersRows.map { userRow ->
+//            userMapper.toEntity(userRow)
+//        }
+//    }
 
-    override suspend fun loginUser(userName: String, password: String): User {
-        val userDto = userDataSource.getUserByUserName(userName) ?: throw InvalidCredentialsException()
-        val hashInput = md5Hash.generateHash(password)
-        if (userDto.password != hashInput) throw InvalidCredentialsException()
-        return userMapper.toEntity(userDto).also { if (it.role == UserRole.ADMIN) adminUser = it }
-    }
+//    override suspend fun loginUser(userName: String, password: String): User {
+//        val userDto = userDataSource.getUserByUserName(userName) ?: throw InvalidCredentialsException()
+//        val hashInput = md5Hash.generateHash(password)
+//        if (userDto.password != hashInput) throw InvalidCredentialsException()
+//        return userMapper.toEntity(userDto)
+//    }
 }
