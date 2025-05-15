@@ -6,7 +6,7 @@ import presentation.exceptions.UserNotLoggedInException
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.AddAuditUseCase
+import domain.usecases.audit.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,7 +35,7 @@ class UpdateTaskUseCaseTest {
         coEvery { taskRepository.updateTask(any()) } returns true
 
         //.when
-        val result = updateTaskUseCase.updateTask(
+        val result = updateTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -55,7 +55,7 @@ class UpdateTaskUseCaseTest {
         coEvery { taskRepository.updateTask(any()) } returns false
 
         //.when
-        val result = updateTaskUseCase.updateTask(
+        val result = updateTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -75,7 +75,7 @@ class UpdateTaskUseCaseTest {
 
         //when & then
         assertThrows<UserNotLoggedInException> {
-            updateTaskUseCase.updateTask(
+            updateTaskUseCase.execute(
                 id = DummyTasks.validTask.id,
                 title = DummyTasks.validTask.title,
                 description = DummyTasks.validTask.description,
@@ -93,7 +93,7 @@ class UpdateTaskUseCaseTest {
         coEvery { taskRepository.updateTask(any()) } returns true
 
         //when
-        updateTaskUseCase.updateTask(
+        updateTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -103,7 +103,7 @@ class UpdateTaskUseCaseTest {
         )
 
         //then
-        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -114,7 +114,7 @@ class UpdateTaskUseCaseTest {
         coEvery { taskRepository.updateTask(capture(taskSlot)) } returns true
 
         //when
-        updateTaskUseCase.updateTask(
+        updateTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,

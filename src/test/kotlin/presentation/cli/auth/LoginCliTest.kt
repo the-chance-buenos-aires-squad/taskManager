@@ -1,7 +1,7 @@
 package presentation.cli.auth
 
 import data.exceptions.InvalidCredentialsException
-import domain.usecases.AuthenticationUseCase
+import domain.usecases.auth.LoginUseCase
 import domain.validation.UserValidator
 import dummyData.DummyUser
 import io.mockk.coEvery
@@ -17,7 +17,7 @@ import presentation.cli.dashBoard.MateDashBoardCli
 class LoginCliTest {
     private lateinit var loginCli: LoginCli
     private val uiController: UiController = mockk(relaxed = true)
-    private val authenticationUseCase: AuthenticationUseCase = mockk()
+    private val authenticationUseCase: LoginUseCase = mockk()
     private val adminDashBoardCli: AdminDashBoardCli = mockk(relaxed = true)
     private val mateDashBoardCli: MateDashBoardCli = mockk(relaxed = true)
     private val userValidator:UserValidator = mockk(relaxed = true)
@@ -33,7 +33,7 @@ class LoginCliTest {
     fun `should login successfully as admin and redirect to admin dashboard`() = runTest {
         // Given
         coEvery { uiController.readInput() } returnsMany listOf(adminTestUser.username, "adminPassword")
-        coEvery { authenticationUseCase.login(adminTestUser.username, "adminPassword") } returns adminTestUser
+        coEvery { authenticationUseCase.execute(adminTestUser.username, "adminPassword") } returns adminTestUser
 
         // When
         loginCli.start()
@@ -48,7 +48,7 @@ class LoginCliTest {
     fun `should login successfully as mate and redirect to mate dashboard`() = runTest {
         // Given
         coEvery { uiController.readInput() } returnsMany listOf(mateTestUser.username, "adminPassword")
-        coEvery { authenticationUseCase.login(mateTestUser.username, "adminPassword") } returns mateTestUser
+        coEvery { authenticationUseCase.execute(mateTestUser.username, "adminPassword") } returns mateTestUser
 
         // When
         loginCli.start()
@@ -65,7 +65,7 @@ class LoginCliTest {
         val exception = InvalidCredentialsException()
 
         coEvery { uiController.readInput() } returnsMany listOf("wrongUser", "wrongPass")
-        coEvery { authenticationUseCase.login("wrongUser", "wrongPass") } throws exception
+        coEvery { authenticationUseCase.execute("wrongUser", "wrongPass") } throws exception
 
         // When
         loginCli.start()
@@ -82,7 +82,7 @@ class LoginCliTest {
         val exception = Exception("unexpected errors")
 
         coEvery { uiController.readInput() } returnsMany listOf("user", "pass")
-        coEvery { authenticationUseCase.login("user", "pass") } throws exception
+        coEvery { authenticationUseCase.execute("user", "pass") } throws exception
 
         // When
         loginCli.start()
@@ -96,7 +96,7 @@ class LoginCliTest {
     @Test
     fun `should return after 2 failed attempts`() = runTest {
         // Given
-        coEvery { authenticationUseCase.login(any(), any()) } throws Exception("Invalid credentials")
+        coEvery { authenticationUseCase.execute(any(), any()) } throws Exception("Invalid credentials")
         coEvery { uiController.readInput() } returnsMany listOf("user1", "pass1", "user2", "pass2")
 
         // When

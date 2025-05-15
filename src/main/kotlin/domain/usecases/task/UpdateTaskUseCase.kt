@@ -6,7 +6,7 @@ import domain.entities.EntityType
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.AddAuditUseCase
+import domain.usecases.audit.AddAuditUseCase
 import java.util.*
 
 class UpdateTaskUseCase(
@@ -14,7 +14,7 @@ class UpdateTaskUseCase(
     private val addAuditUseCase: AddAuditUseCase,
     private val authRepository: AuthRepository
 ) {
-    suspend fun updateTask(
+    suspend fun execute(
         id: UUID,
         title: String,
         description: String,
@@ -39,7 +39,7 @@ class UpdateTaskUseCase(
 
         return taskRepository.updateTask(updatedTask).also { result ->
             if (result) {
-                addAuditUseCase.addAudit(
+                addAuditUseCase.execute(
                     entityId = updatedTask.id.toString(),
                     entityType = EntityType.TASK,
                     action = ActionType.UPDATE,

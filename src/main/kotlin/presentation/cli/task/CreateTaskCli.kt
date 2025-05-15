@@ -58,7 +58,7 @@ class CreateTaskCli(
         uiController.printMessage("Choose task state: ", isInline = false)
         val states = getAllStatesUseCase.execute(projectID)
         states.forEachIndexed { index, taskState ->
-            uiController.printMessage("${index + 1} - ${taskState.name}||", isInline = false)
+            uiController.printMessage("${index + 1} - ${taskState.title}||", isInline = false)
         }
 
         val chosenState: TaskState?
@@ -100,7 +100,7 @@ class CreateTaskCli(
         val newTaskId = UUID.randomUUID()
 
         try {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 id = newTaskId,
                 title = title,
                 description = description,

@@ -25,7 +25,7 @@ class CreateTaskStateUseCaseTest {
 
         coEvery { repository.createTaskState(newState) } returns true
 
-        val result = createTaskStateUseCase.CreateTask(newState)
+        val result = createTaskStateUseCase.execute(newState)
 
         assertThat(result).isTrue()
     }
@@ -37,7 +37,7 @@ class CreateTaskStateUseCaseTest {
 
         coEvery { repository.createTaskState(newState) } returns false
 
-        val result = createTaskStateUseCase.CreateTask(newState)
+        val result = createTaskStateUseCase.execute(newState)
 
         assertThat(result).isFalse()
     }

@@ -1,18 +1,13 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.util.PasswordHash
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.UserRepository
-import dummyData.DummyUser
 import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.test.Test

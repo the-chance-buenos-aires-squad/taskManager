@@ -1,6 +1,6 @@
 package data.dataSource.user
 
-import data.dataSource.DtoParser
+import data.dto.DtoParser
 import data.dto.UserDto
 import domain.entities.UserRole
 

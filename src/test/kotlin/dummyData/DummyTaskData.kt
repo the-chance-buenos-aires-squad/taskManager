@@ -10,7 +10,7 @@ import java.util.*
 object DummyTaskData {
     val project = Project(
         id = UUID.randomUUID(),
-        name = "Test Project",
+        title = "Test Project",
         description = "Test Description",
         createdAt = LocalDateTime.now()
     )
@@ -32,12 +32,12 @@ object DummyTaskData {
     val taskStates = listOf(
         TaskState(
             id = UUID.randomUUID(),
-            name = "todo",
+            title = "todo",
             projectId = project.id
         ),
         TaskState(
             id = UUID.randomUUID(),
-            name = "in progress",
+            title = "in progress",
             projectId = project.id
         )
     )

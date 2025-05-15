@@ -9,8 +9,8 @@ data class Audit(
     val entityType: EntityType?,
     val action: ActionType?,
     val field: String?,
-    val oldValue: String?,
-    val newValue: String?,
+    val originalValue: String?,
+    val modifiedValue: String?,
     val userId: String,
     val timestamp: LocalDateTime
 )

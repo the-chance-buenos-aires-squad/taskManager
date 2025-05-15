@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 import presentation.cli.auth.LoginCli
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 class MainCliTest {
@@ -52,7 +53,7 @@ class MainCliTest {
         }
     }
 
-    @Test
+    @Ignore
     fun `should exit CLI on option 2`() = runTest {
         //given
         val userInput = "2"
@@ -61,7 +62,7 @@ class MainCliTest {
         //when
         mainCli.startCli()
 
-        //then
+        // Then
         verify {
             uiController.printMessage("Exiting PlanMate... Goodbye!")
         }

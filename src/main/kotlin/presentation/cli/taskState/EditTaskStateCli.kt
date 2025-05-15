@@ -53,7 +53,7 @@ class EditTaskStateCli(
             uiController.printMessage("Task state edited successfully.")
             uiController.printMessage(
                 """
-                Updated Task State ${index + 1}: Name: ${updatedState.name}
+                Updated Task State ${index + 1}: Name: ${updatedState.title}
                 """.trimIndent()
             )
         } else uiController.printMessage("Failed to edit task state.")

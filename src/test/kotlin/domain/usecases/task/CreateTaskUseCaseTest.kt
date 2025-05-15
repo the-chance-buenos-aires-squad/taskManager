@@ -9,7 +9,7 @@ import presentation.exceptions.UserNotLoggedInException
 import domain.entities.Task
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.AddAuditUseCase
+import domain.usecases.audit.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -47,7 +47,7 @@ class CreateTaskUseCaseTest {
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
         val result = createTaskUseCase
-            .createTask(
+            .execute(
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
@@ -63,7 +63,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskTitleEmptyException when title is empty`() = runTest {
         assertThrows<TaskTitleEmptyException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 UUID.randomUUID(),
                 " ",
                 validDescription,
@@ -77,7 +77,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskDescriptionEmptyException when description is empty`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 "",
@@ -91,7 +91,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw InvalidProjectIdException when projectId is zero`() = runTest {
         assertThrows<InvalidProjectIdException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
@@ -107,7 +107,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -124,7 +124,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -141,7 +141,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             id = UUID.randomUUID(),
             title = validTitle,
             description = validDescription,
@@ -156,7 +156,7 @@ class CreateTaskUseCaseTest {
     fun `should return true when task is successfully created`() = runTest {
         coEvery { taskRepository.addTask(any()) } returns true
 
-        val result = createTaskUseCase.createTask(
+        val result = createTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -175,7 +175,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             UUID.randomUUID(),
             trimmedTitle,
             trimmedDescription,
@@ -192,7 +192,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskTitleEmptyException when title is only whitespace characters`() = runTest {
         assertThrows<TaskTitleEmptyException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 UUID.randomUUID(),
                 "\n\t",
                 validDescription,
@@ -206,7 +206,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskDescriptionEmptyException when description is only whitespace characters`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 "\t\t  ",
@@ -223,7 +223,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -240,7 +240,7 @@ class CreateTaskUseCaseTest {
         coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
         coEvery { taskRepository.addTask(any()) } returns true
 
-        val result = createTaskUseCase.createTask(
+        val result = createTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -257,7 +257,7 @@ class CreateTaskUseCaseTest {
         coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
         coEvery { taskRepository.addTask(any()) } returns false
 
-        val result = createTaskUseCase.createTask(
+        val result = createTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -274,7 +274,7 @@ class CreateTaskUseCaseTest {
         coEvery { authRepository.getCurrentUser() } returns null
 
         assertThrows<UserNotLoggedInException> {
-            createTaskUseCase.createTask(
+            createTaskUseCase.execute(
                 id = DummyTasks.validTask.id,
                 title = DummyTasks.validTask.title,
                 description = DummyTasks.validTask.description,
@@ -290,7 +290,7 @@ class CreateTaskUseCaseTest {
         coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
         coEvery { taskRepository.addTask(any()) } returns true
 
-        createTaskUseCase.createTask(
+        createTaskUseCase.execute(
             id = DummyTasks.validTask.id,
             title = DummyTasks.validTask.title,
             description = DummyTasks.validTask.description,
@@ -299,6 +299,6 @@ class CreateTaskUseCaseTest {
             assignedTo = DummyTasks.validTask.assignedTo,
         )
 
-        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

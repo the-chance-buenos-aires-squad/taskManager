@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import presentation.exceptions.UserNotLoggedInException
 import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.AddAuditUseCase
+import domain.usecases.audit.AddAuditUseCase
 import dummyData.DummyUser
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -33,7 +33,7 @@ class DeleteTaskUseCaseTest {
         coEvery { taskRepository.deleteTask(any()) } returns true
 
         //.when
-        val result = deleteTaskUseCase.deleteTask(UUID.randomUUID())
+        val result = deleteTaskUseCase.execute(UUID.randomUUID())
 
         //then
         assertThat(result).isTrue()
@@ -46,7 +46,7 @@ class DeleteTaskUseCaseTest {
         coEvery { taskRepository.deleteTask(any()) } returns false
 
         //.when
-        val result = deleteTaskUseCase.deleteTask(UUID.randomUUID())
+        val result = deleteTaskUseCase.execute(UUID.randomUUID())
 
         //then
         assertThat(result).isFalse()
@@ -59,7 +59,7 @@ class DeleteTaskUseCaseTest {
 
         //when & then
         assertThrows<UserNotLoggedInException> {
-            deleteTaskUseCase.deleteTask(UUID.randomUUID())
+            deleteTaskUseCase.execute(UUID.randomUUID())
         }
     }
 
@@ -70,9 +70,9 @@ class DeleteTaskUseCaseTest {
         coEvery { taskRepository.deleteTask(any()) } returns true
 
         //when
-        deleteTaskUseCase.deleteTask(UUID.randomUUID())
+        deleteTaskUseCase.execute(UUID.randomUUID())
 
         //then
-        coVerify { addAuditUseCase.addAudit(any(), any(), any(), any(), any(), any(), any()) }
+        coVerify { addAuditUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

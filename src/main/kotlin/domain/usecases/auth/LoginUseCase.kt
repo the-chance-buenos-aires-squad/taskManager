@@ -1,14 +1,13 @@
-package domain.usecases
+package domain.usecases.auth
 
 import domain.entities.User
 import domain.repositories.AuthRepository
-import domain.validation.UserValidator
 
-class AuthenticationUseCase(
+class LoginUseCase(
     private val authRepository: AuthRepository,
 ) {
 
-    suspend fun login(
+    suspend fun execute(
         username: String,
         password: String
     ): User {

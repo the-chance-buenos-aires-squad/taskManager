@@ -1,7 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.util.PasswordHash
+import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
 import data.exceptions.InvalidCredentialsException
@@ -38,7 +38,7 @@ class UserRepositoryImplTest {
         val expected = "test_user"
 
         coEvery { userRepository.getUserByUserName(expected) } returns null
-        coEvery { hasher.hash(any()) } returns "hash"
+        coEvery { hasher.generateHash(any()) } returns "hash"
         coEvery { userDataSource.addUser(any()) } returns true
 
         // when
@@ -64,7 +64,7 @@ class UserRepositoryImplTest {
     @Test
     fun `addUser throws FailedUserSaveException when datasource fails to add`() = runTest {
         coEvery { userRepository.getUserByUserName("new_user") } returns null
-        coEvery { hasher.hash("pass123") } returns "hash123"
+        coEvery { hasher.generateHash("pass123") } returns "hash123"
         coEvery { userDataSource.addUser(any()) } returns false
 
         assertThrows<FailedUserSaveException> {
@@ -75,7 +75,7 @@ class UserRepositoryImplTest {
     @Test
     fun `should return user when searching by valid user id`() = runTest {
         coEvery { userDataSource.getUserByUserName("admin_user") } returns adminDto
-        coEvery { hasher.hash("adminPass") } returns adminDto.password
+        coEvery { hasher.generateHash("adminPass") } returns adminDto.password
         coEvery { mapper.toEntity(adminDto) } returns userAdmin
 
         val result = userRepository.loginUser("admin_user", "adminPass")
@@ -95,7 +95,7 @@ class UserRepositoryImplTest {
     @Test
     fun `loginUser throws InvalidCredentialsException when password does not match`() = runTest {
         coEvery { userDataSource.getUserByUserName("admin_user") } returns adminDto
-        coEvery { hasher.hash("wrongPass") } returns "incorrectHash"
+        coEvery { hasher.generateHash("wrongPass") } returns "incorrectHash"
 
        assertThrows<InvalidCredentialsException> {
             userRepository.loginUser("admin_user", "wrongPass")

@@ -1,6 +1,6 @@
 package data.dataSource.task
 
-import data.dataSource.DtoParser
+import data.dto.DtoParser
 import data.dto.TaskDto
 
 class TaskDtoParser : DtoParser<List<String>, TaskDto> {

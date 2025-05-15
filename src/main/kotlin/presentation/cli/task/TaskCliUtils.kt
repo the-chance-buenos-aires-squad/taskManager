@@ -86,10 +86,10 @@ object TaskCliUtils {
         states: List<TaskState>,
         ui: UiController
     ): UUID {
-        val currentStateName = states.find { it.id == currentStateId }?.name ?: "Unknown"
+        val currentStateName = states.find { it.id == currentStateId }?.title ?: "Unknown"
         ui.printMessage("Available States:")
         states.forEachIndexed { index, state ->
-            ui.printMessage("${index + 1}. ${state.name}")
+            ui.printMessage("${index + 1}. ${state.title}")
         }
 
         ui.printMessage("Select state index (current: $currentStateName):")

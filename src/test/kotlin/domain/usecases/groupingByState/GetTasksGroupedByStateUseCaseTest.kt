@@ -1,7 +1,8 @@
-package domain.usecases
+package domain.usecases.groupingByState
 
 import com.google.common.truth.Truth.assertThat
 import createDummyTaskState
+import domain.usecases.task.GetTasksUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
 import dummyData.createDummyProject
 import dummyData.createDummyTask
@@ -87,10 +88,10 @@ class GetTasksGroupedByStateUseCaseTest {
     fun `getTasksGroupedByState should return list of states when state have task in specific project`() = runTest {
         // Given
         coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
+        coEvery { getTasksUseCase.execute() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
-        val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
+        val result = getTasksGroupedByStateUseCase.execute(dummyProject)
 
         // Then
         assertThat(result).hasSize(3)
@@ -101,10 +102,10 @@ class GetTasksGroupedByStateUseCaseTest {
     fun `getTasksGroupedByState should group tasks by their state correctly`() = runTest {
         // Given
         coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState, otherState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
+        coEvery { getTasksUseCase.execute() } returns listOf(task1, task2, task3, taskOtherProject, taskOtherState)
 
         // When
-        val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
+        val result = getTasksGroupedByStateUseCase.execute(dummyProject)
 
         // Then
         val stateWithTasks1 = result.find { it.state.id == UUID.fromString("00000000-1000-0000-0000-000000000000") }
@@ -118,10 +119,10 @@ class GetTasksGroupedByStateUseCaseTest {
     fun `getTasksGroupedByState returns states with empty tasks when no tasks exist`() = runTest {
         // Given
         coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(todoState, inProgressState)
-        coEvery { getTasksUseCase.getTasks() } returns emptyList()
+        coEvery { getTasksUseCase.execute() } returns emptyList()
 
         // When
-        val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
+        val result = getTasksGroupedByStateUseCase.execute(dummyProject)
 
         // Then
         assertThat(result[0].tasks).isEmpty()
@@ -131,7 +132,7 @@ class GetTasksGroupedByStateUseCaseTest {
     fun `getTasksGroupedByState returns empty list when there are no states for the project`() = runTest {
         // Given
         coEvery { getTaskStatesUseCase.execute(any()) } returns listOf()
-        coEvery { getTasksUseCase.getTasks() } returns listOf(
+        coEvery { getTasksUseCase.execute() } returns listOf(
             createDummyTask(
                 projectId = projectId,
                 stateId = UUID.fromString("00000000-3000-0000-0000-000000000000"),
@@ -140,7 +141,7 @@ class GetTasksGroupedByStateUseCaseTest {
         )
 
         // When
-        val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
+        val result = getTasksGroupedByStateUseCase.execute(dummyProject)
 
         // Then
         assertThat(result).isEmpty()
@@ -150,10 +151,10 @@ class GetTasksGroupedByStateUseCaseTest {
     fun `getTasksGroupedByState filters out tasks and states from other projects`() = runTest {
         // Given
         coEvery { getTaskStatesUseCase.execute(any()) } returns listOf(projectState, otherProjectState)
-        coEvery { getTasksUseCase.getTasks() } returns listOf(task1, task4)
+        coEvery { getTasksUseCase.execute() } returns listOf(task1, task4)
 
         // When
-        val result = getTasksGroupedByStateUseCase.getTasksGroupedByState(dummyProject)
+        val result = getTasksGroupedByStateUseCase.execute(dummyProject)
 
         // Then
         assertThat(result[0].state).isEqualTo(projectState)

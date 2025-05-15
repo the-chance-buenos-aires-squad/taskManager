@@ -1,4 +1,4 @@
-package domain.usecases
+package domain.usecases.audit
 
 import com.google.common.truth.Truth.assertThat
 import data.dummyData.DummyAudits.DummyTaskAuditDto
@@ -6,6 +6,8 @@ import data.dummyData.DummyAudits.dummyProjectAudit_CreateAction
 import data.repositories.AuditRepositoryImpl
 import data.repositories.dataSource.AuditDataSource
 import data.repositories.mappers.AuditDtoMapper
+import domain.entities.ActionType
+import domain.entities.EntityType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -18,7 +20,6 @@ import java.io.PrintStream
 class AddAuditUseCaseTest {
 
     private lateinit var addAuditUseCase: AddAuditUseCase
-    private val auditDataSource: AuditDataSource = mockk(relaxed = true)
     private lateinit var auditRepository: AuditRepositoryImpl
 
     @Test
@@ -29,13 +30,13 @@ class AddAuditUseCaseTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         //when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             dummyProjectAudit_CreateAction.entityId,
             dummyProjectAudit_CreateAction.entityType,
             dummyProjectAudit_CreateAction.action,
             dummyProjectAudit_CreateAction.field,
-            dummyProjectAudit_CreateAction.oldValue,
-            dummyProjectAudit_CreateAction.newValue,
+            dummyProjectAudit_CreateAction.originalValue,
+            dummyProjectAudit_CreateAction.modifiedValue,
             dummyProjectAudit_CreateAction.userId
         )
         //then
@@ -58,10 +59,10 @@ class AddAuditUseCaseTest {
         val addAuditUseCase = AddAuditUseCase(auditRepository)
 
         // when
-        addAuditUseCase.addAudit(
+        addAuditUseCase.execute(
             DummyTaskAuditDto.entityId,
-            DummyTaskAuditDto.entityType,
-            DummyTaskAuditDto.action,
+            DummyTaskAuditDto.entityType?.let { EntityType.entries.find { e -> e.name == it } },
+            DummyTaskAuditDto.action?.let { ActionType.entries.find { a -> a.name == it } },
             DummyTaskAuditDto.field,
             DummyTaskAuditDto.oldValue,
             DummyTaskAuditDto.newValue,
