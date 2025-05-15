@@ -14,10 +14,10 @@ class CreateProjectCli(
     suspend fun create() {
         val id = UUID.randomUUID()
 
-        uiController.printMessage("Enter project name:")
+        uiController.printMessage(ENTER_PROJECT_NAME)
         val name = uiController.readInput()
 
-        uiController.printMessage("Enter project description:")
+        uiController.printMessage(ENTER_PROJECT_DESCRIPTION)
         val description = uiController.readInput()
         val project = Project(
             id = id,
@@ -27,12 +27,18 @@ class CreateProjectCli(
         )
         try {
             createProjectUseCase.execute(project).let {
-                if (it) uiController.printMessage("Project created.")
+                if (it) uiController.printMessage(PROJECT_CREATED)
             }
         } catch (e: UserEnterInvalidValueException) {
             uiController.printMessage(e.message.toString())
         } catch (e: Exception) {
-            uiController.printMessage("Failed to create project.${e.message}")
+            uiController.printMessage("$FAILED_TO_CREATE_PROJECT ${e.message}")
         }
+    }
+    companion object {
+        const val ENTER_PROJECT_NAME = "Enter project name:"
+        const val ENTER_PROJECT_DESCRIPTION = "Enter project description:"
+        const val PROJECT_CREATED = "Project created."
+        const val FAILED_TO_CREATE_PROJECT = "Failed to create project."
     }
 }

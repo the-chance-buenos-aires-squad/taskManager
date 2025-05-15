@@ -3,8 +3,8 @@ package presentation.cli.task
 import domain.usecases.groupingByState.GetTasksGroupedByStateUseCase
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.INAVLID_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
+import presentation.cli.taskState.TaskStateCliController.Companion.INVALID_PROJECT
 
 class ViewSwimlanesCLI(
     private val uiController: UiController,
@@ -24,7 +24,7 @@ class ViewSwimlanesCLI(
                 val selectedProject = projectCliHelper.selectProject(projects)
 
                 if (selectedProject == null) {
-                    uiController.printMessage("invalid project")
+                    uiController.printMessage(INVALID_PROJECT)
                     return
                 }
                 val swimlanes = getTasksGroupedByStateUseCase.execute(selectedProject)
@@ -38,8 +38,8 @@ class ViewSwimlanesCLI(
                     2 -> updateTaskCli.update(selectedProject.id)
                     3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return
-                    null -> uiController.printMessage(INAVLID_INPUT_MESSAGE)
-                    else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+                    null -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+                    else -> uiController.printMessage("$INVALID_INPUT_MESSAGE from the menu.")
                 }
 
             } catch (ex: Exception) {
@@ -76,7 +76,6 @@ class ViewSwimlanesCLI(
                     "         TASK SWIMLANES VIEW             \n" +
                     "========================================\n"
         private const val TITLE_STATE_MESSAGE = "\n=====( %S )====="
-        private const val NO_PROJECT_ERROR_MESSAGE = " Error: %S"
         private const val EXCEPTION_ERROR_MESSAGE = " An unexpected error occurred: %S"
         private const val TOTAL_TASKS_FOUND_MESSAGE = "\n\n %S total tasks found\n"
         private const val TASKS_BY_STATE_MESSAGE = "\nTasks by State:"

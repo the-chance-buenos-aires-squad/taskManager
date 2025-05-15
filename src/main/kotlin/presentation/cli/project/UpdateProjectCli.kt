@@ -13,29 +13,29 @@ class UpdateProjectCli(
     suspend fun update() {
         val projects = projectCliHelper.getProjects().also {
             if (it.isEmpty()) {
-                uiController.printMessage("No projects found.")
+                uiController.printMessage(NO_PROJECTS_FOUND)
                 return
             }
         }
 
         val selectedProject = projectCliHelper.selectProject(projects).also {
             if (it == null) {
-                uiController.printMessage("No project was selected.")
+                uiController.printMessage(NO_PROJECT_SELECTED)
                 return
             }
         }
 
-        uiController.printMessage("Enter new name:")
+        uiController.printMessage(ENTER_NEW_NAME)
         val name = uiController.readInput()
         if (name.isEmpty()) {
-            uiController.printMessage("New name can't be empty")
+            uiController.printMessage(NEW_NAME_CANT_EMPTY)
             return
         }
 
-        uiController.printMessage("Enter project description:")
+        uiController.printMessage(ENTER_PROJECT_DESCRIPTION)
         val description = uiController.readInput()
         if (description.isEmpty()) {
-            uiController.printMessage("Description can't be empty")
+            uiController.printMessage(DESCRIPTION_CANT_EMPTY)
             return
         }
 
@@ -47,9 +47,19 @@ class UpdateProjectCli(
 
         try {
             updateProjectUseCase.execute(updatedProject)
-            uiController.printMessage("Project updated.")
+            uiController.printMessage(PROJECT_UPDATED)
         } catch (e: Exception) {
-            uiController.printMessage("Error updating project: ${e.message}")
+            uiController.printMessage("$ERROR_UPDATING_PROJECT ${e.message}")
         }
+    }
+    companion object {
+        const val ENTER_NEW_NAME = "Enter new name:"
+        const val NEW_NAME_CANT_EMPTY = "New name can't be empty"
+        const val ENTER_PROJECT_DESCRIPTION = "Enter project description:"
+        const val DESCRIPTION_CANT_EMPTY = "Description can't be empty"
+        const val PROJECT_UPDATED = "Project updated."
+        const val ERROR_UPDATING_PROJECT = "Error updating project:"
+        const val NO_PROJECTS_FOUND = "no projects found"
+        const val NO_PROJECT_SELECTED = "no project was selected"
     }
 }

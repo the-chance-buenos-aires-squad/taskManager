@@ -49,8 +49,8 @@ class UpdateTaskCli(
                 updatedTask.assignedTo,
             ).also { result ->
                 when (result) {
-                    true -> uiController.printMessage("Task updated successfully.")
-                    false -> uiController.printMessage("Failed to update task.")
+                    true -> uiController.printMessage(SUCCESS)
+                    false -> uiController.printMessage(ERROR)
                 }
             }
 
@@ -58,5 +58,8 @@ class UpdateTaskCli(
             uiController.printMessage(e.message ?: "")
         }
     }
-
+    companion object Messages {
+        const val SUCCESS = "Task updated successfully."
+        const val ERROR = "Failed to update task."
+    }
 }

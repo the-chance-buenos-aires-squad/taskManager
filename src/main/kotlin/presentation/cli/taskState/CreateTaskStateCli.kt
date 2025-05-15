@@ -11,28 +11,32 @@ class CreateTaskStateCli(
 ) {
     suspend fun createTaskState(projectId: UUID) {
 
-        uiController.printMessage(
-            """
-            =========  Create Task State  📋========
-            """.trimIndent()
-        )
+        uiController.printMessage(HEADER)
 
         val taskState = inputHandler.readAndValidateUserInputs(projectId = projectId)
 
         try {
             val newState = createTaskStateUseCase.execute(taskState.copy(projectId = projectId))
             if (newState) {
-                uiController.printMessage("Task state created successfully.")
+                uiController.printMessage(SUCCESS)
                 uiController.printMessage(
                     """
-                Name State: ${taskState.title}
+                $NAME_STATE${taskState.title}
                 """.trimIndent()
                 )
             } else {
-                uiController.printMessage("Failed to create task state.")
+                uiController.printMessage(FAILURE)
             }
         } catch (e: Exception) {
-            uiController.printMessage("Error : ${e.localizedMessage}")
+            uiController.printMessage("$ERROR${e.localizedMessage}")
         }
+    }
+
+    companion object Messages {
+        const val HEADER = "=========  Create Task State  ========"
+        const val SUCCESS = "Task state created successfully."
+        const val FAILURE = "Failed to create task state."
+        const val NAME_STATE = "Name State: "
+        const val ERROR = "Error: "
     }
 }
