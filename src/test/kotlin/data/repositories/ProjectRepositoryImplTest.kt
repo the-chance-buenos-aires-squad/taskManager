@@ -4,36 +4,85 @@ import com.google.common.truth.Truth.assertThat
 import data.dto.ProjectDto
 import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectDtoMapper
+import domain.customeExceptions.UserEnterInvalidValueException
+import domain.entities.User
+import domain.repositories.AuthRepository
+import dummyData.DummyProjects
+import dummyData.DummyUser
+import dummyData.DummyUser.dummyUserOne
 import dummyData.createDummyProject
-import io.mockk.coEvery
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.UserNotLoggedInException
 import java.time.LocalDateTime
 import java.util.*
 
 class ProjectRepositoryImplTest {
-    private lateinit var projectDataSource: ProjectDataSource
-    private lateinit var projectDtoMapper: ProjectDtoMapper
+    private var projectDataSource: ProjectDataSource = mockk(relaxed = true)
+    private var projectDtoMapper: ProjectDtoMapper = mockk(relaxed = true)
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
+
+    private val fakeAuthRepo = object : AuthRepository {
+        var currentUser:User? = dummyUserOne
+        override suspend fun login(username: String, password: String) = DummyUser.dummyUserOne
+        override suspend fun addUser(userName: String, password: String) = DummyUser.dummyUserOne
+        override suspend fun logout() {}
+        override suspend fun getCurrentUser() = currentUser
+        override suspend fun <T> runIfLoggedIn(action: suspend (User) -> T): T {
+            return action(getCurrentUser()?:throw UserNotLoggedInException())
+        }
+    }
+
     val id: UUID = UUID.randomUUID()
 
     @BeforeEach
     fun setup() {
-        projectDtoMapper = mockk(relaxed = true)
-        projectDataSource = mockk(relaxed = true)
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectDtoMapper)
+        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectDtoMapper, fakeAuthRepo)
     }
+
+
+
+    @Test
+    fun `should not allow any repository action if user not logged in`() = runTest {
+        //given
+        fakeAuthRepo.currentUser = null
+
+        assertThrows<UserNotLoggedInException> { projectRepositoryImpl.createProject(createDummyProject()) }
+        coVerify(exactly = 0) { projectDataSource.addProject(any()) }
+        coVerify(exactly = 0) { projectDataSource.updateProject(any()) }
+        coVerify(exactly = 0) { projectDataSource.deleteProject(any()) }
+        coVerify(exactly = 0) { projectDataSource.getAllProjects() }
+    }
+
 
     @Test
     fun `should return true if project created successfully`() = runTest {
+        //given
         coEvery { projectDataSource.addProject(any()) } returns true
 
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
         assertThat(result).isTrue()
+        coVerify { projectDataSource.addProject(any()) }
+    }
+
+    @Test
+    fun `should throw UserEnterInvalidValueException trying to create project with empty title`() = runTest {
+        //given
+
+        //when & then
+        assertThrows< UserEnterInvalidValueException > { projectRepositoryImpl.createProject(createDummyProject(name = "")) }
+    }
+
+    @Test
+    fun `should throw UserEnterInvalidValueException trying to create project with empty description`() = runTest {
+        //given
+
+        //when & then
+        assertThrows< UserEnterInvalidValueException > { projectRepositoryImpl.createProject(createDummyProject(description = "")) }
     }
 
     @Test
@@ -43,6 +92,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.createProject(createDummyProject())
 
         assertThat(result).isFalse()
+        coVerify { projectDataSource.addProject(any()) }
     }
 
     @Test
@@ -52,6 +102,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.updateProject(createDummyProject())
 
         assertThat(result).isTrue()
+        coVerify { projectDataSource.updateProject(any()) }
     }
 
     @Test
@@ -61,6 +112,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.updateProject(createDummyProject())
 
         assertThat(result).isFalse()
+        coVerify { projectDataSource.updateProject(any()) }
     }
 
     @Test
@@ -70,6 +122,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
         assertThat(result).isTrue()
+        coVerify { projectDataSource.deleteProject(any()) }
     }
 
     @Test
@@ -79,6 +132,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.deleteProject(createDummyProject().id)
 
         assertThat(result).isFalse()
+        coVerify { projectDataSource.deleteProject(any()) }
     }
 
 
@@ -96,6 +150,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).hasSize(2)
         verify { projectDtoMapper.toEntity(testDto) }
+        coVerify { projectDataSource.getAllProjects() }
     }
 
     @Test
@@ -105,5 +160,6 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.getAllProjects()
 
         assertThat(result).isEmpty()
+        coVerify { projectDataSource.getAllProjects() }
     }
 }

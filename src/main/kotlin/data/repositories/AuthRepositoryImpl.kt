@@ -28,9 +28,8 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun getCurrentUser(): User? = currentUser
-    override suspend fun <T> runIfLoggedIn(action: suspend () -> T): T {
-        getCurrentUser()?: throw UserNotLoggedInException()
-        return action()
+    override suspend fun <T> runIfLoggedIn(action: suspend (currentUser:User) -> T): T {
+        return action(getCurrentUser()?: throw UserNotLoggedInException())
     }
 
 }

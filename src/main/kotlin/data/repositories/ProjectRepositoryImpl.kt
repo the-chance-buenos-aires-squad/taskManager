@@ -22,21 +22,18 @@ class ProjectRepositoryImpl(
             }
              projectDataSource.addProject(projectMapper.fromEntity(project))
         }
-
     }
 
     override suspend fun updateProject(project: Project): Boolean {
         return authRepository.runIfLoggedIn {
             projectDataSource.updateProject(projectMapper.fromEntity(project))
         }
-//        return projectDataSource.updateProject(projectMapper.fromEntity(project))
     }
 
     override suspend fun deleteProject(projectId: UUID): Boolean {
         return authRepository.runIfLoggedIn {
             projectDataSource.deleteProject(projectId.toString())
         }
-//        return projectDataSource.deleteProject(projectId.toString())
     }
 
     override suspend fun getAllProjects(): List<Project> {
@@ -46,9 +43,5 @@ class ProjectRepositoryImpl(
                 projectMapper.toEntity(projectRow)
             }
         }
-//        return projectDataSource.getAllProjects()
-//            .map { projectRow ->
-//                projectMapper.toEntity(projectRow)
-//            }
     }
 }

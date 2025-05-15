@@ -3,8 +3,10 @@ package presentation.cli.project
 import data.repositories.ProjectRepositoryImpl
 import data.repositories.dataSource.ProjectDataSource
 import domain.customeExceptions.UserEnterInvalidValueException
+import domain.repositories.AuthRepository
 import domain.repositories.ProjectRepository
 import domain.usecases.project.CreateProjectUseCase
+import dummyData.DummyUser
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -77,9 +79,11 @@ class CreateProjectCliTest {
         //given
         val exceptionMessage = "fail from data source dou to ......."
         val mockedDataSource: ProjectDataSource = mockk(relaxed = true)
+        val mockedAuthRepo:AuthRepository = mockk(relaxed = true)
+        coEvery { mockedAuthRepo.getCurrentUser() } returns DummyUser.dummyUserOne
         coEvery { mockedDataSource.addProject(any()) } throws Exception(exceptionMessage)
         every { uiController.readInput() } returnsMany listOf("title", "description")
-        val mockedRepo: ProjectRepository = ProjectRepositoryImpl(mockedDataSource, mockk(relaxed = true))
+        val mockedRepo: ProjectRepository = ProjectRepositoryImpl(mockedDataSource, mockk(relaxed = true), mockedAuthRepo)
         val mockedUseCase = CreateProjectUseCase(mockedRepo)
         val createProjectCli = CreateProjectCli(mockedUseCase, uiController)
 
