@@ -3,6 +3,8 @@ package data.repositories
 import com.google.common.truth.Truth.assertThat
 import data.repositories.dataSource.TaskDataSource
 import data.repositories.mappers.TaskDtoMapper
+import domain.repositories.AuditRepository
+import domain.repositories.AuthRepository
 import dummyData.DummyTasks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -18,10 +20,12 @@ class TaskRepositoryImplTest {
     private val mockTaskDataSource = mockk<TaskDataSource>(relaxed = true)
     private val mockTaskMapper = mockk<TaskDtoMapper>(relaxed = true)
     private lateinit var taskRepository: TaskRepositoryImpl
+    private val authRepository:AuthRepository = mockk()
+    private val auditRepository:AuditRepository = mockk()
 
     @BeforeEach
     fun setUp() {
-        taskRepository = TaskRepositoryImpl(mockTaskDataSource, mockTaskMapper)
+        taskRepository = TaskRepositoryImpl(mockTaskDataSource, mockTaskMapper,authRepository,auditRepository)
 
         // Mock mapper and data source to return expected values
         coEvery { mockTaskDataSource.addTask(any()) } returns true

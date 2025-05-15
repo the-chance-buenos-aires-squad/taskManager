@@ -13,20 +13,19 @@ import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.jvm.Throws
 
 
 class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
     private val userMapper: UserDtoMapper,
     private val md5Hash: PasswordHash,
-    private val authRepository: AuthRepository,
+    private val authRepository: Lazy<AuthRepository>,
     private val auditRepository: AuditRepository
 ) : UserRepository {
 
 
     override suspend fun addUser(userName: String, password: String): User {
-        return authRepository.runIfLoggedIn { currentUser ->
+        return authRepository.value.runIfLoggedIn { currentUser ->
             val userDto = this.getUserByUserName(userName)
             if (userDto != null) throw UserNameAlreadyExistException()
 

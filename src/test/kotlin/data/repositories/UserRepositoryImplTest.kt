@@ -10,6 +10,8 @@ import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.entities.UserRole
+import domain.repositories.AuditRepository
+import domain.repositories.AuthRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -25,10 +27,12 @@ class UserRepositoryImplTest {
     private val userDataSource: UserDataSource = mockk(relaxed = true)
     private val mapper: UserDtoMapper = mockk(relaxed = true)
     private val hasher: PasswordHash = mockk()
+    private val authRepository: Lazy<AuthRepository> = lazyOf(mockk<AuthRepository>())
+    private val auditRepository:AuditRepository = mockk()
 
     @BeforeEach
     fun setup() {
-        userRepository = UserRepositoryImpl(userDataSource, mapper, hasher)
+        userRepository = UserRepositoryImpl(userDataSource, mapper, hasher,authRepository,auditRepository)
     }
 
     @Test

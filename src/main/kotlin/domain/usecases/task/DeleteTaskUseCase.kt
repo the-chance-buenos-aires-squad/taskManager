@@ -15,23 +15,7 @@ class DeleteTaskUseCase(
 ) {
 
     suspend fun execute(id: UUID): Boolean {
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
-        return taskRepository.deleteTask(id).also { result ->
-            if (result) {
-                addAuditUseCase.execute(
-                    entityId = id.toString(),
-                    entityType = EntityType.TASK,
-                    action = ActionType.DELETE,
-                    field = "deleting task",
-                    oldValue = "task with id:$id",
-                    newValue = "",
-                    userId = currentUser.id.toString()
-                )
-            }
-        }
-
-
+        return taskRepository.deleteTask(id)
     }
 
 }

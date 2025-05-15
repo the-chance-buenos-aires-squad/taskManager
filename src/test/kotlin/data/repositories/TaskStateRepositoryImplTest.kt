@@ -5,6 +5,8 @@ import data.exceptions.TaskStateNameException
 import data.repositories.TaskStateRepositoryImpl
 import data.repositories.mappers.TaskStateDtoMapper
 import domain.entities.TaskState
+import domain.repositories.AuditRepository
+import domain.repositories.AuthRepository
 import dummyData.dummyStateData.DummyTaskState
 import io.mockk.coEvery
 import io.mockk.every
@@ -20,13 +22,17 @@ class TaskStateRepositoryImplTest {
     private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
     private lateinit var taskStateDtoMapper: TaskStateDtoMapper
     private lateinit var stateRepository: TaskStateRepositoryImpl
+    private val authRepository: AuthRepository = mockk()
+    private val auditRepository: AuditRepository = mockk()
 
     @BeforeEach
     fun setUp() {
         taskStateDtoMapper = mockk(relaxed = true)
         stateRepository = TaskStateRepositoryImpl(
             taskStateCSVDataSource = mockCSVDataSource,
-            taskStateDtoMapper = taskStateDtoMapper
+            taskStateDtoMapper = taskStateDtoMapper,
+            authRepository,
+            auditRepository
         )
     }
 
