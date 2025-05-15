@@ -3,32 +3,73 @@ package data.repositories
 import data.exceptions.TaskStateNameException
 import data.repositories.dataSource.TaskStateDataSource
 import data.repositories.mappers.TaskStateDtoMapper
-import domain.entities.TaskState
+import domain.entities.*
+import domain.repositories.AuditRepository
+import domain.repositories.AuthRepository
 import domain.repositories.TaskStateRepository
+import java.time.LocalDateTime
 import java.util.*
 
 class TaskStateRepositoryImpl(
     private val taskStateCSVDataSource: TaskStateDataSource,
     private val taskStateDtoMapper: TaskStateDtoMapper,
+    private val authRepository: AuthRepository,
+    private val auditRepository: AuditRepository
 ) : TaskStateRepository {
     override suspend fun createTaskState(state: TaskState): Boolean {
-        val taskStates =
-            getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
-        if (!taskStates.isEmpty()) throw TaskStateNameException()
-        return taskStateCSVDataSource.createTaskState(taskStateDtoMapper.fromEntity(state))
+        return authRepository.runIfLoggedIn { currentUser ->
+            val taskStates =
+                getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
+            if (!taskStates.isEmpty()) throw TaskStateNameException()//Todo ask for clarification????
+            taskStateCSVDataSource.createTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
+                if (result) {
+                    recordTaskStateAudit(state.id, currentUser, action = ActionType.CREATE)
+                }
+            }
+        }
     }
 
+
     override suspend fun editTaskState(state: TaskState): Boolean {
-        return taskStateCSVDataSource.editTaskState(taskStateDtoMapper.fromEntity(state))
+        return authRepository.runIfLoggedIn { currentUser ->
+            taskStateCSVDataSource.editTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
+                if (result) {
+                    recordTaskStateAudit(state.id, currentUser, action = ActionType.UPDATE)
+                }
+            }
+        }
     }
 
     override suspend fun deleteTaskState(stateId: UUID): Boolean {
-        return taskStateCSVDataSource.deleteTaskState(stateId.toString())
+        return authRepository.runIfLoggedIn { currentUser ->
+            taskStateCSVDataSource.deleteTaskState(stateId.toString()).also { result ->
+                if (result) {
+                    recordTaskStateAudit(stateId, currentUser, action = ActionType.CREATE)
+                }
+            }
+        }
     }
 
     override suspend fun getAllTaskStates(): List<TaskState> {
         val taskStateRows = taskStateCSVDataSource.getTaskStates()
         return taskStateRows.map { taskStateRow -> taskStateDtoMapper.toEntity(taskStateRow) }
     }
+
+    private suspend fun recordTaskStateAudit(stateId: UUID, currentUser: User, action: ActionType) {
+        auditRepository.addAudit(
+            Audit(
+                id = UUID.randomUUID(),
+                entityId = stateId.toString(),
+                entityType = EntityType.STATE,
+                action = action,
+                field = "",
+                originalValue = "",
+                modifiedValue = "new task state",
+                userId = currentUser.id.toString(),
+                timestamp = LocalDateTime.now()
+            )
+        )
+    }
+
 
 }
