@@ -32,7 +32,7 @@ class UserRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
-        userRepository = UserRepositoryImpl(userDataSource, mapper, hasher,authRepository,auditRepository)
+        userRepository = UserRepositoryImpl(userDataSource, mapper, hasher,auditRepository)
     }
 
     @Test

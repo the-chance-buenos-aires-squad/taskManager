@@ -4,7 +4,6 @@ import domain.entities.User
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import presentation.exceptions.UserNotLoggedInException
-import kotlin.jvm.Throws
 
 class AuthRepositoryImpl(
     private val userRepository: UserRepository,

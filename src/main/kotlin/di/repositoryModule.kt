@@ -8,15 +8,7 @@ val repositoryModule = module {
     single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditDtoMapper = get()) }
     single<AuthRepository> { AuthRepositoryImpl(userRepository = get()) }
 
-    single<UserRepository> {
-        UserRepositoryImpl(
-            userDataSource = get(),
-            userMapper = get(),
-            md5Hash = get(),
-            authRepository = lazy { get<AuthRepository>() },
-            auditRepository = get()
-        )
-    }
+    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get(), md5Hash = get(), auditRepository = get()) }
 
 //    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get(),md5Hash = get(), authRepository = get(), auditRepository = get()) }
 

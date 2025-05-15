@@ -4,6 +4,7 @@ import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
 import data.exceptions.InvalidCredentialsException
+import data.exceptions.UserMateNotAllowedException
 import data.exceptions.UserNameAlreadyExistException
 import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
@@ -19,13 +20,13 @@ class UserRepositoryImpl(
     private val userDataSource: UserDataSource,
     private val userMapper: UserDtoMapper,
     private val md5Hash: PasswordHash,
-    private val authRepository: Lazy<AuthRepository>,
     private val auditRepository: AuditRepository
 ) : UserRepository {
 
+    private var adminUser:User? = null
 
     override suspend fun addUser(userName: String, password: String): User {
-        return authRepository.value.runIfLoggedIn { currentUser ->
+        if (adminUser != null) {
             val userDto = this.getUserByUserName(userName)
             if (userDto != null) throw UserNameAlreadyExistException()
 
@@ -50,12 +51,14 @@ class UserRepositoryImpl(
                     field = "",
                     originalValue = "new User:${newUser.username}",
                     modifiedValue = "",
-                    userId = currentUser.id.toString(),
+                    userId = adminUser!!.id.toString(),
                     timestamp = LocalDateTime.now()
                 )
             )
 
-            userMapper.toEntity(newUser)
+            return userMapper.toEntity(newUser)
+        }else{
+            throw UserMateNotAllowedException()
         }
     }
 
@@ -90,12 +93,8 @@ class UserRepositoryImpl(
 
     override suspend fun loginUser(userName: String, password: String): User {
         val userDto = userDataSource.getUserByUserName(userName) ?: throw InvalidCredentialsException()
-
         val hashInput = md5Hash.generateHash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
-
-        return userMapper.toEntity(userDto)
+        return userMapper.toEntity(userDto).also { if (it.role == UserRole.ADMIN) adminUser = it }
     }
-
-
 }
