@@ -3,10 +3,7 @@ package data.repositories
 import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectDtoMapper
 import domain.customeExceptions.UserEnterInvalidValueException
-import domain.entities.ActionType
-import domain.entities.Audit
-import domain.entities.EntityType
-import domain.entities.Project
+import domain.entities.*
 import domain.repositories.AuditRepository
 import domain.repositories.AuthRepository
 import domain.repositories.ProjectRepository
@@ -29,41 +26,18 @@ class ProjectRepositoryImpl(
             }
              projectDataSource.addProject(projectMapper.fromEntity(project)).also { result->
                  if (result){
-                     auditRepository.addAudit(
-                         Audit(
-                             id = UUID.randomUUID(),
-                             entityId = project.id.toString(),
-                             entityType = EntityType.PROJECT,
-                             action = ActionType.CREATE,
-                             field = "",
-                             originalValue = "",
-                             modifiedValue = "new project",
-                             userId = currentUser.id.toString(),
-                             timestamp = LocalDateTime.now()
-                         )
-                     )
+                     recordProjectAudit(project.id, currentUser,action = ActionType.CREATE)
                  }
              }
         }
     }
 
+
     override suspend fun updateProject(project: Project): Boolean {
         return authRepository.runIfLoggedIn {currentUser->
             projectDataSource.updateProject(projectMapper.fromEntity(project)).also { result->
                 if (result){
-                    auditRepository.addAudit(
-                        Audit(
-                            id = UUID.randomUUID(),
-                            entityId = project.id.toString(),
-                            entityType = EntityType.PROJECT,
-                            action = ActionType.UPDATE,
-                            field = "",
-                            originalValue = "",
-                            modifiedValue = "",
-                            userId = currentUser.id.toString(),
-                            timestamp = LocalDateTime.now()
-                        )
-                    )
+                    recordProjectAudit(project.id, currentUser,action = ActionType.UPDATE)
                 }
             }
         }
@@ -73,19 +47,7 @@ class ProjectRepositoryImpl(
         return authRepository.runIfLoggedIn {currentUser->
             projectDataSource.deleteProject(projectId.toString()).also { result->
                 if (result){
-                    auditRepository.addAudit(
-                        Audit(
-                            id = UUID.randomUUID(),
-                            entityId = projectId.toString(),
-                            entityType = EntityType.PROJECT,
-                            action = ActionType.DELETE,
-                            field = "",
-                            originalValue = "",
-                            modifiedValue = "",
-                            userId = currentUser.id.toString(),
-                            timestamp = LocalDateTime.now()
-                        )
-                    )
+                    recordProjectAudit(projectId, currentUser,action = ActionType.DELETE)
                 }
             }
         }
@@ -99,4 +61,21 @@ class ProjectRepositoryImpl(
             }
         }
     }
+
+    private suspend fun recordProjectAudit(projectId: UUID, currentUser: User, action: ActionType) {
+        auditRepository.addAudit(
+            Audit(
+                id = UUID.randomUUID(),
+                entityId = projectId.toString(),
+                entityType = EntityType.PROJECT,
+                action = action,
+                field = "",
+                originalValue = "",
+                modifiedValue = "new project",
+                userId = currentUser.id.toString(),
+                timestamp = LocalDateTime.now()
+            )
+        )
+    }
+
 }
