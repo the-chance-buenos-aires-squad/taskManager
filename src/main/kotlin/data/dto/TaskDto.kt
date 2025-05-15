@@ -6,7 +6,7 @@ import org.bson.codecs.pojo.annotations.BsonId
 
 @Serializable
 data class TaskDto(
-    @BsonId
+    @SerialName("_id")
     val id: String,
 
     val title: String,
