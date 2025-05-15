@@ -1,6 +1,7 @@
 package data.repositories
 
 import com.google.common.truth.Truth.assertThat
+import data.exceptions.InvalidCredentialsException
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.UserRepository
@@ -8,6 +9,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.UserNotLoggedInException
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.test.Test
@@ -112,6 +115,40 @@ class AuthRepositoryImplTest {
         assertThat(authRepository.getCurrentUser()).isEqualTo(normalUser)
     }
 
+    @Test
+    fun `should allow action block returns if user is logged in`() = runTest{
+        //given
+        coEvery { userRepository.loginUser("admin", any()) } returns adminUser
+        authRepository.login("admin", "admin1")
+
+        //when
+        val result = authRepository.runIfLoggedIn { true }
+
+        //then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should throw UserNotLoggedIn and do not allow action block returns if user is not logged in`() = runTest{
+        //given
+        coEvery { userRepository.loginUser("admin", any()) } returns adminUser
+        authRepository.login("admin", "admin1")
+        authRepository.logout()
+
+        //when
+        assertThrows<UserNotLoggedInException> { authRepository.runIfLoggedIn { it.username } }
+    }
+
+    @Test
+    fun `should throw exception when login fails`() = runTest {
+        // given
+        coEvery { userRepository.loginUser(any(), any()) } throws InvalidCredentialsException()
+
+        // when
+        assertThrows<InvalidCredentialsException> {
+            authRepository.login("invalid", "wrong")
+        }
+    }
 
 
     private val adminUser = User(

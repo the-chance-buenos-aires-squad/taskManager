@@ -6,6 +6,7 @@ import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectDtoMapper
 import domain.customeExceptions.UserEnterInvalidValueException
 import domain.entities.User
+import domain.repositories.AuditRepository
 import domain.repositories.AuthRepository
 import dummyData.DummyProjects
 import dummyData.DummyUser
@@ -24,11 +25,12 @@ class ProjectRepositoryImplTest {
     private var projectDataSource: ProjectDataSource = mockk(relaxed = true)
     private var projectDtoMapper: ProjectDtoMapper = mockk(relaxed = true)
     private lateinit var projectRepositoryImpl: ProjectRepositoryImpl
+    private val auditRepository:AuditRepository = mockk(relaxed = true)
 
     private val fakeAuthRepo = object : AuthRepository {
         var currentUser:User? = dummyUserOne
-        override suspend fun login(username: String, password: String) = DummyUser.dummyUserOne
-        override suspend fun addUser(userName: String, password: String) = DummyUser.dummyUserOne
+        override suspend fun login(username: String, password: String) = dummyUserOne
+        override suspend fun addUser(userName: String, password: String) = dummyUserOne
         override suspend fun logout() {}
         override suspend fun getCurrentUser() = currentUser
         override suspend fun <T> runIfLoggedIn(action: suspend (User) -> T): T {
@@ -40,7 +42,7 @@ class ProjectRepositoryImplTest {
 
     @BeforeEach
     fun setup() {
-        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectDtoMapper, fakeAuthRepo)
+        projectRepositoryImpl = ProjectRepositoryImpl(projectDataSource, projectDtoMapper, fakeAuthRepo,auditRepository)
     }
 
 
@@ -55,6 +57,7 @@ class ProjectRepositoryImplTest {
         coVerify(exactly = 0) { projectDataSource.updateProject(any()) }
         coVerify(exactly = 0) { projectDataSource.deleteProject(any()) }
         coVerify(exactly = 0) { projectDataSource.getAllProjects() }
+        coVerify (exactly = 0){ auditRepository.addAudit(any()) }
     }
 
 
@@ -67,6 +70,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isTrue()
         coVerify { projectDataSource.addProject(any()) }
+        coVerify { auditRepository.addAudit(any()) }
     }
 
     @Test
@@ -93,6 +97,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isFalse()
         coVerify { projectDataSource.addProject(any()) }
+        coVerify (exactly = 0){ auditRepository.addAudit(any()) }
     }
 
     @Test
@@ -103,6 +108,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isTrue()
         coVerify { projectDataSource.updateProject(any()) }
+        coVerify { auditRepository.addAudit(any()) }
     }
 
     @Test
@@ -113,6 +119,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isFalse()
         coVerify { projectDataSource.updateProject(any()) }
+        coVerify (exactly = 0){ auditRepository.addAudit(any()) }
     }
 
     @Test
@@ -123,6 +130,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isTrue()
         coVerify { projectDataSource.deleteProject(any()) }
+        coVerify { auditRepository.addAudit(any()) }
     }
 
     @Test
@@ -133,6 +141,7 @@ class ProjectRepositoryImplTest {
 
         assertThat(result).isFalse()
         coVerify { projectDataSource.deleteProject(any()) }
+        coVerify (exactly = 0){ auditRepository.addAudit(any()) }
     }
 
 
