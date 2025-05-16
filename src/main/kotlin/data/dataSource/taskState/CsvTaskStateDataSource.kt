@@ -5,7 +5,7 @@ import data.dto.TaskStateDto
 import data.repositories.dataSource.TaskStateDataSource
 import java.io.File
 
-class TaskStateCSVDataSource(
+class CsvTaskStateDataSource(
     private val file: File,
     private val taskStateDtoParser: TaskStateDtoParser,
     private val csvHandler: CsvHandler

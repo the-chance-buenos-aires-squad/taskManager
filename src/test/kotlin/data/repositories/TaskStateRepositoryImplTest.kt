@@ -1,5 +1,5 @@
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.taskState.TaskStateCSVDataSource
+import data.dataSource.taskState.CsvTaskStateDataSource
 import data.dto.TaskStateDto
 import data.exceptions.TaskStateNameException
 import data.repositories.TaskStateRepositoryImpl
@@ -17,7 +17,7 @@ import java.util.*
 
 class TaskStateRepositoryImplTest {
 
-    private val mockCSVDataSource = mockk<TaskStateCSVDataSource>(relaxed = true)
+    private val mockCSVDataSource = mockk<CsvTaskStateDataSource>(relaxed = true)
     private lateinit var taskStateDtoMapper: TaskStateDtoMapper
     private lateinit var stateRepository: TaskStateRepositoryImpl
 
