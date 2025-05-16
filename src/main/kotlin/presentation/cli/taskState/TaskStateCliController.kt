@@ -2,7 +2,6 @@ package presentation.cli.taskState
 
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
-import presentation.cli.helper.ProjectCliHelper.Companion.INAVLID_INPUT_MESSAGE
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 
 class TaskStateCliController(
@@ -19,13 +18,13 @@ class TaskStateCliController(
 
             val projects = projectCliHelper.getProjects()
             if (projects.isEmpty()) {
-                uiController.printMessage("No Projects yet, try to create project")
+                uiController.printMessage(NO_PROJECTS)
                 return
             }
 
             val selectedProject = projectCliHelper.selectProject(projects)
             if (selectedProject == null) {
-                uiController.printMessage("invalid project")
+                uiController.printMessage(INVALID_PROJECT)
                 return
             }
 
@@ -45,8 +44,8 @@ class TaskStateCliController(
                 3 -> deleteTaskStateCli.deleteTaskState(selectedProject.id)
                 4 -> getAllTaskStatesCli.getAllTaskStates(selectedProject.id)
                 5 -> return
-                null -> uiController.printMessage(INAVLID_INPUT_MESSAGE)
-                else -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+                null -> uiController.printMessage(INVALID_INPUT_MESSAGE)
+                else -> uiController.printMessage("$INVALID_INPUT_MESSAGE from the menu.")
             }
         }
     }
@@ -66,5 +65,7 @@ class TaskStateCliController(
                     " 5. Back to Main Menu       \n" +
                     "==============================\n" +
                     "Choose an option (1-5):"
+        const val INVALID_PROJECT = "invalid project"
+        const val NO_PROJECTS = "No Projects yet, try to create project"
     }
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 import java.util.*
 
 class ProjectCliHelperTest {
@@ -83,9 +84,9 @@ class ProjectCliHelperTest {
             uiController.printMessage("1. Project1 - Desc1")
             uiController.printMessage("2. Project2 - Desc2")
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.INAVLID_INPUT_MESSAGE)
+            uiController.printMessage(ProjectCliHelper.INVALID_INPUT_MESSAGE)
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.INAVLID_INPUT_MESSAGE)
+            uiController.printMessage(ProjectCliHelper.INVALID_INPUT_MESSAGE)
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
         }
     }
@@ -103,10 +104,10 @@ class ProjectCliHelperTest {
             uiController.printMessage("2. Project2 - Desc2")
             // first invalid numeric below range
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.INVALID_INPUT_MESSAGE)
+            uiController.printMessage("$INVALID_INPUT_MESSAGE from the menu.")
             // second invalid numeric above range
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
-            uiController.printMessage(ProjectCliHelper.INVALID_INPUT_MESSAGE)
+            uiController.printMessage("$INVALID_INPUT_MESSAGE from the menu.")
             // finally valid
             uiController.printMessage(ProjectCliHelper.ENTER_PROJECT_MESSAGE, true)
         }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.cli.project.CreateProjectCli.Companion.FAILED_TO_CREATE_PROJECT
 import java.time.LocalDateTime
 import java.util.*
 
@@ -88,7 +89,7 @@ class CreateProjectCliTest {
         createProjectCli.create()
 
         verify {
-            uiController.printMessage("Failed to create project.${exceptionMessage}")
+            uiController.printMessage(FAILED_TO_CREATE_PROJECT.format(exceptionMessage))
         }
 
     }
