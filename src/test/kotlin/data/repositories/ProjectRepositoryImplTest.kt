@@ -27,7 +27,6 @@ import presentation.exceptions.UserNotLoggedInException
 import java.time.LocalDateTime
 import java.util.*
 
-//TODO fix
 class ProjectRepositoryImplTest {
     private var projectDataSource: ProjectDataSource = mockk(relaxed = true)
     private var projectDtoMapper: ProjectDtoMapper = mockk(relaxed = true)
