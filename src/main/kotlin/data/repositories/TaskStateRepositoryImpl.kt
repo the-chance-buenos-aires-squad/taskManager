@@ -1,6 +1,6 @@
 package data.repositories
 
-import auth.UserSessionImpl
+import auth.UserSession
 import data.exceptions.TaskStateNameException
 import data.repositories.dataSource.TaskStateDataSource
 import data.repositories.mappers.TaskStateDtoMapper
@@ -13,11 +13,11 @@ import java.util.*
 class TaskStateRepositoryImpl(
     private val taskStateDataSource: TaskStateDataSource,
     private val taskStateDtoMapper: TaskStateDtoMapper,
-    private val userSessionImpl: UserSessionImpl,
+    private val userSession: UserSession,
     private val auditRepository: AuditRepository
 ) : TaskStateRepository {
     override suspend fun createTaskState(state: TaskState): Boolean {
-        return userSessionImpl.runIfLoggedIn { currentUser ->
+        return userSession.runIfLoggedIn { currentUser ->
             val taskStates =
                 getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
             if (!taskStates.isEmpty()) throw TaskStateNameException()//Todo ask for clarification????
@@ -31,7 +31,7 @@ class TaskStateRepositoryImpl(
 
 
     override suspend fun editTaskState(state: TaskState): Boolean {
-        return userSessionImpl.runIfLoggedIn { currentUser ->
+        return userSession.runIfLoggedIn { currentUser ->
             taskStateDataSource.editTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
                 if (result) {
                     recordTaskStateAudit(state.id, currentUser, action = ActionType.UPDATE)
@@ -41,7 +41,7 @@ class TaskStateRepositoryImpl(
     }
 
     override suspend fun deleteTaskState(stateId: UUID): Boolean {
-        return userSessionImpl.runIfLoggedIn { currentUser ->
+        return userSession.runIfLoggedIn { currentUser ->
             taskStateDataSource.deleteTaskState(stateId.toString()).also { result ->
                 if (result) {
                     recordTaskStateAudit(stateId, currentUser, action = ActionType.CREATE)
