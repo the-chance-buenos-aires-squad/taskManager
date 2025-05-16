@@ -58,7 +58,7 @@ class DeleteProjectCliTest {
 
         deleteProjectCli.delete()
 
-        verify { uiController.printMessage(match { it.contains("$DELETE_PROJECT_FROM DB error") }) }
+        verify { uiController.printMessage(match { it.contains(DELETE_PROJECT_FROM.format("DB error")) }) }
     }
 
     @Test

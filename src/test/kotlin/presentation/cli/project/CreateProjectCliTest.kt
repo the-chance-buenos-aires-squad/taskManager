@@ -89,7 +89,7 @@ class CreateProjectCliTest {
         createProjectCli.create()
 
         verify {
-            uiController.printMessage("$FAILED_TO_CREATE_PROJECT $exceptionMessage")
+            uiController.printMessage(FAILED_TO_CREATE_PROJECT.format(exceptionMessage))
         }
 
     }

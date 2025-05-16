@@ -13,9 +13,7 @@ class EditTaskStateCli(
     private val inputHandler = TaskStateInputHandler(uiController)
 
     suspend fun editTaskState(selectedProjectId: UUID) {
-        uiController.printMessage(
-            HEADER
-        )
+        uiController.printMessage(HEADER)
 
         val allTaskStates = getAllTaskStatesUseCase.execute(selectedProjectId)
 
@@ -48,12 +46,12 @@ class EditTaskStateCli(
         if (newStateEditing) {
             uiController.printMessage(SUCCESS)
             uiController.printMessage(
-                """
-                Updated Task State ${index + 1}: Name: ${updatedState.title}
-                """.trimIndent()
+                UPDATE_TASK_STATE.format(index + 1) + NAME.format(updatedState.title)
+
             )
         } else uiController.printMessage(FAILURE)
     }
+
     companion object Messages {
         const val HEADER = "===   Edit Task State   ==="
         const val EMPTY_STATES = "No task states available to edit."
@@ -61,5 +59,7 @@ class EditTaskStateCli(
         const val INVALID_SELECTION = "Invalid selection."
         const val SUCCESS = "Task state edited successfully."
         const val FAILURE = "Failed to edit task state."
+        const val UPDATE_TASK_STATE = "Updated Task State %s"
+        const val NAME = ": Name: %s"
     }
 }

@@ -75,7 +75,7 @@ class CreateTaskStateCliTest {
 
         // then
         coVerify {
-            uiController.printMessage("$ERROR${exception.localizedMessage}")
+            uiController.printMessage(ERROR.format(exception.localizedMessage))
         }
     }
 }

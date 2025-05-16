@@ -19,16 +19,12 @@ class CreateTaskStateCli(
             val newState = createTaskStateUseCase.execute(taskState.copy(projectId = projectId))
             if (newState) {
                 uiController.printMessage(SUCCESS)
-                uiController.printMessage(
-                    """
-                $NAME_STATE${taskState.title}
-                """.trimIndent()
-                )
+                uiController.printMessage(NAME_STATE.format(taskState.title))
             } else {
                 uiController.printMessage(FAILURE)
             }
         } catch (e: Exception) {
-            uiController.printMessage("$ERROR${e.localizedMessage}")
+            uiController.printMessage(ERROR.format(e.localizedMessage))
         }
     }
 
@@ -36,7 +32,7 @@ class CreateTaskStateCli(
         const val HEADER = "=========  Create Task State  ========"
         const val SUCCESS = "Task state created successfully."
         const val FAILURE = "Failed to create task state."
-        const val NAME_STATE = "Name State: "
-        const val ERROR = "Error: "
+        const val NAME_STATE = "Name State: %s"
+        const val ERROR = "Error: %s"
     }
 }

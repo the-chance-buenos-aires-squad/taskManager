@@ -24,13 +24,13 @@ class DeleteProjectCli(
                 if (it) uiController.printMessage(PROJECT_DELETED)
             }
         } catch (e: Exception) {
-            uiController.printMessage("$DELETE_PROJECT_FROM ${e.message}")
+            uiController.printMessage(DELETE_PROJECT_FROM.format(e.message))
         }
     }
     companion object {
         const val NO_PROJECTS_FOUND = "no projects found"
         const val NO_PROJECT_SELECTED = "no project was selected"
         const val PROJECT_DELETED = "Project deleted."
-        const val DELETE_PROJECT_FROM = "error deleting project from:"
+        const val DELETE_PROJECT_FROM = "error deleting project from: %s"
     }
 }

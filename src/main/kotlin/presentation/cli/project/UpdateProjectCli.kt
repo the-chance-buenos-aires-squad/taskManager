@@ -49,7 +49,7 @@ class UpdateProjectCli(
             updateProjectUseCase.execute(updatedProject)
             uiController.printMessage(PROJECT_UPDATED)
         } catch (e: Exception) {
-            uiController.printMessage("$ERROR_UPDATING_PROJECT ${e.message}")
+            uiController.printMessage(ERROR_UPDATING_PROJECT.format(e.message))
         }
     }
     companion object {
@@ -58,7 +58,7 @@ class UpdateProjectCli(
         const val ENTER_PROJECT_DESCRIPTION = "Enter project description:"
         const val DESCRIPTION_CANT_EMPTY = "Description can't be empty"
         const val PROJECT_UPDATED = "Project updated."
-        const val ERROR_UPDATING_PROJECT = "Error updating project:"
+        const val ERROR_UPDATING_PROJECT = "Error updating project: %s"
         const val NO_PROJECTS_FOUND = "no projects found"
         const val NO_PROJECT_SELECTED = "no project was selected"
     }

@@ -32,13 +32,13 @@ class CreateProjectCli(
         } catch (e: UserEnterInvalidValueException) {
             uiController.printMessage(e.message.toString())
         } catch (e: Exception) {
-            uiController.printMessage("$FAILED_TO_CREATE_PROJECT ${e.message}")
+            uiController.printMessage(FAILED_TO_CREATE_PROJECT.format(e.message))
         }
     }
     companion object {
         const val ENTER_PROJECT_NAME = "Enter project name:"
         const val ENTER_PROJECT_DESCRIPTION = "Enter project description:"
         const val PROJECT_CREATED = "Project created."
-        const val FAILED_TO_CREATE_PROJECT = "Failed to create project."
+        const val FAILED_TO_CREATE_PROJECT = "Failed to create project. %s"
     }
 }

@@ -28,7 +28,7 @@ class DeleteTaskCli(
 
     private fun confirmDeletion(taskTitle: String): Boolean {
         repeat(2) {
-            uiController.printMessage("$ARE_YOU_SURE$taskTitle?")
+            uiController.printMessage(ARE_YOU_SURE.format(taskTitle))
             uiController.printMessage(CONFIRM_PROMPT)
             when (uiController.readInput().lowercase()) {
                 YES -> return true
@@ -61,6 +61,6 @@ class DeleteTaskCli(
         const val FAILURE = "Error: Task was not deleted."
         const val YES = "yes"
         const val NO = "no"
-        const val ARE_YOU_SURE = "Are you sure you want to delete the task: "
+        const val ARE_YOU_SURE = "Are you sure you want to delete the task: %s?"
     }
 }

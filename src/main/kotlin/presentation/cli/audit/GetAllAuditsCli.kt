@@ -23,17 +23,18 @@ class GetAllAuditsCli(
     suspend fun displayAllAudits() {
         displayAuditHeader()
         try {
-            getAllAuditUseCase.execute().let { audits->
+            getAllAuditUseCase.execute().let { audits ->
                 audits.forEach { it.displayRow() }
             }
-        }catch (e:Exception){
-            uiController.printMessage("error from data source:${e.message}")
+        } catch (e: Exception) {
+            uiController.printMessage(ERROR_FROM_DATA_SOURCE.format(e.message))
         }
     }
 
     companion object {
         const val HEADER =
             "ID || Entity ID || Entity Type || Action || Field || Old Value || New Value || User ID || Timestamp"
+        const val ERROR_FROM_DATA_SOURCE ="error from data source:%s"
     }
 
 }

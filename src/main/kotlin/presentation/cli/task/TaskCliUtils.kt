@@ -13,6 +13,7 @@ import presentation.cli.task.TaskCliUtils.Messages.PROMPT_DESCRIPTION
 import presentation.cli.task.TaskCliUtils.Messages.PROMPT_TASK_INDEX
 import presentation.cli.task.TaskCliUtils.Messages.PROMPT_TITLE
 import presentation.cli.task.TaskCliUtils.Messages.SELECT_STATE_INDEX
+import presentation.cli.task.TaskCliUtils.Messages.UNKNOWN
 import presentation.cli.task.TaskCliUtils.Messages.USER_NOT_FOUND
 import java.util.*
 
@@ -82,12 +83,12 @@ object TaskCliUtils {
     }
 
     private fun promptForTitle(current: String, ui: UiController): String {
-        ui.printMessage("$PROMPT_TITLE (current: $current):")
+        ui.printMessage(PROMPT_TITLE.format(current))
         return ui.readInput().takeIf { it.isNotBlank() } ?: current
     }
 
     private fun promptForDescription(current: String, ui: UiController): String {
-        ui.printMessage("$PROMPT_DESCRIPTION (current: $current):")
+        ui.printMessage(PROMPT_DESCRIPTION.format(current))
         return ui.readInput().takeIf { it.isNotBlank() } ?: current
     }
 
@@ -96,13 +97,13 @@ object TaskCliUtils {
         states: List<TaskState>,
         ui: UiController
     ): UUID {
-        val currentStateName = states.find { it.id == currentStateId }?.title ?: "Unknown"
+        val currentStateName = states.find { it.id == currentStateId }?.title ?: UNKNOWN
         ui.printMessage(AVAILABLE_STATES)
         states.forEachIndexed { index, state ->
             ui.printMessage("${index + 1}. ${state.title}")
         }
 
-        ui.printMessage("$SELECT_STATE_INDEX (current: $currentStateName):")
+        ui.printMessage(SELECT_STATE_INDEX.format(currentStateName))
         val input = ui.readInput()
         val index = input.toIntOrNull()?.takeIf { it in 1..states.size }
 
@@ -114,7 +115,7 @@ object TaskCliUtils {
         userRepo: UserRepository,
         ui: UiController
     ): UUID? {
-        ui.printMessage("$PROMPT_ASSIGN_USER (current: ${current ?: "None"}):")
+        ui.printMessage(PROMPT_ASSIGN_USER.format(current ?: "None"))
         val input = ui.readInput()
         if (input.isBlank()) return current
 
@@ -126,16 +127,18 @@ object TaskCliUtils {
             current
         }
     }
+
     private object Messages {
         const val NO_TASKS_FOUND = "No tasks found for this project."
         const val PROMPT_TASK_INDEX = "Please choose task number: "
         const val INVALID_INDEX = "Invalid input. Returning to dashboard."
         const val EDIT_HINT = "Leave fields empty to keep current values.\n"
-        const val PROMPT_TITLE = "Enter new title"
-        const val PROMPT_DESCRIPTION = "Enter new description"
+        const val PROMPT_TITLE = "Enter new title (current: %s):"
+        const val PROMPT_DESCRIPTION = "Enter new description (current: %s):"
         const val AVAILABLE_STATES = "Available States:"
-        const val SELECT_STATE_INDEX = "Select state index"
-        const val PROMPT_ASSIGN_USER = "Enter username to assign task to"
+        const val SELECT_STATE_INDEX = "Select state index (current: %s):"
+        const val PROMPT_ASSIGN_USER = "Enter username to assign task to (current: %s ):"
         const val USER_NOT_FOUND = "User not found. Keeping existing assignment."
+        const val UNKNOWN = "Unknown"
     }
 }
