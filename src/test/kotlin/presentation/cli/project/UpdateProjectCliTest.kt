@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.project.UpdateProjectCli.Companion.NO_PROJECTS_FOUND
 
 class UpdateProjectCliTest {
 
@@ -89,7 +90,7 @@ class UpdateProjectCliTest {
 
         updateProjectCli.update()
 
-        coVerify { uiController.printMessage("No projects found.") }
+        coVerify { uiController.printMessage(NO_PROJECTS_FOUND) }
         coVerify(exactly = 0) { updateProjectUseCase.execute(any()) }
     }
 

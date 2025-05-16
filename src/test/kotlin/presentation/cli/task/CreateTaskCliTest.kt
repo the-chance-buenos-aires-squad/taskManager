@@ -13,6 +13,15 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.cli.task.CreateTaskCli.Messages.CREATE_HEADER
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_CANCEL
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_EMPTY
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_PROMPT
+import presentation.cli.task.CreateTaskCli.Messages.EXCEPTION_NOT_LOGGED_IN
+import presentation.cli.task.CreateTaskCli.Messages.SUCCESS
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_CANCEL
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_EMPTY
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_PROMPT
 import java.util.*
 
 class CreateTaskCliTest {
@@ -46,7 +55,7 @@ class CreateTaskCliTest {
 
         createTaskCli.create(dummyProjectID)
 
-        verify { uiController.printMessage("Task created successfully!") }
+        verify { uiController.printMessage(SUCCESS) }
     }
 
     @Test
@@ -70,15 +79,14 @@ class CreateTaskCliTest {
         createTaskCli.create(projectId)
 
         verifySequence {
-            mockUiController.printMessage("------ Create Task ------")
-            mockUiController.printMessage("-------------------------")
-            mockUiController.printMessage("Title: ", false)
+            mockUiController.printMessage(CREATE_HEADER)
+            mockUiController.printMessage(TITLE_PROMPT, false)
             mockUiController.readInput()
-            mockUiController.printMessage("Title cannot be empty. Please try again.")
-            mockUiController.printMessage("Title: ", false)
+            mockUiController.printMessage(TITLE_EMPTY)
+            mockUiController.printMessage(TITLE_PROMPT, false)
             mockUiController.readInput()
             mockUiController.printMessage(
-                "It seams that you do not want to enter a Title let us go to past screen",
+                TITLE_CANCEL,
                 false
             )
         }
@@ -108,17 +116,16 @@ class CreateTaskCliTest {
         createTaskCli.create(projectId)
 
         verifySequence {
-            mockUiController.printMessage("------ Create Task ------")
-            mockUiController.printMessage("-------------------------")
-            mockUiController.printMessage("Title: ", false)
+            mockUiController.printMessage(CREATE_HEADER)
+            mockUiController.printMessage(TITLE_PROMPT, false)
             mockUiController.readInput()
-            mockUiController.printMessage("Description: ", false)
+            mockUiController.printMessage(DESCRIPTION_PROMPT, false)
             mockUiController.readInput()
-            mockUiController.printMessage("Description cannot be empty. Please try again.", false)
-            mockUiController.printMessage("Description: ", false)
+            mockUiController.printMessage(DESCRIPTION_EMPTY, false)
+            mockUiController.printMessage(DESCRIPTION_PROMPT, false)
             mockUiController.readInput()
             mockUiController.printMessage(
-                "It seams that you do not want to enter a Description let us go to past screen",
+                DESCRIPTION_CANCEL,
                 false
             )
         }
@@ -151,7 +158,7 @@ class CreateTaskCliTest {
 
         createTaskCli.create(dummyProjectID)
 
-        verify { uiController.printMessage(" user not longed in", false) }
+        verify { uiController.printMessage(EXCEPTION_NOT_LOGGED_IN, false) }
     }
 
     @Test

@@ -13,29 +13,25 @@ class DeleteTaskStateCli(
     suspend fun deleteTaskState(selectedProjectId: UUID) {
 
         uiController.printMessage(
-            """
-            
-            ===   Delete Task State    🗑️   ===
-            
-            """.trimIndent()
+            HEADER
         )
 
         val allTaskStates = getAllTaskStatesUseCase.execute(selectedProjectId)
 
         if (allTaskStates.isEmpty()) {
-            uiController.printMessage("No task states available to delete.")
+            uiController.printMessage(EMPTY_STATES)
             return
         }
 
         TaskStatePrinter.printAllTaskStates(allTaskStates, uiController)
 
-        uiController.printMessage("Enter the number of the task state to delete:")
+        uiController.printMessage(INDEX_PROMPT)
         val taskIdInput = uiController.readInput().trim()
 
         val index = taskIdInput.toIntOrNull()
 
         if (index == null || index < 1 || index > allTaskStates.size) {
-            uiController.printMessage("Invalid selection.")
+            uiController.printMessage(INVALID_SELECTION)
             return
         }
 
@@ -43,8 +39,16 @@ class DeleteTaskStateCli(
         val result = deleteTaskStateUseCase.execute(stateId)
 
         uiController.printMessage(
-            if (result) "Task state deleted successfully."
-            else "No task state found with this ID."
+            if (result) SUCCESS
+            else FAILURE
         )
+    }
+    companion object Messages {
+        const val HEADER = "===   Delete Task State   ️  ==="
+        const val EMPTY_STATES = "No task states available to delete."
+        const val INDEX_PROMPT = "Enter the number of the task state to delete:"
+        const val INVALID_SELECTION = "Invalid selection."
+        const val SUCCESS = "Task state deleted successfully."
+        const val FAILURE = "No task state found with this ID."
     }
 }
