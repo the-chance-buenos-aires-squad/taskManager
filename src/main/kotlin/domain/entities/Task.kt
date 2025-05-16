@@ -10,7 +10,7 @@ data class Task(
     val projectId: UUID,
     val stateId: UUID,
     val assignedTo: UUID?,
-    val createdBy: UUID,
+    val createdBy: UUID?=null,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()
 )

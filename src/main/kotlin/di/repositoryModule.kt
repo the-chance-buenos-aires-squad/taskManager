@@ -6,13 +6,10 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     single<AuditRepository> { AuditRepositoryImpl(auditDataSource = get(), auditDtoMapper = get()) }
-    single<AuthRepository> { AuthRepositoryImpl(userRepository = get()) }
+    single<AuthRepository> { AuthRepositoryImpl(userRepository = get(), session = get(), md5Hash = get(), userMapper = get()) }
+    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get(), md5Hash = get(), auditRepository = get(), userSession = get()) }
 
-    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get(), md5Hash = get(), auditRepository = get()) }
-
-//    single<UserRepository> { UserRepositoryImpl(userDataSource = get(), userMapper = get(),md5Hash = get(), authRepository = get(), auditRepository = get()) }
-
-    single<ProjectRepository> { ProjectRepositoryImpl(projectDataSource = get(), projectMapper = get(), authRepository = get(), auditRepository = get()) }
-    single<TaskStateRepository> { TaskStateRepositoryImpl(taskStateCSVDataSource = get(), taskStateDtoMapper = get(), authRepository = get(), auditRepository = get()) }
-    single<TaskRepository> { TaskRepositoryImpl(taskDataSource = get(), taskMapper = get(), authRepository = get(), auditRepository = get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(projectDataSource = get(), projectMapper = get(), userSession = get(), auditRepository = get()) }
+    single<TaskStateRepository> { TaskStateRepositoryImpl(taskStateDataSource = get(), taskStateDtoMapper = get(), userSession = get(), auditRepository = get()) }
+    single<TaskRepository> { TaskRepositoryImpl(taskDataSource = get(), taskMapper = get(), userSession = get(), auditRepository = get()) }
 }

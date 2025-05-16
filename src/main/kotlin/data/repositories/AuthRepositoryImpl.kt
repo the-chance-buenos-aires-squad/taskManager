@@ -2,6 +2,7 @@ package data.repositories
 
 import auth.UserSession
 import data.dataSource.util.hash.PasswordHash
+import data.dto.UserDto
 import data.exceptions.InvalidCredentialsException
 import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
@@ -16,9 +17,8 @@ class AuthRepositoryImpl(
     private val userMapper: UserDtoMapper
 ) : AuthRepository {
 
-
     override suspend fun login(username: String, password: String): User {
-        val userDto = userRepository.getUserByUserName(username) ?: throw InvalidCredentialsException()
+        val userDto: UserDto = userRepository.getUserByUserName(username) ?: throw InvalidCredentialsException()
         val hashInput = md5Hash.generateHash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
         session.setCurrentUser(userMapper.toEntity(userDto))
@@ -29,6 +29,4 @@ class AuthRepositoryImpl(
     override suspend fun logout() {
         session.setCurrentUser(null)
     }
-
-
 }

@@ -5,7 +5,6 @@ import data.repositories.dataSource.AuditDataSource
 import data.repositories.mappers.AuditDtoMapper
 import domain.entities.Audit
 import domain.repositories.AuditRepository
-import domain.repositories.AuthRepository
 
 class AuditRepositoryImpl(
     private val auditDataSource: AuditDataSource,

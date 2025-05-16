@@ -110,7 +110,7 @@ object TaskCliUtils {
 
         val user = userRepo.getUserByUserName(input)
         return if (user != null) {
-            user.id
+            UUID.fromString(user.id)
         } else {
             ui.printMessage("User not found. Keeping existing assignment.")
             current

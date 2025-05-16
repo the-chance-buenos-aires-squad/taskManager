@@ -6,7 +6,6 @@ import domain.repositories.AuthRepository
 class LoginUseCase(
     private val authRepository: AuthRepository,
 ) {
-
     suspend fun execute(
         username: String,
         password: String

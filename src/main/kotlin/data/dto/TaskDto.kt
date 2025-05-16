@@ -23,7 +23,7 @@ data class TaskDto(
     val assignedTo: String?,
 
     @SerialName("created_by")
-    val createdBy: String,
+    var createdBy: String,
 
     @SerialName("created_at")
     val createdAt: String,

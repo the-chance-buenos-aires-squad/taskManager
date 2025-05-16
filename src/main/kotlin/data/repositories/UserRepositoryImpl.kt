@@ -4,14 +4,12 @@ import auth.UserSession
 import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
-import data.exceptions.InvalidCredentialsException
 import data.exceptions.UserMateNotAllowedException
 import data.exceptions.UserNameAlreadyExistException
 import data.repositories.dataSource.UserDataSource
 import data.repositories.mappers.UserDtoMapper
 import domain.entities.*
 import domain.repositories.AuditRepository
-import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 import java.time.LocalDateTime
 import java.util.*
@@ -22,12 +20,11 @@ class UserRepositoryImpl(
     private val userMapper: UserDtoMapper,
     private val md5Hash: PasswordHash,
     private val auditRepository: AuditRepository,
-    private val session: UserSession
+    private val userSession: UserSession
 ) : UserRepository {
 
-
     override suspend fun addUser(userName: String, password: String): User {
-        if (session.getCurrentUser() != null && session.getCurrentUser()!!.role == UserRole.ADMIN) {
+        if (userSession.getCurrentUser() != null && userSession.getCurrentUser()!!.role == UserRole.ADMIN) {
             val userDto = this.getUserByUserName(userName)
             if (userDto != null) throw UserNameAlreadyExistException()
 
@@ -52,7 +49,7 @@ class UserRepositoryImpl(
                     field = "",
                     originalValue = "new User:${newUser.username}",
                     modifiedValue = "",
-                    userId = session.getCurrentUser()!!.id.toString(),
+                    userId = userSession.getCurrentUser()!!.id.toString(),
                     timestamp = LocalDateTime.now()
                 )
             )
@@ -63,6 +60,9 @@ class UserRepositoryImpl(
         }
     }
 
+    override suspend fun getUserByUserName(userName: String): UserDto? {
+        return userDataSource.getUserByUserName(userName)
+    }
     //todo not used !!
 //    override suspend fun updateUser(user: User): Boolean {
 //        return userDataSource.updateUser(userMapper.fromEntity(user))
@@ -80,9 +80,7 @@ class UserRepositoryImpl(
 //        }
 //    }
 
-    override suspend fun getUserByUserName(userName: String): UserDto? {
-        return userDataSource.getUserByUserName(userName)
-    }
+
 
     //todo : not used !!
 //    override suspend fun getUsers(): List<User> {

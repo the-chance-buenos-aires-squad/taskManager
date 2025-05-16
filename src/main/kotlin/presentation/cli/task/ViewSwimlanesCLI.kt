@@ -34,7 +34,7 @@ class ViewSwimlanesCLI(
                 uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
                 when (uiController.readInput().toIntOrNull()) {
-                    1 -> createTaskCli.create(selectedProject.id)
+//                    1 -> createTaskCli.create(selectedProject.id)
                     2 -> updateTaskCli.update(selectedProject.id)
                     3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return

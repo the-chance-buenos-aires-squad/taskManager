@@ -4,19 +4,12 @@ package domain.usecases.task
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.ActionType
-import domain.entities.EntityType
 import domain.entities.Task
-import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.audit.AddAuditUseCase
 import java.util.*
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val addAuditUseCase: AddAuditUseCase,
-    private val authRepository: AuthRepository
 ) {
 
     suspend fun execute(
@@ -28,8 +21,6 @@ class CreateTaskUseCase(
         assignedTo: UUID? = null,
     ): Boolean {
 
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
 
         validateTaskTitle(title)
         validateTaskDescription(description)
@@ -42,24 +33,11 @@ class CreateTaskUseCase(
             description = description,
             projectId = projectId,
             stateId = stateId,
-            assignedTo = assignedTo,
-            createdBy = currentUser.id,
+            assignedTo = assignedTo
         )
 
 
-        return taskRepository.addTask(newTask).also { result ->
-            if (result) {
-                addAuditUseCase.execute(
-                    entityId = newTask.id.toString(),
-                    entityType = EntityType.TASK,
-                    action = ActionType.CREATE,
-                    field = "",
-                    oldValue = "",
-                    newValue = "creating task: ${newTask.title}",
-                    userId = currentUser.id.toString()
-                )
-            }
-        }
+        return taskRepository.addTask(newTask)
     }
 
     private fun validateTaskTitle(title: String) {
