@@ -28,6 +28,7 @@ class GetAllProjectsUseCaseTest {
         assertThat(result).isNotEmpty()
     }
 
+    //TODO fix or delete
 //    @Test
 //    fun `should return false if project don't created`() = runTest {
 //        coEvery { projectRepository.getAllProjects() } returns emptyList()

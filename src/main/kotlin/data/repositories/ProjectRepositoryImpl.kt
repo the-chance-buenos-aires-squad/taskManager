@@ -1,6 +1,6 @@
 package data.repositories
 
-import auth.UserSession
+import auth.UserSessionImpl
 import data.repositories.dataSource.ProjectDataSource
 import data.repositories.mappers.ProjectDtoMapper
 import domain.customeExceptions.UserEnterInvalidValueException
@@ -13,12 +13,12 @@ import java.util.*
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource,
     private val projectMapper: ProjectDtoMapper,
-    private val userSession: UserSession,
+    private val userSessionImpl: UserSessionImpl,
     private val auditRepository: AuditRepository
 ) : ProjectRepository {
 
     override suspend fun createProject(project: Project): Boolean {
-        return userSession.runIfLoggedIn {currentUser->
+        return userSessionImpl.runIfLoggedIn { currentUser->
             //Todo move this to cli
             when {
                 project.title.isEmpty() -> throw UserEnterInvalidValueException("name can't be empty")
@@ -34,7 +34,7 @@ class ProjectRepositoryImpl(
 
 
     override suspend fun updateProject(project: Project): Boolean {
-        return userSession.runIfLoggedIn {currentUser->
+        return userSessionImpl.runIfLoggedIn { currentUser->
             projectDataSource.updateProject(projectMapper.fromEntity(project)).also { result->
                 if (result){
                     recordProjectAudit(project.id, currentUser,action = ActionType.UPDATE)
@@ -44,7 +44,7 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun deleteProject(projectId: UUID): Boolean {
-        return userSession.runIfLoggedIn {currentUser->
+        return userSessionImpl.runIfLoggedIn { currentUser->
             projectDataSource.deleteProject(projectId.toString()).also { result->
                 if (result){
                     recordProjectAudit(projectId, currentUser,action = ActionType.DELETE)
@@ -54,7 +54,7 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun getAllProjects(): List<Project> {
-        return userSession.runIfLoggedIn {
+        return userSessionImpl.runIfLoggedIn {
             projectDataSource.getAllProjects()
             .map { projectRow ->
                 projectMapper.toEntity(projectRow)

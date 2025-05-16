@@ -19,7 +19,7 @@ class GetAllProjectsCliTest {
     fun setup() {
         getAllProjectsCli = GetAllProjectsCli(getAllProjectsUseCase, uiController)
     }
-
+//TODO fix or delete
 //    @Test
 //    fun `should throw exception if no projects`() = runTest {
 //        val exception = assertThrows<NoProjectsFoundException> {

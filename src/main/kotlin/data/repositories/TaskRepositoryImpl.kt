@@ -1,6 +1,6 @@
 package data.repositories
 
-import auth.UserSession
+import auth.UserSessionImpl
 import data.dto.TaskDto
 import data.repositories.dataSource.TaskDataSource
 import data.repositories.mappers.TaskDtoMapper
@@ -13,12 +13,12 @@ import java.util.*
 class TaskRepositoryImpl(
     private val taskDataSource: TaskDataSource,
     private val taskMapper: TaskDtoMapper,
-    private val userSession: UserSession,
+    private val userSessionImpl: UserSessionImpl,
     private val auditRepository: AuditRepository
 ) : TaskRepository {
 
     override suspend fun addTask(task: Task): Boolean {
-        return userSession.runIfLoggedIn { currentUser ->
+        return userSessionImpl.runIfLoggedIn { currentUser ->
             val taskDto:TaskDto = taskMapper.fromEntity(task).also { it.createdBy = currentUser.id.toString() }
             taskDataSource.addTask(taskDto).also { result ->
                 if (result) {
@@ -29,7 +29,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun getAllTasks(): List<Task> {
-        return userSession.runIfLoggedIn {
+        return userSessionImpl.runIfLoggedIn {
             taskDataSource.getTasks().map { task ->
                 taskMapper.toEntity(task)
             }
@@ -38,7 +38,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun getTaskById(id: UUID): Task? {
-        return userSession.runIfLoggedIn {
+        return userSessionImpl.runIfLoggedIn {
             taskDataSource.getTaskById(id.toString())?.let {
                 taskMapper.toEntity(it)
             }
@@ -46,7 +46,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun updateTask(task: Task): Boolean {
-        return userSession.runIfLoggedIn { currentUser ->
+        return userSessionImpl.runIfLoggedIn { currentUser ->
             val taskDto:TaskDto = taskMapper.fromEntity(task).also { it.createdBy = currentUser.id.toString() }
             taskDataSource.updateTask(taskDto).also { result ->
                 if (result) {
@@ -57,7 +57,7 @@ class TaskRepositoryImpl(
     }
 
     override suspend fun deleteTask(id: UUID): Boolean {
-        return userSession.runIfLoggedIn { currentUser ->
+        return userSessionImpl.runIfLoggedIn { currentUser ->
             taskDataSource.deleteTask(id.toString()).also { result ->
                 if (result) {
                     recordTaskAudit(id, currentUser,action = ActionType.DELETE)

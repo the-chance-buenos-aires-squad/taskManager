@@ -1,6 +1,6 @@
 package data.repositories
 
-import auth.UserSession
+import auth.UserSessionImpl
 import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.FailedUserSaveException
@@ -20,11 +20,11 @@ class UserRepositoryImpl(
     private val userMapper: UserDtoMapper,
     private val md5Hash: PasswordHash,
     private val auditRepository: AuditRepository,
-    private val userSession: UserSession
+    private val userSessionImpl: UserSessionImpl
 ) : UserRepository {
 
     override suspend fun addUser(userName: String, password: String): User {
-        if (userSession.getCurrentUser() != null && userSession.getCurrentUser()!!.role == UserRole.ADMIN) {
+        if (userSessionImpl.getCurrentUser() != null && userSessionImpl.getCurrentUser()!!.role == UserRole.ADMIN) {
             val userDto = this.getUserByUserName(userName)
             if (userDto != null) throw UserNameAlreadyExistException()
 
@@ -49,7 +49,7 @@ class UserRepositoryImpl(
                     field = "",
                     originalValue = "new User:${newUser.username}",
                     modifiedValue = "",
-                    userId = userSession.getCurrentUser()!!.id.toString(),
+                    userId = userSessionImpl.getCurrentUser()!!.id.toString(),
                     timestamp = LocalDateTime.now()
                 )
             )

@@ -1,6 +1,7 @@
 package data.repositories
 
 import auth.UserSession
+import auth.UserSessionImpl
 import data.dataSource.util.hash.PasswordHash
 import data.dto.UserDto
 import data.exceptions.InvalidCredentialsException
