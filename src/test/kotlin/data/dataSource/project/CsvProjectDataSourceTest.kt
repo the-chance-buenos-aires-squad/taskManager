@@ -37,7 +37,7 @@ class CsvProjectDataSourceTest {
     @Test
     fun `should return true when project deleted`() = runTest {
         every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject1)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
+        every { projectDtoParser.fromType(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
 
         val isProjectDeleted = csvProjectDataSource.deleteProject(DummyProjects.projectDto1._id)
 
@@ -47,7 +47,7 @@ class CsvProjectDataSourceTest {
     @Test
     fun `should return false if project not found when call delete function`() = runTest {
         every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject2)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto2
+        every { projectDtoParser.fromType(DummyProjects.rawProject1) } returns DummyProjects.projectDto2
 
         val isProjectDeleted = csvProjectDataSource.deleteProject(UUID.randomUUID().toString())
 
@@ -57,8 +57,8 @@ class CsvProjectDataSourceTest {
     @Test
     fun `should return true if project updated successfully`() = runTest {
         every { csvHandler.read(testFile) } returns DummyProjects.rowList
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
-        every { projectDtoParser.toDto(DummyProjects.rawProject2) } returns DummyProjects.projectDto2
+        every { projectDtoParser.fromType(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
+        every { projectDtoParser.fromType(DummyProjects.rawProject2) } returns DummyProjects.projectDto2
 
         val isProjectUpdated = csvProjectDataSource.updateProject(DummyProjects.projectDto1)
 
@@ -68,7 +68,7 @@ class CsvProjectDataSourceTest {
     @Test
     fun `should return false if project not found when call update function`() = runTest {
         every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject1)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
+        every { projectDtoParser.fromType(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
 
         val isProjectUpdated = csvProjectDataSource.updateProject(DummyProjects.projectDto2)
 
@@ -89,7 +89,7 @@ class CsvProjectDataSourceTest {
     @Test
     fun `should return list of projects`() = runTest {
         every { csvHandler.read(testFile) } returns listOf(DummyProjects.rawProject1)
-        every { projectDtoParser.toDto(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
+        every { projectDtoParser.fromType(DummyProjects.rawProject1) } returns DummyProjects.projectDto1
 
         val all = csvProjectDataSource.getAllProjects()
 

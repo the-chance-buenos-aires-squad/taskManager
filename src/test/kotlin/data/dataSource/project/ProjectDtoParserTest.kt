@@ -10,7 +10,7 @@ class ProjectDtoParserTest {
     @Test
     fun `mapEntityToRow should map Project to Project DTO`() {
 
-        val actualRow = parser.toDto(DummyProjects.list)
+        val actualRow = parser.fromType(DummyProjects.list)
 
         assertThat(DummyProjects.list[0]).isEqualTo(actualRow._id)
     }
@@ -18,7 +18,7 @@ class ProjectDtoParserTest {
     @Test
     fun `mapRowToEntity should map Project DTO to Project`() {
 
-        val actualList = parser.fromDto(DummyProjects.expectedRow)
+        val actualList = parser.toType(DummyProjects.expectedRow)
 
         assertThat(DummyProjects.expectedRow.name).isEqualTo(actualList[1])
 

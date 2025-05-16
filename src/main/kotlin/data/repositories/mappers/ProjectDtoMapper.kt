@@ -6,16 +6,16 @@ import java.time.LocalDateTime
 import java.util.*
 
 class ProjectDtoMapper : Mapper<Project, ProjectDto> {
-    override fun fromEntity(entity: Project): ProjectDto {
+    override fun fromType(type: Project): ProjectDto {
         return ProjectDto(
-            entity.id.toString(),
-            entity.title,
-            entity.description,
-            entity.createdAt.toString()
+            type.id.toString(),
+            type.title,
+            type.description,
+            type.createdAt.toString()
         )
     }
 
-    override fun toEntity(row: ProjectDto): Project {
+    override fun toType(row: ProjectDto): Project {
         return Project(
             UUID.fromString(row._id),
             row.name,

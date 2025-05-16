@@ -41,7 +41,7 @@ class AuditRepositoryImplTest {
     @Test
     fun `should return true when add audit successful in the data source`() = runTest {
         //given
-        coEvery { auditDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns true
+        coEvery { auditDataSource.addAudit(mapper.fromType(DummyAudits.dummyProjectAudit_CreateAction)) } returns true
 
         //when
         val result = repository.addAudit(DummyAudits.dummyProjectAudit_CreateAction)
@@ -52,8 +52,8 @@ class AuditRepositoryImplTest {
 
     @Test
     fun `should return all audits from data source`() = runTest {
-        every { mapper.toEntity(createDummyAudits.dummyTaskCreateActionRow) } returns dummyTaskCreateAction
-        every { mapper.toEntity(createDummyAudits.dummyProjectCreateActionRow) } returns dummyProjectCreateAction
+        every { mapper.toType(createDummyAudits.dummyTaskCreateActionRow) } returns dummyTaskCreateAction
+        every { mapper.toType(createDummyAudits.dummyProjectCreateActionRow) } returns dummyProjectCreateAction
         val expectedAudits = listOf(
             createDummyAudits.dummyTaskCreateActionRow,
             createDummyAudits.dummyProjectCreateActionRow,
@@ -67,7 +67,7 @@ class AuditRepositoryImplTest {
     @Test
     fun `should return false when add audit unSuccessful in the data source`() = runTest {
         //given
-        coEvery { auditDataSource.addAudit(mapper.fromEntity(DummyAudits.dummyProjectAudit_CreateAction)) } returns false
+        coEvery { auditDataSource.addAudit(mapper.fromType(DummyAudits.dummyProjectAudit_CreateAction)) } returns false
 
         //when
         val result = repository.addAudit(DummyAudits.dummyProjectAudit_CreateAction)

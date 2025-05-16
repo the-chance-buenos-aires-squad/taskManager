@@ -17,7 +17,7 @@ class UserDtoParserTest {
     @Test
     fun `parsing to dto should return dto object with the same properties values`() {
         //when
-        val result = userDtoParser.toDto(row)
+        val result = userDtoParser.fromType(row)
 
         assertThat(result.username).isEqualTo(dto.username)
         assertThat(result.id).isEqualTo(dto.id)
@@ -26,7 +26,7 @@ class UserDtoParserTest {
     @Test
     fun `parsing from dto should return row  with the same values`() {
         //when
-        val result = userDtoParser.fromDto(dto)
+        val result = userDtoParser.toType(dto)
 
         assertThat(result[0]).isEqualTo(row[0])
     }

@@ -1,11 +1,11 @@
 package data.dataSource.taskState
 
-import data.dto.DtoParser
 import data.dto.TaskStateDto
+import data.repositories.mappers.Mapper
 
-class TaskStateDtoParser : DtoParser<List<String>, TaskStateDto> {
+class TaskStateDtoParser : Mapper<List<String>, TaskStateDto> {
 
-    override fun toDto(type: List<String>): TaskStateDto {
+    override fun fromType(type: List<String>): TaskStateDto {
         return TaskStateDto(
             _id = type[ID_ROW],
             name = type[TASK_STATE_NAME_ROW],
@@ -13,8 +13,8 @@ class TaskStateDtoParser : DtoParser<List<String>, TaskStateDto> {
         )
     }
 
-    override fun fromDto(dto: TaskStateDto): List<String> {
-        return listOf(dto._id, dto.name, dto.projectId)
+    override fun toType(row: TaskStateDto): List<String> {
+        return listOf(row._id, row.name, row.projectId)
     }
 
     companion object {

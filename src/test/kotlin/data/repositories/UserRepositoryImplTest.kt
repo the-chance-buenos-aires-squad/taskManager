@@ -76,7 +76,7 @@ class UserRepositoryImplTest {
     fun `should return user when searching by valid user id`() = runTest {
         coEvery { userDataSource.getUserByUserName("admin_user") } returns adminDto
         coEvery { hasher.generateHash("adminPass") } returns adminDto.password
-        coEvery { mapper.toEntity(adminDto) } returns userAdmin
+        coEvery { mapper.toType(adminDto) } returns userAdmin
 
         val result = userRepository.loginUser("admin_user", "adminPass")
 
@@ -105,7 +105,7 @@ class UserRepositoryImplTest {
     @Test
     fun `getUserById returns mapped user when exists`() = runTest {
         coEvery { userDataSource.getUserById(adminId.toString()) } returns adminDto
-        coEvery { mapper.toEntity(adminDto) } returns userAdmin
+        coEvery { mapper.toType(adminDto) } returns userAdmin
 
         val result = userRepository.getUserById(adminId)
 
@@ -124,8 +124,8 @@ class UserRepositoryImplTest {
     @Test
     fun `should return all users when retrieving users`() = runTest {
         coEvery { userDataSource.getUsers() } returns listOf(adminDto, mateDto)
-        coEvery { mapper.toEntity(adminDto) } returns userAdmin
-        coEvery { mapper.toEntity(mateDto) } returns userMate
+        coEvery { mapper.toType(adminDto) } returns userAdmin
+        coEvery { mapper.toType(mateDto) } returns userMate
 
         val result = userRepository.getUsers()
 
@@ -134,7 +134,7 @@ class UserRepositoryImplTest {
 
     @Test
     fun `updateUser should returns true when datasource update succeeds`() = runTest {
-        coEvery { mapper.fromEntity(userMate) } returns mateDto
+        coEvery { mapper.fromType(userMate) } returns mateDto
         coEvery { userDataSource.updateUser(mateDto) } returns true
 
         val result = userRepository.updateUser(userMate)

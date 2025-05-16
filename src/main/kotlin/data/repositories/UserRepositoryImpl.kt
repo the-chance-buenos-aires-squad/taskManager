@@ -37,12 +37,12 @@ class UserRepositoryImpl(
             throw FailedUserSaveException()
         }
 
-        return userMapper.toEntity(newUser)
+        return userMapper.toType(newUser)
 
     }
 
     override suspend fun updateUser(user: User): Boolean {
-        return userDataSource.updateUser(userMapper.fromEntity(user))
+        return userDataSource.updateUser(userMapper.fromType(user))
     }
 
     override suspend fun deleteUser(user: User): Boolean {
@@ -51,18 +51,18 @@ class UserRepositoryImpl(
 
     override suspend fun getUserById(id: UUID): User? {
         return userDataSource.getUserById(id.toString())?.let {
-            userMapper.toEntity(it)
+            userMapper.toType(it)
         }
     }
 
     override suspend fun getUserByUserName(userName: String): User? {
-        return userDataSource.getUserByUserName(userName)?.let { userMapper.toEntity(it) }
+        return userDataSource.getUserByUserName(userName)?.let { userMapper.toType(it) }
     }
 
     override suspend fun getUsers(): List<User> {
         val usersRows = userDataSource.getUsers()
         return usersRows.map { userRow ->
-            userMapper.toEntity(userRow)
+            userMapper.toType(userRow)
         }
     }
 
@@ -72,7 +72,7 @@ class UserRepositoryImpl(
         val hashInput =  md5Hash.generateHash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
 
-        return userMapper.toEntity(userDto)
+        return userMapper.toType(userDto)
     }
 
 

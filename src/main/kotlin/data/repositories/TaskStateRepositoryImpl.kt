@@ -15,11 +15,11 @@ class TaskStateRepositoryImpl(
         val taskStates =
             getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
         if (!taskStates.isEmpty()) throw TaskStateNameException()
-        return taskStateCSVDataSource.createTaskState(taskStateDtoMapper.fromEntity(state))
+        return taskStateCSVDataSource.createTaskState(taskStateDtoMapper.fromType(state))
     }
 
     override suspend fun editTaskState(state: TaskState): Boolean {
-        return taskStateCSVDataSource.editTaskState(taskStateDtoMapper.fromEntity(state))
+        return taskStateCSVDataSource.editTaskState(taskStateDtoMapper.fromType(state))
     }
 
     override suspend fun deleteTaskState(stateId: UUID): Boolean {
@@ -28,7 +28,7 @@ class TaskStateRepositoryImpl(
 
     override suspend fun getAllTaskStates(): List<TaskState> {
         val taskStateRows = taskStateCSVDataSource.getTaskStates()
-        return taskStateRows.map { taskStateRow -> taskStateDtoMapper.toEntity(taskStateRow) }
+        return taskStateRows.map { taskStateRow -> taskStateDtoMapper.toType(taskStateRow) }
     }
 
 }

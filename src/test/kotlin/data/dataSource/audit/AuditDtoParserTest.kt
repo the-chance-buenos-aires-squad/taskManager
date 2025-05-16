@@ -18,7 +18,7 @@ class AuditDtoParserTest {
     @Test
     fun `parsing to dto should return dto object with the same properties values`() {
         //when
-        val result: AuditDto = auditDtoParser.toDto(row)
+        val result: AuditDto = auditDtoParser.fromType(row)
 
         assertThat(result).isEqualTo(dto)
     }
@@ -26,7 +26,7 @@ class AuditDtoParserTest {
     @Test
     fun `parsing from dto should return row  with the same values`() {
         //when
-        val result: List<String> = auditDtoParser.fromDto(dto)
+        val result: List<String> = auditDtoParser.toType(dto)
 
         assertThat(result).isEqualTo(row)
     }
@@ -35,7 +35,7 @@ class AuditDtoParserTest {
     @Test
     fun `parsing to dto with unKnown entityType and action should should take default null value`() {
         //when
-        val resultDto: AuditDto = auditDtoParser.toDto(rowWithUnknownValues)
+        val resultDto: AuditDto = auditDtoParser.fromType(rowWithUnknownValues)
 
         assertThat(resultDto.entityType).isEqualTo("unknown type")
         assertThat(resultDto.action).isEqualTo("unknown action")
@@ -45,7 +45,7 @@ class AuditDtoParserTest {
     fun `parsing from dto with null properties should be empty value in row`() {
         val dtoWithNullValues =
             dto.copy(entityType = null, action = null, field = null, oldValue = null, newValue = null)
-        val resultRow = auditDtoParser.fromDto(dtoWithNullValues)
+        val resultRow = auditDtoParser.toType(dtoWithNullValues)
 
         assertThat(resultRow[ENTITY_TYPE_ROW]).isEmpty()
         assertThat(resultRow[ACTION_ROW]).isEmpty()

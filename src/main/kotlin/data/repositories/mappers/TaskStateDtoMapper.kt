@@ -6,19 +6,19 @@ import java.util.*
 
 class TaskStateDtoMapper : Mapper<TaskState, TaskStateDto> {
 
-    override fun fromEntity(entity: TaskState): TaskStateDto {
+    override fun fromType(type: TaskState): TaskStateDto {
         return TaskStateDto(
-            _id = entity.id.toString(),
-            name = entity.title,
-            projectId = entity.projectId.toString()
+            _id = type.id.toString(),
+            name = type.title,
+            projectId = type.projectId.toString()
         )
     }
 
-    override fun toEntity(type: TaskStateDto): TaskState {
+    override fun toType(row: TaskStateDto): TaskState {
         return TaskState(
-            id = UUID.fromString(type._id),
-            title = type.name,
-            projectId = UUID.fromString(type.projectId)
+            id = UUID.fromString(row._id),
+            title = row.name,
+            projectId = UUID.fromString(row.projectId)
         )
     }
 

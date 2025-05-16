@@ -25,7 +25,7 @@ class TaskRepositoryImplTest {
 
         // Mock mapper and data source to return expected values
         coEvery { mockTaskDataSource.addTask(any()) } returns true
-        coEvery { mockTaskMapper.fromEntity(any()) } returns DummyTasks.validTaskDto
+        coEvery { mockTaskMapper.fromType(any()) } returns DummyTasks.validTaskDto
     }
 
     @Test
@@ -99,7 +99,7 @@ class TaskRepositoryImplTest {
         taskRepository.addTask(DummyTasks.validTask)
 
         // Then
-        coVerify(exactly = 1) { mockTaskMapper.fromEntity(any()) }
+        coVerify(exactly = 1) { mockTaskMapper.fromType(any()) }
     }
 
     @Test
@@ -107,7 +107,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = DummyTasks.validTask
         val mappedTask = DummyTasks.validTaskDto
-        coEvery { mockTaskMapper.fromEntity(any()) } returns mappedTask
+        coEvery { mockTaskMapper.fromType(any()) } returns mappedTask
 
         // When
         taskRepository.addTask(task)
@@ -136,14 +136,14 @@ class TaskRepositoryImplTest {
         val mappedTask = DummyTasks.validTask
 
         coEvery { mockTaskDataSource.getTasks() } returns listOf(taskDto)
-        coEvery { mockTaskMapper.toEntity(taskDto) } returns mappedTask
+        coEvery { mockTaskMapper.toType(taskDto) } returns mappedTask
 
         // When
         val result = taskRepository.getAllTasks()
 
         // Then
         coVerify(exactly = 1) { mockTaskDataSource.getTasks() }
-        coVerify(exactly = 1) { mockTaskMapper.toEntity(taskDto) }
+        coVerify(exactly = 1) { mockTaskMapper.toType(taskDto) }
 
         assertThat(result).hasSize(1)
         assertThat(result[0]).isEqualTo(mappedTask)
@@ -180,7 +180,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = DummyTasks.validTask
         val taskDto = DummyTasks.validTaskDto
-        coEvery { mockTaskMapper.fromEntity(task) } returns taskDto
+        coEvery { mockTaskMapper.fromType(task) } returns taskDto
         coEvery { mockTaskDataSource.updateTask(taskDto) } returns true
 
         // When
@@ -195,7 +195,7 @@ class TaskRepositoryImplTest {
         // Given
         val task = DummyTasks.validTask
         val taskDto = DummyTasks.validTaskDto
-        coEvery { mockTaskMapper.fromEntity(task) } returns taskDto
+        coEvery { mockTaskMapper.fromType(task) } returns taskDto
         coEvery { mockTaskDataSource.updateTask(taskDto) } returns false
 
         // When
@@ -211,7 +211,7 @@ class TaskRepositoryImplTest {
         val task = DummyTasks.validTask
         val taskDto = DummyTasks.validTaskDto
         coEvery { mockTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
-        coEvery { mockTaskMapper.toEntity(taskDto) } returns task
+        coEvery { mockTaskMapper.toType(taskDto) } returns task
 
         // When
         val result = taskRepository.getTaskById(task.id)

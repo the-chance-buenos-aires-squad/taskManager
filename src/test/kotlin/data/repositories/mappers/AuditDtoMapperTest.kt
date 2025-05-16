@@ -13,7 +13,7 @@ class AuditDtoMapperTest {
     @Test
     fun `should return Audit object when mapping toEntity`() {
         //when
-        val expectedAudit = auditDtoMapper.toEntity(DummyTaskAuditDto)
+        val expectedAudit = auditDtoMapper.toType(DummyTaskAuditDto)
 
         //then
         assertThat(expectedAudit).isEqualTo(DummyAudits.dummyTaskAudit_CreateAction)
@@ -23,7 +23,7 @@ class AuditDtoMapperTest {
     @Test
     fun `should return dto object when mapping fromEntity`() {
         //when
-        val expectedRow = auditDtoMapper.fromEntity(dummyTaskAudit_CreateAction)
+        val expectedRow = auditDtoMapper.fromType(dummyTaskAudit_CreateAction)
         //then
         assertThat(expectedRow).isEqualTo(DummyTaskAuditDto)
     }
