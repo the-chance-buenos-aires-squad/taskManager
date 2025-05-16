@@ -20,7 +20,7 @@ class TaskStateRepositoryImpl(
         return userSession.runIfLoggedIn { currentUser ->
             val taskStates =
                 getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
-            if (!taskStates.isEmpty()) throw TaskStateNameException()
+            if (taskStates.isNotEmpty()) throw TaskStateNameException()
             taskStateDataSource.createTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
                 if (result) {
                     recordTaskStateAudit(state.id, currentUser, action = ActionType.CREATE)
