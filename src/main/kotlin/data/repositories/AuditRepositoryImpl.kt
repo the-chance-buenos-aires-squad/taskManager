@@ -12,13 +12,13 @@ class AuditRepositoryImpl(
 ) : AuditRepository {
 
     override suspend fun addAudit(audit: Audit): Boolean {
-        return auditDataSource.addAudit(auditDtoMapper.fromEntity(audit))
+        return auditDataSource.addAudit(auditDtoMapper.fromType(audit))
     }
 
     override suspend fun getAllAudit(): List<Audit> {
         val auditsRowList = auditDataSource.getAllAudit()
         return auditsRowList.map { row ->
-            auditDtoMapper.toEntity(row)
+            auditDtoMapper.toType(row)
         }
     }
 

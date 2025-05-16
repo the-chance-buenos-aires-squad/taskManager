@@ -12,25 +12,25 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
 
     override suspend fun addTask(task: Task): Boolean {
-        return taskDataSource.addTask(taskMapper.fromEntity(task))
+        return taskDataSource.addTask(taskMapper.fromType(task))
     }
 
     override suspend fun getAllTasks(): List<Task> {
         val taskRow = taskDataSource.getTasks()
         return taskRow.map { task ->
-            taskMapper.toEntity(task)
+            taskMapper.toType(task)
         }
     }
 
     override suspend fun getTaskById(id: UUID): Task? {
         return taskDataSource.getTaskById(id.toString())?.let {
-            taskMapper.toEntity(it)
+            taskMapper.toType(it)
 
         }
     }
 
     override suspend fun updateTask(task: Task): Boolean {
-        return taskDataSource.updateTask(taskMapper.fromEntity(task))
+        return taskDataSource.updateTask(taskMapper.fromType(task))
 
     }
 

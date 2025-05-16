@@ -14,7 +14,7 @@ class CsvTaskDataSource(
     override suspend fun addTask(taskDto: TaskDto): Boolean {
         return try {
             csvHandler.write(
-                row = taskDtoParser.fromDto(taskDto),
+                row = taskDtoParser.toType(taskDto),
                 file = file,
                 append = true,
             )
@@ -27,7 +27,7 @@ class CsvTaskDataSource(
 
     override suspend fun getTasks(): List<TaskDto> {
         if (!file.exists()) return emptyList()
-        return csvHandler.read(file).map { row -> taskDtoParser.toDto(row) }
+        return csvHandler.read(file).map { row -> taskDtoParser.fromType(row) }
     }
 
     override suspend fun getTaskById(taskId: String): TaskDto? {
@@ -49,7 +49,7 @@ class CsvTaskDataSource(
             file.writeText("") // Clear file
             updatedTasks.forEach { updatedTask ->
                 csvHandler.write(
-                    row = taskDtoParser.fromDto(updatedTask),
+                    row = taskDtoParser.toType(updatedTask),
                     file = file,
                     append = true,
                 )
@@ -71,7 +71,7 @@ class CsvTaskDataSource(
             file.writeText("") // Clear file
             updatedTasks.forEach { task ->
                 csvHandler.write(
-                    row = taskDtoParser.fromDto(task),
+                    row = taskDtoParser.toType(task),
                     file = file,
                     append = true,
                 )

@@ -12,7 +12,7 @@ class TaskStateCSVDataSource(
 ) : TaskStateDataSource {
 
     override suspend fun createTaskState(state: TaskStateDto): Boolean {
-        csvHandler.write(taskStateDtoParser.fromDto(state), file)
+        csvHandler.write(taskStateDtoParser.toType(state), file)
         return true
     }
 
@@ -49,14 +49,14 @@ class TaskStateCSVDataSource(
 
     override suspend fun getTaskStates(): List<TaskStateDto> {
         return csvHandler.read(file)
-            .map { parts -> taskStateDtoParser.toDto(parts) }
+            .map { parts -> taskStateDtoParser.fromType(parts) }
     }
 
     private fun writeTaskStates(states: List<TaskStateDto>) {
         file.writeText("")
         states.forEach { state ->
             csvHandler.write(
-                taskStateDtoParser.fromDto(state),
+                taskStateDtoParser.toType(state),
                 file,
             )
         }

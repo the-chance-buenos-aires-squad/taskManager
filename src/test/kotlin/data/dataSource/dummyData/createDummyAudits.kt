@@ -21,7 +21,7 @@ object createDummyAudits {
         timestamp = LocalDateTime.now()
     )
     val auditDtoMapper = AuditDtoMapper()
-    val dummyTaskCreateActionRow = auditDtoMapper.fromEntity(dummyTaskCreateAction)
+    val dummyTaskCreateActionRow = auditDtoMapper.fromType(dummyTaskCreateAction)
 
 
     val dummyProjectCreateAction = Audit(
@@ -35,7 +35,7 @@ object createDummyAudits {
         userId = "user_id",
         timestamp = LocalDateTime.now()
     )
-    val dummyProjectCreateActionRow = auditDtoMapper.fromEntity(dummyProjectCreateAction)
+    val dummyProjectCreateActionRow = auditDtoMapper.fromType(dummyProjectCreateAction)
 
 
     val dummyUserUpdateAction = Audit(

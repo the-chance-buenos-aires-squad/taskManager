@@ -17,11 +17,11 @@ class ProjectRepositoryImpl(
             project.title.isEmpty() -> throw UserEnterInvalidValueException("name can't be empty")
             project.description.isEmpty() -> throw UserEnterInvalidValueException("description can't be empty")
         }
-        return projectDataSource.addProject(projectMapper.fromEntity(project))
+        return projectDataSource.addProject(projectMapper.fromType(project))
     }
 
     override suspend fun updateProject(project: Project): Boolean {
-        return projectDataSource.updateProject(projectMapper.fromEntity(project))
+        return projectDataSource.updateProject(projectMapper.fromType(project))
     }
 
     override suspend fun deleteProject(projectId: UUID): Boolean {
@@ -31,7 +31,7 @@ class ProjectRepositoryImpl(
     override suspend fun getAllProjects(): List<Project> {
         return projectDataSource.getAllProjects()
             .map { projectRow ->
-                projectMapper.toEntity(projectRow)
+                projectMapper.toType(projectRow)
             }
     }
 }

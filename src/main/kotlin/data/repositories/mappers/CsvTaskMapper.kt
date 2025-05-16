@@ -6,21 +6,21 @@ import java.util.*
 
 class CsvTaskMapper : Mapper<Task, List<String>> {
 
-    override fun fromEntity(entity: Task): List<String> {
+    override fun fromType(type: Task): List<String> {
         return listOf(
-            entity.id.toString(),
-            entity.title,
-            entity.description,
-            entity.projectId.toString(),
-            entity.stateId.toString(),
-            entity.assignedTo.toString(),
-            entity.createdBy.toString(),
-            entity.createdAt.toString(),
-            entity.updatedAt.toString()
+            type.id.toString(),
+            type.title,
+            type.description,
+            type.projectId.toString(),
+            type.stateId.toString(),
+            type.assignedTo.toString(),
+            type.createdBy.toString(),
+            type.createdAt.toString(),
+            type.updatedAt.toString()
         )
     }
 
-    override fun toEntity(row: List<String>): Task {
+    override fun toType(row: List<String>): Task {
         return Task(
             id = UUID.fromString(row[0]),
             title = row[1],

@@ -1,13 +1,13 @@
 package data.dataSource.user
 
-import data.dto.DtoParser
 import data.dto.UserDto
+import data.repositories.mappers.Mapper
 import domain.entities.UserRole
 
 
-class UserDtoParser : DtoParser<List<String>, UserDto> {
+class UserDtoParser : Mapper<List<String>, UserDto> {
 
-    override fun toDto(type: List<String>): UserDto {
+    override fun fromType(type: List<String>): UserDto {
         return UserDto(
             id = type[ID_ROW],
             username = type[USER_NAME_ROW],
@@ -17,8 +17,8 @@ class UserDtoParser : DtoParser<List<String>, UserDto> {
         )
     }
 
-    override fun fromDto(dto: UserDto): List<String> {
-        return listOf(dto.id, dto.username, dto.password, dto.role?.name ?: UserRole.MATE.name, dto.createdAt)
+    override fun toType(row: UserDto): List<String> {
+        return listOf(row.id, row.username, row.password, row.role?.name ?: UserRole.MATE.name, row.createdAt)
     }
 
     companion object {

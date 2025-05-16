@@ -1,10 +1,10 @@
 package data.dataSource.project
 
-import data.dto.DtoParser
 import data.dto.ProjectDto
+import data.repositories.mappers.Mapper
 
-class ProjectDtoParser : DtoParser<List<String>, ProjectDto> {
-    override fun toDto(type: List<String>): ProjectDto {
+class ProjectDtoParser : Mapper<List<String>, ProjectDto> {
+    override fun fromType(type: List<String>): ProjectDto {
         return ProjectDto(
             _id = type[0],
             name = type[1],
@@ -13,12 +13,12 @@ class ProjectDtoParser : DtoParser<List<String>, ProjectDto> {
         )
     }
 
-    override fun fromDto(dto: ProjectDto): List<String> {
+    override fun toType(row: ProjectDto): List<String> {
         return listOf(
-            dto._id,
-            dto.name,
-            dto.description,
-            dto.createdAt
+            row._id,
+            row.name,
+            row.description,
+            row.createdAt
         )
     }
 }

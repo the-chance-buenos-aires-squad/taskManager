@@ -42,7 +42,7 @@ class TaskStateCSVDataSourceTest {
 
     @Test
     fun `should return true when state is created successfully`() = runTest {
-        every { taskStateDtoParser.fromDto(any()) } returns csvRow1
+        every { taskStateDtoParser.toType(any()) } returns csvRow1
         val result = taskStateCSVDataSource.createTaskState(stateDto1)
         assertThat(result).isTrue()
     }
@@ -50,10 +50,10 @@ class TaskStateCSVDataSourceTest {
     @Test
     fun `should return true when state is edited successfully`() = runTest {
         every { csvHandler.read(testStateFile) } returns csvRows
-        every { taskStateDtoParser.toDto(csvRow1) } returns stateDto1
-        every { taskStateDtoParser.toDto(csvRow2) } returns stateDto2
+        every { taskStateDtoParser.fromType(csvRow1) } returns stateDto1
+        every { taskStateDtoParser.fromType(csvRow2) } returns stateDto2
         every { csvHandler.write(any(), any(), any()) } just Runs
-        every { taskStateDtoParser.fromDto(any()) } returns csvRow2
+        every { taskStateDtoParser.toType(any()) } returns csvRow2
 
         val result = taskStateCSVDataSource.editTaskState(
             TaskStateDto(id2.toString(), "Review", projectId2.toString())
@@ -65,8 +65,8 @@ class TaskStateCSVDataSourceTest {
     @Test
     fun `should return false when trying to edit non-existing state`() = runTest {
         every { csvHandler.read(testStateFile) } returns csvRows
-        every { taskStateDtoParser.toDto(csvRow1) } returns stateDto1
-        every { taskStateDtoParser.toDto(csvRow2) } returns stateDto2
+        every { taskStateDtoParser.fromType(csvRow1) } returns stateDto1
+        every { taskStateDtoParser.fromType(csvRow2) } returns stateDto2
 
         val result = taskStateCSVDataSource.editTaskState(
             TaskStateDto(UUID.randomUUID().toString(), "Blocked", UUID.randomUUID().toString())
@@ -78,9 +78,9 @@ class TaskStateCSVDataSourceTest {
     @Test
     fun `should return true when state is deleted`() = runTest {
         every { csvHandler.read(testStateFile) } returns csvRows
-        every { taskStateDtoParser.toDto(csvRow1) } returns stateDto1
-        every { taskStateDtoParser.toDto(csvRow2) } returns stateDto2
-        every { taskStateDtoParser.fromDto(any()) } returnsMany listOf(csvRow2)
+        every { taskStateDtoParser.fromType(csvRow1) } returns stateDto1
+        every { taskStateDtoParser.fromType(csvRow2) } returns stateDto2
+        every { taskStateDtoParser.toType(any()) } returnsMany listOf(csvRow2)
         every { csvHandler.write(any(), any(), any()) } just Runs
 
         val result = taskStateCSVDataSource.deleteTaskState(id1.toString())
@@ -90,8 +90,8 @@ class TaskStateCSVDataSourceTest {
     @Test
     fun `should return false when trying to delete non-existing state`() = runTest {
         every { csvHandler.read(testStateFile) } returns csvRows
-        every { taskStateDtoParser.toDto(csvRow1) } returns stateDto1
-        every { taskStateDtoParser.toDto(csvRow2) } returns stateDto2
+        every { taskStateDtoParser.fromType(csvRow1) } returns stateDto1
+        every { taskStateDtoParser.fromType(csvRow2) } returns stateDto2
 
         val result = taskStateCSVDataSource.deleteTaskState(UUID.randomUUID().toString())
         assertThat(result).isFalse()
@@ -100,8 +100,8 @@ class TaskStateCSVDataSourceTest {
     @Test
     fun `should return all states parsed from csv`() = runTest {
         every { csvHandler.read(testStateFile) } returns csvRows
-        every { taskStateDtoParser.toDto(csvRow1) } returns stateDto1
-        every { taskStateDtoParser.toDto(csvRow2) } returns stateDto2
+        every { taskStateDtoParser.fromType(csvRow1) } returns stateDto1
+        every { taskStateDtoParser.fromType(csvRow2) } returns stateDto2
 
         val result = taskStateCSVDataSource.getTaskStates()
 

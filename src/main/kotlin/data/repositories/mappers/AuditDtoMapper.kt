@@ -9,35 +9,35 @@ import java.util.*
 
 class AuditDtoMapper : Mapper<Audit, AuditDto> {
 
-    override fun fromEntity(entity: Audit): AuditDto {
+    override fun fromType(type: Audit): AuditDto {
         return AuditDto(
-            id = entity.id.toString(),
-            entityId = entity.entityId,
-            entityType = entity.entityType?.name,
-            action = entity.action?.name,
-            field = entity.field,
-            oldValue = entity.originalValue,
-            newValue = entity.modifiedValue,
-            userId = entity.userId,
-            timestamp = entity.timestamp.toString()
+            id = type.id.toString(),
+            entityId = type.entityId,
+            entityType = type.entityType?.name,
+            action = type.action?.name,
+            field = type.field,
+            oldValue = type.originalValue,
+            newValue = type.modifiedValue,
+            userId = type.userId,
+            timestamp = type.timestamp.toString()
         )
     }
 
-    override fun toEntity(type: AuditDto): Audit {
+    override fun toType(row: AuditDto): Audit {
         return Audit(
-            id = UUID.fromString(type.id),
-            entityId = type.entityId,
-            entityType = type.entityType?.let {
+            id = UUID.fromString(row.id),
+            entityId = row.entityId,
+            entityType = row.entityType?.let {
                 runCatching { EntityType.valueOf(it) }.getOrNull()
             },
-            action = type.action?.let {
+            action = row.action?.let {
                 runCatching { ActionType.valueOf(it) }.getOrNull()
             },
-            field = type.field,
-            originalValue = type.oldValue,
-            modifiedValue = type.newValue,
-            userId = type.userId,
-            timestamp = LocalDateTime.parse(type.timestamp)
+            field = row.field,
+            originalValue = row.oldValue,
+            modifiedValue = row.newValue,
+            userId = row.userId,
+            timestamp = LocalDateTime.parse(row.timestamp)
         )
     }
 

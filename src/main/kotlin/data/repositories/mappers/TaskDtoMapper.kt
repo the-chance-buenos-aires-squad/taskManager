@@ -7,31 +7,31 @@ import java.util.*
 
 class TaskDtoMapper : Mapper<Task, TaskDto> {
 
-    override fun fromEntity(entity: Task): TaskDto {
+    override fun fromType(type: Task): TaskDto {
         return TaskDto(
-            id = entity.id.toString(),
-            title = entity.title,
-            description = entity.description,
-            projectId = entity.projectId.toString(),
-            stateId = entity.stateId.toString(),
-            assignedTo = entity.assignedTo?.toString(),
-            createdBy = entity.createdBy.toString(),
-            createdAt = entity.createdAt.toString(),
-            updatedAt = entity.updatedAt.toString()
+            id = type.id.toString(),
+            title = type.title,
+            description = type.description,
+            projectId = type.projectId.toString(),
+            stateId = type.stateId.toString(),
+            assignedTo = type.assignedTo?.toString(),
+            createdBy = type.createdBy.toString(),
+            createdAt = type.createdAt.toString(),
+            updatedAt = type.updatedAt.toString()
         )
     }
 
-    override fun toEntity(type: TaskDto): Task {
+    override fun toType(row: TaskDto): Task {
         return Task(
-            id = UUID.fromString(type.id),
-            title = type.title,
-            description = type.description,
-            projectId = UUID.fromString(type.projectId),
-            stateId = UUID.fromString(type.stateId),
-            assignedTo = type.assignedTo?.let { UUID.fromString(it) },
-            createdBy = UUID.fromString(type.createdBy),
-            createdAt = LocalDateTime.parse(type.createdAt),
-            updatedAt = LocalDateTime.parse(type.updatedAt)
+            id = UUID.fromString(row.id),
+            title = row.title,
+            description = row.description,
+            projectId = UUID.fromString(row.projectId),
+            stateId = UUID.fromString(row.stateId),
+            assignedTo = row.assignedTo?.let { UUID.fromString(it) },
+            createdBy = UUID.fromString(row.createdBy),
+            createdAt = LocalDateTime.parse(row.createdAt),
+            updatedAt = LocalDateTime.parse(row.updatedAt)
         )
     }
 }

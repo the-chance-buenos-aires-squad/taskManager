@@ -13,7 +13,7 @@ class CsvProjectDataSource(
 ) : ProjectDataSource {
 
     override suspend fun addProject(projectDto: ProjectDto): Boolean {
-        csvHandler.write(projectDtoParser.fromDto(projectDto), file)
+        csvHandler.write(projectDtoParser.toType(projectDto), file)
         return true
     }
 
@@ -39,13 +39,13 @@ class CsvProjectDataSource(
     }
 
     override suspend fun getAllProjects(): List<ProjectDto> {
-        return csvHandler.read(file).map { projectDtoParser.toDto(it) }
+        return csvHandler.read(file).map { projectDtoParser.fromType(it) }
     }
 
     private fun rewriteAllProjects(projects: List<ProjectDto>) {
         file.writeText("") // clear file
         projects.forEach {
-            csvHandler.write(projectDtoParser.fromDto(it), file)
+            csvHandler.write(projectDtoParser.toType(it), file)
         }
     }
 }

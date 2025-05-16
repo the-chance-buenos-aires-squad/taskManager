@@ -7,21 +7,21 @@ import java.time.LocalDateTime
 import java.util.*
 
 class UserDtoMapper : Mapper<User, UserDto> {
-    override fun fromEntity(entity: User): UserDto {
+    override fun fromType(type: User): UserDto {
         return UserDto(
-            id = entity.id.toString(),
-            username = entity.username,
-            role = entity.role,
-            createdAt = entity.createdAt.toString()
+            id = type.id.toString(),
+            username = type.username,
+            role = type.role,
+            createdAt = type.createdAt.toString()
         )
     }
 
-    override fun toEntity(type: UserDto): User {
+    override fun toType(row: UserDto): User {
         return User(
-            id = UUID.fromString(type.id),
-            username = type.username,
-            role = type.role ?: UserRole.MATE,
-            createdAt = LocalDateTime.parse(type.createdAt)
+            id = UUID.fromString(row.id),
+            username = row.username,
+            role = row.role ?: UserRole.MATE,
+            createdAt = LocalDateTime.parse(row.createdAt)
         )
     }
 

@@ -28,7 +28,7 @@ class ProjectDtoMapperTest {
             now.toString()
         )
 
-        val actualRow = mapper.fromEntity(project)
+        val actualRow = mapper.fromType(project)
 
         assertThat(expectedRow._id).isEqualTo(actualRow._id)
     }
@@ -51,7 +51,7 @@ class ProjectDtoMapperTest {
             createdAt = now
         )
 
-        val actualProject = mapper.toEntity(row)
+        val actualProject = mapper.toType(row)
         assertThat(expectedProject.title).isEqualTo(actualProject.title)
 
     }
