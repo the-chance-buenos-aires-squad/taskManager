@@ -17,7 +17,6 @@ class CreateTaskCli(
     private val uiController: UiController,
 ) {
 
-    //TODO re write every thing
     suspend fun addTask(projectID: UUID) {
         uiController.printMessage(
             "------ Create Task ------\n"
@@ -54,8 +53,6 @@ class CreateTaskCli(
                 return
             }
         }
-
-        //todo we need get all user to choose user better
 
         uiController.printMessage("Enter the user to assign the task to: ", false)
         val assignUser = uiController.readInput()
