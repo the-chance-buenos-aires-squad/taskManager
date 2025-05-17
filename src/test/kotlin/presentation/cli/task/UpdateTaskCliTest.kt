@@ -15,17 +15,16 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.cli.helper.TaskStateCliHelper
 import java.util.*
 
 class UpdateTaskCliTest {
 
     private lateinit var getAllTasksUseCase: GetAllTasksUseCase
     private lateinit var updateTaskUseCase: UpdateTaskUseCase
-    private lateinit var getAllTaskStatesUseCase: GetAllTaskStatesUseCase
-    private lateinit var userRepository: UserRepository
+    private lateinit var taskCliHelper: TaskStateCliHelper
     private lateinit var uiController: UiController
     private lateinit var updateTaskCli: UpdateTaskCli
-
 
     private val projectId = UUID.randomUUID()
     private val createdBy = UUID.randomUUID()
@@ -36,15 +35,13 @@ class UpdateTaskCliTest {
     fun setup() {
         getAllTasksUseCase = mockk()
         updateTaskUseCase = mockk()
-        getAllTaskStatesUseCase = mockk()
-        userRepository = mockk()
+        taskCliHelper = mockk()
         uiController = mockk(relaxed = true)
 
         updateTaskCli = UpdateTaskCli(
             getAllTasksUseCase,
             updateTaskUseCase,
-            getAllTaskStatesUseCase,
-            userRepository,
+            taskCliHelper,
             uiController
         )
 
@@ -54,14 +51,22 @@ class UpdateTaskCliTest {
     @Test
     fun `should update task successfully`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
+        coEvery { taskCliHelper.getTaskStates(projectId) } returns listOf(taskState)
+        coEvery { taskCliHelper.selectTaskState(any()) } returns taskState
+        coEvery { uiController.readInput() } returns "" andThen "" andThen ""
+
         coEvery {
-            TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
-        } returns task
-        coEvery {
-            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         } returns true
 
         updateTaskCli.update(projectId)
@@ -72,14 +77,22 @@ class UpdateTaskCliTest {
     @Test
     fun `should print failed to update task`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
+        coEvery { taskCliHelper.getTaskStates(projectId) } returns listOf(taskState)
+        coEvery { taskCliHelper.selectTaskState(any()) } returns taskState
+        coEvery { uiController.readInput() } returns "" andThen "" andThen ""
+
         coEvery {
-            TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
-        } returns task
-        coEvery {
-            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         } returns false
 
         updateTaskCli.update(projectId)
@@ -90,14 +103,22 @@ class UpdateTaskCliTest {
     @Test
     fun `should handle UserNotLoggedInException when updating task`() = runTest {
         coEvery { getAllTasksUseCase.execute() } returns listOf(task)
-        coEvery { getAllTaskStatesUseCase.execute(projectId) } returns listOf(taskState)
         coEvery { TaskCliUtils.fetchProjectTasks(any(), any(), any()) } returns listOf(task)
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
+        coEvery { taskCliHelper.getTaskStates(projectId) } returns listOf(taskState)
+        coEvery { taskCliHelper.selectTaskState(any()) } returns taskState
+        coEvery { uiController.readInput() } returns "" andThen "" andThen ""
+
         coEvery {
-            TaskCliUtils.promptForUpdatedTask(any(), any(), userRepository, uiController)
-        } returns task
-        coEvery {
-            updateTaskUseCase.execute(any(), any(), any(), any(), any(), any())
+            updateTaskUseCase.execute(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
         } throws UserNotLoggedInException("User not logged in")
 
         updateTaskCli.update(projectId)
@@ -113,7 +134,7 @@ class UpdateTaskCliTest {
         updateTaskCli.update(projectId)
 
         coVerify(exactly = 0) { TaskCliUtils.selectTask(any(), any()) }
-        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -124,6 +145,6 @@ class UpdateTaskCliTest {
 
         updateTaskCli.update(projectId)
 
-        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { updateTaskUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
     }
 }

@@ -7,6 +7,7 @@ import data.repositories.mappers.TaskDtoMapper
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.AuditRepository
+import domain.repositories.UserRepository
 import dummyData.DummyTasks
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -23,6 +24,7 @@ class TaskRepositoryImplTest {
     private val mockTaskDataSource: TaskDataSource = mockk(relaxed = true)
     private val mockTaskMapper: TaskDtoMapper = mockk(relaxed = true)
     private val auditRepository: AuditRepository = mockk()
+    private val userRepository: UserRepository = mockk()
     private val session: UserSession = mockk()
     private lateinit var taskRepository: TaskRepositoryImpl
 
@@ -33,7 +35,8 @@ class TaskRepositoryImplTest {
             taskDataSource = mockTaskDataSource,
             taskMapper = mockTaskMapper,
             userSession = session,
-            auditRepository = auditRepository
+            auditRepository = auditRepository,
+            userRepository = userRepository
         )
 
         initUser()
@@ -51,7 +54,13 @@ class TaskRepositoryImplTest {
 
 
         // When
-        val result = taskRepository.addTask(DummyTasks.validTask)
+        val result = taskRepository.addTask(
+            title = DummyTasks.validTask.title,
+            description = DummyTasks.validTask.description,
+            projectId = DummyTasks.validTask.projectId,
+            stateId = DummyTasks.validTask.stateId,
+            assignedTo = DummyTasks.validTask.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -67,7 +76,13 @@ class TaskRepositoryImplTest {
 
 
         // When
-        val result = taskRepository.addTask(initialTask)
+        val result = taskRepository.addTask(
+            title = initialTask.title,
+            description = initialTask.description,
+            projectId = initialTask.projectId,
+            stateId = initialTask.stateId,
+            assignedTo = initialTask.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -81,7 +96,13 @@ class TaskRepositoryImplTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         // When
-        val result = taskRepository.addTask(initialTask)
+        val result = taskRepository.addTask(
+            title = initialTask.title,
+            description = initialTask.description,
+            projectId = initialTask.projectId,
+            stateId = initialTask.stateId,
+            assignedTo = initialTask.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -96,7 +117,13 @@ class TaskRepositoryImplTest {
 
 
         // When
-        val result = taskRepository.addTask(initialTask)
+        val result = taskRepository.addTask(
+            title = initialTask.title,
+            description = initialTask.description,
+            projectId = initialTask.projectId,
+            stateId = initialTask.stateId,
+            assignedTo = initialTask.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -110,9 +137,14 @@ class TaskRepositoryImplTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
 
-
         // When
-        val result = taskRepository.addTask(initialTask)
+        val result = taskRepository.addTask(
+            title = initialTask.title,
+            description = initialTask.description,
+            projectId = initialTask.projectId,
+            stateId = initialTask.stateId,
+            assignedTo = initialTask.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -126,9 +158,14 @@ class TaskRepositoryImplTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
 
-
         // When
-        val result = taskRepository.addTask(initialTask)
+        val result = taskRepository.addTask(
+            title = initialTask.title,
+            description = initialTask.description,
+            projectId = initialTask.projectId,
+            stateId = initialTask.stateId,
+            assignedTo = initialTask.assignedTo.toString()
+        )
         // Then
         coVerify(exactly = 1) { mockTaskMapper.fromType(any()) }
     }
@@ -142,7 +179,13 @@ class TaskRepositoryImplTest {
         coEvery { auditRepository.addAudit(any()) } returns true
 
         // When
-        taskRepository.addTask(task)
+        taskRepository.addTask(
+            title = task.title,
+            description = task.description,
+            projectId = task.projectId,
+            stateId = task.stateId,
+            assignedTo = task.assignedTo.toString()
+        )
 
         // Then
         coVerify(exactly = 1) { mockTaskDataSource.addTask(mappedTask) }
@@ -157,7 +200,13 @@ class TaskRepositoryImplTest {
 
 
         // When
-        val result = taskRepository.addTask(task)
+        val result = taskRepository.addTask(
+            title = task.title,
+            description = task.description,
+            projectId = task.projectId,
+            stateId = task.stateId,
+            assignedTo = task.assignedTo.toString()
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -222,7 +271,14 @@ class TaskRepositoryImplTest {
 
 
         // When
-        val result = taskRepository.updateTask(task)
+        val result = taskRepository.updateTask(
+            id = task.id, title = task.title,
+            description = task.description,
+            projectId = task.projectId,
+            stateId = task.stateId,
+            assignedTo = task.assignedTo.toString(),
+            craetedAt= task.createdAt
+        )
 
         // Then
         assertThat(result).isTrue()
@@ -237,7 +293,12 @@ class TaskRepositoryImplTest {
         coEvery { mockTaskDataSource.updateTask(taskDto) } returns false
 
         // When
-        val result = taskRepository.updateTask(task)
+        val result = taskRepository.updateTask(   id = task.id, title = task.title,
+            description = task.description,
+            projectId = task.projectId,
+            stateId = task.stateId,
+            assignedTo = task.assignedTo.toString(),
+            craetedAt= task.createdAt)
 
         // Then
         assertThat(result).isFalse()
