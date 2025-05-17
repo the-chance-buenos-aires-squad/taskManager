@@ -53,7 +53,7 @@ class UserRepositoryImpl(
                 )
             )
 
-            return userMapper.toEntity(newUser)
+            return userMapper.toType(newUser)
         }else{
             throw UserMateNotAllowedException()
         }

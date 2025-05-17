@@ -13,6 +13,15 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
+import presentation.cli.task.CreateTaskCli.Messages.CREATE_HEADER
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_CANCEL
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_EMPTY
+import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_PROMPT
+import presentation.cli.task.CreateTaskCli.Messages.EXCEPTION_NOT_LOGGED_IN
+import presentation.cli.task.CreateTaskCli.Messages.SUCCESS
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_CANCEL
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_EMPTY
+import presentation.cli.task.CreateTaskCli.Messages.TITLE_PROMPT
 import java.util.*
 //TODO fix
 //class CreateTaskCliTest {

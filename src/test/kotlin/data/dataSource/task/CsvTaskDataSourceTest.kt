@@ -33,7 +33,7 @@ class CsvTaskDataSourceTest {
 
     @Test
     fun `addTask should return true when write succeeds`() = runTest {
-        every { parser.fromDto(taskDto) } returns row
+        every { parser.toType(taskDto) } returns row
 
         val result = dataSource.addTask(taskDto)
 
@@ -43,7 +43,7 @@ class CsvTaskDataSourceTest {
     @Test
     fun `getTasks should return parsed list from csv`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
+        every { parser.fromType(row) } returns taskDto
 
         val result = dataSource.getTasks()
 
@@ -53,7 +53,7 @@ class CsvTaskDataSourceTest {
     @Test
     fun `getTaskById should return correct task when found`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
+        every { parser.fromType(row) } returns taskDto
 
         val result = dataSource.getTaskById("1")
 
@@ -63,7 +63,7 @@ class CsvTaskDataSourceTest {
     @Test
     fun `getTaskById should return null when not found`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
+        every { parser.fromType(row) } returns taskDto
 
         val result = dataSource.getTaskById("non-existent")
 
@@ -73,8 +73,8 @@ class CsvTaskDataSourceTest {
     @Test
     fun `updateTask should return true when task exists`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
-        every { parser.fromDto(any()) } returns row
+        every { parser.fromType(row) } returns taskDto
+        every { parser.toType(any()) } returns row
 
         val result = dataSource.updateTask(taskDto)
 
@@ -93,8 +93,8 @@ class CsvTaskDataSourceTest {
     @Test
     fun `deleteTask should return true when task is removed`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
-        every { parser.fromDto(taskDto) } returns row
+        every { parser.fromType(row) } returns taskDto
+        every { parser.toType(taskDto) } returns row
 
         val result = dataSource.deleteTask("1")
 
@@ -104,7 +104,7 @@ class CsvTaskDataSourceTest {
     @Test
     fun `deleteTask should return false when task not found`() = runTest {
         every { csvHandler.read(file) } returns listOf(row)
-        every { parser.toDto(row) } returns taskDto
+        every { parser.fromType(row) } returns taskDto
 
         val result = dataSource.deleteTask("non-existent")
 

@@ -15,7 +15,7 @@ class CsvUserDataSource(
     override suspend fun addUser(userDto: UserDto): Boolean {
         return try {
             csvHandler.write(
-                row = userDtoParser.fromDto(userDto),
+                row = userDtoParser.toType(userDto),
                 file = file,
                 append = true
             )
@@ -48,7 +48,7 @@ class CsvUserDataSource(
             // Write each remaining user back to the file
             updatedUsers.forEach { user ->
                 csvHandler.write(
-                    row = userDtoParser.fromDto(user),
+                    row = userDtoParser.toType(user),
                     file = file,
                     append = true
                 )
@@ -63,7 +63,7 @@ class CsvUserDataSource(
 
     override suspend fun getUsers(): List<UserDto> {
         if (!file.exists()) return emptyList()
-        return csvHandler.read(file).map { row -> userDtoParser.toDto(row) }
+        return csvHandler.read(file).map { row -> userDtoParser.fromType(row) }
     }
 
 
@@ -83,7 +83,7 @@ class CsvUserDataSource(
 
             updatedUsers.forEach { updatedUser ->
                 csvHandler.write(
-                    row = userDtoParser.fromDto(updatedUser),
+                    row = userDtoParser.toType(updatedUser),
                     file = file,
                     append = true
                 )

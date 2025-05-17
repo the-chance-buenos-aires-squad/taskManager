@@ -31,7 +31,7 @@ class CsvUserDataSourceTest {
 
     @Test
     fun `should return true when user added successfully`() = runTest {
-        every { parser.fromDto(dummyUserOneDto) } returns dummyUserOneRow
+        every { parser.toType(dummyUserOneDto) } returns dummyUserOneRow
         every { csvHandler.write(dummyUserOneRow, file, true) } just Runs
 
         val result = dataSource.addUser(dummyUserOneDto)
@@ -40,7 +40,7 @@ class CsvUserDataSourceTest {
 
     @Test
     fun `should return false when exception occurs while adding user`() = runTest {
-        every { parser.fromDto(dummyUserOneDto) } returns dummyUserOneRow
+        every { parser.toType(dummyUserOneDto) } returns dummyUserOneRow
         every { csvHandler.write(dummyUserOneRow, file, true) } throws RuntimeException("Failed")
 
         val result = dataSource.addUser(dummyUserOneDto)
@@ -51,7 +51,7 @@ class CsvUserDataSourceTest {
     fun `get user by id should return correct user`() = runTest {
         every { file.exists() } returns true
         every { csvHandler.read(file) } returns listOf(dummyUserOneRow)
-        every { parser.toDto(dummyUserOneRow) } returns dummyUserOneDto
+        every { parser.fromType(dummyUserOneRow) } returns dummyUserOneDto
 
         val result = dataSource.getUserById(dummyUserOneDto.id)
         assertThat(result).isEqualTo(dummyUserOneDto)
@@ -70,7 +70,7 @@ class CsvUserDataSourceTest {
     fun `get user by username should return correct user`() = runTest {
         every { file.exists() } returns true
         every { csvHandler.read(file) } returns listOf(dummyUserOneRow)
-        every { parser.toDto(dummyUserOneRow) } returns dummyUserOneDto
+        every { parser.fromType(dummyUserOneRow) } returns dummyUserOneDto
 
         val result = dataSource.getUserByUserName(dummyUserOneDto.username)
         assertThat(result).isEqualTo(dummyUserOneDto)
@@ -98,7 +98,7 @@ class CsvUserDataSourceTest {
     fun `get users should return list of users`() = runTest {
         every { file.exists() } returns true
         every { csvHandler.read(file) } returns listOf(dummyUserOneRow, dummyUserOneRow)
-        every { parser.toDto(dummyUserOneRow) } returns dummyUserOneDto
+        every { parser.fromType(dummyUserOneRow) } returns dummyUserOneDto
 
         val result = dataSource.getUsers()
         assertThat(result).hasSize(2)

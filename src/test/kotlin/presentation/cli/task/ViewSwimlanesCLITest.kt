@@ -11,7 +11,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 import presentation.cli.task.ViewSwimlanesCLI.Companion.DISPLAY_OPTION_MANAGE_TASK
+import presentation.cli.taskState.TaskStateCliController.Companion.INVALID_PROJECT
 import java.util.*
 
 class ViewSwimlanesCLITest {
@@ -91,7 +93,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         coVerify {
-            uiController.printMessage("invalid project")
+            uiController.printMessage(INVALID_PROJECT)
         }
     }
 
@@ -163,7 +165,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         coVerify(exactly = 1) {
-            uiController.printMessage("Invalid input: please enter a valid number.")
+            uiController.printMessage(INVALID_INPUT_MESSAGE)
         }
     }
 
@@ -177,7 +179,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         coVerify(exactly = 1) {
-            uiController.printMessage("Invalid Input: please enter a valid number from the menu.")
+            uiController.printMessage("$INVALID_INPUT_MESSAGE from the menu.")
         }
     }
 }

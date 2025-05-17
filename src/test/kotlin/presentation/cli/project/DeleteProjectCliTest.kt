@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.project.DeleteProjectCli.Companion.DELETE_PROJECT_FROM
 
 class DeleteProjectCliTest {
 
@@ -57,7 +58,7 @@ class DeleteProjectCliTest {
 
         deleteProjectCli.delete()
 
-        verify { uiController.printMessage(match { it.contains("error deleting project from:DB error") }) }
+        verify { uiController.printMessage(match { it.contains(DELETE_PROJECT_FROM.format("DB error")) }) }
     }
 
     @Test

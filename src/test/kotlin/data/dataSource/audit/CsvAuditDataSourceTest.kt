@@ -58,7 +58,7 @@ class CsvAuditDataSourceTest {
     @Test
     fun `addAudit should write parsed row using CsvHandler`() = runTest {
         // Arrange
-        val expectedRow = auditDtoParser.fromDto(DummyTaskAuditDto)
+        val expectedRow = auditDtoParser.toType(DummyTaskAuditDto)
         every { csvHandler.write(expectedRow, file, true) } returns Unit
 
         // Act

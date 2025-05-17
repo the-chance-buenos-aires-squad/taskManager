@@ -11,21 +11,26 @@ class DeleteProjectCli(
 ) {
     suspend fun delete() {
         val projects = projectCliHelper.getProjects().also {
-            if (it.isEmpty()) uiController.printMessage("no projects found")
+            if (it.isEmpty()) uiController.printMessage(NO_PROJECTS_FOUND)
         }
         val selectedProject = projectCliHelper.selectProject(projects).also {
             if (it == null) {
-                uiController.printMessage("no project was selected")
+                uiController.printMessage(NO_PROJECT_SELECTED)
                 return
             }
         }
         try {
             deleteProjectUseCase.execute(selectedProject!!.id).also {
-                if (it) uiController.printMessage("Project deleted.")
+                if (it) uiController.printMessage(PROJECT_DELETED)
             }
         } catch (e: Exception) {
-            uiController.printMessage("error deleting project from:${e.message}")
+            uiController.printMessage(DELETE_PROJECT_FROM.format(e.message))
         }
-
+    }
+    companion object {
+        const val NO_PROJECTS_FOUND = "no projects found"
+        const val NO_PROJECT_SELECTED = "no project was selected"
+        const val PROJECT_DELETED = "Project deleted."
+        const val DELETE_PROJECT_FROM = "error deleting project from: %s"
     }
 }

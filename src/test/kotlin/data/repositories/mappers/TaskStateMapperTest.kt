@@ -14,7 +14,7 @@ class TaskStateMapperTest {
     @Test
     fun `should return dto object when mapping from entity to dto`() {
         //when
-        val result = taskStateDtoMapper.fromEntity(entityUser)
+        val result = taskStateDtoMapper.fromType(entityUser)
 
         //then
         assertThat(result).isInstanceOf(TaskStateDto::class.java)

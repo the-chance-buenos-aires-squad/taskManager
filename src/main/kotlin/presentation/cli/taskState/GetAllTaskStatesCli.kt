@@ -12,20 +12,20 @@ class GetAllTaskStatesCli(
     suspend fun getAllTaskStates(selectedProjectId: UUID) {
 
         uiController.printMessage(
-            """
-
-            ===   View All Task States  👀  ===
-            
-            """.trimIndent()
+            HEADER
         )
 
         val allTaskStates = getAllTaskStatesUseCase.execute(selectedProjectId)
 
         if (allTaskStates.isEmpty()) {
-            uiController.printMessage("No task states for this project.")
+            uiController.printMessage(EMPTY_STATES)
             return
         }
 
         TaskStatePrinter.printAllTaskStates(allTaskStates, uiController)
+    }
+    companion object Messages {
+        const val HEADER = "===   View All Task States  ==="
+        const val EMPTY_STATES = "No task states for this project."
     }
 }

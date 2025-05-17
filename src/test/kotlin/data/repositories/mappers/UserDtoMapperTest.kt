@@ -16,7 +16,7 @@ class UserDtoMapperTest {
     @Test
     fun `should return dto object when mapping from entity`() {
         //when
-        val result = userDtoMapper.fromEntity(entityUser)
+        val result = userDtoMapper.fromType(entityUser)
 
         //then
         Truth.assertThat(result).isInstanceOf(UserDto::class.java)
@@ -25,7 +25,7 @@ class UserDtoMapperTest {
     @Test
     fun `should return entity object when mapping to entity`() {
         //when
-        val result = userDtoMapper.toEntity(dtoUser)
+        val result = userDtoMapper.toType(dtoUser)
 
         //then
         assertThat(result).isInstanceOf(User::class.java)

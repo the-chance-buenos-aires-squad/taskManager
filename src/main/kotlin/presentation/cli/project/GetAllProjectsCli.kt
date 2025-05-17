@@ -12,7 +12,7 @@ class GetAllProjectsCli(
         try{
             val projects = getAllProjectsUseCase.execute()
 
-            uiController.printMessage(" all projects found:")
+            uiController.printMessage(ALL_PROJECTS_FOUND)
             projects.forEachIndexed { index, project ->
                 uiController.printMessage("${index + 1}. ${project.title} - ${project.description}")
             }
@@ -20,5 +20,7 @@ class GetAllProjectsCli(
             uiController.printMessage(e.localizedMessage)
         }
     }
-
+    companion object {
+        const val ALL_PROJECTS_FOUND = "all projects found"
+    }
 }

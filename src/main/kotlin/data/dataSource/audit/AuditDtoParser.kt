@@ -1,10 +1,10 @@
 package data.dataSource.audit
 
-import data.dto.DtoParser
 import data.dto.AuditDto
+import data.repositories.mappers.Mapper
 
-class AuditDtoParser : DtoParser<List<String>, AuditDto> {
-    override fun toDto(type: List<String>): AuditDto {
+class AuditDtoParser : Mapper<List<String>, AuditDto> {
+    override fun fromType(type: List<String>): AuditDto {
         return AuditDto(
             id = type[ID_ROW],
             entityId = type[ENTITY_ID_ROW],
@@ -18,17 +18,17 @@ class AuditDtoParser : DtoParser<List<String>, AuditDto> {
         )
     }
 
-    override fun fromDto(dto: AuditDto): List<String> {
+    override fun toType(row: AuditDto): List<String> {
         return listOf(
-            dto.id,
-            dto.entityId,
-            dto.entityType ?: "",
-            dto.action ?: "",
-            dto.field ?: "",
-            dto.oldValue ?: "",
-            dto.newValue ?: "",
-            dto.userId,
-            dto.timestamp
+            row.id,
+            row.entityId,
+            row.entityType ?: "",
+            row.action ?: "",
+            row.field ?: "",
+            row.oldValue ?: "",
+            row.newValue ?: "",
+            row.userId,
+            row.timestamp
         )
     }
 

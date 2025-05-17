@@ -14,7 +14,7 @@ class CsvAuditDataSource(
 
     override suspend fun addAudit(auditDto: AuditDto): Boolean {
         csvHandler.write(
-            row = auditDtoParser.fromDto(auditDto),
+            row = auditDtoParser.toType(auditDto),
             file = file,
             append = true
         )
@@ -23,7 +23,7 @@ class CsvAuditDataSource(
 
     override suspend fun getAllAudit(): List<AuditDto> {
         val rows = csvHandler.read(file)
-        return rows.map { auditDtoParser.toDto(it) }
+        return rows.map { auditDtoParser.fromType(it) }
     }
 
 

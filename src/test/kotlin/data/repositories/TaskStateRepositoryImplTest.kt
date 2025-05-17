@@ -1,6 +1,6 @@
 import auth.UserSession
 import com.google.common.truth.Truth.assertThat
-import data.dataSource.taskState.TaskStateCSVDataSource
+import data.dataSource.taskState.CsvTaskStateDataSource
 import data.dto.TaskStateDto
 import data.exceptions.TaskStateNameException
 import data.repositories.TaskStateRepositoryImpl
@@ -52,8 +52,8 @@ class TaskStateRepositoryImplTest {
         initUser()
         val newState = DummyTaskState.readyForReview
         val stateRow = DummyTaskState.readyForReviewDto
-        every { taskStateDtoMapper.toEntity(stateRow) } returns newState
-        every { taskStateDtoMapper.fromEntity(newState) } returns stateRow
+        every { taskStateDtoMapper.toType(stateRow) } returns newState
+        every { taskStateDtoMapper.fromType(newState) } returns stateRow
         coEvery { mockCSVDataSource.getTaskStates() } returns emptyList()
         coEvery { mockCSVDataSource.createTaskState(stateRow) } returns true
         coEvery { auditRepository.addAudit(any()) } returns true
@@ -79,8 +79,8 @@ class TaskStateRepositoryImplTest {
         initUser()
         val newState = DummyTaskState.readyForReview
         val stateDto = DummyTaskState.readyForReviewDto
-        every { taskStateDtoMapper.toEntity(stateDto) } returns newState
-        every { taskStateDtoMapper.fromEntity(newState) } returns stateDto
+        every { taskStateDtoMapper.toType(stateDto) } returns newState
+        every { taskStateDtoMapper.fromType(newState) } returns stateDto
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf(stateDto)
         coEvery { mockCSVDataSource.createTaskState(stateDto) } returns true
 
@@ -110,8 +110,8 @@ class TaskStateRepositoryImplTest {
         val updatedToDoState = TaskState(UUID.randomUUID(), "In Progress", UUID.randomUUID())
         val updatedStateRow =
             TaskStateDto(updatedToDoState.id.toString(), updatedToDoState.title, updatedToDoState.projectId.toString())
-        every { taskStateDtoMapper.toEntity(updatedStateRow) } returns updatedToDoState
-        every { taskStateDtoMapper.fromEntity(updatedToDoState) } returns updatedStateRow
+        every { taskStateDtoMapper.toType(updatedStateRow) } returns updatedToDoState
+        every { taskStateDtoMapper.fromType(updatedToDoState) } returns updatedStateRow
         coEvery { mockCSVDataSource.getTaskStates() } returns listOf<TaskStateDto>(todoState)
         coEvery { mockCSVDataSource.editTaskState(updatedStateRow) } returns true
         coEvery { auditRepository.addAudit(any()) } returns true
