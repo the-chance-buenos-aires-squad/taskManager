@@ -1,17 +1,5 @@
 package presentation.cli.task
 
-import domain.customeExceptions.InvalidProjectIdException
-import domain.customeExceptions.TaskTitleEmptyException
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.TaskState
-import domain.repositories.UserRepository
-import domain.usecases.task.CreateTaskUseCase
-import domain.usecases.taskState.GetAllTaskStatesUseCase
-import dummyData.DummyUser
-import io.mockk.*
-import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 //import presentation.UiController
 //import presentation.cli.task.CreateTaskCli.Messages.CREATE_HEADER
 //import presentation.cli.task.CreateTaskCli.Messages.DESCRIPTION_CANCEL
@@ -22,7 +10,6 @@ import org.junit.jupiter.api.Test
 //import presentation.cli.task.CreateTaskCli.Messages.TITLE_CANCEL
 //import presentation.cli.task.CreateTaskCli.Messages.TITLE_EMPTY
 //import presentation.cli.task.CreateTaskCli.Messages.TITLE_PROMPT
-import java.util.*
 //TODO fix
 //class CreateTaskCliTest {
 //    private lateinit var createTaskCli: CreateTaskCli

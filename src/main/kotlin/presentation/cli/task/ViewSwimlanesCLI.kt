@@ -5,6 +5,7 @@ import presentation.UiController
 import presentation.cli.helper.ProjectCliHelper
 import presentation.cli.helper.ProjectCliHelper.Companion.INVALID_INPUT_MESSAGE
 import presentation.cli.taskState.TaskStateCliController.Companion.INVALID_PROJECT
+import presentation.cli.taskState.TaskStateCliController.Companion.NO_PROJECTS
 
 class ViewSwimlanesCLI(
     private val uiController: UiController,
@@ -20,21 +21,27 @@ class ViewSwimlanesCLI(
             try {
                 uiController.printMessage(HEADER_MESSAGE)
 
-                val projects = projectCliHelper.getProjects()
-                val selectedProject = projectCliHelper.selectProject(projects)
-
-                if (selectedProject == null) {
-                    uiController.printMessage(INVALID_PROJECT)
-                    return
+                val projects = projectCliHelper.getProjects().also { projects ->
+                    if (projects.isEmpty()) {
+                        uiController.printMessage(NO_PROJECTS)
+                        return
+                    }
                 }
-                val swimlanes = getTasksGroupedByStateUseCase.execute(selectedProject)
+                val selectedProject = projectCliHelper.selectProject(projects).also {
+                    if (it == null) {
+                        uiController.printMessage(INVALID_PROJECT)
+                        return
+                    }
+                }
+
+                val swimlanes = getTasksGroupedByStateUseCase.execute(selectedProject!!)
 
                 displaySwimlanes(swimlanes)
 
                 uiController.printMessage(DISPLAY_OPTION_MANAGE_TASK)
 
                 when (uiController.readInput().toIntOrNull()) {
-//                    1 -> createTaskCli.create(selectedProject.id)
+                    1 -> createTaskCli.addTask(selectedProject.id)
                     2 -> updateTaskCli.update(selectedProject.id)
                     3 -> deleteTaskCli.delete(selectedProject.id)
                     4 -> return

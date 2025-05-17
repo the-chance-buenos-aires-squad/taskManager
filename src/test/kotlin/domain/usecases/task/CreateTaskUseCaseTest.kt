@@ -19,7 +19,7 @@ import java.util.*
 class CreateTaskUseCaseTest {
 
     private val taskRepository: TaskRepository = mockk(relaxed = true)
-    private lateinit var createTaskUseCase: CreateTaskUseCase
+    private lateinit var addTaskUseCase: AddTaskUseCase
     private val validTitle = "Valid Task Title"
     private val validDescription = "Valid Task Description"
     private val validProjectId = UUID.randomUUID()
@@ -28,14 +28,14 @@ class CreateTaskUseCaseTest {
 
     @BeforeEach
     fun setUp() {
-        createTaskUseCase = CreateTaskUseCase(taskRepository)
+        addTaskUseCase = AddTaskUseCase(taskRepository)
     }
 
     @Test
     fun `should create task successfully when all parameters are valid`() = runTest {
         coEvery { taskRepository.addTask(any()) } returns true
 
-        val result = createTaskUseCase
+        val result = addTaskUseCase
             .execute(
                 UUID.randomUUID(),
                 validTitle,
@@ -52,7 +52,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should return false when create task unSuccessfully`() = runTest {
         coEvery { taskRepository.addTask(any()) } returns false
-        val result = createTaskUseCase
+        val result = addTaskUseCase
             .execute(
                 UUID.randomUUID(),
                 validTitle,
@@ -69,7 +69,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskTitleEmptyException when title is empty`() = runTest {
         assertThrows<TaskTitleEmptyException> {
-            createTaskUseCase.execute(
+            addTaskUseCase.execute(
                 UUID.randomUUID(),
                 " ",
                 validDescription,
@@ -83,7 +83,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskDescriptionEmptyException when description is empty`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
-            createTaskUseCase.execute(
+            addTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 "",
@@ -97,7 +97,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw InvalidProjectIdException when projectId is zero`() = runTest {
         assertThrows<InvalidProjectIdException> {
-            createTaskUseCase.execute(
+            addTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 validDescription,
@@ -113,7 +113,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.execute(
+        addTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -130,7 +130,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.execute(
+        addTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -147,7 +147,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.execute(
+        addTaskUseCase.execute(
             id = UUID.randomUUID(),
             title = validTitle,
             description = validDescription,
@@ -162,7 +162,7 @@ class CreateTaskUseCaseTest {
     fun `should return true when task is successfully created`() = runTest {
         coEvery { taskRepository.addTask(any()) } returns true
 
-        val result = createTaskUseCase.execute(
+        val result = addTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,
@@ -181,7 +181,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.execute(
+        addTaskUseCase.execute(
             UUID.randomUUID(),
             trimmedTitle,
             trimmedDescription,
@@ -198,7 +198,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskTitleEmptyException when title is only whitespace characters`() = runTest {
         assertThrows<TaskTitleEmptyException> {
-            createTaskUseCase.execute(
+            addTaskUseCase.execute(
                 UUID.randomUUID(),
                 "\n\t",
                 validDescription,
@@ -212,7 +212,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw TaskDescriptionEmptyException when description is only whitespace characters`() = runTest {
         assertThrows<TaskDescriptionEmptyException> {
-            createTaskUseCase.execute(
+            addTaskUseCase.execute(
                 UUID.randomUUID(),
                 validTitle,
                 "\t\t  ",
@@ -229,7 +229,7 @@ class CreateTaskUseCaseTest {
         val taskSlot = slot<Task>()
         coEvery { taskRepository.addTask(capture(taskSlot)) } returns true
 
-        createTaskUseCase.execute(
+        addTaskUseCase.execute(
             UUID.randomUUID(),
             validTitle,
             validDescription,

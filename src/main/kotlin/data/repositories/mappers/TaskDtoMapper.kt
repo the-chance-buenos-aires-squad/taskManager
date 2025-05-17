@@ -28,7 +28,7 @@ class TaskDtoMapper : Mapper<Task, TaskDto> {
             description = row.description,
             projectId = UUID.fromString(row.projectId),
             stateId = UUID.fromString(row.stateId),
-            assignedTo = row.assignedTo?.let { UUID.fromString(it) },
+            assignedTo = row.assignedTo,
             createdBy = UUID.fromString(row.createdBy),
             createdAt = LocalDateTime.parse(row.createdAt),
             updatedAt = LocalDateTime.parse(row.updatedAt)

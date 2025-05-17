@@ -1,65 +1,90 @@
 package presentation.cli.task
 
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.Task
-import domain.repositories.UserRepository
 import domain.usecases.task.GetAllTasksUseCase
 import domain.usecases.task.UpdateTaskUseCase
-import domain.usecases.taskState.GetAllTaskStatesUseCase
 import presentation.UiController
+import presentation.cli.helper.TaskStateCliHelper
+import presentation.cli.taskState.TaskStateCliController.Companion.INVALID_PROJECT
+import presentation.cli.taskState.TaskStateCliController.Companion.NO_PROJECTS
 import java.util.*
 
 class UpdateTaskCli(
     private val getAllTasksUseCase: GetAllTasksUseCase,
     private val updateTaskUseCase: UpdateTaskUseCase,
-    private val getAllTaskStatesUseCase: GetAllTaskStatesUseCase,
-    private val userRepository: UserRepository,
+    private val taskCliHelper: TaskStateCliHelper,
     private val uiController: UiController
 ) {
 
     suspend fun update(projectID: UUID) {
+
+        uiController.printMessage(HEADER_MESSAGE)
+
         val allTasks = getAllTasksUseCase.execute()
         val tasks = TaskCliUtils.fetchProjectTasks(allTasks, projectID, uiController)
         if (tasks.isEmpty()) return
-
         val selectedTask = TaskCliUtils.selectTask(tasks, uiController) ?: return
 
-        val statesForProject = getAllTaskStatesUseCase.execute(projectID)
-        // val statesForProject = allStates.filter { it.projectId == projectID }
-
-        val updatedTask = TaskCliUtils.promptForUpdatedTask(
-            selectedTask,
-            statesForProject,
-            userRepository,
-            uiController
-        )
+        uiController.printMessage(NEW_TITLE_MESSAGE, false)
+        var newtTitle = uiController.readInput()
+        if (newtTitle.trim().isEmpty()) {
+            newtTitle = selectedTask.title
+        }
 
 
-        handleTaskUpdating(updatedTask)
-    }
+        uiController.printMessage(NEW_DESCRIPTION_MESSAGE, false)
+        var newDescription = uiController.readInput()
+        if (newDescription.trim().isEmpty()) {
+            newDescription = selectedTask.description
+        }
 
-    private suspend fun handleTaskUpdating(updatedTask: Task) {
+        val taskStates = taskCliHelper.getTaskStates(projectID).also { projects ->
+            if (projects.isEmpty()) {
+                uiController.printMessage(NO_PROJECTS)
+                return
+            }
+        }
+
+        val selectedNewState = taskCliHelper.selectTaskState(taskStates).also {
+            if (it == null) {
+                uiController.printMessage(INVALID_PROJECT)
+                return
+            }
+        }
+
+        uiController.printMessage(NEW_USER_ASSIGN_MESSAGE, false)
+        var assignUser = uiController.readInput()
+        if (assignUser.trim().isEmpty()) {
+            assignUser = selectedTask.assignedTo.toString()
+        }
+
         try {
             updateTaskUseCase.execute(
-                updatedTask.id,
-                updatedTask.title,
-                updatedTask.description,
-                updatedTask.projectId,
-                updatedTask.stateId,
-                updatedTask.assignedTo,
-            ).also { result ->
-                when (result) {
-                    true -> uiController.printMessage(SUCCESS)
-                    false -> uiController.printMessage(ERROR)
-                }
-            }
+                id = selectedTask.id,
+                title = newtTitle,
+                description = newDescription,
+                projectId = projectID,
+                stateId = selectedNewState!!.id,
+                assignedTo = assignUser,
+                createdAt = selectedTask.createdAt
+            )
 
-        } catch (e: UserNotLoggedInException) {
-            uiController.printMessage(e.message ?: "")
+            uiController.printMessage(UPDATED_TASK_SUCCESS_MESSAGE)
+
+        } catch (e: Exception) {
+            uiController.printMessage(ERROR_MESSAGE.format(e.localizedMessage))
+            return
         }
+
     }
+
+
     companion object Messages {
-        const val SUCCESS = "Task updated successfully."
-        const val ERROR = "Failed to update task."
+        const val HEADER_MESSAGE = "======== Update Task ======\n" +
+                "============================\n"
+        const val NEW_TITLE_MESSAGE = "enter title or enter to put same title : "
+        const val NEW_DESCRIPTION_MESSAGE = "enter Description or enter to put same title:  "
+        const val NEW_USER_ASSIGN_MESSAGE = "Enter the user to assign the task to: "
+        const val UPDATED_TASK_SUCCESS_MESSAGE = "Task updated successfully."
+        const val ERROR_MESSAGE = "Failed to update task. %S"
     }
 }

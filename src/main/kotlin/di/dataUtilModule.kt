@@ -1,5 +1,6 @@
 package di
 
+import auth.UserSession
 import auth.UserSessionImpl
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import data.dataSource.util.CsvHandler
@@ -13,5 +14,5 @@ val dataUtilModule = module {
     factory { CsvHandler(get()) }
     factory { MessageDigest.getInstance("MD5") }
     factory<PasswordHash> { MD5PasswordHash(get()) }
-    single{UserSessionImpl()}
+    single<UserSession> { UserSessionImpl() }
 }

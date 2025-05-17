@@ -60,7 +60,7 @@ object TaskCliUtils {
         return null
     }
 
-    suspend fun promptForUpdatedTask(
+    /*suspend fun promptForUpdatedTask(
         task: Task,
         projectStates: List<TaskState>,
         userRepository: UserRepository,
@@ -80,7 +80,7 @@ object TaskCliUtils {
             assignedTo = newAssignedTo,
             updatedAt = java.time.LocalDateTime.now()
         )
-    }
+    }*/
 
     private fun promptForTitle(current: String, ui: UiController): String {
         ui.printMessage(PROMPT_TITLE.format(current))

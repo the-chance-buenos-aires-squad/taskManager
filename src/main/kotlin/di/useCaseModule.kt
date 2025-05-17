@@ -43,7 +43,7 @@ val useCaseModule = module {
         singleOf(::GetTasksUseCase)
         singleOf(::GetAllTasksUseCase)
         singleOf(::GetTasksGroupedByStateUseCase)
-        singleOf(::CreateTaskUseCase)
+        singleOf(::AddTaskUseCase)
         singleOf(::DeleteTaskUseCase)
         singleOf(::UpdateTaskUseCase)
 }
