@@ -7,10 +7,7 @@ import domain.repositories.UserRepository
 import domain.usecases.task.GetAllTasksUseCase
 import domain.usecases.task.UpdateTaskUseCase
 import domain.usecases.taskState.GetAllTaskStatesUseCase
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
-import io.mockk.mockkObject
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -81,23 +78,28 @@ class UpdateTaskCliTest {
         coEvery { TaskCliUtils.selectTask(any(), any()) } returns task
         coEvery { taskCliHelper.getTaskStates(projectId) } returns listOf(taskState)
         coEvery { taskCliHelper.selectTaskState(any()) } returns taskState
-        coEvery { uiController.readInput() } returns "" andThen "" andThen ""
+        coEvery { uiController.readInput() } returns "" andThen "" andThen "" // Empty input triggers fallback to existing task values
 
+        // simulate failure with an exception
         coEvery {
             updateTaskUseCase.execute(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                id = task.id,
+                title = task.title,
+                description = task.description,
+                projectId = projectId,
+                stateId = taskState.id,
+                assignedTo = task.assignedTo.toString(),
+                createdAt = task.createdAt
             )
-        } returns false
+        } throws RuntimeException("Something went wrong")
 
+        // when
         updateTaskCli.update(projectId)
 
-        coVerify { uiController.printMessage("Failed to update task.") }
+        // then
+        verify {
+            uiController.printMessage("Failed to update task. SOMETHING WENT WRONG")
+        }
     }
 
     @Test
@@ -123,7 +125,7 @@ class UpdateTaskCliTest {
 
         updateTaskCli.update(projectId)
 
-        coVerify { uiController.printMessage("User not logged in") }
+        verify() { uiController.printMessage("Failed to update task. USER NOT LOGGED IN") }
     }
 
     @Test
