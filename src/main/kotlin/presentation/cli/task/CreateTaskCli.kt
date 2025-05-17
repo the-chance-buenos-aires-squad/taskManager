@@ -76,25 +76,4 @@ class CreateTaskCli(
         }
 
     }
-
-    private fun validateTaskTitle(title: String) {
-        if (title.trim().isEmpty()) {
-            //todo move to cli
-            throw TaskTitleEmptyException()
-        }
-    }
-
-    private fun validateTaskDescription(description: String) {
-        if (description.trim().isEmpty()) {
-            //todo move to cli
-            throw TaskDescriptionEmptyException()
-        }
-    }
-
-    private fun validateProjectId(projectId: UUID) {
-        if (projectId == UUID(0, 0)) {
-            //todo move to cli
-            throw InvalidProjectIdException()
-        }
-    }
 }
