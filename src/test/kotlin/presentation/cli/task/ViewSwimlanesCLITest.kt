@@ -121,7 +121,7 @@ class ViewSwimlanesCLITest {
         viewSwimlanesCLI.start()
 
         coVerify(exactly = 1) {
-            createTaskCli.create(sampleProject.id)
+            createTaskCli.addTask(sampleProject.id)
         }
     }
 

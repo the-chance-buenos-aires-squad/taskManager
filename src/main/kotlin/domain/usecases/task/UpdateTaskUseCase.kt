@@ -1,18 +1,12 @@
 package domain.usecases.task
 
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.ActionType
-import domain.entities.EntityType
 import domain.entities.Task
-import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.audit.AddAuditUseCase
+import java.time.LocalDateTime
 import java.util.*
 
 class UpdateTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val addAuditUseCase: AddAuditUseCase,
-    private val authRepository: AuthRepository
 ) {
     suspend fun execute(
         id: UUID,
@@ -20,35 +14,16 @@ class UpdateTaskUseCase(
         description: String,
         projectId: UUID,
         stateId: UUID,
-        assignedTo: UUID? = null,
+        assignedTo: String,
+        createdAt: LocalDateTime
     ): Boolean {
 
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
-
-        val updatedTask = Task(
-            id = id,
+        return taskRepository.updateTask(id = id,
             title = title,
             description = description,
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-            createdBy = currentUser.id,
-        )
-
-
-        return taskRepository.updateTask(updatedTask).also { result ->
-            if (result) {
-                addAuditUseCase.execute(
-                    entityId = updatedTask.id.toString(),
-                    entityType = EntityType.TASK,
-                    action = ActionType.UPDATE,
-                    field = "",
-                    oldValue = "${updatedTask.id}",
-                    newValue = "$updatedTask",
-                    userId = currentUser.id.toString()
-                )
-            }
-        }
+            createdAt = createdAt)
     }
 }

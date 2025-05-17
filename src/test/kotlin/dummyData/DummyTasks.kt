@@ -21,7 +21,7 @@ object DummyTasks {
         description = "Valid Task Description",
         projectId = fixedProjectId,
         stateId = fixedStateId,
-        assignedTo = fixedAssignedToId,
+        assignedTo = fixedAssignedToId.toString(),
         createdBy = fixedCreatedById,
         createdAt = fixedCreatedAt,
         updatedAt = fixedUpdatedAt

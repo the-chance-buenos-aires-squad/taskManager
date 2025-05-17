@@ -2,37 +2,28 @@ package domain.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.DummyTasks
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.Task
-import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.audit.AddAuditUseCase
-import dummyData.DummyUser
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class UpdateTaskUseCaseTest {
     private val taskRepository: TaskRepository = mockk()
-    private val authRepository: AuthRepository = mockk()
-    private val addAuditUseCase: AddAuditUseCase = mockk(relaxed = true)
     private lateinit var updateTaskUseCase: UpdateTaskUseCase
 
     @BeforeEach
     fun setUp() {
-        updateTaskUseCase = UpdateTaskUseCase(taskRepository, addAuditUseCase, authRepository)
+        updateTaskUseCase = UpdateTaskUseCase(taskRepository)
     }
 
     @Test
-    fun `should return true when current user is logged in and updating Successful`() = runTest {
+    fun `should return true when  updating Successful`() = runTest {
         //given
-        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        coEvery { taskRepository.updateTask(any()) } returns true
+        coEvery { taskRepository.updateTask(
+            any(),any(),any(),any(),any(),any(),any()
+        ) } returns true
 
         //.when
         val result = updateTaskUseCase.execute(
@@ -41,7 +32,8 @@ class UpdateTaskUseCaseTest {
             description = DummyTasks.validTask.description,
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
-            assignedTo = DummyTasks.validTask.assignedTo,
+            assignedTo = "",
+            createdAt = DummyTasks.validTask.createdAt
         )
 
         //then
@@ -49,10 +41,11 @@ class UpdateTaskUseCaseTest {
     }
 
     @Test
-    fun `should return false when current user is logged in and updating unSuccessful`() = runTest {
+    fun `should return false when  updating unSuccessful`() = runTest {
         //given
-        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        coEvery { taskRepository.updateTask(any()) } returns false
+        coEvery { taskRepository.updateTask(
+            any(),any(),any(),any(),any(),any(),any()
+        ) } returns false
 
         //.when
         val result = updateTaskUseCase.execute(
@@ -61,68 +54,11 @@ class UpdateTaskUseCaseTest {
             description = DummyTasks.validTask.description,
             projectId = DummyTasks.validTask.projectId,
             stateId = DummyTasks.validTask.stateId,
-            assignedTo = DummyTasks.validTask.assignedTo,
+            assignedTo = "",
+            createdAt = DummyTasks.validTask.createdAt
         )
 
         //then
         assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should through UserNotLoggedInException when user not logged in`() = runTest {
-        //given
-        coEvery { authRepository.getCurrentUser() } returns null
-
-        //when & then
-        assertThrows<UserNotLoggedInException> {
-            updateTaskUseCase.execute(
-                id = DummyTasks.validTask.id,
-                title = DummyTasks.validTask.title,
-                description = DummyTasks.validTask.description,
-                projectId = DummyTasks.validTask.projectId,
-                stateId = DummyTasks.validTask.stateId,
-                assignedTo = DummyTasks.validTask.assignedTo,
-            )
-        }
-    }
-
-    @Test
-    fun `should add audit when user is logged in and updating is successful`() = runTest {
-        //given
-        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserOne
-        coEvery { taskRepository.updateTask(any()) } returns true
-
-        //when
-        updateTaskUseCase.execute(
-            id = DummyTasks.validTask.id,
-            title = DummyTasks.validTask.title,
-            description = DummyTasks.validTask.description,
-            projectId = DummyTasks.validTask.projectId,
-            stateId = DummyTasks.validTask.stateId,
-            assignedTo = DummyTasks.validTask.assignedTo,
-        )
-
-        //then
-        coVerify { addAuditUseCase.execute(any(), any(), any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `should set assignedTo to null when assignedTo is not provided`() = runTest {
-        //given
-        val taskSlot = slot<Task>()
-        coEvery { authRepository.getCurrentUser() } returns DummyUser.dummyUserTwo
-        coEvery { taskRepository.updateTask(capture(taskSlot)) } returns true
-
-        //when
-        updateTaskUseCase.execute(
-            id = DummyTasks.validTask.id,
-            title = DummyTasks.validTask.title,
-            description = DummyTasks.validTask.description,
-            projectId = DummyTasks.validTask.projectId,
-            stateId = DummyTasks.validTask.stateId,
-        )
-
-        //then
-        assertThat(taskSlot.captured.assignedTo).isNull()
     }
 }

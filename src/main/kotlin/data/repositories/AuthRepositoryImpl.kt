@@ -1,30 +1,33 @@
 package data.repositories
 
+import auth.UserSession
+import auth.UserSessionImpl
+import data.dataSource.util.hash.PasswordHash
+import data.dto.UserDto
+import data.exceptions.InvalidCredentialsException
+import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.repositories.AuthRepository
 import domain.repositories.UserRepository
 
+
 class AuthRepositoryImpl(
     private val userRepository: UserRepository,
+    private val session: UserSession,
+    private val md5Hash: PasswordHash,
+    private val userMapper: UserDtoMapper
 ) : AuthRepository {
 
-    private var currentUser: User? = null
-
     override suspend fun login(username: String, password: String): User {
-        val user = userRepository.loginUser(username,password)
-        currentUser = user
-        return user;
-    }
-
-    override suspend fun addUser(userName: String, password: String): User {
-        return  userRepository.addUser(userName,password)
+        val userDto: UserDto = userRepository.getUserByUserName(username) ?: throw InvalidCredentialsException()
+        val hashInput = md5Hash.generateHash(password)
+        if (userDto.password != hashInput) throw InvalidCredentialsException()
+        session.setCurrentUser(userMapper.toType(userDto))
+        return userMapper.toType(userDto)
     }
 
 
     override suspend fun logout() {
-        currentUser = null
+        session.setCurrentUser(null)
     }
-
-    override suspend fun getCurrentUser(): User? = currentUser
-
 }

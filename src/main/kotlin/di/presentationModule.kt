@@ -11,6 +11,7 @@ import presentation.cli.auth.LoginCli
 import presentation.cli.dashBoard.AdminDashBoardCli
 import presentation.cli.dashBoard.MateDashBoardCli
 import presentation.cli.helper.ProjectCliHelper
+import presentation.cli.helper.TaskStateCliHelper
 import presentation.cli.project.*
 import presentation.cli.task.CreateTaskCli
 import presentation.cli.task.DeleteTaskCli
@@ -35,6 +36,7 @@ val presentationModule = module {
     // Project
     factoryOf(::ProjectShowMenu)
     factoryOf(::ProjectCliHelper)
+    factoryOf(::TaskStateCliHelper)
     factoryOf(::CreateProjectCli)
     factoryOf(::UpdateProjectCli)
     factoryOf(::DeleteProjectCli)

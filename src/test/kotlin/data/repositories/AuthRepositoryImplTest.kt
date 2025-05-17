@@ -1,124 +1,102 @@
 package data.repositories
 
+import auth.FakeUserSession
 import com.google.common.truth.Truth.assertThat
+import data.dataSource.util.hash.PasswordHash
+import data.dto.UserDto
+import data.exceptions.InvalidCredentialsException
+import data.repositories.mappers.UserDtoMapper
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.UserRepository
+import dummyData.DummyUser
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
+import presentation.exceptions.UserNotLoggedInException
 import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.test.Test
 
 class AuthRepositoryImplTest {
 
-
     private lateinit var authRepository: AuthRepositoryImpl
     private val userRepository: UserRepository = mockk()
+    private val mapper: UserDtoMapper = mockk(relaxed = true)
+    private val hasher: PasswordHash = mockk()
+    private val session = FakeUserSession()
 
     @BeforeEach
     fun setup() {
-        authRepository = AuthRepositoryImpl(userRepository)
+        authRepository = AuthRepositoryImpl(md5Hash = hasher, userRepository = userRepository, userMapper = mapper, session = session)
     }
 
     @Test
     fun `should return user when login succeeds`() = runTest {
         // given
-        coEvery { userRepository.loginUser(adminUser.username, any()) } returns adminUser
-
+        coEvery { userRepository.getUserByUserName(adminUser.username) } returns adminUserDto
+        every { mapper.toType(adminUserDto) } returns adminUser
+        every { hasher.generateHash(any()) } returns hashedPassword
         // when
-        val result = authRepository.login(adminUser.username, "any")
+        val result = authRepository.login(adminUser.username, hashedPassword)
 
         // then
         assertThat(result).isEqualTo(adminUser)
     }
 
     @Test
-    fun `should set current user after successful login`() = runTest {
+    fun `should throw InvalidCredentialsException when the no user found by the given name`() = runTest {
         // given
-        coEvery { userRepository.loginUser(any(), any()) } returns adminUser
+        coEvery { userRepository.getUserByUserName(adminUser.username) } returns  null
 
         // when
-        authRepository.login(adminUser.username, "any")
-
         // then
-        assertThat(authRepository.getCurrentUser()).isEqualTo(adminUser)
+        assertThrows<InvalidCredentialsException> { authRepository.login(adminUser.username, password) }
     }
 
     @Test
-    fun `should return new user when adding user`() = runTest {
+    fun `should throw InvalidCredentialsException when the given hashed password is not matching`() = runTest {
         // given
-        coEvery { userRepository.addUser(any(), any()) } returns normalUser
+        coEvery { userRepository.getUserByUserName(adminUser.username) } returns adminUserDto
+        every { mapper.toType(adminUserDto) } returns adminUser
+        every { hasher.generateHash(any()) } returns wrongHashedPassword
 
         // when
-        val result = authRepository.addUser("new", "pass")
-
         // then
-        assertThat(result).isEqualTo(normalUser)
+        assertThrows<InvalidCredentialsException> { authRepository.login(adminUser.username, password) }
     }
 
-    @Test
-    fun `should not change current user when adding new user`() = runTest {
-        // given
-        coEvery { userRepository.addUser(any(), any()) } returns normalUser
-
-        // when
-        authRepository.addUser("new", "pass")
-
-        // then
-        assertThat(authRepository.getCurrentUser()).isNull()
-    }
 
     @Test
-    fun `should clear current user after logout`() = runTest {
-        // given
-        coEvery { userRepository.loginUser(any(), any()) } returns adminUser
-        authRepository.login("admin", "pass")
-
-        // when
+    fun `should call setCurrentUser to null when logout`()= runTest{
+        //when
         authRepository.logout()
 
-        // then
-        assertThat(authRepository.getCurrentUser()).isNull()
+        assertThat(session.getCurrentUser()).isNull()
     }
-
-    @Test
-    fun `should return null when no user logged in`() = runTest {
-        // when
-        val result = authRepository.getCurrentUser()
-
-        // then
-        assertThat(result).isNull()
-    }
-
-    @Test
-    fun `should update current user on subsequent logins`() = runTest {
-        // given
-        coEvery { userRepository.loginUser("admin", any()) } returns adminUser
-        coEvery { userRepository.loginUser("mate", any()) } returns normalUser
-
-        // when & then 1
-        authRepository.login("admin", "admin1")
-        assertThat(authRepository.getCurrentUser()).isEqualTo(adminUser)
-
-        // when & then 2
-        authRepository.logout()
-        assertThat(authRepository.getCurrentUser()).isNull()
-
-        // when & then 3
-        authRepository.login("mate", "mateEe1")
-        assertThat(authRepository.getCurrentUser()).isEqualTo(normalUser)
-    }
-
 
 
     private val adminUser = User(
-        id = UUID.fromString("00000000-0000-0000-0000-000000000001"),
+        id = UUID.randomUUID(),
         username = "admin",
         role = UserRole.ADMIN,
         createdAt = LocalDateTime.now()
+    )
+
+    private val password = "123456"
+    private val hashedPassword = "e10adc3949ba59abbe56e057f20f883e"
+    private val wrongHashedPassword = "e10adc4444baddabbe5de057f20f883e"
+
+    private var adminUserDto = UserDto(
+        id = adminUser.id.toString(),
+        username = adminUser.username,
+        password = hashedPassword,
+        role = adminUser.role,
+        createdAt = adminUser.createdAt.toString()
     )
 
     private val normalUser = User(
@@ -126,6 +104,13 @@ class AuthRepositoryImplTest {
         username = "mate",
         role = UserRole.MATE,
         createdAt = LocalDateTime.now()
+    )
+    private val normalUserDto = UserDto(
+        id = normalUser.id.toString(),
+        username = normalUser.username,
+        password = hashedPassword,
+        role = normalUser.role,
+        createdAt = ""
     )
 
 }

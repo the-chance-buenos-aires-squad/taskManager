@@ -1,5 +1,7 @@
 package presentation.cli.project
 
+import com.google.common.truth.Truth.assertThat
+import data.exceptions.NoProjectsFoundException
 import domain.usecases.project.GetAllProjectsUseCase
 import dummyData.createDummyProject
 import io.mockk.coEvery
@@ -8,6 +10,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import presentation.UiController
 
 class GetAllProjectsCliTest {
@@ -19,14 +22,14 @@ class GetAllProjectsCliTest {
     fun setup() {
         getAllProjectsCli = GetAllProjectsCli(getAllProjectsUseCase, uiController)
     }
+    @Test
+    fun `should throw exception if no projects`() = runTest {
+        coEvery { getAllProjectsUseCase.execute() }  throws NoProjectsFoundException()
 
-//    @Test
-//    fun `should throw exception if no projects`() = runTest {
-//        val exception = assertThrows<NoProjectsFoundException> {
-//            getAllProjectsCli.getAll()
-//        }
-//        assertThat(exception.message).isEqualTo("Not projects found")
-//    }
+        getAllProjectsCli.getAll()
+
+        coVerify { uiController.printMessage("No project found !")}
+    }
 
     @Test
     fun `should call execute function in create use case when I call create function and success to create project`() =

@@ -1,13 +1,16 @@
 package domain.usecases.project
 
 import com.google.common.truth.Truth.assertThat
+import data.exceptions.NoProjectsFoundException
 import domain.repositories.ProjectRepository
 import dummyData.createDummyProject
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.builtins.NothingSerializer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class GetAllProjectsUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
@@ -27,15 +30,5 @@ class GetAllProjectsUseCaseTest {
 
         assertThat(result).isNotEmpty()
     }
-
-//    @Test
-//    fun `should return false if project don't created`() = runTest {
-//        coEvery { projectRepository.getAllProjects() } returns emptyList()
-//
-//
-//        assertThrows<NoProjectsFoundException> {
-//            getAllProjectsUseCase.execute()
-//        }
-//    }
 
 }

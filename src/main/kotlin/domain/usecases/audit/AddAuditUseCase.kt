@@ -33,6 +33,7 @@ class AddAuditUseCase(
             userId = userId,
             timestamp = timeStamp
         )
+
         try {
             auditRepository.addAudit(newAudit)
         } catch (e: Exception) {

@@ -1,37 +1,14 @@
 package domain.usecases.task
 
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.ActionType
-import domain.entities.EntityType
-import domain.repositories.AuthRepository
 import domain.repositories.TaskRepository
-import domain.usecases.audit.AddAuditUseCase
 import java.util.*
 
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val addAuditUseCase: AddAuditUseCase,
-    private val authRepository: AuthRepository
 ) {
 
     suspend fun execute(id: UUID): Boolean {
-        val currentUser = authRepository.getCurrentUser()
-            ?: throw UserNotLoggedInException()
-        return taskRepository.deleteTask(id).also { result ->
-            if (result) {
-                addAuditUseCase.execute(
-                    entityId = id.toString(),
-                    entityType = EntityType.TASK,
-                    action = ActionType.DELETE,
-                    field = "deleting task",
-                    oldValue = "task with id:$id",
-                    newValue = "",
-                    userId = currentUser.id.toString()
-                )
-            }
-        }
-
-
+        return taskRepository.deleteTask(id)
     }
 
 }

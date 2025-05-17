@@ -22,6 +22,13 @@ object DummyProjects {
     val now: String = LocalDateTime.now().toString()
     val id: UUID = UUID.randomUUID()
 
+    val validProject = Project(
+        id= id,
+        title = "title",
+        description = "description",
+        createdAt = LocalDateTime.now()
+    )
+
     val projectDto1 = ProjectDto(
         _id = UUID.randomUUID().toString(),
         name = "Project Alpha",

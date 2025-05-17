@@ -21,6 +21,4 @@ class AuditRepositoryImpl(
             auditDtoMapper.toType(row)
         }
     }
-
-
 }

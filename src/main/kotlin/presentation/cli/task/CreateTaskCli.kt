@@ -4,151 +4,73 @@ package presentation.cli.task
 import domain.customeExceptions.InvalidProjectIdException
 import domain.customeExceptions.TaskDescriptionEmptyException
 import domain.customeExceptions.TaskTitleEmptyException
-import presentation.exceptions.UserNotLoggedInException
-import domain.entities.TaskState
-import domain.entities.User
-import domain.repositories.UserRepository
-import domain.usecases.task.CreateTaskUseCase
-import domain.usecases.taskState.GetAllTaskStatesUseCase
+import domain.usecases.task.AddTaskUseCase
 import presentation.UiController
+import presentation.cli.helper.TaskStateCliHelper
+import presentation.cli.taskState.TaskStateCliController.Companion.INVALID_PROJECT
+import presentation.cli.taskState.TaskStateCliController.Companion.NO_PROJECTS
 import java.util.*
 
 class CreateTaskCli(
-    private val createTaskUseCase: CreateTaskUseCase,
-    private val getAllStatesUseCase: GetAllTaskStatesUseCase,
-    private val userRepository: UserRepository,
+    private val addTaskUseCase: AddTaskUseCase,
+    private val taskCliHelper: TaskStateCliHelper,
     private val uiController: UiController,
 ) {
 
-    suspend fun create(projectID: UUID) {
-        uiController.printMessage(CREATE_HEADER)
+    suspend fun addTask(projectID: UUID) {
+        uiController.printMessage(
+            "------ Create Task ------\n"
+                    + "-------------------------\b"
+        )
 
-        uiController.printMessage(TITLE_PROMPT, false)
-        var title = uiController.readInput()
-        if (title.isEmpty()) {
-            uiController.printMessage(TITLE_EMPTY)
-            uiController.printMessage(TITLE_PROMPT, false)
-            title = uiController.readInput()
-        }
-        if (title.isEmpty()) {
-            uiController.printMessage(
-                TITLE_CANCEL, false
-            )
+        uiController.printMessage("Title: ", false)
+        val title = uiController.readInput()
+
+        if (title.trim().isEmpty()) {
+            uiController.printMessage("Title cannot be empty. ")
             return
         }
 
-        uiController.printMessage(DESCRIPTION_PROMPT, false)
-        var description = uiController.readInput()
+        uiController.printMessage("Description: ", false)
+        val description = uiController.readInput()
+
         if (description.isEmpty()) {
-            uiController.printMessage(DESCRIPTION_EMPTY)
-            uiController.printMessage(DESCRIPTION_PROMPT, false)
-            description = uiController.readInput()
-        }
-        if (description.isEmpty()) {
-            uiController.printMessage(
-                DESCRIPTION_CANCEL, false
-            )
+            uiController.printMessage("Description cannot be empty. Please try again.")
             return
         }
 
+        uiController.printMessage("Choose task state: ", isInline = false)
 
-        uiController.printMessage(CHOOSE_STATE, isInline = false)
-        val states = getAllStatesUseCase.execute(projectID)
-        states.forEachIndexed { index, taskState ->
-            uiController.printMessage("${index + 1} - ${taskState.title}||", isInline = false)
+        val taskStates = taskCliHelper.getTaskStates(projectID).also { projects ->
+            if (projects.isEmpty()) {
+                uiController.printMessage(NO_PROJECTS)
+                return
+            }
+        }
+        val selectedState = taskCliHelper.selectTaskState(taskStates).also {
+            if (it == null) {
+                uiController.printMessage(INVALID_PROJECT)
+                return
+            }
         }
 
-        val chosenState: TaskState?
-        uiController.printMessage(STATE_PROMPT, false)
-        var stateInput = uiController.readInput().toIntOrNull()
-        if (stateInput == null || stateInput !in 1..states.size) {
-            uiController.printMessage(STATE_INVALID)
-            uiController.printMessage(STATE_PROMPT, false)
-            stateInput = uiController.readInput().toIntOrNull()
-        }
-        if (stateInput == null || stateInput !in 1..states.size) {
-            uiController.printMessage(
-                STATE_CANCEL, false
-            )
-            return
-        }
-        chosenState = states[stateInput - 1]
+        uiController.printMessage("Enter the user to assign the task to: ", false)
+        val assignUser = uiController.readInput()
 
-        var assignedUser: User?
-        uiController.printMessage(USER_PROMPT, false)
-        var username = uiController.readInput()
-        assignedUser = userRepository.getUserByUserName(username)
-        if (assignedUser == null) {
-            uiController.printMessage(USER_NOT_FOUND)
-            uiController.printMessage(USER_PROMPT, false)
-            username = uiController.readInput()
-            assignedUser = userRepository.getUserByUserName(username)
-        }
-        if (assignedUser == null) {
-            uiController.printMessage(
-                USER_CANCEL, false
-            )
-            return
-        }
-
-
-        val newTaskId = UUID.randomUUID()
-
-        try {
-            createTaskUseCase.execute(
-                id = newTaskId,
+        try{
+            addTaskUseCase.execute(
                 title = title,
                 description = description,
                 projectId = projectID,
-                stateId = chosenState.id,
-                assignedTo = assignedUser.id
-            ).let {
-                when (it) {
-                    true -> {
-                        uiController.printMessage(SUCCESS)
-                    }
+                stateId = selectedState!!.id,
+                assignedTo = assignUser
+            )
+            uiController.printMessage("add Task Successful")
 
-                    false -> {
-                        uiController.printMessage(FAILURE)
-                    }
-                }
-            }
-
-        } catch (e: UserNotLoggedInException) {
-            uiController.printMessage(EXCEPTION_NOT_LOGGED_IN)
-        } catch (e: TaskTitleEmptyException) {
-            uiController.printMessage(EXCEPTION_TITLE)
-        } catch (e: TaskDescriptionEmptyException) {
-            uiController.printMessage(EXCEPTION_DESCRIPTION)
-        } catch (e: InvalidProjectIdException) {
-            uiController.printMessage(EXCEPTION_PROJECT)
+        }catch (e: Exception){
+            uiController.printMessage(e.localizedMessage)
+            return
         }
-    }
-    companion object Messages {
-        const val CREATE_HEADER = "------ Create Task ------\n-------------------------"
-        const val TITLE_PROMPT = "Title: "
-        const val TITLE_EMPTY = "Title cannot be empty. Please try again."
-        const val TITLE_CANCEL = "It seams that you do not want to enter a Title. Let us go to past screen"
 
-        const val DESCRIPTION_PROMPT = "Description: "
-        const val DESCRIPTION_EMPTY = "Description cannot be empty. Please try again."
-        const val DESCRIPTION_CANCEL = "It seams that you do not want to enter a Description. Let us go to past screen"
-
-        const val CHOOSE_STATE = "Choose task state: "
-        const val STATE_PROMPT = "\nEnter state number: "
-        const val STATE_INVALID = "Invalid state selection. Please try again."
-        const val STATE_CANCEL = "It seams that you do not want to enter a valid state number. Let us go to past screen"
-
-        const val USER_PROMPT = "Enter the user to assign the task to: "
-        const val USER_NOT_FOUND = "User not found. Please try again."
-        const val USER_CANCEL = "It seams that you do not want to enter a valid username. Let us go to past screen"
-
-        const val SUCCESS = "Task created successfully!"
-        const val FAILURE = "Task did not created successfully!"
-
-        const val EXCEPTION_NOT_LOGGED_IN = "User not logged in"
-        const val EXCEPTION_TITLE = "Not valid task Title"
-        const val EXCEPTION_DESCRIPTION = "Not valid task Description"
-        const val EXCEPTION_PROJECT = "Not valid Project"
     }
 }
