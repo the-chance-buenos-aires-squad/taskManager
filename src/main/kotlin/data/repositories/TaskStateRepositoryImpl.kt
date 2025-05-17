@@ -21,7 +21,7 @@ class TaskStateRepositoryImpl(
             val taskStates =
                 getAllTaskStates().filter { it.projectId == state.projectId && it.title.lowercase() == state.title.lowercase() }
             if (taskStates.isNotEmpty()) throw TaskStateNameException()
-            taskStateDataSource.createTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
+            taskStateDataSource.createTaskState(taskStateDtoMapper.fromType(state)).also { result ->
                 if (result) {
                     recordTaskStateAudit(state.id, currentUser, action = ActionType.CREATE)
                 }
@@ -32,7 +32,7 @@ class TaskStateRepositoryImpl(
 
     override suspend fun editTaskState(state: TaskState): Boolean {
         return userSession.runIfLoggedIn { currentUser ->
-            taskStateDataSource.editTaskState(taskStateDtoMapper.fromEntity(state)).also { result ->
+            taskStateDataSource.editTaskState(taskStateDtoMapper.fromType(state)).also { result ->
                 if (result) {
                     recordTaskStateAudit(state.id, currentUser, action = ActionType.UPDATE)
                 }
@@ -52,7 +52,7 @@ class TaskStateRepositoryImpl(
 
     override suspend fun getAllTaskStates(): List<TaskState> {
         val taskStateRows = taskStateDataSource.getTaskStates()
-        return taskStateRows.map { taskStateRow -> taskStateDtoMapper.toEntity(taskStateRow) }
+        return taskStateRows.map { taskStateRow -> taskStateDtoMapper.toType(taskStateRow) }
     }
 
     private suspend fun recordTaskStateAudit(stateId: UUID, currentUser: User, action: ActionType) {

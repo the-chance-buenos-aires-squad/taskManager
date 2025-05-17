@@ -20,7 +20,7 @@
         override suspend fun createProject(project: Project): Boolean {
             return userSession.runIfLoggedIn { currentUser ->
 
-                projectDataSource.addProject(projectMapper.fromEntity(project)).also { result ->
+                projectDataSource.addProject(projectMapper.fromType(project)).also { result ->
                     if (result) {
                         recordProjectAudit(project.id, currentUser, action = ActionType.CREATE)
                     }
@@ -31,7 +31,7 @@
 
         override suspend fun updateProject(project: Project): Boolean {
             return userSession.runIfLoggedIn { currentUser ->
-                projectDataSource.updateProject(projectMapper.fromEntity(project)).also { result ->
+                projectDataSource.updateProject(projectMapper.fromType(project)).also { result ->
                     if (result) {
                         recordProjectAudit(project.id, currentUser, action = ActionType.UPDATE)
                     }
@@ -55,7 +55,7 @@
                 if (projects.isEmpty()) throw NoProjectsFoundException()
                 projects
                     .map { projectRow ->
-                        projectMapper.toEntity(projectRow)
+                        projectMapper.toType(projectRow)
                     }
             }
         }

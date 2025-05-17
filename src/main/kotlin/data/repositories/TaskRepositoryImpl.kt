@@ -19,7 +19,7 @@ class TaskRepositoryImpl(
 
     override suspend fun addTask(task: Task): Boolean {
         return userSession.runIfLoggedIn { currentUser ->
-            val taskDto:TaskDto = taskMapper.fromEntity(task).also { it.createdBy = currentUser.id.toString() }
+            val taskDto:TaskDto = taskMapper.fromType(task).also { it.createdBy = currentUser.id.toString() }
             taskDataSource.addTask(taskDto).also { result ->
                 if (result) {
                     recordTaskAudit(task.id, currentUser,action = ActionType.CREATE)
@@ -31,7 +31,7 @@ class TaskRepositoryImpl(
     override suspend fun getAllTasks(): List<Task> {
         return userSession.runIfLoggedIn {
             taskDataSource.getTasks().map { task ->
-                taskMapper.toEntity(task)
+                taskMapper.toType(task)
             }
         }
 
@@ -40,14 +40,14 @@ class TaskRepositoryImpl(
     override suspend fun getTaskById(id: UUID): Task? {
         return userSession.runIfLoggedIn {
             taskDataSource.getTaskById(id.toString())?.let {
-                taskMapper.toEntity(it)
+                taskMapper.toType(it)
             }
         }
     }
 
     override suspend fun updateTask(task: Task): Boolean {
         return userSession.runIfLoggedIn { currentUser ->
-            val taskDto:TaskDto = taskMapper.fromEntity(task).also { it.createdBy = currentUser.id.toString() }
+            val taskDto:TaskDto = taskMapper.fromType(task).also { it.createdBy = currentUser.id.toString() }
             taskDataSource.updateTask(taskDto).also { result ->
                 if (result) {
                     recordTaskAudit(task.id, currentUser,action = ActionType.UPDATE)

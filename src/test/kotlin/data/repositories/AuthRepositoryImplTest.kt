@@ -39,7 +39,7 @@ class AuthRepositoryImplTest {
     fun `should return user when login succeeds`() = runTest {
         // given
         coEvery { userRepository.getUserByUserName(adminUser.username) } returns adminUserDto
-        every { mapper.toEntity(adminUserDto) } returns adminUser
+        every { mapper.toType(adminUserDto) } returns adminUser
         every { hasher.generateHash(any()) } returns hashedPassword
         // when
         val result = authRepository.login(adminUser.username, hashedPassword)
@@ -62,7 +62,7 @@ class AuthRepositoryImplTest {
     fun `should throw InvalidCredentialsException when the given hashed password is not matching`() = runTest {
         // given
         coEvery { userRepository.getUserByUserName(adminUser.username) } returns adminUserDto
-        every { mapper.toEntity(adminUserDto) } returns adminUser
+        every { mapper.toType(adminUserDto) } returns adminUser
         every { hasher.generateHash(any()) } returns wrongHashedPassword
 
         // when

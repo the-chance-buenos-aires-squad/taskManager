@@ -22,8 +22,8 @@ class AuthRepositoryImpl(
         val userDto: UserDto = userRepository.getUserByUserName(username) ?: throw InvalidCredentialsException()
         val hashInput = md5Hash.generateHash(password)
         if (userDto.password != hashInput) throw InvalidCredentialsException()
-        session.setCurrentUser(userMapper.toEntity(userDto))
-        return userMapper.toEntity(userDto)
+        session.setCurrentUser(userMapper.toType(userDto))
+        return userMapper.toType(userDto)
     }
 
 

@@ -154,7 +154,7 @@ class ProjectRepositoryImplTest {
         val result = projectRepositoryImpl.getAllProjects()
 
         assertThat(result).hasSize(2)
-        verify { projectDtoMapper.toEntity(testDto) }
+        verify { projectDtoMapper.toType(testDto) }
         coVerify { projectDataSource.getAllProjects() }
     }
 

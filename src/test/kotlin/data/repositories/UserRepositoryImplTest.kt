@@ -89,7 +89,7 @@ class UserRepositoryImplTest {
         coEvery { userDataSource.getUserByUserName(userName) } returns null
         every { hasher.generateHash(password) } returns hashedPassword
         coEvery { userDataSource.addUser(any()) } returns true
-        every { mapper.toEntity(any()) } returns expectedUser
+        every { mapper.toType(any()) } returns expectedUser
         coEvery { auditRepository.addAudit(any()) } returns true
 
         val result = userRepository.addUser(userName, password)

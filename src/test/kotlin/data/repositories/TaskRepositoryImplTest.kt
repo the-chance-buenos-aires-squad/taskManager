@@ -7,7 +7,6 @@ import data.repositories.mappers.TaskDtoMapper
 import domain.entities.User
 import domain.entities.UserRole
 import domain.repositories.AuditRepository
-import domain.repositories.AuthRepository
 import dummyData.DummyTasks
 import io.mockk.coEvery
 import io.mockk.coVerify
