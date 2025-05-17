@@ -14,25 +14,51 @@ class CreateProjectCli(
     suspend fun create() {
         val id = UUID.randomUUID()
 
-        uiController.printMessage("Enter project name:")
-        val name = uiController.readInput()
+        uiController.printMessage(FIRST_TITLE_PROMPT_MESSAGE)
+        val title = handleTitleInput()?:return
 
-        uiController.printMessage("Enter project description:")
-        val description = uiController.readInput()
+        uiController.printMessage(FIRST_DESCRIPTION_PROMPT_MESSAGE)
+        val description = handleDescriptionInput()?:return
+
         val project = Project(
             id = id,
-            title = name,
+            title = title,
             description = description,
             createdAt = LocalDateTime.now()
         )
         try {
             createProjectUseCase.execute(project).let {
-                if (it) uiController.printMessage("Project created.")
+                if (it) uiController.printMessage(PROJECT_CREATED_MESSAGE)
             }
-        } catch (e: UserEnterInvalidValueException) {
-            uiController.printMessage(e.message.toString())
         } catch (e: Exception) {
             uiController.printMessage("Failed to create project.${e.message}")
         }
+    }
+
+    private fun handleTitleInput(): String? {
+        val firstInput = uiController.readInput()
+        if (firstInput.isNotBlank()) return firstInput
+
+        uiController.printMessage(TITLE_EMPTY_WARNING_MESSAGE, isInline = true)
+
+        val secondInput = uiController.readInput()
+        return if (secondInput.isNotBlank()) secondInput else null
+    }
+
+    private fun handleDescriptionInput(): String? {
+        val firstInput = uiController.readInput()
+        if (firstInput.isNotBlank()) return firstInput
+
+        uiController.printMessage(DESCRIPTION_EMPTY_WARNING_MESSAGE, isInline = true)
+
+        val secondInput = uiController.readInput()
+        return if (secondInput.isNotBlank()) secondInput else null
+    }
+    companion object{
+        const val FIRST_TITLE_PROMPT_MESSAGE = "Enter project title:"
+        const val FIRST_DESCRIPTION_PROMPT_MESSAGE = "Enter project description:"
+        const val TITLE_EMPTY_WARNING_MESSAGE = "title cannot be empty please enter title"
+        const val DESCRIPTION_EMPTY_WARNING_MESSAGE = "description cannot be empty please enter description"
+        const val PROJECT_CREATED_MESSAGE = "Project created."
     }
 }

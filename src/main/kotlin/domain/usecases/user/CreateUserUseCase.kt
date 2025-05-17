@@ -11,8 +11,6 @@ class CreateUserUseCase(
         username: String,
         password: String,
     ): User {
-
-        val userAdded = userRepository.addUser(username, password)
-        return userAdded
+        return userRepository.addUser(username, password)
     }
 }
