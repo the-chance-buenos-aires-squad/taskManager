@@ -60,27 +60,6 @@ object TaskCliUtils {
         return null
     }
 
-    /*suspend fun promptForUpdatedTask(
-        task: Task,
-        projectStates: List<TaskState>,
-        userRepository: UserRepository,
-        uiController: UiController
-    ): Task {
-        uiController.printMessage(EDIT_HINT)
-
-        val newTitle = promptForTitle(task.title, uiController)
-        val newDescription = promptForDescription(task.description, uiController)
-        val newStateId = promptForStateId(task.stateId, projectStates, uiController)
-        val newAssignedTo = promptForAssignedTo(task.assignedTo, userRepository, uiController)
-
-        return task.copy(
-            title = newTitle,
-            description = newDescription,
-            stateId = newStateId,
-            assignedTo = newAssignedTo,
-            updatedAt = java.time.LocalDateTime.now()
-        )
-    }*/
 
     private fun promptForTitle(current: String, ui: UiController): String {
         ui.printMessage(PROMPT_TITLE.format(current))
