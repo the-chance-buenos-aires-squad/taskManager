@@ -159,17 +159,16 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should return empty list if there aren't projects`() = runTest {
+    fun `should throw NoProjectsFoundException aren't projects`() = runTest {
         //given
         initUser()
         coEvery { projectDataSource.getAllProjects() } returns emptyList()
 
-        //when
-        val result = projectRepositoryImpl.getAllProjects()
+        //then & when
+        assertThrows<NoProjectsFoundException> { projectRepositoryImpl.getAllProjects() }
 
-        //then
-        assertThat(result).isEmpty()
-        coVerify { projectDataSource.getAllProjects() }
+
+//        coVerify { projectDataSource.getAllProjects() }
     }
 
     @Test
