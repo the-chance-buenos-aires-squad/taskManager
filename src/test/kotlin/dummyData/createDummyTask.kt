@@ -20,7 +20,7 @@ fun createDummyTask(
     description = description,
     projectId = projectId,
     stateId = stateId,
-    assignedTo = assignedTo,
+    assignedTo = assignedTo.toString(),
     createdBy = createdBy,
     createdAt = createdAt,
     updatedAt = updatedAt,

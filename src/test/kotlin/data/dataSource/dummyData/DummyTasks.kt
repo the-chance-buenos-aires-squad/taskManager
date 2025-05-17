@@ -13,7 +13,7 @@ object DummyTasks {
         description = "Valid Task Description",
         projectId = UUID.randomUUID(),
         stateId = UUID.randomUUID(),
-        assignedTo = UUID.randomUUID(),
+        assignedTo = UUID.randomUUID().toString(),
         createdBy = UUID.randomUUID(),
         createdAt = LocalDateTime.now(),
         updatedAt = LocalDateTime.now()

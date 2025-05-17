@@ -9,7 +9,7 @@ data class Task(
     val description: String,
     val projectId: UUID,
     val stateId: UUID,
-    val assignedTo: UUID?,
+    val assignedTo: String?,
     val createdBy: UUID?=null,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val updatedAt: LocalDateTime = LocalDateTime.now()

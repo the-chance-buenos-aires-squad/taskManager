@@ -2,6 +2,7 @@ package domain.usecases.task
 
 import domain.entities.Task
 import domain.repositories.TaskRepository
+import java.time.LocalDateTime
 import java.util.*
 
 class UpdateTaskUseCase(
@@ -13,18 +14,16 @@ class UpdateTaskUseCase(
         description: String,
         projectId: UUID,
         stateId: UUID,
-        assignedTo: UUID? = null,
+        assignedTo: String,
+        createdAt: LocalDateTime
     ): Boolean {
 
-        val updatedTask = Task(
-            id = id,
+        return taskRepository.updateTask(id = id,
             title = title,
             description = description,
             projectId = projectId,
             stateId = stateId,
             assignedTo = assignedTo,
-        )
-
-        return taskRepository.updateTask(updatedTask)
+            createdAt = createdAt)
     }
 }

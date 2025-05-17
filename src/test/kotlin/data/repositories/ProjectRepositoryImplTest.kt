@@ -159,16 +159,13 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `should throw NoProjectsFoundException aren't projects`() = runTest {
+    fun `should throw NoProjectsFoundException if there aren't projects`() = runTest {
         //given
         initUser()
         coEvery { projectDataSource.getAllProjects() } returns emptyList()
 
-        //then & when
+        //when & then
         assertThrows<NoProjectsFoundException> { projectRepositoryImpl.getAllProjects() }
-
-
-//        coVerify { projectDataSource.getAllProjects() }
     }
 
     @Test

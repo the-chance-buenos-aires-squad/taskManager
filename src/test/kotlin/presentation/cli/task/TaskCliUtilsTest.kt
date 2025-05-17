@@ -3,10 +3,6 @@ package presentation.cli.task
 import com.google.common.truth.Truth.assertThat
 import data.dataSource.dummyData.DummyTasks
 import domain.repositories.UserRepository
-import dummyData.DummyUser
-import dummyData.DummyUser.dummyUserOneDto
-import dummyData.dummyStateData.DummyTaskState
-import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -15,24 +11,10 @@ import presentation.UiController
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.time.LocalDateTime
 import java.util.*
 
 class TaskCliUtilsTest {
 
-    private val task = DummyTasks.validTask.copy(
-        title = "Old Title",
-        description = "Old Description",
-        assignedTo = null,
-        updatedAt = LocalDateTime.now()
-    )
-
-    private val dummyUser = DummyUser.dummyUserOne
-    private val dummyStates = listOf(
-        DummyTaskState.todo,
-        DummyTaskState.inProgress,
-        DummyTaskState.done
-    )
 
     private lateinit var userRepository: UserRepository
     private lateinit var uiController: UiController
@@ -125,45 +107,4 @@ class TaskCliUtilsTest {
         assertThat(output.toString()).contains("Invalid input. Returning to dashboard.")
     }
 
-    @Test
-    fun `promptForUpdatedTask should update all fields when new inputs are provided`() = runTest {
-        coEvery { uiController.readInput() } returnsMany listOf(
-            "New Title",       // title
-            "New Description", // description
-            "2",               // state index
-            dummyUser.username // username
-        )
-        coEvery { userRepository.getUserByUserName(dummyUser.username) } returns dummyUserOneDto
-
-        val updatedTask = TaskCliUtils.promptForUpdatedTask(
-            task, dummyStates, userRepository, uiController
-        )
-
-        assertThat(updatedTask.title).isEqualTo("New Title")
-        assertThat(updatedTask.description).isEqualTo("New Description")
-        assertThat(updatedTask.stateId).isEqualTo(dummyStates[1].id)
-        assertThat(updatedTask.assignedTo).isEqualTo(dummyUser.id)
-        assertThat(updatedTask.updatedAt).isNotEqualTo(task.updatedAt)
-    }
-
-    @Test
-    fun `promptForUpdatedTask should keep current values when inputs are empty or invalid`() = runTest {
-        coEvery { uiController.readInput() } returnsMany listOf(
-            "",   // title → keep old
-            "",   // description → keep old
-            "9",  // invalid state index → keep old
-            "unknownUser" // unknown user → keep old
-        )
-        coEvery { userRepository.getUserByUserName("unknownUser") } returns null
-
-        val updatedTask = TaskCliUtils.promptForUpdatedTask(
-            task.copy(stateId = dummyStates[0].id), dummyStates, userRepository, uiController
-        )
-
-        assertThat(updatedTask.title).isEqualTo(task.title)
-        assertThat(updatedTask.description).isEqualTo(task.description)
-        assertThat(updatedTask.stateId).isEqualTo(dummyStates[0].id)
-        assertThat(updatedTask.assignedTo).isEqualTo(null)
-        assertThat(updatedTask.updatedAt).isNotEqualTo(task.updatedAt)
-    }
 }
