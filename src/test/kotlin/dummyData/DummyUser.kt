@@ -5,7 +5,7 @@ import domain.entities.UserRole
 import java.util.*
 
 object DummyUser {
-    val     dummyUserOne = createDummyUser(
+    val dummyUserOne = createDummyUser(
         id = UUID.fromString("e7a1a8b0-51e2-4e61-b4f6-7c9f3e05b221"),
         username = "adminUserName",
         role = UserRole.ADMIN
